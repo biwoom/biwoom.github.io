@@ -1,7 +1,7 @@
 # Dharma Note 
 __다르마노트__
 
-![Placeholder](img/oerich.png){width=100%}
+![Placeholder](img/roerich.png){width=100%}
 
 !!! note ""
     LET WISDOM BE THE ONLY CURE
