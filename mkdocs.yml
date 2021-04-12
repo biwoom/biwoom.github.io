@@ -1,0 +1,103 @@
+site_name: Dharma Note
+# Copyright
+copyright: Copyright &copy; 2021 Biwoom.DharmNote - LET WISDOM BE THE ONLY CURE
+
+plugins:
+  - search:
+      lang: en
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  language: kr
+  features:
+   - navigation.top
+   - navigation.tabs
+  #  - navigation.instant
+  #  - navigation.tracking
+  palette:
+    # Light mode
+    - teal: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: cyan
+      accent: teal
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: teal
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+    
+# Extensions
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+  - javascripts/tables.js
+extra_css:
+  - stylesheets/extra.css
+
+# Page tree
+# nav:
+#   - Home: index.md
+#   - Getting started:
+#     - Installation: getting-started.md
+#     - Creating your site: creating-your-site.md
+#     - Publishing your site: publishing-your-site.md
+#     - Customization: customization.md
+#     - Troubleshooting: troubleshooting.md
+#     - Data privacy: data-privacy.md
+#     - License: license.md
+#     - Releases:
+#       - Changelog: changelog.md
+#       - Upgrade guide: upgrading.md
+#       - Deprecations: deprecations.md
+
+nav:
+  - Home: index.md
+  - 문서:
+    - 마크다운: markdown.md
