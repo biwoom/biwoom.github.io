@@ -2,12 +2,17 @@ site_name: Dharma Note
 # Copyright
 copyright: Copyright &copy; 2021 Biwoom.DharmNote - LET WISDOM BE THE ONLY CURE
 
+repo_name: biwoom/biwoom.github.io
+repo_url: https://github.com/biwoom/biwoom.github.io
+edit_uri: ""
+
 plugins:
   - search:
       lang: en
 
 theme:
   name: material
+  custom_dir: material
   logo: assets/logo.png
   favicon: assets/logo.png
   language: kr
