@@ -1,3 +1,14 @@
+@font-face{ 
+    font-family: DDC_Uchen; 
+    src:url('../fonts/DDC_Uchen.ttf') format('truetype');
+}
+
 .md-typeset .admonition, .md-typeset details{
     font-size: .75rem;
+}
+
+em {
+    font-family:'DDC_Uchen', 'NanumGothic', 'Helvetica', 'Arial, sans-serif';
+    font-size: 0.9rem;
+    font-style: normal !important;
 }

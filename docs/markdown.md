@@ -534,12 +534,14 @@ _출력_ :
 
 ### 편집부호
 ```
-Text can be --deleted-- and replacement text ​++added++. This can also be
-combined into ​~~one~>a single~~ operation. ​==Highlighting== is also
-possible >>and comments can be added inline<<.
+Text can be {--deleted--} and replacement text ​{++added++}. This can also be
+combined into ​{~~one~> a single~~} operation. ​{==Highlighting==} is also
+possible {>>and comments can be added inline<<}.
 
-​==Formatting can also be applied to blocks, by putting the opening and closing
-tags on separate lines and adding new lines between the tags and the content.==
+​{==
+Formatting can also be applied to blocks, by putting the opening and closing
+tags on separate lines and adding new lines between the tags and the content.
+==}
 
 - ==This was marked==
 - ^^This was inserted^^
@@ -547,12 +549,14 @@ tags on separate lines and adding new lines between the tags and the content.==
 ```
 _출력_ :
 
-Text can be --deleted-- and replacement text ​++added++. This can also be
-combined into ​~~one~>a single~~ operation. ​==Highlighting== is also
-possible >>and comments can be added inline<<.
+Text can be {--deleted--} and replacement text ​{++added++}. This can also be
+combined into ​{~~one~> a single~~} operation. ​{==Highlighting==} is also
+possible {>>and comments can be added inline<<}.
 
-​==Formatting can also be applied to blocks, by putting the opening and closing
-tags on separate lines and adding new lines between the tags and the content.==
+​{==
+Formatting can also be applied to blocks, by putting the opening and closing
+tags on separate lines and adding new lines between the tags and the content.
+==}
 
 - ==This was marked==
 - ^^This was inserted^^
@@ -766,3 +770,22 @@ will stretch to the full width of the viewport, e.g. on mobile viewports._
   <figcaption>Image caption</figcaption>
 </figure>
 
+## Tibetan
+
+__DDC_Uchen__ 폰트로 티벳어를 렌더링하기 위해 티벳어 문장 앞과 뒤로 `_티벳어문장_` 언더바(underbar)를 추가한다.
+```
+_སློབ་ཚན་དང་པོ།
+༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
+ལེགས་བཤད་ལྗོན་དབང་ལས།
+དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
+བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
+གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།_
+```
+_출력_ : 
+
+_སློབ་ཚན་དང་པོ།
+༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
+ལེགས་བཤད་ལྗོན་དབང་ལས།
+དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
+བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
+གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།_
