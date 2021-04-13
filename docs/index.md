@@ -52,3 +52,8 @@ __다르마노트__ : 불교지식 보관과 전승을 위한 지혜인드라망
 
 
 ---
+
+<figure>
+    <img src="../img/indranet.JPG" width="400" />
+    <figcaption>지혜인드라망</figcaption>
+    </figure>
