@@ -613,6 +613,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tibetan" class="md-nav__link">
+    Tibetan
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -961,6 +968,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tibetan" class="md-nav__link">
+    Tibetan
+  </a>
   
 </li>
       
@@ -1513,23 +1527,27 @@ purus auctor massa, nec semper lorem quam in massa.</p>
 </div>
 <h2 id="formatting">Formatting<a class="headerlink" href="#formatting" title="Permanent link">&para;</a></h2>
 <h3 id="_8">편집부호<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code>Text can be --deleted-- and replacement text ​++added++. This can also be
-combined into ​~~one~&gt;a single~~ operation. ​==Highlighting== is also
-possible &gt;&gt;and comments can be added inline&lt;&lt;.
+<p><div class="highlight"><pre><span></span><code>Text can be <del class="critic">deleted</del> and replacement text ​<ins class="critic">added</ins>. This can also be
+combined into ​<del class="critic">one</del><ins class="critic"> a single</ins> operation. ​<mark class="critic">Highlighting</mark> is also
+possible <span class="critic comment">and comments can be added inline</span>.
 
-​==Formatting can also be applied to blocks, by putting the opening and closing
-tags on separate lines and adding new lines between the tags and the content.==
+​<mark class="critic">
+Formatting can also be applied to blocks, by putting the opening and closing
+tags on separate lines and adding new lines between the tags and the content.
+</mark>
 
 - ==This was marked==
 - ^^This was inserted^^
 - ~~This was deleted~~
 </code></pre></div>
 <em>출력</em> :</p>
-<p>Text can be --deleted-- and replacement text ​++added++. This can also be
-combined into ​<del>one~&gt;a single</del> operation. ​<mark>Highlighting</mark> is also
-possible &gt;&gt;and comments can be added inline&lt;&lt;.</p>
-<p>​<mark>Formatting can also be applied to blocks, by putting the opening and closing
-tags on separate lines and adding new lines between the tags and the content.</mark></p>
+<p>Text can be <del class="critic">deleted</del> and replacement text ​<ins class="critic">added</ins>. This can also be
+combined into ​<del class="critic">one</del><ins class="critic"> a single</ins> operation. ​<mark class="critic">Highlighting</mark> is also
+possible <span class="critic comment">and comments can be added inline</span>.</p>
+<p>​<mark class="critic">
+Formatting can also be applied to blocks, by putting the opening and closing
+tags on separate lines and adding new lines between the tags and the content.
+</mark></p>
 <ul>
 <li><mark>This was marked</mark></li>
 <li><ins>This was inserted</ins></li>
@@ -1720,6 +1738,22 @@ will stretch to the full width of the viewport, e.g. on mobile viewports.</em></
   <figcaption>Image caption</figcaption>
 </figure>
 
+<h2 id="tibetan">Tibetan<a class="headerlink" href="#tibetan" title="Permanent link">&para;</a></h2>
+<p><strong>DDC_Uchen</strong> 폰트로 티벳어를 렌더링하기 위해 티벳어 문장 앞과 뒤로 <code>_티벳어문장_</code> 언더바(underbar)를 추가한다.
+<div class="highlight"><pre><span></span><code>_སློབ་ཚན་དང་པོ།
+༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
+ལེགས་བཤད་ལྗོན་དབང་ལས།
+དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
+བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
+གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།_
+</code></pre></div></p>
+<p><em>출력</em> : </p>
+<p><em>སློབ་ཚན་དང་པོ།
+༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
+ལེགས་བཤད་ལྗོན་དབང་ལས།
+དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
+བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
+གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།</em></p>
 <div class="footnote">
 <hr />
 <ol>
