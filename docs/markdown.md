@@ -709,7 +709,7 @@ adding the respective alignment directions via the `align` attribute, i.e.
     _Example_:
 
     ``` markdown
-    ![Placeholder](https://dummyimage.com/600x400/eee/aaa){ align=left }
+    ![Placeholder](https://dummyimage.com/600x400/f5f5f5/aaaaaa&text=–%20Image%20–){ align=left width=300 }
     ```
 
     _Result_:
@@ -725,7 +725,7 @@ adding the respective alignment directions via the `align` attribute, i.e.
     _Example_:
 
     ``` markdown
-    ![Placeholder](https://dummyimage.com/600x400/eee/aaa){ align=right }
+    ![Placeholder](https://dummyimage.com/600x400/f5f5f5/aaaaaa&text=–%20Image%20–){ align=right width=300 }
     ```
 
     _Result_:
@@ -736,8 +736,7 @@ adding the respective alignment directions via the `align` attribute, i.e.
     nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
     massa, nec semper lorem quam in massa.
 
-_If there's insufficient space to render the text next to the image, the image
-will stretch to the full width of the viewport, e.g. on mobile viewports._
+모바일 뷰포트에서는 이미지 옆에 텍스트를 렌더링 할 공간이 충분하지 않으면 이미지가 뷰포트의 전체 너비로 늘어납니다. 
 
 ### Image captions
 ```
