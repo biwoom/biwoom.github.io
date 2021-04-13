@@ -1,8 +1,6 @@
 # Dharma Note 
 __다르마노트__
 
-![Placeholder](img/roerich.png){width=100%}
-
 !!! note ""
     LET WISDOM BE THE ONLY CURE
 
@@ -13,5 +11,7 @@ __다르마노트__
 
     모든 유정 어머님들 행복얻게 하시고, 삼악도 영원토록 텅 비며, <br>
     보살님들 그 어디에 계시든 그분들 모두의 서원 원만히 이루어지게 하소서.
+
+![Placeholder](img/roerich.png){width=100%}
 
 ![Placeholder](img/IMG_0613.JPG){width=100%}
