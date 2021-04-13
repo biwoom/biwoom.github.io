@@ -567,7 +567,6 @@ tags on separate lines and adding new lines between the tags and the content.
 - H~2~0
 - A^T^A
 - __BOLD__
-- _italic_
 ```
 
 _출력_ :
@@ -575,7 +574,7 @@ _출력_ :
 - H~2~0
 - A^T^A
 - __BOLD__
-- _italic_
+
 
 ### 구분선
 
