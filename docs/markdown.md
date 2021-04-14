@@ -7,7 +7,7 @@ The HTML specification is maintained by the W3C.
 *[HTML]: Hyper Text Markup Language
 *[W3C]: World Wide Web Consortium
 ```
-_출력_ :
+출력 :
 
  The HTML specification is maintained by the W3C.
 
@@ -43,7 +43,7 @@ Lorem ipsum[^1] dolor sit amet, consectetur adipiscing elit.[^2]
     massa, nec semper lorem quam in massa.
 ```
 ### with title
-_출력_ :
+출력 :
 
 !!! note "Phasellus posuere in sem ut cursus"
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
@@ -58,7 +58,7 @@ _출력_ :
     massa, nec semper lorem quam in massa.
 ```
 
-_출력_ :
+출력 :
 !!! note ""
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
     nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
@@ -74,7 +74,7 @@ collapsible Admonition
     nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
     massa, nec semper lorem quam in massa.
 ```
-_출력_ :
+출력 :
 ??? note
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
     nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
@@ -118,7 +118,7 @@ nesting of code and content blocks inside admonitions
     sem ut cursus. Nullam sit amet tincidunt ipsum, sit amet elementum turpis.
     Etiam ipsum quam, mattis in purus vitae, lacinia fermentum enim.
 ```
-_출력_ :
+출력 :
 !!! note
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
     nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
@@ -286,7 +286,7 @@ __Important__: `inline` 표시자를 사용하는 Admonitions는 반드시 옆�
 ```
 [Subscribe to our mailing list](#){ .md-button }
 ```
-_출력_ :
+출력 :
 
 [Subscribe to our mailing list](#){ .md-button }
 
@@ -296,7 +296,7 @@ _출력_ :
 [Subscribe to our mailing list](#){ .md-button .md-button--primary }
 ```
 
-_출력_ :
+출력 :
 
 [Subscribe to our mailing list](#){ .md-button .md-button--primary }
 
@@ -305,7 +305,7 @@ _출력_ :
 [Submit :fontawesome-solid-paper-plane:](#){ .md-button .md-button--primary }
 ```
 
-_출력_ :
+출력 :
 
 [Submit :fontawesome-solid-paper-plane:](#){ .md-button .md-button--primary }
 
@@ -336,7 +336,7 @@ _출력_ :
     ```
 ```
 
-_출력_ :
+출력 :
 === "C"
 
     ``` c
@@ -373,7 +373,7 @@ _출력_ :
     2. Donec vitae suscipit est
     3. Nulla tempor lobortis orci
 ```
-_출력_ :
+출력 :
 
 === "Unordered list"
 
@@ -397,7 +397,7 @@ _출력_ :
 | `PUT`       | :material-check-all: Update resource |
 | `DELETE`    | :material-close:     Delete resource |
 ```
-_출력_ :
+출력 :
 
 | Method      | Description                          |
 | ----------- | ------------------------------------ |
@@ -468,7 +468,7 @@ _출력_ :
     | `DELETE`    | :material-close:     Delete resource |
 ```
 
-_출력_ :
+출력 :
 === "Left"
 
     _Example_:
@@ -547,7 +547,7 @@ tags on separate lines and adding new lines between the tags and the content.
 - ^^This was inserted^^
 - ~~This was deleted~~
 ```
-_출력_ :
+출력 :
 
 Text can be {--deleted--} and replacement text ​{++added++}. This can also be
 combined into ​{~~one~> a single~~} operation. ​{==Highlighting==} is also
@@ -569,7 +569,7 @@ tags on separate lines and adding new lines between the tags and the content.
 - __BOLD__
 ```
 
-_출력_ :
+출력 :
 
 - H~2~0
 - A^T^A
@@ -582,7 +582,7 @@ _출력_ :
 ---
 ```
 
-_출력_ : 
+출력 : 
 
 ---
 
@@ -606,7 +606,7 @@ _출력_ :
     * Nam vulputate tincidunt fringilla.
     * Nullam dignissim ultrices urna non auctor.
 ```
-_출력_ : 
+출력 : 
 
 - Nulla et rhoncus turpis. Mauris ultricies elementum leo. Duis efficitur
   accumsan nibh eu mattis. Vivamus tempus velit eros, porttitor placerat nibh
@@ -633,7 +633,7 @@ _출력_ :
         2. Ut sit amet placerat ante
         3. Suspendisse ac eros arcu
 ```
-_출력_ : 
+출력 : 
 
 1. Vivamus id mi enim. Integer id turpis sapien. Ut condimentum lobortis
   sagittis. Aliquam purus tellus, faucibus eget urna at, iaculis venenatis
@@ -664,7 +664,7 @@ _출력_ :
     Nam vulputate tincidunt fringilla.
     Nullam dignissim ultrices urna non auctor.
 ```
-_출력_ : 
+출력 : 
 `Lorem ipsum dolor sit amet`
 :   Sed sagittis eleifend rutrum. Donec vitae suscipit est. Nullam tempus
     tellus non sem sollicitudin, quis rutrum leo facilisis.
@@ -687,7 +687,7 @@ _출력_ :
 - [ ] Aenean pretium efficitur erat, donec pharetra, ligula non scelerisque
 ```
 
-_출력_ : 
+출력 : 
 
 - [x] Lorem ipsum dolor sit amet, consectetur adipiscing elit
 - [ ] Vestibulum convallis sit amet nisi a tincidunt
@@ -770,6 +770,10 @@ adding the respective alignment directions via the `align` attribute, i.e.
 
 ## Tibetan
 
+티벳어를 특정 폰트(DDC_Uchen)로 렌더링하는 두 가지 방법
+
+###  언더바(underbar) 감싸기
+
 __DDC_Uchen__ 폰트로 티벳어를 렌더링하기 위해 티벳어 문장 앞과 뒤로 `_티벳어문장_` 언더바(underbar)를 추가한다.
 ```
 _སློབ་ཚན་དང་པོ།
@@ -780,7 +784,7 @@ _སློབ་ཚན་དང་པོ།
 གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།_
 ```
 
-_출력_ : 
+출력 : 
 
 _སློབ་ཚན་དང་པོ།
 ༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
@@ -788,3 +792,26 @@ _སློབ་ཚན་དང་པོ།
 དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
 བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
 གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།_
+
+###  코드 추가하기
+
+`{: .tibetan}` 이 코드를 문장 말미에 추가한다.
+
+```
+སློབ་ཚན་དང་པོ།
+༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
+ལེགས་བཤད་ལྗོན་དབང་ལས།
+དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
+བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
+གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།
+{: .tibetan}
+```
+출력 : 
+
+སློབ་ཚན་དང་པོ།
+༼ ཡི་གེ་དབྱངས་གསལ་བཤད་པ།༽
+ལེགས་བཤད་ལྗོན་དབང་ལས།
+དབྱངས་ཀྱི་བྱ་བ་གསལ་པོ་རུ།
+བྱེད་པ་ཨི་ཨུ་ཨེ་ཨོ་བཞི།
+གསལ་བྱེད་ཀ་སོགས་སུམ་ཅུ་ཡིན།
+{: .tibetan}
