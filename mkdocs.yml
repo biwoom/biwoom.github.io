@@ -108,3 +108,5 @@ nav:
   - Home: index.md
   - 문서:
     - 마크다운: markdown.md
+  - 중관:
+    - 중론.청목소: madhyamaka/중론-청목소/1-관인연품.md
