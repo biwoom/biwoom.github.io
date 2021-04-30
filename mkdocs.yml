@@ -19,6 +19,7 @@ theme:
   features:
    - navigation.top
    - navigation.tabs
+   - navigation.expand
   #  - navigation.instant
   #  - navigation.tracking
   palette:
@@ -109,4 +110,7 @@ nav:
   - 문서:
     - 마크다운: markdown.md
   - 중관:
-    - 중론.청목소: madhyamaka/중론-청목소/1-관인연품.md
+    # - 중론.청목소: madhyamaka/중론-청목소/index.md
+    - 중론.청목소:
+      - 목차: madhyamaka/중론-청목소/index.md
+      - 1.관인연품: madhyamaka/중론-청목소/1-관인연품.md
