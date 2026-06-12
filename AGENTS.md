@@ -17,6 +17,16 @@ This repository is OL HOME, the public Astro site for the OL project.
 - Keep root-level temporary source documents out of commits after they are moved into the correct content collection.
 - Prefer ASCII filenames for code and route-bearing files. Korean document titles belong in frontmatter and body text.
 
+## Project Context
+
+- Before major work, read `.agents/context/current-state.md` and `.agents/context/decisions.md` if they exist.
+- Use `.agents/context/work-log.md` to understand recent work and unresolved follow-ups.
+- Keep context files concise. They are continuity records, not full transcripts.
+- Update `.agents/context/current-state.md` when project structure, deployment status, active priorities, or known risks change.
+- Update `.agents/context/decisions.md` when a durable architectural, content, naming, deployment, or workflow decision is made.
+- Update `.agents/context/work-log.md` after meaningful implementation, documentation, deployment, or repository-management work.
+- When the user asks to upload, publish, push, or deploy to GitHub, complete the requested GitHub operation first, then update the context files with the final result and create a follow-up commit if needed.
+
 ## Content Placement
 
 - `src/content/pages/`: permanent project documents, brand rules, operating manuals.
@@ -46,6 +56,7 @@ This repository is OL HOME, the public Astro site for the OL project.
 - The deploy workflow is `.github/workflows/deploy.yml`.
 - Pushing to `main` should build and publish the site.
 - Root URL errors usually indicate GitHub Pages settings, Actions status, CDN delay, or an accidental Astro `base`.
+- After push/deploy work, record the commit, build/deploy result, and any follow-up in `.agents/context/work-log.md`.
 
 ## Codex Skills
 
