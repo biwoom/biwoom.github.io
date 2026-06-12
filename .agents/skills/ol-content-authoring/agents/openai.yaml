@@ -1,0 +1,4 @@
+interface:
+  display_name: "OL Content Authoring"
+  short_description: "Create and update OL HOME content"
+  default_prompt: "Use $ol-content-authoring to add or revise OL HOME content."

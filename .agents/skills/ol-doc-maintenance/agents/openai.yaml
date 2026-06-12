@@ -1,0 +1,4 @@
+interface:
+  display_name: "OL Doc Maintenance"
+  short_description: "Maintain OL HOME manuals and docs"
+  default_prompt: "Use $ol-doc-maintenance to update OL HOME project documents."

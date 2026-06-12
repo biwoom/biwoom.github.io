@@ -1,0 +1,37 @@
+# Allow routine OL HOME verification commands outside the sandbox when Codex requests them.
+prefix_rule(
+    pattern = ["npm", "run", "build"],
+    decision = "allow",
+    justification = "OL HOME build verification is expected after site, content, or config changes.",
+    match = [
+        "npm run build",
+    ],
+)
+
+prefix_rule(
+    pattern = ["npm", "run", "dev"],
+    decision = "prompt",
+    justification = "Starting the dev server is useful but may leave a long-running process.",
+    match = [
+        "npm run dev",
+    ],
+)
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Publishing changes should be confirmed before updating the remote repository.",
+    match = [
+        "git push",
+        "git push origin main",
+    ],
+)
+
+prefix_rule(
+    pattern = ["rm", "-rf"],
+    decision = "forbidden",
+    justification = "Use explicit file deletion through a reviewed patch or safer command.",
+    match = [
+        "rm -rf dist",
+    ],
+)

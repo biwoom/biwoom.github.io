@@ -1,0 +1,4 @@
+interface:
+  display_name: "OL Deploy Check"
+  short_description: "Verify OL HOME GitHub Pages deploys"
+  default_prompt: "Use $ol-deploy-check to verify OL HOME build and GitHub Pages readiness."
