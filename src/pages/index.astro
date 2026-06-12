@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OLHero from '../components/home/OLHero.astro';
+import OLProductCards from '../components/home/OLProductCards.astro';
+import OLManifest from '../components/home/OLManifest.astro';
+import OLStats from '../components/home/OLStats.astro';
+import OLLatestUpdates from '../components/home/OLLatestUpdates.astro';
+---
+
+<BaseLayout
+  title="OL — Weaving the Wisdom"
+  description="OL(올)은 한 올, 한 올 지혜를 엮어가는 불교 콘텐츠 프로젝트입니다."
+>
+  <main>
+    <OLHero />
+    <OLProductCards />
+    <OLManifest />
+    <OLStats />
+    <OLLatestUpdates />
+  </main>
+</BaseLayout>

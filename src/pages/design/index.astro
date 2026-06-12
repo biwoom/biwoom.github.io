@@ -1,0 +1,368 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { url } from '../../lib/url';
+import {
+  formatLabel,
+  primaryKindLabel,
+  primaryKindOrder,
+  typeLabel,
+} from '../../lib/design';
+
+const allItems = await getCollection('design', e => e.data.published);
+allItems.sort((a, b) => {
+  const kindA = primaryKindOrder.indexOf(a.data.primaryKind as typeof primaryKindOrder[number]);
+  const kindB = primaryKindOrder.indexOf(b.data.primaryKind as typeof primaryKindOrder[number]);
+  if (kindA !== kindB) return kindA - kindB;
+  return a.data.title.localeCompare(b.data.title, 'ko');
+});
+
+const PAGE_SIZE = 12;
+
+const kindCounts = allItems.reduce((acc, item) => {
+  const kind = item.data.primaryKind;
+  acc[kind] = (acc[kind] ?? 0) + 1;
+  return acc;
+}, {} as Record<string, number>);
+
+const allTags = [...new Set(allItems.flatMap(i => i.data.tags))]
+  .sort((a, b) => a.localeCompare(b, 'ko'));
+
+function assetUrl(entryId: string, asset?: string) {
+  return asset ? url(`/generated/design/${entryId}/${asset}`) : '';
+}
+
+function itemFormats(item: typeof allItems[number]) {
+  const formats = [];
+  if (item.data.htmlAsset) formats.push('HTML');
+  if (item.data.pdfAsset) formats.push('PDF');
+  if (item.data.imageAsset && formats.length === 0) formats.push(formatLabel[item.data.format] ?? 'IMAGE');
+  return formats.length > 0 ? formats : [formatLabel[item.data.format] ?? 'IMAGE'];
+}
+---
+
+<BaseLayout
+  title="OL DESIGN — 불교 인포그래픽 라이브러리"
+  description="불교 지식을 HTML과 PDF로 시각화하는 인포그래픽 중심의 OL DESIGN 라이브러리입니다."
+>
+  <main>
+    <section class="ol-hero" style="padding-bottom: 32px;">
+      <div class="ol-container">
+        <span class="ol-kicker">VISUAL LIBRARY · 불교인포그래픽</span>
+        <h1 class="ol-kr">
+          불교를 한 눈에,<br>
+          <em>지혜의 구조</em> 를 그리다.
+        </h1>
+        <p class="ol-lead ol-kr">
+          OL DESIGN은 인포그래픽을 중심으로 불교 개념·서사·구조를 시각화합니다.
+          불교관련 인포그래픽, 삽화, 스타일시트 자료를 축적하고 공유합니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="ol-section-tight">
+      <div class="ol-container">
+        <div class="ol-design-layout">
+
+          <aside class="ol-design-sidebar">
+            <div class="ol-design-sidebar-inner">
+
+              <div class="ol-design-filter-group">
+                <div class="ol-design-filter-label">KIND</div>
+                <ul class="ol-design-cat-list">
+                  <li>
+                    <button
+                      class="ol-design-cat-btn active"
+                      data-filter-kind="all"
+                      data-count={allItems.length}
+                    >
+                      <span class="cat-name ol-kr">전체</span>
+                      <span class="cat-count">{allItems.length}</span>
+                    </button>
+                  </li>
+                  {primaryKindOrder.map(kind => {
+                    const count = kindCounts[kind] ?? 0;
+                    return (
+                      <li>
+                        <button
+                          class="ol-design-cat-btn"
+                          data-filter-kind={kind}
+                          data-count={count}
+                          disabled={count === 0}
+                        >
+                          <span class="cat-name ol-kr">{primaryKindLabel[kind]}</span>
+                          <span class="cat-count">{count}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+
+              {allTags.length > 0 && (
+                <div class="ol-design-filter-group">
+                  <div class="ol-design-filter-label">TAGS</div>
+                  <div class="ol-design-tag-cloud">
+                    {allTags.map(tag => (
+                      <button class="ol-design-tag-btn" data-filter-tag={tag}>
+                        {tag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div class="ol-design-sidebar-note">
+                <span class="ol-mono-label" style="font-size: 18px;">HTML · PDF</span>
+                <p class="ol-kr">
+                  인포그래픽은 브라우저 열람용 HTML과 배포·인쇄용 PDF를 우선 산출물로 관리합니다.
+                  라이선스는 자료별 메타데이터를 따릅니다.
+                </p>
+              </div>
+
+            </div>
+          </aside>
+
+          <div class="ol-design-main">
+            <div class="ol-design-toolbar">
+              <div class="ol-design-toolbar-count">
+                <span id="design-visible-count">{allItems.length}</span>개 자료
+              </div>
+              <div class="ol-design-active-filters" id="design-active-filters"></div>
+            </div>
+
+            {allItems.length === 0 && (
+              <div style="padding: 80px 0; text-align: center; color: var(--ol-muted); font-family: var(--ol-font-mono); font-size: 13px;">
+                아직 등록된 자료가 없습니다.
+              </div>
+            )}
+
+            <div class="ol-design-grid" id="design-grid">
+              {allItems.map((item, i) => {
+                const previewAsset = item.data.thumbnailAsset ?? item.data.imageAsset;
+                const tags = item.data.tags;
+                const formats = itemFormats(item);
+                return (
+                  <a
+                    class="ol-design-card"
+                    href={url(`/design/${item.id}`)}
+                    data-kind={item.data.primaryKind}
+                    data-tags={tags.join(',')}
+                    data-index={i}
+                    style={i >= PAGE_SIZE ? 'display:none;' : ''}
+                  >
+                    <div class="ol-design-card-img">
+                      {previewAsset ? (
+                        <img
+                          src={assetUrl(item.id, previewAsset)}
+                          alt={item.data.imageAlt ?? item.data.title}
+                          loading={i < 6 ? 'eager' : 'lazy'}
+                          decoding="async"
+                        />
+                      ) : (
+                        <div class="ol-ph" style="width:100%;height:100%;">
+                          {primaryKindLabel[item.data.primaryKind] ?? 'DESIGN'}
+                        </div>
+                      )}
+                    </div>
+                    <div class="ol-design-card-meta">
+                      <div class="ol-design-card-type">
+                        {primaryKindLabel[item.data.primaryKind]}
+                        {item.data.type && <span> · {typeLabel[item.data.type] ?? item.data.type}</span>}
+                      </div>
+                      <h3 class="ol-design-card-title ol-kr">{item.data.title}</h3>
+                      {(item.data.summary ?? item.data.description) && (
+                        <p class="ol-design-card-summary ol-kr">
+                          {item.data.summary ?? item.data.description}
+                        </p>
+                      )}
+                      <div class="ol-design-format-row">
+                        {formats.map(format => (
+                          <span class="ol-design-format-badge">{format}</span>
+                        ))}
+                        {item.data.version && <span class="ol-design-card-era">v{item.data.version}</span>}
+                      </div>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+
+            <div id="design-no-results" style="display:none; padding: 60px 0; text-align: center; color: var(--ol-muted); font-size: 14px;" class="ol-kr">
+              선택한 필터에 해당하는 자료가 없습니다.
+            </div>
+
+            {allItems.length > PAGE_SIZE && (
+              <div class="ol-design-loadmore" id="design-loadmore-wrap">
+                <button id="design-loadmore-btn" class="ol-btn ol-btn-outline">
+                  더 보기
+                  <span id="design-loadmore-remaining">
+                    ({allItems.length - PAGE_SIZE})
+                  </span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script type="application/json" id="design-kind-labels" set:html={JSON.stringify(primaryKindLabel)} />
+</BaseLayout>
+
+<script>
+  const PAGE_SIZE = 12;
+  let activeKind = 'all';
+  let activeTag: string | null = null;
+  let visibleCount = PAGE_SIZE;
+
+  const grid = document.getElementById('design-grid')!;
+  const cards = Array.from(grid.querySelectorAll<HTMLElement>('.ol-design-card'));
+  const countEl = document.getElementById('design-visible-count')!;
+  const noResults = document.getElementById('design-no-results')!;
+  const activeFiltersEl = document.getElementById('design-active-filters')!;
+  const loadmoreWrap = document.getElementById('design-loadmore-wrap');
+  const loadmoreBtn = document.getElementById('design-loadmore-btn');
+  const loadmoreRemaining = document.getElementById('design-loadmore-remaining');
+  const kindLabels: Record<string, string> = JSON.parse(document.getElementById('design-kind-labels')!.textContent!);
+  const kindButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.ol-design-cat-btn'));
+  const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.ol-design-tag-btn'));
+
+  function matchCard(card: HTMLElement): boolean {
+    const kind = card.dataset.kind ?? 'infographic';
+    const tags = (card.dataset.tags ?? '').split(',').filter(Boolean);
+    if (activeKind !== 'all' && kind !== activeKind) return false;
+    if (activeTag && !tags.includes(activeTag)) return false;
+    return true;
+  }
+
+  function updateUrl() {
+    const nextUrl = new URL(window.location.href);
+    if (activeKind !== 'all') {
+      nextUrl.searchParams.set('kind', activeKind);
+    } else {
+      nextUrl.searchParams.delete('kind');
+    }
+    if (activeTag) {
+      nextUrl.searchParams.set('tag', activeTag);
+    } else {
+      nextUrl.searchParams.delete('tag');
+    }
+    window.history.replaceState({}, '', nextUrl);
+  }
+
+  function applyFilters({ syncUrl = true } = {}) {
+    const matched = cards.filter(matchCard);
+    const unmatched = cards.filter(c => !matchCard(c));
+
+    visibleCount = PAGE_SIZE;
+
+    matched.forEach((c, i) => {
+      c.style.display = i < visibleCount ? '' : 'none';
+    });
+    unmatched.forEach(c => { c.style.display = 'none'; });
+
+    countEl.textContent = String(matched.length);
+    noResults.style.display = matched.length === 0 ? '' : 'none';
+
+    if (loadmoreWrap && loadmoreRemaining) {
+      const remaining = matched.length - visibleCount;
+      if (remaining > 0) {
+        loadmoreWrap.style.display = '';
+        loadmoreRemaining.textContent = `(${remaining})`;
+      } else {
+        loadmoreWrap.style.display = 'none';
+      }
+    }
+
+    updateFilterPills();
+    if (syncUrl) updateUrl();
+  }
+
+  function updateFilterPills() {
+    activeFiltersEl.innerHTML = '';
+    if (activeKind !== 'all') {
+      activeFiltersEl.appendChild(makePill(kindLabels[activeKind] ?? activeKind, () => {
+        activeKind = 'all';
+        kindButtons.forEach(b => {
+          b.classList.toggle('active', b.dataset.filterKind === 'all');
+        });
+        applyFilters();
+      }));
+    }
+    if (activeTag) {
+      activeFiltersEl.appendChild(makePill(`#${activeTag}`, () => {
+        activeTag = null;
+        tagButtons.forEach(b => b.classList.remove('active'));
+        applyFilters();
+      }));
+    }
+  }
+
+  function makePill(label: string, onClose: () => void) {
+    const span = document.createElement('span');
+    span.className = 'ol-design-filter-pill';
+    span.innerHTML = `${label} <button aria-label="필터 해제">x</button>`;
+    span.querySelector('button')!.addEventListener('click', onClose);
+    return span;
+  }
+
+  kindButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeKind = btn.dataset.filterKind ?? 'all';
+      kindButtons.forEach(b => {
+        b.classList.toggle('active', b === btn);
+      });
+      applyFilters();
+    });
+  });
+
+  tagButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.filterTag ?? '';
+      if (activeTag === tag) {
+        activeTag = null;
+        btn.classList.remove('active');
+      } else {
+        activeTag = tag;
+        tagButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      applyFilters();
+    });
+  });
+
+  loadmoreBtn?.addEventListener('click', () => {
+    const matched = cards.filter(matchCard);
+    visibleCount += PAGE_SIZE;
+    matched.forEach((c, i) => { c.style.display = i < visibleCount ? '' : 'none'; });
+    const remaining = matched.length - visibleCount;
+    if (remaining > 0 && loadmoreRemaining) {
+      loadmoreRemaining.textContent = `(${remaining})`;
+    } else if (loadmoreWrap) {
+      loadmoreWrap.style.display = 'none';
+    }
+  });
+
+  const initialParams = new URLSearchParams(window.location.search);
+  const initialKind = initialParams.get('kind');
+  const initialTag = initialParams.get('tag');
+
+  if (initialKind && kindButtons.some(btn => btn.dataset.filterKind === initialKind)) {
+    activeKind = initialKind;
+    kindButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filterKind === initialKind);
+    });
+  }
+
+  if (initialTag && tagButtons.some(btn => btn.dataset.filterTag === initialTag)) {
+    activeTag = initialTag;
+    tagButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filterTag === initialTag);
+    });
+  }
+
+  if (initialKind || initialTag) {
+    applyFilters({ syncUrl: false });
+  }
+</script>

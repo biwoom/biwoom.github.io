@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import RedirectLayout from '../../layouts/RedirectLayout.astro';
+
+export async function getStaticPaths() {
+  const stories = await getCollection('story', e => e.data.published);
+  return stories.map(entry => ({
+    params: { slug: entry.id },
+    props: { slug: entry.id },
+  }));
+}
+
+const { slug } = Astro.props;
+---
+
+<RedirectLayout to={`/story/${slug}`} />

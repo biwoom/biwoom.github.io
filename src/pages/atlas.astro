@@ -1,0 +1,252 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLatestAtlasBuild } from '../lib/atlas';
+import { url } from '../lib/url';
+
+const {
+  fileName,
+  filePath: latestPath,
+  version,
+  fileSize,
+} = getLatestAtlasBuild();
+---
+
+<BaseLayout
+  title="OL ATLAS — 단일 HTML 불교 콘텐츠 제작 도구"
+  description="ATLAS는 단일 HTML 파일로 동작하는 불교 콘텐츠 에디터이자 뷰어입니다."
+>
+  <main>
+    <!-- Hero -->
+    <section class="ol-hero">
+      <div class="ol-container">
+        <span class="ol-kicker">TOOL · 단일 HTML 제작 도구</span>
+        <h1 class="ol-kr">
+          <em>한 파일에 담는</em><br>
+          불교 콘텐츠 제작 도구.
+        </h1>
+        <p class="ol-lead ol-kr">
+          ATLAS는 단일 HTML 파일로 동작하는 불교 콘텐츠 에디터이자 뷰어입니다.
+          설치도, 서버도 필요하지 않습니다. 만들고, 저장하고, 그대로 누군가에게 보냅니다 — 한 파일 그대로.
+        </p>
+        <div class="ol-hero-actions">
+          <a class="ol-btn ol-btn-accent" href={url(latestPath)} download={fileName}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3v13m0 0 4-4m-4 4-4-4M4 21h16"/>
+            </svg>
+            v{version} 내려받기
+          </a>
+          <a class="ol-btn ol-btn-outline" href={url(latestPath)} target="_blank" rel="noopener noreferrer">
+            브라우저에서 바로 열기
+          </a>
+          <a class="ol-btn ol-btn-ghost" href="https://github.com/biwoom/ol-atlas" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.21c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.91-.39 2.9-.39.99 0 1.98.13 2.9.39 2.21-1.5 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.4-5.26 5.68.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.79.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+            </svg>
+            소스 보기
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ATLAS 실제 툴 미리보기 (iframe + 탭 전환) -->
+    <section class="ol-section-tight">
+      <div class="ol-container">
+        <div class="ol-card ol-card-flush" style="border-color: var(--ol-border-strong);" id="atlas-preview-card">
+
+          <!-- 브라우저 크롬: 신호등 + 탭 + 열기 버튼 -->
+          <div class="atlas-chrome">
+            <!-- 신호등 -->
+            <div class="atlas-chrome-dots">
+              <span style="background: #ff5f57;"></span>
+              <span style="background: #febc2e;"></span>
+              <span style="background: #28c840;"></span>
+            </div>
+
+            <!-- 탭 -->
+            <div class="atlas-tabs" role="tablist">
+              <button
+                class="atlas-tab active"
+                role="tab"
+                aria-selected="true"
+                data-tab="home"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                홈
+              </button>
+              <button
+                class="atlas-tab"
+                role="tab"
+                aria-selected="false"
+                data-tab="kanban"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="7" height="18" x="3" y="3" rx="1"/>
+                  <rect width="7" height="18" x="14" y="3" rx="1"/>
+                </svg>
+                칸반
+              </button>
+            </div>
+
+            <!-- 열기 버튼 -->
+            <a
+              href={url(latestPath)}
+              id="atlas-open-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="atlas-open-btn"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              열기
+            </a>
+          </div>
+
+          <!-- iframe 컨테이너 (data-active로 활성 뷰 제어) -->
+          <div class="atlas-preview-wrap" data-active="home">
+            <iframe
+              src={url(latestPath)}
+              class="atlas-preview-iframe"
+              data-view="home"
+              tabindex="-1"
+              title="OL ATLAS 홈 미리보기"
+            ></iframe>
+            <iframe
+              src={url(`${latestPath}#kanban`)}
+              class="atlas-preview-iframe"
+              data-view="kanban"
+              tabindex="-1"
+              title="OL ATLAS 칸반 미리보기"
+            ></iframe>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const tabs = document.querySelectorAll<HTMLButtonElement>('.atlas-tab');
+      const wrap = document.querySelector('.atlas-preview-wrap');
+      const openLink = document.getElementById('atlas-open-link') as HTMLAnchorElement | null;
+      const baseHome   = openLink?.href ?? '';
+      const baseKanban = baseHome.replace(/#.*$/, '') + '#kanban';
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.tab ?? 'home';
+
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+
+          if (wrap) wrap.setAttribute('data-active', target);
+          if (openLink) openLink.href = target === 'kanban' ? baseKanban : baseHome;
+        });
+      });
+    </script>
+
+    <!-- Features + Download -->
+    <section class="ol-section">
+      <div class="ol-container">
+        <div class="ol-section-grid-2">
+          <div>
+            <span class="ol-kicker">FEATURES · 설계 원칙</span>
+            <h2 style="font-size: 32px; margin-top: 12px; letter-spacing: -0.025em;" class="ol-kr">설치 없음, 서버 없음, 잠금 없음.</h2>
+            <p style="color: var(--ol-muted); margin-top: 12px; max-width: 50ch;" class="ol-kr">ATLAS는 모든 콘텐츠를 단일 HTML 파일로 보관합니다. 그 파일을 누구에게 보내든, 그 사람도 똑같이 열고 — 자유롭게 — 수정할 수 있습니다.</p>
+
+            <div style="margin-top: 32px;">
+              <div class="ol-feature">
+                <div class="ic">01</div>
+                <div>
+                  <h4 class="ol-kr">단일 HTML 파일</h4>
+                  <p class="ol-kr">에디터·뷰어·콘텐츠·이미지 자산이 한 파일에 들어 있습니다. 콘텐츠없는 기본버전 평균 1MB.</p>
+                </div>
+              </div>
+              <div class="ol-feature">
+                <div class="ic">02</div>
+                <div>
+                  <h4 class="ol-kr">에디터 ↔ 뷰어 토글</h4>
+                  <p class="ol-kr">같은 파일을 읽기 모드와 편집 모드로 전환합니다. 별도 도구가 필요하지 않습니다.</p>
+                </div>
+              </div>
+              <div class="ol-feature">
+                <div class="ic">03</div>
+                <div>
+                  <h4 class="ol-kr">자유로운 수정과 전달</h4>
+                  <p class="ol-kr">OL 콘텐츠는 모두 오픈소스입니다. 내용을 자유롭게 편집하고 더 풍성하게 확장하세요.</p>
+                </div>
+              </div>
+              <div class="ol-feature">
+                <div class="ic">04</div>
+                <div>
+                  <h4 class="ol-kr">편집자 기록 관리</h4>
+                  <p class="ol-kr">편집자들의 생성·수정·삭제 기록으로 하나의 콘텐츠가 어떻게 확장되었는지 확인할 수 있습니다.</p>
+                </div>
+              </div>
+              <div class="ol-feature">
+                <div class="ic">05</div>
+                <div>
+                  <h4 class="ol-kr">로컬 우선</h4>
+                  <p class="ol-kr">계정 없음. 추적 없음. 모든 데이터는 사용자의 브라우저와 파일 안에만 머뭅니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="ol-card" style="position: sticky; top: 88px;">
+              <span class="ol-mono-label">DOWNLOAD · v{version}</span>
+              <h3 style="font-size: 22px; margin-top: 8px; letter-spacing: -0.02em;" class="ol-kr">지금 받기</h3>
+              <p style="color: var(--ol-muted); font-size: 13.5px; margin-top: 6px;" class="ol-kr">한 파일을 받아 더블클릭하면 끝입니다.</p>
+
+              <div style="display: grid; gap: 8px; margin-top: 20px;">
+                <a class="ol-btn ol-btn-outline" style="justify-content: space-between; height: 48px; padding: 0 16px;" href={url(latestPath)} download={fileName}>
+                  <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="ol-code" style="background: var(--ol-ink); color: var(--ol-bg); border-color: transparent;">HTML</span>
+                    {fileName}
+                  </span>
+                  <span style="font-family: var(--ol-font-mono); font-size: 11px; color: var(--ol-muted);">{fileSize}</span>
+                </a>
+                <a class="ol-btn ol-btn-outline" style="justify-content: space-between; height: 48px; padding: 0 16px;" href="https://github.com/biwoom/ol-atlas" target="_blank" rel="noopener">
+                  <span style="display: flex; align-items: center; gap: 10px;">
+                    <span class="ol-code">SRC</span>github.com/biwoom/ol-atlas
+                  </span>
+                  <span style="font-family: var(--ol-font-mono); font-size: 11px; color: var(--ol-muted);">main</span>
+                </a>
+              </div>
+
+              <div class="ol-divider"></div>
+
+              <div class="ol-mono-label" style="margin-bottom: 10px;">REQUIREMENTS</div>
+              <div style="font-size: 13px; color: var(--ol-ink-2); line-height: 1.75;">
+                하나의 모던 브라우저<br>
+                Chrome · Firefox · Safari · Edge 등<br>
+                <span style="color: var(--ol-muted);">(인터넷 연결도 필요 없음)</span>
+              </div>
+
+              <div class="ol-divider"></div>
+
+              <div class="ol-mono-label" style="margin-bottom: 10px;">CHANGELOG</div>
+              <ul style="margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--ol-ink-2);">
+                <li style="padding: 4px 0;"><span class="ol-code">0.0.7</span> &nbsp; 코드 구조 리팩토링</li>
+                <li style="padding: 4px 0;"><span class="ol-code">0.0.6</span> &nbsp; 마크다운 각주 기능 추가</li>
+                <li style="padding: 4px 0;"><span class="ol-code">0.0.5</span> &nbsp; 마크다운 렌더링 스타일 개선</li>
+                <li style="padding: 4px 0;"><span class="ol-code">0.0.4</span> &nbsp; dev모드 추가</li>
+                <li style="padding: 4px 0;"><span class="ol-code">0.0.3</span> &nbsp; 편집기록관리 추가</li>
+                <li style="padding: 4px 0;"><span class="ol-code">0.0.2</span> &nbsp; 문서 view모드 추가</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

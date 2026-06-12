@@ -1,0 +1,101 @@
+---
+import { url } from '../../lib/url';
+import { getCollection } from 'astro:content';
+import { getLatestAtlasBuild } from '../../lib/atlas';
+import { isTextDocumentEntry } from '../../lib/text';
+
+const texts = await getCollection('text', entry => entry.data.published && isTextDocumentEntry(entry));
+const stories = await getCollection('story', ({ data }) => data.published);
+const blogs = await getCollection('blog', ({ data }) => data.published);
+const designs = await getCollection('design', ({ data }) => data.published);
+
+const atlasVersion = getLatestAtlasBuild().version;
+---
+<section class="ol-section">
+  <div class="ol-container">
+    <div class="ol-section-head">
+      <span class="ol-kicker">PROJECTS · opensource</span>
+      <h2 class="ol-kr">OL이 만드는 불교콘텐츠</h2>
+      <p class="ol-kr">OL프로젝트의 라이선스는 모두 MIT · CC0 · 오픈소스 자료로 배포됩니다.</p>
+    </div>
+
+    <div class="ol-grid-3">
+
+      <!-- 06 TEXT -->
+      <a href={url('/text')} class="ol-product-card">
+        <span class="ol-mono-label">06 / TEXT</span>
+        <h3>OL TEXT</h3>
+        <p class="ol-kr">경전·논서·선어록·강의록을 번역하고 주석한 문헌 콘텐츠가 이곳에서 열리고 이어집니다.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">{texts.length} documents</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 02 STORY -->
+      <a href={url('/story')} class="ol-product-card">
+        <span class="ol-mono-label">02 / LIBRARY</span>
+        <h3>OL STORY</h3>
+        <p class="ol-kr">불교의 인물·설화·가르침을 이야기 형식으로 재구성한 서사 콘텐츠입니다.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">{stories.length} 권 / 진행 중</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 03 DESIGN -->
+      <a href={url('/design')} class="ol-product-card">
+        <span class="ol-mono-label">03 / VISUAL</span>
+        <h3>OL DESIGN</h3>
+        <p class="ol-kr">불교 지식을 시각화하는 인포그래픽 라이브러리. 삽화와 스타일시트도 함께 보관합니다.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">{designs.length} visuals</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 04 AI -->
+      <!-- <a href={url('/ai')} class="ol-product-card">
+        <span class="ol-mono-label">04 / R&amp;D</span>
+        <h3>OL AI</h3>
+        <p class="ol-kr">불교 지혜와 자비로 정렬된, 로컬에서 구동되는 작은 AI 모델 구상. 장래 개발 과제.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">CONCEPT · 2026—</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a> -->
+
+      <!-- 05 BLOG -->
+      <a href={url('/blog')} class="ol-product-card">
+        <span class="ol-mono-label">05 / JOURNAL</span>
+        <h3>OL BLOG</h3>
+        <p class="ol-kr">OL 콘텐츠를 만들고 고쳐가는 과정의 기록. 결정과 회고, 작은 발견들.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">{blogs.length} posts</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a>
+      
+      <!-- 01 ATLAS -->
+      <!-- <a href={url('/atlas')} class="ol-product-card">
+        <span class="ol-mono-label">01 / TOOL</span>
+        <h3>OL ATLAS</h3>
+        <p class="ol-kr">단일 HTML 파일로 만들어진 불교 콘텐츠 제작·열람 도구. 설치 없이 브라우저 하나면 충분합니다.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">v{atlasVersion}</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a> -->
+
+      <!-- + OPEN -->
+      <div class="ol-product-card dashed">
+        <span class="ol-mono-label">+ / OPEN</span>
+        <h3 class="ol-kr">모두에게 열려 있음</h3>
+        <p class="ol-kr">참고 자료, 원본 소스, 작업 메모, 실패 기록까지. 누구든 가져다 다시 쓸 수 있도록 모든 것을 공개합니다.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">CC0 · MIT · 공개 도메인</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

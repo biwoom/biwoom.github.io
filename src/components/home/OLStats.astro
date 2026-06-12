@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import { getLatestAtlasBuild } from '../../lib/atlas';
+import { isTextDocumentEntry } from '../../lib/text';
+
+const stories = await getCollection('story', ({ data }) => data.published);
+const texts = await getCollection('text', entry => entry.data.published !== false && isTextDocumentEntry(entry));
+const designs = await getCollection('design', ({ data }) => data.published);
+const blogs = await getCollection('blog', ({ data }) => data.published);
+
+const atlasVersion = getLatestAtlasBuild().version;
+---
+<section class="ol-section-tight">
+  <div class="ol-container">
+    <div class="ol-stats">
+      <div class="ol-stat">
+        <div class="n"><em>{stories.length}</em></div>
+        <div class="l">콘텐츠 STORY</div>
+      </div>
+      <div class="ol-stat">
+        <div class="n"><em>{texts.length}</em></div>
+        <div class="l">문헌 TEXT</div>
+      </div>
+      <div class="ol-stat">
+        <div class="n"><em>{designs.length}</em></div>
+        <div class="l">DESIGN 자료</div>
+      </div>
+      <div class="ol-stat">
+        <div class="n"><em>{blogs.length}</em></div>
+        <div class="l">BLOG 기록</div>
+      </div>
+      <!-- <div class="ol-stat">
+        <div class="n"><em>v{atlasVersion}</em></div>
+        <div class="l">ATLAS 빌드</div>
+      </div> -->
+    </div>
+  </div>
+</section>

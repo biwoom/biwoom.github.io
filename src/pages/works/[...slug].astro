@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import RedirectLayout from '../../layouts/RedirectLayout.astro';
+import { getTextEntryUrl, isTextDocumentEntry } from '../../lib/text';
+
+export async function getStaticPaths() {
+  const texts = await getCollection('text', e => e.data.published !== false && isTextDocumentEntry(e));
+  return texts.map(entry => ({
+    params: { slug: entry.id },
+    props: { to: getTextEntryUrl(entry) },
+  }));
+}
+
+const { to } = Astro.props;
+---
+
+<RedirectLayout to={to} />

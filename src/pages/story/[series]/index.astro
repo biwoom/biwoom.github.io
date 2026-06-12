@@ -1,0 +1,366 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { url } from '../../../lib/url';
+import {
+  buildStoryHierarchy,
+  formatStoryTag,
+  getStoryEntryUrl,
+  isStorySeriesIndex,
+  storyAsset,
+} from '../../../lib/story';
+
+export async function getStaticPaths() {
+  const stories = await getCollection('story', e => e.data.published);
+  return buildStoryHierarchy(stories).map(series => ({
+    params: { series: series.slug },
+    props: { series },
+  }));
+}
+
+const { series } = Astro.props;
+const cover = series.entries.find(isStorySeriesIndex) ?? series.entries[0];
+const documentParts = series.parts
+  .map(part => ({
+    ...part,
+    entries: part.entries.filter(entry => !isStorySeriesIndex(entry)),
+    groups: part.groups
+      .map(group => ({
+        ...group,
+        entries: group.entries.filter(entry => !isStorySeriesIndex(entry)),
+        count: group.entries.filter(entry => !isStorySeriesIndex(entry)).length,
+      }))
+      .filter(group => group.entries.length > 0),
+  }))
+  .filter(part => part.entries.length > 0);
+
+const allDocuments = documentParts.flatMap(part => part.entries);
+const allTags = [...new Set(allDocuments.flatMap(entry => entry.data.tags))];
+const tagIndex = new Map<string, typeof allDocuments>();
+
+for (const entry of allDocuments) {
+  for (const tag of entry.data.tags) {
+    const items = tagIndex.get(tag) ?? [];
+    items.push(entry);
+    tagIndex.set(tag, items);
+  }
+}
+
+const tagGroups = Array.from(tagIndex.entries())
+  .map(([tag, items]) => ({ tag, ...formatStoryTag(tag), items }))
+  .sort((a, b) => a.prefix.localeCompare(b.prefix, 'ko') || a.label.localeCompare(b.label, 'ko'))
+  .reduce<Array<{ prefix: string; tags: Array<{ tag: string; label: string; items: typeof allDocuments }> }>>((groups, tag) => {
+    const group = groups.find(item => item.prefix === tag.prefix);
+    const tagItem = { tag: tag.tag, label: tag.label, items: tag.items };
+    if (group) group.tags.push(tagItem);
+    else groups.push({ prefix: tag.prefix, tags: [tagItem] });
+    return groups;
+  }, []);
+
+const statusLabel: Record<string, string> = {
+  draft: '초고',
+  revising: '수정중',
+  ready: '완료',
+  published: '출판됨',
+};
+const statusKey = cover.data.status ?? 'draft';
+const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
+---
+
+<BaseLayout
+  title={`${series.label} — OL STORY`}
+  description={cover.data.description}
+>
+  <main class="ol-story-reader-page">
+    <section class="ol-story-series-hero ol-story-series-hero--centered">
+      <span class="ol-kicker">STORY SERIES</span>
+      <h1 class="ol-kr">{series.label}</h1>
+      {cover.data.description && <p class="ol-kr">{cover.data.description}</p>}
+
+      {tagGroups.length > 0 && (
+        <div class="ol-story-tag-area" data-story-tag-index>
+          <div class="ol-story-tag-row">
+            {tagGroups.map(group => (
+              <div class="ol-story-tag-menu">
+                <button class="ol-story-tag-menu-trigger" type="button" aria-expanded="false" data-story-tag-menu-trigger>
+                  <span>{group.prefix}</span>
+                  <strong>{group.tags.length}</strong>
+                </button>
+                <div class="ol-story-tag-menu-panel">
+                  {group.tags.map(tag => (
+                    <button type="button" data-story-tag-select={tag.tag} data-story-tag-label={tag.label}>
+                      <span>{tag.label}</span>
+                      <strong>{tag.items.length}</strong>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <section class="ol-story-tag-results" data-story-tag-results hidden>
+            <div class="ol-story-tag-results-head">
+              <div>
+                <span class="ol-kicker">Tag index</span>
+                <h2 class="ol-kr" data-story-tag-results-title>태그 문서</h2>
+                <p class="ol-story-tag-result-summary" data-story-tag-results-summary>
+                  <em>선택한 태그를 모두 포함한 문서를 표시합니다.</em>
+                  <strong data-story-tag-results-count>0개 문서</strong>
+                </p>
+              </div>
+              <div class="ol-story-tag-results-actions">
+                <button type="button" data-story-tag-results-clear>초기화</button>
+                <button type="button" data-story-tag-results-close>닫기</button>
+              </div>
+            </div>
+            <div class="ol-story-tag-selected" data-story-selected-tags></div>
+            <p class="ol-story-tag-result-empty ol-kr" data-story-tag-results-empty hidden>
+              선택한 태그 조합에 해당하는 문서가 없습니다.
+            </p>
+            <div class="ol-story-tag-result-panel" data-story-tag-result-panel>
+              <div class="ol-story-tag-result-list">
+                {documentParts.map((part, partIndex) => (
+                  <section data-story-result-part>
+                    <h3>PART {partIndex + 1} · {part.label}</h3>
+                    {part.groups.map(group => (
+                      <div class="ol-story-full-toc-group" data-story-result-group>
+                        <p>{group.label}</p>
+                        <ol>
+                          {group.entries.map((entry, entryIndex) => (
+                            <li data-story-result-entry data-tags={JSON.stringify(entry.data.tags)}>
+                              <a href={url(getStoryEntryUrl(entry))}>
+                                <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
+                                <strong class="ol-kr">{entry.data.title}</strong>
+                              </a>
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    ))}
+                  </section>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+    </section>
+
+    {documentParts.length > 0 && (
+      <nav class="ol-story-part-nav" aria-label={`${series.label} 파트 바로가기`}>
+        {documentParts.map((part, index) => {
+          const firstEntry = part.entries[0];
+          return (
+            <a href={url(getStoryEntryUrl(firstEntry))}>
+              <span>PART {index + 1}</span>
+              <strong class="ol-kr">{part.label}</strong>
+            </a>
+          );
+        })}
+      </nav>
+    )}
+
+    <section class="ol-story-reader-shell">
+      <div class="ol-story-biblio-grid">
+        <section class="ol-story-cover-panel">
+          <div class="ol-story-book-cover">
+            <span>OL STORY</span>
+            <strong class="ol-kr">{series.label}</strong>
+            <em>{cover.data.version}</em>
+          </div>
+          <!-- {htmlUrl && (
+            <div class="ol-story-downloads">
+              <a class="ol-btn ol-btn-outline ol-btn-sm" href={url(htmlUrl)} target="_blank" rel="noopener noreferrer">
+                원본 HTML
+              </a>
+            </div>
+          )} -->
+        </section>
+
+        <section class="ol-story-biblio-toc-card" data-story-mobile-collapsible data-mobile-collapsed="true">
+          <div class="ol-story-biblio-card-head">
+            <div>
+              <span class="ol-kicker">Contents</span>
+              <h2 class="ol-kr">파트 목록</h2>
+            </div>
+            <button class="ol-story-biblio-toggle" type="button" aria-expanded="false" aria-label="파트 목록 펼치기" data-story-biblio-toggle>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+          </div>
+          <div class="ol-story-biblio-card-content">
+            <div class="ol-story-part-overview">
+              {documentParts.map((part, partIndex) => {
+                const firstEntry = part.entries[0];
+                return (
+                  <a href={url(getStoryEntryUrl(firstEntry))}>
+                    <span>PART {partIndex + 1}</span>
+                    <strong class="ol-kr">{part.label}</strong>
+                    <em>{part.entries.length}개 문서</em>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section class="ol-story-biblio-body" data-story-mobile-collapsible data-mobile-collapsed="true">
+          <div class="ol-story-biblio-card-head">
+            <div>
+              <span class="ol-kicker">Metadata</span>
+              <h2 class="ol-kr">서지정보</h2>
+            </div>
+            <button class="ol-story-biblio-toggle" type="button" aria-expanded="false" aria-label="서지정보 펼치기" data-story-biblio-toggle>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="ol-story-biblio-card-content">
+            <div class="ol-story-biblio-head">
+              <span class={`ol-text-status ol-text-status--${statusKey}`}>{statusLabel[statusKey]}</span>
+              <span class="ol-mono-label">{new Date(cover.data.publishedAt).toLocaleDateString('ko-KR')}</span>
+            </div>
+
+            <dl class="ol-story-biblio-list">
+              <div><dt>제목</dt><dd>{series.label}</dd></div>
+              {cover.data.subtitle && <div><dt>부제</dt><dd>{cover.data.subtitle}</dd></div>}
+              <div><dt>분류</dt><dd>{cover.data.category ?? 'STORY'}</dd></div>
+              <div><dt>문서 수</dt><dd>{allDocuments.length}개</dd></div>
+              <div><dt>버전</dt><dd>{cover.data.version}</dd></div>
+              <div><dt>언어</dt><dd>{cover.data.lang}</dd></div>
+              <div><dt>라이선스</dt><dd>{cover.data.license}</dd></div>
+              {cover.data.rightsHolder && <div><dt>권리자</dt><dd>{cover.data.rightsHolder}</dd></div>}
+            </dl>
+
+            {cover.data.description && (
+              <div class="ol-story-summary">
+                <h3 class="ol-kr">내용 요약</h3>
+                <p class="ol-kr">{cover.data.description}</p>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  const tagIndex = document.querySelector<HTMLElement>('[data-story-tag-index]');
+  const tagResults = document.querySelector<HTMLElement>('[data-story-tag-results]');
+  const tagResultsTitle = tagResults?.querySelector<HTMLElement>('[data-story-tag-results-title]');
+  const tagResultsCount = tagResults?.querySelector<HTMLElement>('[data-story-tag-results-count]');
+  const selectedStoryTags = tagResults?.querySelector<HTMLElement>('[data-story-selected-tags]');
+  const tagResultsEmpty = tagResults?.querySelector<HTMLElement>('[data-story-tag-results-empty]');
+  const tagResultsClose = tagResults?.querySelector<HTMLButtonElement>('[data-story-tag-results-close]');
+  const selectedTags = new Map<string, string>();
+
+  const closeTagMenus = () => {
+    document.querySelectorAll<HTMLButtonElement>('[data-story-tag-menu-trigger]').forEach(button => {
+      button.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  const updateStoryTagResults = () => {
+    if (!tagResults) return;
+    const selected = Array.from(selectedTags.keys());
+    tagResults.hidden = selected.length === 0;
+    if (tagResultsTitle) tagResultsTitle.textContent = selected.length > 0 ? `선택 태그 ${selected.length}개` : '태그 문서';
+
+    if (selectedStoryTags) {
+      selectedStoryTags.innerHTML = '';
+      selectedTags.forEach((label, tag) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.dataset.storyTagRemove = tag;
+        chip.textContent = `${label} ×`;
+        selectedStoryTags.appendChild(chip);
+      });
+    }
+
+    let visibleCount = 0;
+    tagResults.querySelectorAll<HTMLElement>('[data-story-result-entry]').forEach(entry => {
+      const tags = JSON.parse(entry.dataset.tags ?? '[]') as string[];
+      const visible = selected.every(tag => tags.includes(tag));
+      entry.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+
+    tagResults.querySelectorAll<HTMLElement>('[data-story-result-group]').forEach(group => {
+      group.hidden = !group.querySelector('[data-story-result-entry]:not([hidden])');
+    });
+
+    tagResults.querySelectorAll<HTMLElement>('[data-story-result-part]').forEach(part => {
+      part.hidden = !part.querySelector('[data-story-result-group]:not([hidden])');
+    });
+
+    if (tagResultsCount) tagResultsCount.textContent = `${visibleCount}개 문서`;
+    if (tagResultsEmpty) tagResultsEmpty.hidden = visibleCount > 0;
+
+    document.querySelectorAll<HTMLButtonElement>('[data-story-tag-select]').forEach(button => {
+      button.classList.toggle('active', selectedTags.has(button.dataset.storyTagSelect ?? ''));
+    });
+    closeTagMenus();
+  };
+
+  tagIndex?.addEventListener('click', event => {
+    event.stopPropagation();
+    const trigger = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-story-tag-menu-trigger]');
+    if (trigger) {
+      const open = trigger.getAttribute('aria-expanded') === 'true';
+      closeTagMenus();
+      trigger.setAttribute('aria-expanded', String(!open));
+      return;
+    }
+
+    const tagButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-story-tag-select]');
+    if (!tagButton) return;
+    const tag = tagButton.dataset.storyTagSelect;
+    if (!tag) return;
+    if (selectedTags.has(tag)) selectedTags.delete(tag);
+    else selectedTags.set(tag, tagButton.dataset.storyTagLabel ?? tag);
+    updateStoryTagResults();
+  });
+
+  selectedStoryTags?.addEventListener('click', event => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-story-tag-remove]');
+    if (!button?.dataset.storyTagRemove) return;
+    selectedTags.delete(button.dataset.storyTagRemove);
+    updateStoryTagResults();
+  });
+
+  tagResults?.querySelector<HTMLElement>('[data-story-tag-results-clear]')?.addEventListener('click', () => {
+    selectedTags.clear();
+    updateStoryTagResults();
+  });
+
+  tagResultsClose?.addEventListener('click', () => {
+    if (tagResults) tagResults.hidden = true;
+    closeTagMenus();
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-story-mobile-collapsible]').forEach(card => {
+    const button = card.querySelector<HTMLButtonElement>('[data-story-biblio-toggle]');
+    const toggleCard = () => {
+      const collapsed = card.dataset.mobileCollapsed !== 'false';
+      card.dataset.mobileCollapsed = collapsed ? 'false' : 'true';
+      button?.setAttribute('aria-expanded', String(collapsed));
+    };
+
+    card.addEventListener('click', event => {
+      const target = event.target as HTMLElement;
+      if (target.closest('.ol-story-biblio-card-content button, .ol-story-biblio-card-content a')) return;
+      toggleCard();
+    });
+
+    button?.addEventListener('click', event => {
+      event.stopPropagation();
+      toggleCard();
+    });
+  });
+
+  document.addEventListener('click', closeTagMenus);
+</script>
