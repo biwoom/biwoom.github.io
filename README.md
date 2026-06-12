@@ -1,43 +1,141 @@
-# Astro Starter Kit: Minimal
+# OL HOME
+
+OL HOME is the public web home for the OL project, a Buddhist content project that publishes texts, stories, visual works, project notes, and ontology-based reference pages.
+
+Production site:
+
+```txt
+https://biwoom.github.io/
+```
+
+Repository:
+
+```txt
+https://github.com/biwoom/biwoom.github.io
+```
+
+## Stack
+
+- Astro 6
+- Astro Content Collections
+- MD / MDX content
+- Tailwind CSS via Vite
+- Pagefind search
+- GitHub Pages deployment through GitHub Actions
+
+## Main Sections
+
+- `HOME`: project entrance and latest updates
+- `TEXT`: translated and annotated Buddhist text library
+- `STORY`: narrative Buddhist content organized by series and chapters
+- `DESIGN`: infographic and visual knowledge archive
+- `BLOG`: project logs, development notes, and editorial records
+- `ENTITY`: people, places, and concepts connected by relations
+- `ATLAS`: static OL ATLAS HTML archive
+
+## Project Structure
+
+```txt
+.
+├── .github/workflows/deploy.yml
+├── public/
+│   ├── atlas/
+│   ├── favicon.ico
+│   ├── og-image.png
+│   └── robots.txt
+├── scripts/
+│   └── sync-content-assets.mjs
+├── src/
+│   ├── components/
+│   ├── content/
+│   │   ├── blog/
+│   │   ├── design/
+│   │   ├── entities/
+│   │   ├── ontology/
+│   │   ├── pages/
+│   │   ├── story/
+│   │   └── text/
+│   ├── layouts/
+│   ├── lib/
+│   ├── pages/
+│   └── styles/
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
+```
+
+## Content Model
+
+Content collections are defined in `src/content.config.ts`.
+
+Current collection groups:
+
+- `blog`: project logs and essays
+- `text`: translated or annotated documents
+- `story`: narrative series and chapters
+- `design`: visual works and infographics
+- `entities`: ontology entries for persons, places, concepts, texts, events, practices, and schools
+- `ontology`: relation and entity type documentation
+- `pages`: permanent project pages
+- `ai`: reserved for AI workflow records
+
+Design and story assets are stored next to their content source under `assets/`. During development and build, `scripts/sync-content-assets.mjs` copies those assets into `public/generated/`.
+
+## Commands
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev
+npm run build
+npm run preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Command behavior:
 
-## 🚀 Project Structure
+- `npm run dev`: syncs content assets, then starts Astro dev server
+- `npm run build`: syncs assets, builds the static site, then creates the Pagefind index
+- `npm run preview`: previews the built site locally
 
-Inside of your Astro project, you'll see the following folders and files:
+The project requires Node.js `>=22.12.0`.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## GitHub Pages
+
+This repository is intended to be a GitHub user page repository. The repository name should be:
+
+```txt
+biwoom.github.io
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Because it is served from the root GitHub Pages URL, `astro.config.mjs` sets:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```js
+site: 'https://biwoom.github.io'
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+There is no Astro `base` path. Internal links and assets are generated from `/`.
 
-## 🧞 Commands
+Deployment is handled by:
 
-All commands are run from the root of the project, from a terminal:
+```txt
+.github/workflows/deploy.yml
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+The GitHub repository should use:
 
-## 👀 Want to learn more?
+```txt
+Settings -> Pages -> Source -> GitHub Actions
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Generated Files
+
+The following are generated or local-only and should not be committed:
+
+- `dist/`
+- `.astro/`
+- `node_modules/`
+- `public/generated/`
+- `.DS_Store`
+
+## License
+
+Project code and content licensing are managed per file or per content entry. Most public OL materials are intended for open distribution under permissive terms such as MIT or CC0 where applicable.
