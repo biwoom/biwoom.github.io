@@ -69,8 +69,15 @@ This file records concise date-based work summaries for continuity across Codex 
 - Pushed commit `300c5c2` (`Add Buddhist worldview text entry`) to `origin/main`.
 - GitHub Actions deployment run `27459008078` was queued immediately after push.
 
+### GitHub Upload Workflow Rule Update
+
+- Updated project rules so future GitHub upload requests complete the push first and record the result immediately.
+- Deployment completion checks are no longer part of the default upload flow.
+- GitHub Pages or Actions status should be checked only when the user explicitly asks for deployment verification.
+- Added `$ol-github-upload-log` for this upload-and-log workflow.
+
 ## Follow-ups
 
 - Keep this file updated after meaningful work.
-- After GitHub upload/deploy requests, record the final pushed commit and deployment result.
-- If deployment status is checked through GitHub Actions, add the run result here.
+- After GitHub upload/deploy requests, record the final pushed commit or branch immediately after push.
+- If deployment status is explicitly checked through GitHub Actions, add the run result here.
