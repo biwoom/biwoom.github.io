@@ -89,6 +89,8 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated the STORY series page part list so each part can expand to show its internal document groups and document links.
 - Document links now navigate directly to each STORY document from the central contents card.
 - Local validation: `npm run build` passed.
+- Pushed commit `9ba455e` (`Update internal docs and story navigation`) to `origin/main`.
+- Deployment completion was not checked by design.
 
 ## Follow-ups
 
