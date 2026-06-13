@@ -114,3 +114,12 @@ This file records concise date-based work summaries for continuity across Codex 
 - Local validation: `npm run build` passed.
 - Pushed commit `67d7697` (`Update Buddha Story and text cleanup`) to `origin/main`.
 - Deployment completion was not checked by design.
+
+## 2026-06-14
+
+### Mobile Prose Table Overflow Upload
+
+- Updated `src/styles/components/prose.css` so `.ol-prose` tables can scroll horizontally on mobile without clipping TEXT or STORY body content.
+- Local validation: `npm run build` passed before push.
+- Pushed commit `511ff21` (`Fix mobile prose table overflow`) to `origin/main`.
+- Deployment completion was not checked by design.
