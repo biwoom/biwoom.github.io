@@ -3,7 +3,7 @@ title: "붓다 스토리"
 series: "붓다 스토리"
 seriesSlug: "buddha-story"
 seriesOrder: 10
-part: "붓다의 생애"
+part: "탄생"
 partSlug: "part-1"
 partOrder: 10
 group: "탄생과 출가"
