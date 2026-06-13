@@ -55,6 +55,20 @@ This file records concise date-based work summaries for continuity across Codex 
 - GitHub connector did not yet report a workflow run for `067ec3a` at the time of logging.
 - This entry was added as the required post-upload continuity record.
 
+## 2026-06-13
+
+### TEXT Content Upload
+
+- Added `src/content/text/body-mind-transformation/part/02-buddhist-worldview-two-perspectives.md`.
+- Source copied from OL-CONTENTS:
+  - `/Users/damjin/Projects/ol-project/github/ol-assets/ol-project-data/OL-CONTENTS/OL-SPECIAL/불교의 세계관-두 가지 관찰 방식/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해 v0.2.md`
+- Added the document to the `수행연구` TEXT series.
+- Generated route verified locally:
+  - `/text/body-mind-transformation/02-buddhist-worldview-two-perspectives/`
+- Local validation: `npm run build` passed.
+- Pushed commit `300c5c2` (`Add Buddhist worldview text entry`) to `origin/main`.
+- GitHub Actions deployment run `27459008078` was queued immediately after push.
+
 ## Follow-ups
 
 - Keep this file updated after meaningful work.
