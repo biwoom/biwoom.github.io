@@ -159,6 +159,20 @@ src/content/text/
         └── 01-six-steps.md   → 실제 문서
 ```
 
+`part/`는 TEXT 문서에서 기본 구획 폴더처럼 특별 취급됩니다. 현재 코드에서는 `part/` 바로 아래의 문서는 URL에 `part`가 표시되지 않습니다.
+
+```txt
+src/content/text/body-mind-transformation/part/01-six-steps.md
+→ /text/body-mind-transformation/01-six-steps
+```
+
+다만 `part/` 아래에 추가 하위 폴더를 두면 그 아래 경로는 URL에 반영됩니다.
+
+```txt
+src/content/text/body-mind-transformation/part/section-a/01-six-steps.md
+→ /text/body-mind-transformation/section-a/01-six-steps
+```
+
 ### 1.2 TEXT 시리즈 예시
 
 ```yaml

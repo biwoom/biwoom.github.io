@@ -48,5 +48,5 @@ excerpt: "보리도차제론의 하사도·중사도·상사도를 한국적 수
 3. 체계불학의 과제
 4. <보리도차제론>의 체계불학
 
-![람림 삼사도 인포그래픽 1쪽](../../assets/systematic_buddhology/preview1.jpg)
-![람림 삼사도 인포그래픽 2쪽](../../assets/systematic_buddhology/preview2.jpg)
+![람림 삼사도 인포그래픽 1쪽](../assets/systematic_buddhology/preview1.jpg)
+![람림 삼사도 인포그래픽 2쪽](../assets/systematic_buddhology/preview2.jpg)
