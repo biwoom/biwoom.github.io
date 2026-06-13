@@ -66,6 +66,12 @@ This file records durable project decisions that future Codex sessions should pr
 - If the final log update happens after the push, create a follow-up commit when appropriate.
 - This workflow is captured in `$ol-github-upload-log`.
 
+### Internal Content Management Manual
+
+- `src/content/pages/content-management-manual.md` should not be maintained as a public homepage page.
+- The OL HOME content management manual belongs at `.agents/references/ol-home-content-management-manual.md`.
+- Public `pages` content should be limited to visitor-facing permanent documents such as the brand definition.
+
 ## Historical Notes
 
 - The project previously used or referenced `ol-home` and project-page style URLs.

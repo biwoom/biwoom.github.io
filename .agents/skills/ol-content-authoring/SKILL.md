@@ -9,18 +9,19 @@ description: Create or update OL HOME content entries under src/content. Use whe
 
 1. Identify the target collection from the user request.
 2. Read `src/content.config.ts` before adding or changing frontmatter.
-3. Inspect a nearby existing entry in the same collection and follow its structure.
-4. Place content in the correct folder:
-   - `src/content/pages/` for permanent project documents.
+3. For internal content-management rules, read `.agents/references/ol-home-content-management-manual.md`.
+4. Inspect a nearby existing entry in the same collection and follow its structure.
+5. Place content in the correct folder:
+   - `src/content/pages/` for public permanent project documents.
    - `src/content/blog/{slug}/index.md` for dated work logs.
    - `src/content/text/{series}/` for TEXT series and documents.
    - `src/content/story/{series}/` for STORY series and chapters.
    - `src/content/design/{slug}/index.md` plus `assets/` for visual works.
    - `src/content/entities/{type}s/` for ontology entries.
    - `src/content/ontology/` for ontology reference docs.
-5. Use ASCII slugs and route-bearing filenames. Put Korean titles in frontmatter.
-6. Set `published: true` only when the content should be public.
-7. Run `npm run build` after edits and confirm the expected route is generated.
+6. Use ASCII slugs and route-bearing filenames. Put Korean titles in frontmatter.
+7. Set `published: true` only when the content should be public.
+8. Run `npm run build` after edits and confirm the expected route is generated.
 
 ## Frontmatter Rules
 

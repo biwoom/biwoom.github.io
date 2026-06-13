@@ -184,7 +184,7 @@ const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
               <h2 class="ol-kr">파트 목록</h2>
             </div>
             <button class="ol-story-biblio-toggle" type="button" aria-expanded="false" aria-label="파트 목록 펼치기" data-story-biblio-toggle>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </button>
@@ -194,11 +194,35 @@ const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
               {documentParts.map((part, partIndex) => {
                 const firstEntry = part.entries[0];
                 return (
-                  <a href={url(getStoryEntryUrl(firstEntry))}>
-                    <span>PART {partIndex + 1}</span>
-                    <strong class="ol-kr">{part.label}</strong>
-                    <em>{part.entries.length}개 문서</em>
-                  </a>
+                  <details class="ol-story-part-overview-item" open={partIndex === 0}>
+                    <summary>
+                      <span>PART {partIndex + 1}</span>
+                      <strong class="ol-kr">{part.label}</strong>
+                      <em>{part.entries.length}개 문서</em>
+                    </summary>
+                    <div class="ol-story-part-overview-docs">
+                      {part.groups.map(group => (
+                        <section class="ol-story-part-overview-group">
+                          <h3 class="ol-kr">{group.label}</h3>
+                          <ol>
+                            {group.entries.map((entry, entryIndex) => (
+                              <li>
+                                <a href={url(getStoryEntryUrl(entry))}>
+                                  <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
+                                  <strong class="ol-kr">{entry.data.title}</strong>
+                                </a>
+                              </li>
+                            ))}
+                          </ol>
+                        </section>
+                      ))}
+                      {firstEntry && (
+                        <a class="ol-story-part-overview-start" href={url(getStoryEntryUrl(firstEntry))}>
+                          PART {partIndex + 1} 첫 문서로 이동
+                        </a>
+                      )}
+                    </div>
+                  </details>
                 );
               })}
             </div>
@@ -212,7 +236,7 @@ const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
               <h2 class="ol-kr">서지정보</h2>
             </div>
             <button class="ol-story-biblio-toggle" type="button" aria-expanded="false" aria-label="서지정보 펼치기" data-story-biblio-toggle>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"/>
               </svg>
             </button>
@@ -352,7 +376,7 @@ const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
 
     card.addEventListener('click', event => {
       const target = event.target as HTMLElement;
-      if (target.closest('.ol-story-biblio-card-content button, .ol-story-biblio-card-content a')) return;
+      if (target.closest('.ol-story-biblio-card-content button, .ol-story-biblio-card-content a, .ol-story-part-overview summary, .ol-story-part-overview details')) return;
       toggleCard();
     });
 

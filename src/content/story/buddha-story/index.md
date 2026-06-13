@@ -17,7 +17,7 @@ status: "draft"
 publishedAt: 2026-05-29
 htmlAsset: "index.html"
 primaryEntities: []
-description: "붓다스토리 - 부처님의 일대기를 담은 책입니다.'현재 개발 중'. "
+description: "부처님의 일대기를 담은 책입니다.'현재 개발 중'. "
 tags:
   - "인물/싯다르타-고타마"
   - "형식/불전"

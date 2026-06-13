@@ -236,9 +236,41 @@
     aspect-ratio: 6 / 3;
   }
 
-  .ol-story-part-overview a {
-    grid-template-columns: 1fr;
+  .ol-story-part-overview-item summary {
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 6px;
+  }
+
+  .ol-story-part-overview-item summary span {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .ol-story-part-overview-item summary em {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .ol-story-part-overview-item summary strong {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .ol-story-part-overview-item summary::after {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    align-self: center;
+  }
+
+  .ol-story-part-overview-docs {
+    padding: 0 12px 15px 17px;
+  }
+
+  .ol-story-part-overview-group a {
+    grid-template-columns: 28px minmax(0, 1fr);
+    padding: 9px 8px;
   }
 
   .ol-story-book-cover strong {

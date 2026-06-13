@@ -1,16 +1,12 @@
----
-title: "OL 홈페이지 콘텐츠 관리 매뉴얼"
-description: "OL HOME의 콘텐츠 작성, 자산 관리, 빌드, 배포, 등록 체크리스트를 정리한 운영 매뉴얼입니다."
-published: true
----
-
 # OL 홈페이지 콘텐츠 관리 매뉴얼
 
-**문서 버전**: v1.2  
-**최종 업데이트**: 2026-06-12  
+**문서 버전**: v1.3  
+**최종 업데이트**: 2026-06-13  
 **대상 프로젝트**: OL HOME (`biwoom.github.io`)  
 **기술 스택**: Astro 6 + GitHub Pages + Pagefind  
-**기준 배포 URL**: `https://biwoom.github.io/`
+**기준 배포 URL**: `https://biwoom.github.io/`  
+**문서 위치**: `.agents/references/ol-home-content-management-manual.md`  
+**문서 성격**: Codex 에이전트와 운영자를 위한 내부 관리 매뉴얼
 
 이 문서는 OL HOME의 콘텐츠를 작성하고 관리하는 기준 문서입니다. 운영 중 스키마와 매뉴얼이 충돌하면 코드가 우선이며, 코드 변경 후 매뉴얼을 함께 갱신합니다.
 
@@ -39,7 +35,7 @@ src/content/
 ├── text/       → 번역, 주석, 연구 노트를 중심으로 한 문헌 콘텐츠
 ├── story/      → 불교 인물·설화·가르침을 이야기 형식으로 재구성한 서사 콘텐츠
 ├── design/     → 인포그래픽, 도식, 이미지 자료
-├── pages/      → 브랜드 문서, 운영 매뉴얼 등 상설 문서
+├── pages/      → 공개 브랜드 문서, 선언문, 안내문 등 상설 문서
 ├── entities/   → 인물, 장소, 개념 등 엔티티
 ├── ontology/   → 온톨로지 정의
 └── ai/         → AI workflow 기록용 예약 컬렉션
@@ -446,16 +442,13 @@ BLOG의 `published` 기본값은 `false`입니다. 공개하려면 반드시 `pu
 
 ---
 
-## 5. PAGES — 상설 문서
+## 5. PAGES — 공개 상설 문서
 
-시간순으로 흐르지 않는 브랜드 문서, 선언문, 안내 문서는 `src/content/pages/`에 둡니다.
+시간순으로 흐르지 않는 브랜드 문서, 선언문, 안내 문서는 `src/content/pages/`에 둡니다. 방문자에게 공개할 필요가 없는 내부 운영 매뉴얼은 `src/content/pages/`에 두지 않고 `.agents/references/`에 둡니다.
 
 ```txt
 src/content/pages/brand.md
 → /pages/brand/
-
-src/content/pages/content-management-manual.md
-→ /pages/content-management-manual/
 ```
 
 현재 `pages` 스키마는 다음 frontmatter만 허용합니다.
@@ -632,6 +625,12 @@ tags:
 ---
 
 ## 수정 변경사항
+
+### 2026-06-13 · v1.3
+
+- 콘텐츠 관리 매뉴얼을 공개 홈페이지 페이지에서 Codex 에이전트 내부 참고 문서로 전환했습니다.
+- 문서 위치를 `src/content/pages/content-management-manual.md`에서 `.agents/references/ol-home-content-management-manual.md`로 변경했습니다.
+- `src/content/pages/`는 방문자에게 공개할 상설 문서만 두는 위치로 정리했습니다.
 
 ### 2026-06-12 · v1.2
 

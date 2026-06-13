@@ -9,13 +9,15 @@ description: Maintain OL HOME manuals, brand documents, AGENTS.md, README.md, an
 
 1. Classify the document:
    - Public permanent document: `src/content/pages/{slug}.md`.
+   - Internal Codex reference: `.agents/references/{name}.md`.
    - Repository operating rule: `AGENTS.md`.
    - Contributor overview: `README.md`.
    - Codex local workflow: `.agents/skills/{name}/SKILL.md`.
    - Codex execution setting: `.codex/config.toml` or `.codex/rules/*.rules`.
 2. Read the current version before editing.
 3. Align content with the current codebase, not older project names or routes.
-4. For public manuals in `src/content/pages/`, keep frontmatter limited to the `pages` schema:
+4. Keep internal operating manuals under `.agents/references/` when they are for Codex or maintainers rather than public visitors.
+5. For public manuals in `src/content/pages/`, keep frontmatter limited to the `pages` schema:
 
 ```yaml
 ---
@@ -25,9 +27,9 @@ published: true
 ---
 ```
 
-5. Put document version, latest update date, target project, and deployment URL in the body.
-6. Add or update a bottom section named `수정 변경사항`.
-7. Run `npm run build` after public content changes.
+6. Put document version, latest update date, target project, and deployment URL in the body.
+7. Add or update a bottom section named `수정 변경사항`.
+8. Run `npm run build` after public content changes.
 
 ## Current OL HOME Facts
 
@@ -41,7 +43,7 @@ published: true
 ## Document Placement
 
 - Brand definition: `src/content/pages/brand.md`.
-- Content management manual: `src/content/pages/content-management-manual.md`.
+- Content management manual: `.agents/references/ol-home-content-management-manual.md`.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
 

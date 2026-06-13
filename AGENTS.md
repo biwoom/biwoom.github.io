@@ -21,6 +21,7 @@ This repository is OL HOME, the public Astro site for the OL project.
 
 - Before major work, read `.agents/context/current-state.md` and `.agents/context/decisions.md` if they exist.
 - Use `.agents/context/work-log.md` to understand recent work and unresolved follow-ups.
+- Use `.agents/references/ol-home-content-management-manual.md` for internal OL HOME content management rules.
 - Keep context files concise. They are continuity records, not full transcripts.
 - Update `.agents/context/current-state.md` when project structure, deployment status, active priorities, or known risks change.
 - Update `.agents/context/decisions.md` when a durable architectural, content, naming, deployment, or workflow decision is made.

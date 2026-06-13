@@ -78,6 +78,18 @@ This file records concise date-based work summaries for continuity across Codex 
 - Pushed commit `1c5a667` (`Update GitHub upload workflow`) to `origin/main`.
 - Deployment completion was not checked by design.
 
+### Content Management Manual Internalization
+
+- Moved `src/content/pages/content-management-manual.md` to `.agents/references/ol-home-content-management-manual.md`.
+- Removed the public footer link to `/pages/content-management-manual/`.
+- Updated AGENTS and OL HOME skills so Codex uses the internal reference path for content management rules.
+
+### STORY Series Navigation
+
+- Updated the STORY series page part list so each part can expand to show its internal document groups and document links.
+- Document links now navigate directly to each STORY document from the central contents card.
+- Local validation: `npm run build` passed.
+
 ## Follow-ups
 
 - Keep this file updated after meaningful work.
