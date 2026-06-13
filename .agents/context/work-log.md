@@ -104,3 +104,13 @@ This file records concise date-based work summaries for continuity across Codex 
 - Keep this file updated after meaningful work.
 - After GitHub upload/deploy requests, record the final pushed commit or branch immediately after push.
 - If deployment status is explicitly checked through GitHub Actions, add the run result here.
+
+## 2026-06-13
+
+### Buddha Story Test Cleanup Upload
+
+- Updated `src/content/story/buddha-story/index.md` and the chapter files under `src/content/story/buddha-story/part-1/` and `src/content/story/buddha-story/part-2/`.
+- Removed the old `src/content/text/donam-kim-sung-chul/` entry and its associated assets/files from the working tree.
+- Local validation: `npm run build` passed.
+- Pushed commit `67d7697` (`Update Buddha Story and text cleanup`) to `origin/main`.
+- Deployment completion was not checked by design.
