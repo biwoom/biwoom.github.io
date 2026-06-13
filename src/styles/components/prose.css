@@ -123,6 +123,20 @@
   color: var(--ol-ink-2);
 }
 
+@media (max-width: 720px) {
+  .ol-prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ol-prose th,
+  .ol-prose td {
+    min-width: 120px;
+  }
+}
+
 /* ── Horizontal rule ── */
 .ol-prose hr {
   margin: 2.5em 0;
