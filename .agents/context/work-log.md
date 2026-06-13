@@ -92,6 +92,13 @@ This file records concise date-based work summaries for continuity across Codex 
 - Pushed commit `9ba455e` (`Update internal docs and story navigation`) to `origin/main`.
 - Deployment completion was not checked by design.
 
+### Text Path Restructure Upload
+
+- Pushed commit `f338635` (`Upload all current changes`) to `origin/main`.
+- Included the internal manual update plus the current text path changes in `src/content/text/donam-kim-sung-chul/part1/` and `src/content/text/donam-kim-sung-chul/test/`.
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
+
 ## Follow-ups
 
 - Keep this file updated after meaningful work.
