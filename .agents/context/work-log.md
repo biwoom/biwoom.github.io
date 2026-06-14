@@ -151,3 +151,17 @@ This file records concise date-based work summaries for continuity across Codex 
 - Local validation: `npm run build` passed and generated HTML includes Pagefind metadata for TEXT, STORY, DESIGN, BLOG, and ENTITY sample pages.
 - Pushed commit `08c06ce` (`Improve README and search result context`) to `origin/main`.
 - Deployment completion was not checked by design.
+
+### Search Index Scope Cleanup
+
+- Added `pagefindBody` control to `BaseLayout` so route templates can opt out of Pagefind body indexing.
+- Excluded top-level landing/listing/utility pages from search: `/`, `/text/`, `/story/`, `/design/`, `/blog/`, `/entity/`, `/atlas/`, `/ai/`, `/partners/`, and `/404.html`.
+- Kept TEXT/STORY series pages and content detail pages searchable.
+- Local validation: `npm run build` passed; Pagefind indexed page count dropped from 41 to 31.
+
+### Search Result Filter Tabs
+
+- Added section filter tabs to the search result panel.
+- Tabs are generated from Pagefind result metadata and show counts for `전체`, `TEXT`, `STORY`, `DESIGN`, `BLOG`, `ENTITY`, and any future unknown section.
+- Increased the client-side result pool to 24 so section filtering has enough results to work with.
+- Local validation: `npm run build` passed and generated assets include the filter tab markup/script.

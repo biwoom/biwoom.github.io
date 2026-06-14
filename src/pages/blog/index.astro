@@ -34,6 +34,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
 <BaseLayout
   title="OL BLOG — 작업 일지"
   description="OL의 결정 기록. 무엇을 고쳤고, 무엇을 포기했고, 무엇을 다음으로 미뤘는지."
+  pagefindBody={false}
 >
   <main>
     <!-- Hero -->

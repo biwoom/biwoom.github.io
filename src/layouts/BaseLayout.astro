@@ -11,6 +11,7 @@ interface Props {
   ogImage?: string;
   lang?: string;
   pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
+  pagefindBody?: boolean;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   ogImage,
   lang = 'ko',
   pagefindMeta = {},
+  pagefindBody = true,
 } = Astro.props;
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://biwoom.github.io';
@@ -103,7 +105,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <div class="ol-app">
     <OLHeader />
     <OLSearchModal />
-    <div data-pagefind-body>
+    <div data-pagefind-body={pagefindBody ? true : undefined} data-pagefind-ignore={pagefindBody ? undefined : true}>
       <slot />
     </div>
     <OLFooter />

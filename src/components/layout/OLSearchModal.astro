@@ -49,6 +49,10 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
 <script>
   let pagefind: any = null;
   let selectedIndex = -1;
+  let activeSection = 'ALL';
+  let currentResults: any[] = [];
+
+  const sectionOrder = ['TEXT', 'STORY', 'DESIGN', 'BLOG', 'ENTITY', 'PAGES'];
 
   async function loadPagefind() {
     if (pagefind) return pagefind;
@@ -97,12 +101,101 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
     return breadcrumb || 'OL';
   }
 
+  function resultSection(result: any) {
+    const section = String(result.meta?.section ?? result.meta?.sectionLabel ?? 'OL').toUpperCase();
+    return section || 'OL';
+  }
+
+  function sectionCounts(results: any[]) {
+    const counts = new Map<string, number>();
+    for (const result of results) {
+      const section = resultSection(result);
+      counts.set(section, (counts.get(section) ?? 0) + 1);
+    }
+    return counts;
+  }
+
+  function orderedSections(counts: Map<string, number>) {
+    const known = sectionOrder.filter(section => counts.has(section));
+    const unknown = [...counts.keys()]
+      .filter(section => !sectionOrder.includes(section))
+      .sort((a, b) => a.localeCompare(b));
+    return ['ALL', ...known, ...unknown];
+  }
+
+  function renderSearchResults() {
+    const counts = sectionCounts(currentResults);
+    const sections = orderedSections(counts);
+    const filteredResults = activeSection === 'ALL'
+      ? currentResults
+      : currentResults.filter(result => resultSection(result) === activeSection);
+
+    if (activeSection !== 'ALL' && filteredResults.length === 0) {
+      activeSection = 'ALL';
+      renderSearchResults();
+      return;
+    }
+
+    const tabs = sections.map(section => {
+      const count = section === 'ALL' ? currentResults.length : counts.get(section) ?? 0;
+      const label = section === 'ALL' ? '전체' : section;
+      return `
+        <button
+          type="button"
+          class="ol-search-filter${section === activeSection ? ' active' : ''}"
+          data-search-section="${escapeHtml(section)}"
+          aria-pressed="${section === activeSection ? 'true' : 'false'}"
+        >
+          <span>${escapeHtml(label)}</span>
+          <strong>${count}</strong>
+        </button>
+      `;
+    }).join('');
+
+    const resultList = filteredResults.map((r: any, i: number) => {
+      const meta = r.meta ?? {};
+      const section = meta.sectionLabel || meta.section || 'OL';
+      const title = meta.title || '제목 없음';
+      const path = displayPath(r.url);
+      const kicker = resultKicker(r);
+
+      return `
+        <a
+          href="${escapeHtml(r.url)}"
+          class="ol-search-result${i === 0 ? ' active' : ''}"
+          data-index="${i}"
+        >
+          <span class="ol-search-result-meta">
+            <span class="ol-search-result-section">${escapeHtml(section)}</span>
+            <span class="ol-search-result-breadcrumb">${escapeHtml(kicker)}</span>
+          </span>
+          <span class="ol-search-result-title">${escapeHtml(title)}</span>
+          <span class="ol-search-result-path">${escapeHtml(path)}</span>
+          <span class="ol-search-result-excerpt">${r.excerpt ?? ''}</span>
+        </a>
+      `;
+    }).join('');
+
+    resultsEl.innerHTML = `
+      <div class="ol-search-filters" role="tablist" aria-label="검색 결과 유형">
+        ${tabs}
+      </div>
+      <div class="ol-search-result-list">
+        ${resultList}
+      </div>
+    `;
+
+    selectedIndex = filteredResults.length > 0 ? 0 : -1;
+  }
+
   function openSearch() {
     overlay.setAttribute('aria-hidden', 'false');
     overlay.removeAttribute('inert');
     input.value = '';
     resultsEl.innerHTML = '<div class="ol-search-empty">검색어를 입력하세요</div>';
     selectedIndex = -1;
+    activeSection = 'ALL';
+    currentResults = [];
     requestAnimationFrame(() => input.focus());
     loadPagefind(); // 첫 열기 시 미리 로드
   }
@@ -122,6 +215,8 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
       if (!query) {
         resultsEl.innerHTML = '<div class="ol-search-empty">검색어를 입력하세요</div>';
         selectedIndex = -1;
+        activeSection = 'ALL';
+        currentResults = [];
         return;
       }
 
@@ -139,35 +234,11 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
       }
 
       // 상위 8개 결과
-      const results = await Promise.all(
-        search.results.slice(0, 8).map((r: any) => r.data())
+      currentResults = await Promise.all(
+        search.results.slice(0, 24).map((r: any) => r.data())
       );
-
-      resultsEl.innerHTML = results.map((r: any, i: number) => {
-        const meta = r.meta ?? {};
-        const section = meta.sectionLabel || meta.section || 'OL';
-        const title = meta.title || '제목 없음';
-        const path = displayPath(r.url);
-        const kicker = resultKicker(r);
-
-        return `
-        <a
-          href="${escapeHtml(r.url)}"
-          class="ol-search-result${i === 0 ? ' active' : ''}"
-          data-index="${i}"
-        >
-          <span class="ol-search-result-meta">
-            <span class="ol-search-result-section">${escapeHtml(section)}</span>
-            <span class="ol-search-result-breadcrumb">${escapeHtml(kicker)}</span>
-          </span>
-          <span class="ol-search-result-title">${escapeHtml(title)}</span>
-          <span class="ol-search-result-path">${escapeHtml(path)}</span>
-          <span class="ol-search-result-excerpt">${r.excerpt ?? ''}</span>
-        </a>
-      `;
-      }).join('');
-
-      selectedIndex = 0;
+      activeSection = 'ALL';
+      renderSearchResults();
     }, 200);
   });
 
@@ -197,6 +268,13 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
 
   // 결과 클릭 시 닫기
   resultsEl.addEventListener('click', (e) => {
+    const filter = (e.target as Element).closest<HTMLButtonElement>('[data-search-section]');
+    if (filter) {
+      activeSection = filter.dataset.searchSection || 'ALL';
+      renderSearchResults();
+      return;
+    }
+
     if ((e.target as Element).closest('.ol-search-result')) closeSearch();
   });
 
