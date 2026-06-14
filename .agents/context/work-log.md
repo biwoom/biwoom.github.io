@@ -165,3 +165,11 @@ This file records concise date-based work summaries for continuity across Codex 
 - Tabs are generated from Pagefind result metadata and show counts for `전체`, `TEXT`, `STORY`, `DESIGN`, `BLOG`, `ENTITY`, and any future unknown section.
 - Increased the client-side result pool to 24 so section filtering has enough results to work with.
 - Local validation: `npm run build` passed and generated assets include the filter tab markup/script.
+
+### Search And Design Content Upload
+
+- Pushed commit `2a90224` (`Improve search filters and design content`) to `origin/main`.
+- Included search index scope cleanup, search result filter tabs, DESIGN HTML text alignment for `two-perspectives`, and current DESIGN HTML cleanup changes.
+- Confirmed the temporary `license-line` addition request was abandoned and no `license-line` text remains in DESIGN source or generated HTML.
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
