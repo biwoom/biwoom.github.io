@@ -36,6 +36,9 @@ const hasRightsInfo = Boolean(
   entry.data.license || entry.data.rightsHolder || entry.data.copyrightNotice || entry.data.authors.length
 );
 const currentUrl = url(getTextEntryUrl(entry));
+const pagefindBreadcrumb = ['TEXT', entry.data.series, entry.data.part, entry.data.group]
+  .filter(Boolean)
+  .join(' · ');
 ---
 
 <TextLayout
@@ -43,6 +46,15 @@ const currentUrl = url(getTextEntryUrl(entry));
   description={entry.data.excerpt}
   currentId={entry.id}
   seriesSlug={seriesSlug}
+  pagefindMeta={{
+    title: entry.data.title,
+    section: 'TEXT',
+    sectionLabel: 'TEXT',
+    series: entry.data.series,
+    part: entry.data.part,
+    group: entry.data.group,
+    breadcrumb: pagefindBreadcrumb,
+  }}
 >
   <article class="ol-text-article">
     <header class="ol-text-doc-header">

@@ -144,8 +144,8 @@
 }
 
 .ol-search-modal {
-  width: min(560px, calc(100vw - 32px));
-  max-height: min(480px, 70vh);
+  width: min(680px, calc(100vw - 32px));
+  max-height: min(560px, 74vh);
   background: var(--ol-surface);
   border: 1px solid var(--ol-border);
   border-radius: var(--ol-r-lg);
@@ -203,7 +203,7 @@
 
 .ol-search-result {
   display: block;
-  padding: 10px 12px;
+  padding: 12px;
   border-radius: var(--ol-r);
   text-decoration: none;
   color: inherit;
@@ -214,12 +214,55 @@
   background: var(--ol-surface-2);
 }
 
+.ol-search-result-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 6px;
+  color: var(--ol-muted);
+  font-family: var(--ol-font-mono);
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+
+.ol-search-result-section {
+  flex-shrink: 0;
+  padding: 2px 5px;
+  border: 1px solid var(--ol-border);
+  border-radius: 4px;
+  background: var(--ol-surface);
+  color: var(--ol-ink);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.ol-search-result-breadcrumb {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .ol-search-result-title {
   display: block;
   font-size: 14px;
   font-weight: 600;
   color: var(--ol-ink);
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  line-height: 1.35;
+}
+
+.ol-search-result-path {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ol-subtle);
+  font-family: var(--ol-font-mono);
+  font-size: 11px;
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ol-search-result-excerpt {
@@ -229,7 +272,9 @@
   line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .ol-search-result-excerpt mark {
   background: transparent;
@@ -404,4 +449,3 @@
 .dark .ol-mobile-sheet-close:hover {
   background: var(--ol-surface-3);
 }
-

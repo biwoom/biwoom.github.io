@@ -22,6 +22,11 @@ const previewAsset = previewAssets[0];
 const description = entry.data.description ?? entry.data.summary ?? entry.data.imageAlt ?? entry.data.title;
 const allTags = entry.data.tags;
 const showImageDownload = entry.data.format === 'image' && Boolean(entry.data.imageAsset);
+const pagefindKind = primaryKindLabel[entry.data.primaryKind] ?? entry.data.primaryKind;
+const pagefindType = entry.data.type ? (typeLabel[entry.data.type] ?? entry.data.type) : undefined;
+const pagefindBreadcrumb = ['DESIGN', pagefindKind, pagefindType, entry.data.series]
+  .filter(Boolean)
+  .join(' · ');
 
 function designAsset(asset?: string) {
   return asset ? url(`/generated/design/${entry.id}/${asset}`) : '';
@@ -31,6 +36,15 @@ function designAsset(asset?: string) {
 <BaseLayout
   title={`${entry.data.title} — OL DESIGN`}
   description={description}
+  pagefindMeta={{
+    title: entry.data.title,
+    section: 'DESIGN',
+    sectionLabel: 'DESIGN',
+    category: pagefindKind,
+    type: pagefindType,
+    series: entry.data.series,
+    breadcrumb: pagefindBreadcrumb,
+  }}
 >
   <main>
     <div class="ol-design-detail-wrap">

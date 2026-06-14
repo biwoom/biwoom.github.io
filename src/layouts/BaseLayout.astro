@@ -10,6 +10,7 @@ interface Props {
   description?: string;
   ogImage?: string;
   lang?: string;
+  pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   description = 'OL(올)은 한 올, 한 올 지혜를 엮어가는 불교 콘텐츠 프로젝트입니다.',
   ogImage,
   lang = 'ko',
+  pagefindMeta = {},
 } = Astro.props;
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://biwoom.github.io';
@@ -24,6 +26,9 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageUrl = ogImage
   ? new URL(ogImage, siteUrl).toString()
   : new URL(url('/og-image.png'), siteUrl).toString();
+const pagefindMetaEntries = Object.entries(pagefindMeta)
+  .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
+  .map(([key, value]) => [key, String(value)] as const);
 ---
 
 <!DOCTYPE html>
@@ -43,6 +48,10 @@ const ogImageUrl = ogImage
   <meta property="og:image" content={ogImageUrl} />
   <meta property="og:site_name" content="OL — Weaving the Wisdom" />
   <meta property="og:locale" content="ko_KR" />
+
+  {pagefindMetaEntries.map(([key, value]) => (
+    <meta data-pagefind-meta={`${key}[content]`} content={value} />
+  ))}
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />

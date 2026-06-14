@@ -13,11 +13,21 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const pagefindBreadcrumb = ['BLOG', entry.data.category]
+  .filter(Boolean)
+  .join(' · ');
 ---
 
 <BaseLayout
   title={`${entry.data.title} — OL BLOG`}
   description={entry.data.description}
+  pagefindMeta={{
+    title: entry.data.title,
+    section: 'BLOG',
+    sectionLabel: 'BLOG',
+    category: entry.data.category,
+    breadcrumb: pagefindBreadcrumb,
+  }}
 >
   <main>
     <section class="ol-section">

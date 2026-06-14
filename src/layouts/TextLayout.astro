@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   currentId?: string;
   seriesSlug?: string;
+  pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = '경전·논서·선어록·강의록을 번역하고 주석한 문헌 콘텐츠',
   currentId,
   seriesSlug,
+  pagefindMeta,
 } = Astro.props;
 
 const allText = await getCollection('text', e => e.data.published !== false);
@@ -34,7 +36,7 @@ const statusLabel: Record<string, string> = {
 };
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} pagefindMeta={pagefindMeta}>
   <button
     class="ol-sidebar-toggle"
     aria-label="문서 목록 열기"

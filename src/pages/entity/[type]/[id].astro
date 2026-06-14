@@ -24,9 +24,31 @@ const allRelations = entities.flatMap(e => e.data.relations ?? []);
 
 const outgoing = getEntityRelations(entry.data.id, allRelations);
 const backlinks = getBacklinks(entry.data.id, allRelations);
+const entityTypeLabel: Record<string, string> = {
+  person: '인물',
+  concept: '개념',
+  place: '장소',
+  text: '문헌',
+  practice: '수행',
+  event: '사건',
+  school: '학파',
+};
+const pagefindType = entityTypeLabel[entry.data.type] ?? entry.data.type;
+const pagefindBreadcrumb = ['ENTITY', pagefindType]
+  .filter(Boolean)
+  .join(' · ');
 ---
 
-<EntityLayout title={`${entry.data.name.ko} — OL ENTITY`}>
+<EntityLayout
+  title={`${entry.data.name.ko} — OL ENTITY`}
+  pagefindMeta={{
+    title: entry.data.name.ko,
+    section: 'ENTITY',
+    sectionLabel: 'ENTITY',
+    type: pagefindType,
+    breadcrumb: pagefindBreadcrumb,
+  }}
+>
   <div style="display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-items: start;">
     <article>
       <header style="margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--ol-border);">

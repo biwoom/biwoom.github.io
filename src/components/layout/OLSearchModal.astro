@@ -10,6 +10,7 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
   id="ol-search-overlay"
   aria-hidden="true"
   data-pagefind-path={pagefindPath}
+  data-pagefind-ignore
 >
   <div class="ol-search-modal" role="dialog" aria-modal="true" aria-label="검색">
 
@@ -70,6 +71,32 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
   const input = document.getElementById('ol-search-input') as HTMLInputElement;
   const resultsEl = document.getElementById('ol-search-results')!;
 
+  function escapeHtml(value: unknown) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function displayPath(rawUrl: string) {
+    try {
+      const parsed = new URL(rawUrl, window.location.origin);
+      return parsed.pathname.replace(/\/$/, '') || '/';
+    } catch {
+      return rawUrl;
+    }
+  }
+
+  function resultKicker(result: any) {
+    const meta = result.meta ?? {};
+    const breadcrumb = meta.breadcrumb || [meta.sectionLabel || meta.section, meta.series, meta.part || meta.category || meta.type, meta.group]
+      .filter(Boolean)
+      .join(' · ');
+    return breadcrumb || 'OL';
+  }
+
   function openSearch() {
     overlay.setAttribute('aria-hidden', 'false');
     overlay.removeAttribute('inert');
@@ -116,16 +143,29 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
         search.results.slice(0, 8).map((r: any) => r.data())
       );
 
-      resultsEl.innerHTML = results.map((r: any, i: number) => `
+      resultsEl.innerHTML = results.map((r: any, i: number) => {
+        const meta = r.meta ?? {};
+        const section = meta.sectionLabel || meta.section || 'OL';
+        const title = meta.title || '제목 없음';
+        const path = displayPath(r.url);
+        const kicker = resultKicker(r);
+
+        return `
         <a
-          href="${r.url}"
+          href="${escapeHtml(r.url)}"
           class="ol-search-result${i === 0 ? ' active' : ''}"
           data-index="${i}"
         >
-          <span class="ol-search-result-title">${r.meta?.title ?? '제목 없음'}</span>
+          <span class="ol-search-result-meta">
+            <span class="ol-search-result-section">${escapeHtml(section)}</span>
+            <span class="ol-search-result-breadcrumb">${escapeHtml(kicker)}</span>
+          </span>
+          <span class="ol-search-result-title">${escapeHtml(title)}</span>
+          <span class="ol-search-result-path">${escapeHtml(path)}</span>
           <span class="ol-search-result-excerpt">${r.excerpt ?? ''}</span>
         </a>
-      `).join('');
+      `;
+      }).join('');
 
       selectedIndex = 0;
     }, 200);

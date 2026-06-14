@@ -135,3 +135,17 @@ This file records concise date-based work summaries for continuity across Codex 
   - `npm run build` passed.
 - Pushed commit `782059e` (`Add incremental generated asset sync`) to `origin/main`.
 - Deployment completion was not checked by design.
+
+### README Brand And Content Direction Update
+
+- Rewrote `README.md` to better reflect the OL brand definition, philosophy, product system, target audience, and design principles.
+- Added planned Buddhist content directions for TEXT, STORY, DESIGN, and BLOG based on the current OL project roadmap.
+- Kept repository operation details for stack, structure, commands, GitHub Pages, generated files, internal guidance, and licensing.
+
+### Search Result Context Metadata
+
+- Updated `OLSearchModal.astro` so Pagefind results show section, breadcrumb, title, route path, and excerpt instead of title/excerpt only.
+- Added automatic Pagefind metadata output through `BaseLayout` and the TEXT/STORY/DESIGN/BLOG/ENTITY detail templates.
+- Search metadata is derived from existing frontmatter and page context, so content authors do not need to write Pagefind-specific fields.
+- Added `data-pagefind-ignore` to the search modal overlay so command-palette UI text is not indexed as page content.
+- Local validation: `npm run build` passed and generated HTML includes Pagefind metadata for TEXT, STORY, DESIGN, BLOG, and ENTITY sample pages.

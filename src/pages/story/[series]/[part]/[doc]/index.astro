@@ -62,11 +62,23 @@ const statusLabel: Record<string, string> = {
 };
 const statusKey = entry.data.status ?? 'draft';
 const currentUrl = url(getStoryEntryUrl(entry));
+const pagefindBreadcrumb = ['STORY', series?.label ?? entry.data.series, entry.data.part, entry.data.group]
+  .filter(Boolean)
+  .join(' · ');
 ---
 
 <BaseLayout
   title={`${entry.data.title} — ${series?.label ?? entry.data.series ?? 'OL STORY'}`}
   description={entry.data.description}
+  pagefindMeta={{
+    title: entry.data.title,
+    section: 'STORY',
+    sectionLabel: 'STORY',
+    series: series?.label ?? entry.data.series,
+    part: entry.data.part,
+    group: entry.data.group,
+    breadcrumb: pagefindBreadcrumb,
+  }}
 >
   <main class="ol-story-reader-page ol-story-doc-page">
     <section class="ol-story-doc-hero">
