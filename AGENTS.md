@@ -43,7 +43,7 @@ This repository is OL HOME, the public Astro site for the OL project.
 - Use `published: true` for content that should appear on the site.
 - For TEXT and STORY user-facing tags, prefer `prefix/name` form such as `개념/연기`.
 - For manuals and rule documents, include the latest update date in the body and maintain a `수정 변경사항` section at the bottom.
-- For DESIGN and STORY assets, keep source assets under `src/content/**/assets/`; `public/generated/` is derived by `npm run sync:assets`.
+- For DESIGN and STORY assets, keep source assets under `src/content/**/assets/`; `public/generated/` is derived by `npm run sync:assets`, which incrementally syncs changed files and removes stale generated files.
 
 ## Verification
 

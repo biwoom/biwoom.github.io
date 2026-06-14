@@ -123,3 +123,13 @@ This file records concise date-based work summaries for continuity across Codex 
 - Local validation: `npm run build` passed before push.
 - Pushed commit `511ff21` (`Fix mobile prose table overflow`) to `origin/main`.
 - Deployment completion was not checked by design.
+
+### Incremental Generated Asset Sync
+
+- Updated `scripts/sync-content-assets.mjs` to incrementally sync DESIGN/STORY assets into `public/generated/`.
+- The sync now copies changed files, leaves unchanged generated files in place, removes stale generated files, and prunes empty directories.
+- Added a GitHub Actions cache for `public/generated/` so CI builds can restore prior generated assets before running the incremental sync.
+- Updated `README.md`, `AGENTS.md`, and `.agents/references/ol-home-content-management-manual.md` to document the new behavior.
+- Local validation:
+  - `npm run sync:assets` twice reported unchanged assets without recopying.
+  - `npm run build` passed.

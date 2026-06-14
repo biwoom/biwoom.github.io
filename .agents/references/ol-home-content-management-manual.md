@@ -1,7 +1,7 @@
 # OL 홈페이지 콘텐츠 관리 매뉴얼
 
-**문서 버전**: v1.3  
-**최종 업데이트**: 2026-06-13  
+**문서 버전**: v1.4  
+**최종 업데이트**: 2026-06-14  
 **대상 프로젝트**: OL HOME (`biwoom.github.io`)  
 **기술 스택**: Astro 6 + GitHub Pages + Pagefind  
 **기준 배포 URL**: `https://biwoom.github.io/`  
@@ -52,7 +52,8 @@ src/content/design/{slug}/assets/
 src/content/story/{series}/assets/
 ```
 
-빌드 전에 `scripts/sync-content-assets.mjs`가 `assets/` 폴더를 찾아 `public/generated/`로 복사합니다.
+빌드 전에 `scripts/sync-content-assets.mjs`가 `assets/` 폴더를 찾아 `public/generated/`로 동기화합니다.
+현재 동기화는 증분 방식입니다. 변경된 파일만 복사하고, 원본 `assets/`에서 사라진 파일은 `public/generated/`에서도 제거합니다.
 
 ```txt
 src/content/design/two-perspectives/assets/index.html
@@ -63,6 +64,7 @@ src/content/story/buddha-story/assets/index.html
 ```
 
 `public/generated/`는 빌드 산출물입니다. 원본처럼 직접 관리하지 않습니다.
+GitHub Actions에서는 `public/generated/` 캐시를 복원한 뒤 증분 동기화를 수행하므로, DESIGN/STORY 자산이 많아져도 변경되지 않은 파일의 반복 복사를 줄일 수 있습니다.
 
 현재 자동 동기화 대상은 다음 두 컬렉션입니다.
 
@@ -639,6 +641,11 @@ tags:
 ---
 
 ## 수정 변경사항
+
+### 2026-06-14 · v1.4
+
+- `public/generated/` 자산 동기화를 전체 삭제 후 복사 방식에서 증분 동기화 방식으로 변경한 내용을 반영했습니다.
+- GitHub Actions에서 `public/generated/` 캐시를 복원해 변경되지 않은 DESIGN/STORY 자산의 반복 복사를 줄이는 운영 방식을 추가했습니다.
 
 ### 2026-06-13 · v1.3
 

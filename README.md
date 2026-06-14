@@ -79,7 +79,7 @@ Current collection groups:
 - `pages`: permanent project pages
 - `ai`: reserved for AI workflow records
 
-Design and story assets are stored next to their content source under `assets/`. During development and build, `scripts/sync-content-assets.mjs` copies those assets into `public/generated/`.
+Design and story assets are stored next to their content source under `assets/`. During development and build, `scripts/sync-content-assets.mjs` syncs those assets into `public/generated/` by copying changed files and removing stale generated files.
 
 ## Commands
 
