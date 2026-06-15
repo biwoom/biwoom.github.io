@@ -173,3 +173,12 @@ This file records concise date-based work summaries for continuity across Codex 
 - Confirmed the temporary `license-line` addition request was abandoned and no `license-line` text remains in DESIGN source or generated HTML.
 - Local validation: `npm run build` passed before push.
 - Deployment completion was not checked by design.
+
+### STORY Series Metadata Schema Upload
+
+- Pushed commit `8b2080c` (`Align story series metadata schema`) to `origin/main`.
+- Updated STORY collection handling so series `index.md` can use `kind: series` metadata without document-only fields such as `part`, `group`, `chapter`, `order`, `publishedAt`, and `htmlAsset`.
+- Updated STORY hierarchy, listing/detail pages, home counters, and the content management manual to separate series metadata entries from document entries.
+- Included the current Buddha Story chapter filename/order cleanup under `src/content/story/buddha-story/part-1/`.
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
