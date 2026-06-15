@@ -4,7 +4,7 @@ description: "주관적 관찰과 객관적 관찰을 통해 불교적 세계관
 summary: "두 가지 관점으로 정리한 불교 세계관"
 primaryKind: infographic
 type: diagram
-format: mixed
+format: html
 series: "불교의 세계관"
 version: "0.1.0"
 status: published
@@ -17,7 +17,7 @@ previewAssets:
   - "preview1.png"
 imageAlt: "두 가지 관점에서 나와 세계를 이해하는 불교의 세계관 인포그래픽"
 
-pageSize: "A4"
+pageSize: ""
 orientation: portrait
 medium: "HTML/CSS, Image"
 source: "OL Project"
@@ -32,7 +32,6 @@ prefixTags:
   - "topic:윤회"
   - "topic:사성제"
   - "format:html"
-  - "format:image"
   - "level:introductory"
   - "use:education"
 tags:
