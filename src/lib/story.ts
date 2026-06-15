@@ -30,6 +30,7 @@ export interface StorySeries {
   slug: string;
   label: string;
   order: number;
+  meta?: StoryEntry;
   entries: StoryEntry[];
   parts: StoryPart[];
   count: number;
@@ -57,7 +58,11 @@ export function getStoryGroupSlug(entry: StoryEntry): string {
 
 export function isStorySeriesIndex(entry: StoryEntry): boolean {
   const segments = entry.id.split('/');
-  return segments.length === 1 || segments.at(-1) === 'index';
+  return entry.data.kind === 'series' || segments.length === 1 || segments.at(-1) === 'index';
+}
+
+export function isStoryDocumentEntry(entry: StoryEntry): boolean {
+  return !isStorySeriesIndex(entry);
 }
 
 export function getStoryDocumentSlug(entry: StoryEntry): string {
@@ -105,9 +110,11 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
 
   return Array.from(seriesMap.entries())
     .map(([seriesSlug, seriesEntries]) => {
+      const meta = seriesEntries.find(isStorySeriesIndex);
+      const documentEntries = seriesEntries.filter(isStoryDocumentEntry);
       const partMap = new Map<string, StoryEntry[]>();
 
-      for (const entry of seriesEntries) {
+      for (const entry of documentEntries) {
         const partSlug = getStoryPartSlug(entry);
         const partEntries = partMap.get(partSlug) ?? [];
         partEntries.push(entry);
@@ -159,11 +166,12 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
       return {
         key: seriesSlug,
         slug: seriesSlug,
-        label: seriesEntries[0]?.data.series ?? seriesEntries[0]?.data.title ?? seriesSlug,
-        order: seriesEntries[0]?.data.seriesOrder ?? 0,
+        label: meta?.data.series ?? meta?.data.title ?? documentEntries[0]?.data.series ?? documentEntries[0]?.data.title ?? seriesSlug,
+        order: meta?.data.seriesOrder ?? documentEntries[0]?.data.seriesOrder ?? 0,
+        meta,
         entries: sortStoryEntries(seriesEntries),
         parts,
-        count: seriesEntries.length,
+        count: documentEntries.length,
       };
     })
     .sort((a, b) => {

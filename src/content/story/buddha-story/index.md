@@ -1,23 +1,14 @@
 ---
 title: "붓다 스토리"
+kind: series
 series: "붓다 스토리"
 seriesSlug: "buddha-story"
 seriesOrder: 10
-part: "탄생"
-partSlug: "part-1"
-partOrder: 10
-group: "탄생과 출가"
-groupSlug: "birth-renunciation"
-groupOrder: 10
-category: "인물 · 행적"
-chapter: 1
-order: 1
+category: "부처님 일대기"
 version: "v0.0.1"
 status: "draft"
-publishedAt: 2026-05-29
-htmlAsset: "index.html"
 primaryEntities: []
-description: "부처님의 일대기를 담은 책입니다.'현재 개발 중'. "
+description: "부처님의 일대기를 담은 이야기불교 시리즈입니다. 현재 개발 중입니다."
 tags:
   - "인물/싯다르타-고타마"
   - "형식/불전"
@@ -31,3 +22,5 @@ tagAliases:
 license: "CC0"
 published: true
 ---
+
+붓다스토리 시리즈의 메타데이터 파일입니다.

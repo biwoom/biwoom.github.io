@@ -9,9 +9,9 @@ partOrder: 10
 group: "수행의 시작"
 groupSlug: "practice-begins"
 groupOrder: 20
-category: "인물 · 행적"
-chapter: 3
-order: 3
+category: "부처님 일대기"
+chapter: 2
+order: 2
 version: "v0.0.1-test"
 status: "draft"
 publishedAt: 2026-06-11

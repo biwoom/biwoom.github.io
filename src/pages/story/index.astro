@@ -8,13 +8,13 @@ import { groupTagsByPrefix } from '../../lib/tags';
 
 const storyEntries = (
   await getCollection('story', e => e.data.published === true)
-).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+).sort((a, b) => (b.data.publishedAt?.valueOf() ?? 0) - (a.data.publishedAt?.valueOf() ?? 0));
 const stories = buildStoryHierarchy(storyEntries);
 
 const PAGE_SIZE = 8;
 
 const storyCards = stories.map(story => {
-  const entry = story.entries[0];
+  const entry = story.meta ?? story.entries[0];
   return {
     story,
     entry,
@@ -96,7 +96,10 @@ const statusLabel: Record<string, string> = {
               >
                 <div>
                   <span class="ol-mono-label" style="margin-bottom:8px;display:flex;align-items:center;gap:8px;">
-                    <span>{new Date(entry.data.publishedAt).getFullYear()} · {entry.data.version}</span>
+                    <span>
+                      {entry.data.publishedAt ? `${new Date(entry.data.publishedAt).getFullYear()} · ` : ''}
+                      {entry.data.version}
+                    </span>
                     <span class={`ol-text-status ol-text-status--${entry.data.status ?? 'draft'}`}>
                       {statusLabel[entry.data.status ?? 'draft']}
                     </span>
@@ -140,6 +143,7 @@ const statusLabel: Record<string, string> = {
                     시리즈 보기
                   </a>
 
+                  {entry.data.htmlAsset && (
                   <a
                     href={url(`/generated/story/${entry.id}/${entry.data.htmlAsset}`)}
                     download={`${story.label}-${entry.data.version}.html`}
@@ -151,6 +155,7 @@ const statusLabel: Record<string, string> = {
                     </svg>
                     HTML 내려받기
                   </a>
+                  )}
                 </div> */}
               </a>
             ))}

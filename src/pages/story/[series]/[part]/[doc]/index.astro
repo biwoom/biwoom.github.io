@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 
 const { entry, series } = Astro.props;
 const { Content } = await render(entry);
-const cover = series?.entries.find(isStorySeriesIndex) ?? series?.entries[0] ?? entry;
+const cover = series?.meta ?? series?.entries.find(isStorySeriesIndex) ?? series?.entries[0] ?? entry;
 const documentParts = (series?.parts ?? [])
   .map(part => ({
     ...part,
@@ -241,7 +241,7 @@ const pagefindBreadcrumb = ['STORY', series?.label ?? entry.data.series, entry.d
             <div class="ol-text-doc-meta">
               <span class={`ol-text-status ol-text-status--${statusKey}`}>{statusLabel[statusKey]}</span>
               <span class="ol-mono-label">
-                {new Date(entry.data.publishedAt).toLocaleDateString('ko-KR', {
+                {entry.data.publishedAt && new Date(entry.data.publishedAt).toLocaleDateString('ko-KR', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',

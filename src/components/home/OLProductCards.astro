@@ -3,9 +3,11 @@ import { url } from '../../lib/url';
 import { getCollection } from 'astro:content';
 import { getLatestAtlasBuild } from '../../lib/atlas';
 import { isTextDocumentEntry } from '../../lib/text';
+import { buildStoryHierarchy } from '../../lib/story';
 
 const texts = await getCollection('text', entry => entry.data.published && isTextDocumentEntry(entry));
-const stories = await getCollection('story', ({ data }) => data.published);
+const storyEntries = await getCollection('story', ({ data }) => data.published);
+const stories = buildStoryHierarchy(storyEntries);
 const blogs = await getCollection('blog', ({ data }) => data.published);
 const designs = await getCollection('design', ({ data }) => data.published);
 

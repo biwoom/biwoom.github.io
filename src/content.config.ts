@@ -171,6 +171,7 @@ const storyCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/story' }),
   schema: z.object({
     title: z.string(),
+    kind: z.enum(['series', 'document']).default('document'),
     subtitle: z.string().optional(),
     series: z.string().optional(),
     seriesSlug: z.string().optional(),
@@ -186,8 +187,8 @@ const storyCollection = defineCollection({
     category: z.string().optional(),
     version: z.string().default('v1.0'),
     status: z.enum(['draft', 'revising', 'ready', 'published']).default('draft'),
-    publishedAt: z.coerce.date(),
-    htmlAsset: z.string(),
+    publishedAt: z.coerce.date().optional(),
+    htmlAsset: z.string().optional(),
     primaryEntities: z.array(z.string()).default([]),
     description: z.string().optional(),
     tags: z.array(z.string()).default([]),

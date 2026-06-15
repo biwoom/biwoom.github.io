@@ -1,7 +1,7 @@
 # OL 홈페이지 콘텐츠 관리 매뉴얼
 
-**문서 버전**: v1.4  
-**최종 업데이트**: 2026-06-14  
+**문서 버전**: v1.5  
+**최종 업데이트**: 2026-06-15  
 **대상 프로젝트**: OL HOME (`biwoom.github.io`)  
 **기술 스택**: Astro 6 + GitHub Pages + Pagefind  
 **기준 배포 URL**: `https://biwoom.github.io/`  
@@ -275,27 +275,22 @@ src/content/story/
 ```
 
 `index.md`도 STORY 컬렉션 entry이며, 시리즈 대표 정보와 서지정보 역할을 합니다.
+TEXT 시리즈 `index.md`와 마찬가지로 `kind: series`를 사용합니다.
+개별 STORY 문서에 필요한 `part`, `group`, `chapter`, `order`, `publishedAt`, `htmlAsset`는 시리즈 `index.md`에 적지 않습니다.
 
 ### 2.2 STORY 시리즈 예시
 
 ```yaml
 ---
 title: "붓다 스토리"
+kind: series
 subtitle: "부처님의 일대기"
 series: "붓다 스토리"
 seriesSlug: "buddha-story"
 seriesOrder: 10
-part: "서지정보"
-partSlug: "bibliography"
-partOrder: 0
-group: "서지정보"
-groupSlug: "bibliography"
-groupOrder: 0
 category: "인물 · 행적"
 version: "v1.0"
 status: draft
-publishedAt: 2026-06-11
-htmlAsset: "index.html"
 description: "싯다르타 고타마의 생애를 이야기 형식으로 재구성한 시리즈."
 tags:
   - "인물/붓다"
@@ -315,6 +310,7 @@ published: true
 ```yaml
 ---
 title: "출가"
+kind: document
 series: "붓다 스토리"
 seriesSlug: "buddha-story"
 seriesOrder: 10
@@ -593,10 +589,13 @@ tags:
 
 - [ ] 시리즈 폴더 생성: `src/content/story/{series}/`
 - [ ] 서지정보 작성: `src/content/story/{series}/index.md`
+- [ ] 시리즈 `index.md`에는 `kind: series` 지정
+- [ ] 시리즈 `index.md`에는 개별 문서용 `part`, `group`, `chapter`, `order`, `publishedAt`, `htmlAsset`를 작성하지 않음
 - [ ] 자산 저장: `src/content/story/{series}/assets/`
 - [ ] PART 문서 작성: `src/content/story/{series}/part-x/...md`
+- [ ] 개별 문서에는 `kind: document` 지정
 - [ ] `seriesSlug`, `partSlug`, `groupSlug`, `order` 확인
-- [ ] `publishedAt`, `htmlAsset` 작성
+- [ ] 개별 문서에는 `publishedAt`, 필요시 `htmlAsset` 작성
 - [ ] 태그는 `prefix/name` 방식으로 작성
 - [ ] `npm run build` 후 `public/generated/story/{series}/` 확인
 
@@ -641,6 +640,11 @@ tags:
 ---
 
 ## 수정 변경사항
+
+### 2026-06-15 · v1.5
+
+- STORY 시리즈 `index.md`를 TEXT 시리즈와 같은 `kind: series` 메타데이터 파일로 운영하도록 정리했습니다.
+- STORY 개별 문서 전용 필드인 `part`, `group`, `chapter`, `order`, `publishedAt`, `htmlAsset`를 시리즈 `index.md`에 쓰지 않는 원칙을 추가했습니다.
 
 ### 2026-06-14 · v1.4
 

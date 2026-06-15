@@ -9,7 +9,7 @@ partOrder: 20
 group: "깨달음"
 groupSlug: "awakening"
 groupOrder: 10
-category: "인물 · 행적"
+category: "부처님 일대기"
 chapter: 1
 order: 1
 version: "v0.0.1-test"

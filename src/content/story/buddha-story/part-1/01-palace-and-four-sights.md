@@ -9,9 +9,9 @@ partOrder: 10
 group: "탄생과 출가"
 groupSlug: "birth-renunciation"
 groupOrder: 10
-category: "인물 · 행적"
-chapter: 2
-order: 2
+category: "부처님 일대기"
+chapter: 1
+order: 1
 version: "v0.0.1-test"
 status: "draft"
 publishedAt: 2026-06-11

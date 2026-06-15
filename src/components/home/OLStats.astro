@@ -2,8 +2,9 @@
 import { getCollection } from 'astro:content';
 import { getLatestAtlasBuild } from '../../lib/atlas';
 import { isTextDocumentEntry } from '../../lib/text';
+import { isStoryDocumentEntry } from '../../lib/story';
 
-const stories = await getCollection('story', ({ data }) => data.published);
+const stories = await getCollection('story', entry => entry.data.published && isStoryDocumentEntry(entry));
 const texts = await getCollection('text', entry => entry.data.published !== false && isTextDocumentEntry(entry));
 const designs = await getCollection('design', ({ data }) => data.published);
 const blogs = await getCollection('blog', ({ data }) => data.published);

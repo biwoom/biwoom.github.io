@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 }
 
 const { series } = Astro.props;
-const cover = series.entries.find(isStorySeriesIndex) ?? series.entries[0];
+const cover = series.meta ?? series.entries.find(isStorySeriesIndex) ?? series.entries[0];
 const documentParts = series.parts
   .map(part => ({
     ...part,
@@ -245,7 +245,9 @@ const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
           <div class="ol-story-biblio-card-content">
             <div class="ol-story-biblio-head">
               <span class={`ol-text-status ol-text-status--${statusKey}`}>{statusLabel[statusKey]}</span>
-              <span class="ol-mono-label">{new Date(cover.data.publishedAt).toLocaleDateString('ko-KR')}</span>
+              {cover.data.publishedAt && (
+                <span class="ol-mono-label">{new Date(cover.data.publishedAt).toLocaleDateString('ko-KR')}</span>
+              )}
             </div>
 
             <dl class="ol-story-biblio-list">

@@ -9,7 +9,7 @@ partOrder: 20
 group: "첫 전법"
 groupSlug: "first-teaching"
 groupOrder: 20
-category: "인물 · 행적"
+category: "부처님 일대기"
 chapter: 3
 order: 3
 version: "v0.0.1-test"
