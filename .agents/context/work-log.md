@@ -182,3 +182,11 @@ This file records concise date-based work summaries for continuity across Codex 
 - Included the current Buddha Story chapter filename/order cleanup under `src/content/story/buddha-story/part-1/`.
 - Local validation: `npm run build` passed before push.
 - Deployment completion was not checked by design.
+
+### STORY htmlAsset Removal Upload
+
+- Pushed commit `8a80619` (`Remove unused story htmlAsset`) to `origin/main`.
+- Removed the unused STORY-only `htmlAsset` field from the content schema, STORY frontmatter, and dormant STORY page code.
+- Removed the unused `storyAsset()` helper and updated the internal content management manual to reflect the new STORY rule set.
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
