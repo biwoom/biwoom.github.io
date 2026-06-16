@@ -1,7 +1,7 @@
 # OL 홈페이지 콘텐츠 관리 매뉴얼
 
-**문서 버전**: v1.5  
-**최종 업데이트**: 2026-06-15  
+**문서 버전**: v1.6  
+**최종 업데이트**: 2026-06-16  
 **대상 프로젝트**: OL HOME (`biwoom.github.io`)  
 **기술 스택**: Astro 6 + GitHub Pages + Pagefind  
 **기준 배포 URL**: `https://biwoom.github.io/`  
@@ -276,7 +276,7 @@ src/content/story/
 
 `index.md`도 STORY 컬렉션 entry이며, 시리즈 대표 정보와 서지정보 역할을 합니다.
 TEXT 시리즈 `index.md`와 마찬가지로 `kind: series`를 사용합니다.
-개별 STORY 문서에 필요한 `part`, `group`, `chapter`, `order`, `publishedAt`, `htmlAsset`는 시리즈 `index.md`에 적지 않습니다.
+개별 STORY 문서에 필요한 `part`, `group`, `chapter`, `order`, `publishedAt`는 시리즈 `index.md`에 적지 않습니다.
 
 ### 2.2 STORY 시리즈 예시
 
@@ -326,7 +326,6 @@ category: "붓다전기"
 version: "v1.0"
 status: draft
 publishedAt: 2026-06-11
-htmlAsset: "index.html"
 description: "싯다르타가 궁을 떠나는 장면."
 tags:
   - "인물/싯다르타"
@@ -543,12 +542,6 @@ export default defineConfig({
 - `htmlAsset`, `thumbnailAsset`, `imageAsset`, `previewAssets`가 실제 파일명과 일치하는지 확인합니다.
 - `npm run build` 또는 `npm run sync:assets`를 실행했는지 확인합니다.
 
-### STORY HTML 자산 링크가 깨짐
-
-- 자산이 `src/content/story/{series}/assets/` 안에 있는지 확인합니다.
-- `htmlAsset` 값이 실제 파일명과 일치하는지 확인합니다.
-- 빌드 후 `public/generated/story/{series}/`에 파일이 복사되었는지 확인합니다.
-
 ### TEXT/STORY 태그 필터가 이상함
 
 TEXT/STORY의 사용자 필터용 태그는 `/`를 사용합니다.
@@ -590,14 +583,14 @@ tags:
 - [ ] 시리즈 폴더 생성: `src/content/story/{series}/`
 - [ ] 서지정보 작성: `src/content/story/{series}/index.md`
 - [ ] 시리즈 `index.md`에는 `kind: series` 지정
-- [ ] 시리즈 `index.md`에는 개별 문서용 `part`, `group`, `chapter`, `order`, `publishedAt`, `htmlAsset`를 작성하지 않음
+- [ ] 시리즈 `index.md`에는 개별 문서용 `part`, `group`, `chapter`, `order`, `publishedAt`를 작성하지 않음
 - [ ] 자산 저장: `src/content/story/{series}/assets/`
 - [ ] PART 문서 작성: `src/content/story/{series}/part-x/...md`
 - [ ] 개별 문서에는 `kind: document` 지정
 - [ ] `seriesSlug`, `partSlug`, `groupSlug`, `order` 확인
-- [ ] 개별 문서에는 `publishedAt`, 필요시 `htmlAsset` 작성
+- [ ] 개별 문서에는 `publishedAt` 작성
 - [ ] 태그는 `prefix/name` 방식으로 작성
-- [ ] `npm run build` 후 `public/generated/story/{series}/` 확인
+- [ ] `npm run build` 확인
 
 ### DESIGN
 
@@ -640,6 +633,11 @@ tags:
 ---
 
 ## 수정 변경사항
+
+### 2026-06-16 · v1.6
+
+- STORY frontmatter에서 더 이상 사용하지 않는 `htmlAsset` 필드를 제거했습니다.
+- STORY 시리즈 및 개별 문서 작성 규칙, 체크리스트, 예시에서 `htmlAsset` 관련 설명을 삭제했습니다.
 
 ### 2026-06-15 · v1.5
 

@@ -129,34 +129,6 @@ const statusLabel: Record<string, string> = {
                   </div>
                 )}
 
-                {/* <div style="display:flex;gap:10px;margin-top:auto;">
-                  <a
-                    href={url(getStoryEntryUrl(entry))}
-                    class="ol-btn ol-btn-primary ol-btn-sm"
-                    style="flex:1;justify-content:center;"
-                  >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <line x1="2" y1="12" x2="22" y2="12"/>
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                    </svg>
-                    시리즈 보기
-                  </a>
-
-                  {entry.data.htmlAsset && (
-                  <a
-                    href={url(`/generated/story/${entry.id}/${entry.data.htmlAsset}`)}
-                    download={`${story.label}-${entry.data.version}.html`}
-                    class="ol-btn ol-btn-outline ol-btn-sm"
-                    style="flex:1;justify-content:center;"
-                  >
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M12 3v13m0 0 4-4m-4 4-4-4M4 21h16"/>
-                    </svg>
-                    HTML 내려받기
-                  </a>
-                  )}
-                </div> */}
               </a>
             ))}
           </div>

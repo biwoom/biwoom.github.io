@@ -15,7 +15,6 @@ order: 1
 version: "v0.0.1-test"
 status: "draft"
 publishedAt: 2026-06-11
-htmlAsset: "index.html"
 primaryEntities: ["siddhartha-gautama"]
 description: "깨달음 장면을 테스트하기 위한 임시 장입니다."
 tags:

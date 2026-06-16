@@ -75,10 +75,6 @@ export function getStoryEntryUrl(entry: StoryEntry): string {
   return `/story/${seriesSlug}/${getStoryPartSlug(entry)}/${getStoryDocumentSlug(entry)}`;
 }
 
-export function storyAsset(entry: StoryEntry, asset?: string): string {
-  return asset ? `/generated/story/${entry.id}/${asset}` : '';
-}
-
 export function sortStoryEntries(entries: StoryEntry[]): StoryEntry[] {
   return [...entries].sort((a, b) => {
     const partDiff = (a.data.partOrder ?? 0) - (b.data.partOrder ?? 0);

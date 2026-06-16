@@ -7,7 +7,6 @@ import {
   formatStoryTag,
   getStoryEntryUrl,
   isStorySeriesIndex,
-  storyAsset,
 } from '../../../lib/story';
 
 export async function getStaticPaths() {
@@ -64,7 +63,6 @@ const statusLabel: Record<string, string> = {
   published: '출판됨',
 };
 const statusKey = cover.data.status ?? 'draft';
-const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
 ---
 
 <BaseLayout
@@ -168,13 +166,6 @@ const htmlUrl = storyAsset(cover, cover.data.htmlAsset);
             <strong class="ol-kr">{series.label}</strong>
             <em>{cover.data.version}</em>
           </div>
-          <!-- {htmlUrl && (
-            <div class="ol-story-downloads">
-              <a class="ol-btn ol-btn-outline ol-btn-sm" href={url(htmlUrl)} target="_blank" rel="noopener noreferrer">
-                원본 HTML
-              </a>
-            </div>
-          )} -->
         </section>
 
         <section class="ol-story-biblio-toc-card" data-story-mobile-collapsible data-mobile-collapsed="true">

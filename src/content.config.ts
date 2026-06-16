@@ -188,7 +188,6 @@ const storyCollection = defineCollection({
     version: z.string().default('v1.0'),
     status: z.enum(['draft', 'revising', 'ready', 'published']).default('draft'),
     publishedAt: z.coerce.date().optional(),
-    htmlAsset: z.string().optional(),
     primaryEntities: z.array(z.string()).default([]),
     description: z.string().optional(),
     tags: z.array(z.string()).default([]),

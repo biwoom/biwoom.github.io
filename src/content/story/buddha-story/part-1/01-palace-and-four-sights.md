@@ -15,7 +15,6 @@ order: 1
 version: "v0.0.1-test"
 status: "draft"
 publishedAt: 2026-06-11
-htmlAsset: "index.html"
 primaryEntities: ["siddhartha-gautama"]
 description: "궁전 안의 안락한 삶과 노인, 병자, 죽은 이, 수행자를 만나는 장면을 테스트하기 위한 임시 장입니다."
 tags:
@@ -42,4 +41,3 @@ published: true
 
 ## 의의
 사문유관은 싯다르타가 세상의 고통과 무상함을 처음으로 인식하는 중요한 전환점입니다. 이 경험을 통해 그는 출가를 결심하고, 고통의 원인과 해탈의 길을 탐구하기 시작합니다. 사문유관은 불교에서 인간 존재의 근본적인 문제와 수행의 필요성을 상징적으로 보여주는 이야기로 자주 인용됩니다.
-
