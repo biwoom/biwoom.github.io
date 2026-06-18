@@ -105,6 +105,25 @@ This file records concise date-based work summaries for continuity across Codex 
 - After GitHub upload/deploy requests, record the final pushed commit or branch immediately after push.
 - If deployment status is explicitly checked through GitHub Actions, add the run result here.
 
+## 2026-06-18
+
+### STORY, ENTITY, NET Planning Sync Upload
+
+- Updated `docs/붓다스토리 기획안 v0.2.md`, `docs/NET 기획 v0.2.md`, `docs/NET 지도 SVG 구현 기획 v0.1.md`, and `docs/STORY 원전 재구성 규칙 v0.3.md` to align the planning docs with the current `part-1` Buddha Story structure and the current `src/content.config.ts` schema.
+- Added new Person Entity docs:
+  - `src/content/entities/persons/sumedha.md`
+  - `src/content/entities/persons/sakka.md`
+  - `src/content/entities/persons/vissukamma.md`
+- Added new Place Entity docs:
+  - `src/content/entities/places/amaravati.md`
+  - `src/content/entities/places/himalaya.md`
+  - `src/content/entities/places/dhammika-mountain.md`
+- Updated `.agents/skills/ol-content-authoring/SKILL.md` with entity document creation rules and Buddha Story TOC guidance.
+- Updated `src/content.config.ts` so Entity and STORY frontmatter can support the current NET-oriented reference fields.
+- Local validation: `npm run build` passed.
+- Pushed commit `2a45e1e` (`Update story, entity, and net documentation`) to `origin/main`.
+- Deployment completion was not checked by design.
+
 ## 2026-06-13
 
 ### Buddha Story Test Cleanup Upload
