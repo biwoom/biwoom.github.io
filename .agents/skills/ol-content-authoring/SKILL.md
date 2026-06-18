@@ -28,6 +28,7 @@ description: Create or update OL HOME content entries under src/content. Use whe
 - Do not invent frontmatter fields without updating `src/content.config.ts`.
 - Preserve URL stability unless the user explicitly requests a rename.
 - Use `date` or `publishedAt` formats already used in nearby entries.
+- For BuddhaStory part names and candidate chapter titles, consult `docs/toc/붓다스토리(Buddha Story) 목차 v0.1.md` first. Treat it as a planning reference, not as a final route source; actual URLs follow `src/content/story/buddha-story`.
 - For TEXT and STORY tags, prefer `prefix/name` form:
 
 ```yaml
@@ -44,6 +45,45 @@ prefixTags:
   - "kind:blog"
   - "project:ol-home"
 ```
+
+## Entity Rules
+
+- Place entity documents under `src/content/entities/{type}s/`, such as `src/content/entities/persons/sumedha.md` or `src/content/entities/places/amaravati.md`.
+- Use `id` as the stable internal key. STORY `primaryEntities` and `primaryPlaces` must reference these ids, not Korean labels.
+- Use current schema field names:
+  - `type: "person"` or `type: "place"`.
+  - `name.en`, not `name.english`.
+  - `description`, not `summary` or `memoryPhrase`.
+  - Do not use `kind` or `entityType` in entity frontmatter.
+- When adding a Person Entity for a STORY document, add `appearsIn` entries pointing back to the current STORY route:
+
+```yaml
+appearsIn:
+  - type: story
+    title: "수메다, 길을 묻기 시작하다"
+    path: "/story/buddha-story/part-1/01-sumedha-begins-to-ask/"
+    role: "주요 인물"
+    storySlug: "buddha-story"
+    documentSlug: "01-sumedha-begins-to-ask"
+    partSlug: "part-1"
+    chapter: 1
+    order: 1
+```
+
+- When a Person Entity is tied to locations, use `primaryPlaces` with place ids:
+
+```yaml
+primaryPlaces:
+  - placeId: "amaravati"
+    relation: "출신지"
+```
+
+- When a STORY document uses `primaryPlaces`, make sure matching Place Entity documents exist under `src/content/entities/places/`.
+- Place Entity coordinates belong in `geo`. Do not put `lat`/`lng` directly in STORY or Person Entity documents.
+- If a place is legendary, broad, or uncertain, set `geo.confidence` to `low` or `unknown` and use `map.showOnMap: false` when a marker would mislead.
+- For NET readiness, fill these fields when the source supports them:
+  - Person: `primaryPlaces`, `appearsIn`, `relatedText`, `design`, `sourceTraditions`, `spiritualStatus`.
+  - Place: `placeType`, `geo`, `kingdom`, `historical`, `map`, `relatedPersons`, `relatedStories`, `relatedText`.
 
 ## Asset Rules
 

@@ -101,7 +101,7 @@ published: true
 ---
 ```
 
-현재 스키마가 `geo`, `kingdom`, `primaryPlaces`를 허용하지 않으면 구현 전에 스키마 확장이 필요하다.
+현재 `src/content.config.ts`에는 NET v0.1을 위한 최소 스키마가 반영되어 있다. Person Entity는 `primaryPlaces`를 사용할 수 있고, Place Entity는 `geo`, `kingdom`, `placeType`, `relatedPersons`, `relatedStories`, `relatedText`를 사용할 수 있다.
 
 ---
 
@@ -309,7 +309,7 @@ v0.1 제외:
 
 ### 5.1 1단계: 데이터 스키마 확장
 
-필요한 스키마 확장:
+현재 반영된 최소 스키마:
 
 ```txt
 Place Entity:
@@ -324,11 +324,16 @@ Place Entity:
 
 Story:
 - primaryPlaces
+
+Person Entity:
+- primaryPlaces
+- appearsIn
+- relatedText
+- design
+- sourceTraditions
 ```
 
-기존 `location.lat`, `location.lng`는 유지할 수 있다.
-
-좌표 보조 정보는 `geo` 또는 별도 필드로 확장한다.
+기존 `location.lat`, `location.lng`는 유지할 수 있다. 지도 렌더링에는 `geo`를 우선 사용하고, 구형 장소 문서와의 호환이 필요할 때만 `location.lat`, `location.lng`를 보조로 읽는다.
 
 ### 5.2 2단계: 장소 Entity 10개 작성
 
@@ -600,4 +605,3 @@ v0.5 이후:
 ## 10. 한 줄 결론
 
 NET 지도 SVG의 핵심은 지도를 잘 그리는 것이 아니라, 장소 Entity를 기준으로 STORY·TEXT·DESIGN·ENTITY를 안정적으로 연결하는 것이다.
-

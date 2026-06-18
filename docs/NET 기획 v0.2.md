@@ -27,7 +27,10 @@ v0.2는 NET과 ENTITY의 역할을 분리한다.
 5. 검색 결과에서는 ENTITY 개별 문서(`/entity/...`)로 진입할 수 있다.
 6. NET은 개별 Entity 상세 URL을 대체하지 않는다.
 7. Entity 원본 데이터에서 memoryPhrase 필드는 사용하지 않는다.
+8. 붓다스토리 관련 NET 연결은 `docs/toc/붓다스토리(Buddha Story) 목차 v0.1.md`의 파트명과 회차 구성을 우선 참고한다.
 ```
+
+NET에서 STORY 연결을 표시할 때는 현재 공개 문서 경로를 기준으로 하되, 파트명과 회차 후보를 정할 때는 `docs/toc/붓다스토리(Buddha Story) 목차 v0.1.md`를 먼저 확인한다. 이 목차는 최종본이 아니므로, 실제 문서 제목과 URL은 `src/content/story/buddha-story`의 현재 파일명을 우선한다.
 
 ## 1. 기획의 핵심 방향
 
@@ -604,18 +607,17 @@ src/content/entities/persons/sumedha.md
 
 권장 프론트메터:
 
+현재 구현된 Entity 스키마 기준 예시는 다음과 같다. `kind`, `entityType`, `summary`, `name.english`는 사용하지 않고, `type`, `description`, `name.en`을 사용한다.
+
 ```yaml
 ---
 id: "sumedha"
-kind: "entity"
-entityType: "person"
+type: "person"
 
 name:
   ko: "수메다"
+  en: "Sumedha"
   pali: "Sumedha"
-  sanskrit:
-  chinese:
-  english: "Sumedha"
 
 aliases:
   - "수메다 브라만"
@@ -623,33 +625,39 @@ aliases:
   - "미래의 고타마 부처"
   - "Sumedha the Brahmin"
 
-summary: "아마라와띠의 명문 브라만 가문에서 태어난 인물. 지식과 재산을 모두 갖추었으나 삶의 덧없음을 깊이 바라보고 출가의 길로 나아간다."
+description: "아마라와띠의 명문 브라만 가문에서 태어난 인물. 지식과 재산을 모두 갖추었으나 삶의 덧없음을 깊이 바라보고 출가의 길로 나아간다."
+tradition: "Buddha biography"
 
 primaryPlaces:
   - placeId: "amaravati"
     relation: "출신지"
-  - placeId: "muddy-road"
-    relation: "디빵까라 부처님에게 수기를 받은 장소"
+  - placeId: "himalaya"
+    relation: "출가 후 수행 지역"
 
 spiritualStatus:
-  pathStage:
-  attainment:
-  finalState:
+  pathStage: "보살도 시작"
   notes:
     - "미래 부처가 될 보살로 서사가 전개된다."
 
 appearsIn:
-  - title: "수메다, 길을 묻기 시작하다"
-    path: "/story/buddha-story/part-0/01-sumedha-begins-to-ask/"
-    role: "주인공"
+  - type: story
+    title: "수메다, 길을 묻기 시작하다"
+    path: "/story/buddha-story/part-1/01-sumedha-begins-to-ask/"
+    role: "주요 인물"
+    storySlug: "buddha-story"
+    documentSlug: "01-sumedha-begins-to-ask"
+    partSlug: "part-1"
+    chapter: 1
+    order: 1
 
 relatedText:
-  - title: "수메다는 누구인가"
+  - type: text
+    title: "수메다는 누구인가"
     path: "/text/buddha-story-deep-dive/who-is-sumedha/"
 
 design:
-  styleSheet: "/design/buddha-story/persons/sumedha-style/"
-  characterSheet: "/design/buddha-story/persons/sumedha-character-sheet/"
+  styleSheet: "/design/buddha-story-person-sumedha-style/"
+  characterSheet: "/design/buddha-story-person-sumedha-character-sheet/"
   profileImage: "/generated/design/buddha-story/assets/persons/sumedha/profile.webp"
 
 sourceTraditions:
@@ -660,10 +668,8 @@ sourceTraditions:
 tags:
   - "인물/수메다"
   - "장소/아마라와띠"
-  - "개념/보살도"
-  - "개념/수기"
+  - "주제/보살도"
   - "경전/마하붓다왐사"
-  - "시기/과거불_시대"
 
 published: true
 ---
@@ -712,15 +718,15 @@ src/content/entities/places/sravasti.md
 ```yaml
 ---
 id: "sravasti"
-kind: "entity"
-entityType: "place"
+type: "place"
+placeType: "city"
 
 name:
   ko: "사위성"
   pali: "Sāvatthī"
   sanskrit: "Śrāvastī"
   chinese: "舍衛城"
-  english: "Sravasti"
+  en: "Sravasti"
 
 aliases:
   - "사밧티"
@@ -729,9 +735,8 @@ aliases:
   - "Savatthi"
   - "Sravasti"
 
-summary: "코살라 왕국의 주요 도시. 부처님이 기원정사에서 오랫동안 머물며 많은 설법을 하신 장소로 전승된다."
-
-placeType: "city"
+description: "코살라 왕국의 주요 도시. 부처님이 기원정사에서 오랫동안 머물며 많은 설법을 하신 장소로 전승된다."
+kingdom: "kosala"
 
 geo:
   lat: 27.51
@@ -756,20 +761,16 @@ relatedPersons:
     relation: "주요 체류"
   - id: "pasenadi"
     relation: "코살라 왕"
-  - id: "anathapindika"
-    relation: "기원정사 후원자"
 
 relatedStories:
-  - title: "붓다의 사위성 체류"
+  - type: story
+    title: "붓다의 사위성 체류"
     path: "/story/buddha-story/..."
 
 relatedText:
-  - title: "기원정사의 의미"
+  - type: text
+    title: "기원정사의 의미"
     path: "/text/..."
-
-sourceNotes:
-  - title: "니까야 전승"
-    note: "사위성은 여러 니까야 경전의 설법 배경으로 등장한다."
 
 tags:
   - "장소/사위성"
@@ -782,6 +783,9 @@ published: true
 ```
 
 본문 권장 구조:
+
+```md
+# 사위성본문 권장 구조:
 
 ```md
 # 사위성
@@ -877,9 +881,11 @@ Entity 문서에서는 다음처럼 연결한다.
 
 ```yaml
 relatedText:
-  - title: "수메다는 누구인가"
+  - type: text
+    title: "수메다는 누구인가"
     path: "/text/buddha-story-deep-dive/who-is-sumedha/"
-  - title: "보살도와 수기 사상"
+  - type: text
+    title: "보살도와 수기 사상"
     path: "/text/buddha-story-deep-dive/bodhisatta-path-and-prediction/"
 ```
 
@@ -891,8 +897,8 @@ DESIGN은 Entity의 시각 자산을 담당한다.
 
 ```yaml
 design:
-  styleSheet: "/design/buddha-story/persons/sumedha-style/"
-  characterSheet: "/design/buddha-story/persons/sumedha-character-sheet/"
+  styleSheet: "/design/buddha-story-person-sumedha-style/"
+  characterSheet: "/design/buddha-story-person-sumedha-character-sheet/"
   profileImage: "/generated/design/buddha-story/assets/persons/sumedha/profile.webp"
 ```
 
@@ -900,8 +906,8 @@ design:
 
 ```yaml
 design:
-  mapIllustration: "/design/buddha-story/places/sravasti-map/"
-  sceneStyle: "/design/buddha-story/scenes/jetavana-style/"
+  mapIllustration: "/design/buddha-story-place-sravasti-map/"
+  sceneStyle: "/design/buddha-story-scene-jetavana-style/"
   imageAsset: "/generated/design/buddha-story/assets/places/sravasti.webp"
 ```
 

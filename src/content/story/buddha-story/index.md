@@ -1,25 +1,34 @@
 ---
 title: "붓다 스토리"
 kind: series
+subtitle: "부처님의 생애와 가르침 제자들의 이야기 모음"
 series: "붓다 스토리"
 seriesSlug: "buddha-story"
 seriesOrder: 10
 category: "부처님 일대기"
-version: "v0.0.1"
+version: "v0.1.0"
 status: "draft"
-primaryEntities: []
-description: "부처님의 일대기를 담은 이야기불교 시리즈입니다. 현재 개발 중입니다."
+primaryEntities:
+  - "sumedha"
+description: ""
 tags:
-  - "인물/싯다르타-고타마"
-  - "형식/불전"
-  - "형식/서사"
+  - "인물/수메다"
+  - "개념/보살도"
+  - "경전/마하붓다왐사"
+  - "형식/붓다스토리"
   - "주제/붓다전기"
 tagAliases:
-  "인물/싯다르타-고타마": ["Siddhartha Gautama", "석가모니", "부처님", "붓다"]
-  "형식/불전": ["Buddhist scripture", "불교 경전"]
-  "형식/서사": ["narrative", "story"]
+  "인물/수메다": ["Sumedha", "수메다 보살", "수메다 브라만", "수메다 고행자"]
+  "개념/보살도": ["Bodhisatta Path", "Bodhisattva Path", "보살의 길"]
+  "경전/마하붓다왐사": ["Mahābuddhavaṃsa", "Maha Buddhavamsa", "Great Chronicle of Buddhas"]
+  "형식/붓다스토리": ["Buddha Story", "OL STORY"]
   "주제/붓다전기": ["Buddha biography", "붓다 생애", "부처님 일대기"]
+prefixTags:
+  - "kind:story"
+  - "topic:붓다전기"
 license: "CC0"
+rightsHolder: "비움"
+lang: "ko"
 published: true
 ---
 

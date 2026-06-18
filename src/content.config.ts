@@ -12,6 +12,47 @@ const RelationSchema = z.object({
   note: z.string().optional(),
 });
 
+const ContentReferenceSchema = z.object({
+  type: z.enum(['story', 'text', 'design', 'blog', 'entity']).default('story'),
+  title: z.string(),
+  path: z.string(),
+  role: z.string().optional(),
+  storySlug: z.string().optional(),
+  documentSlug: z.string().optional(),
+  partSlug: z.string().optional(),
+  chapter: z.number().optional(),
+  order: z.number().optional(),
+  note: z.string().optional(),
+});
+
+const RelatedEntitySchema = z.object({
+  id: z.string(),
+  relation: z.string().optional(),
+  note: z.string().optional(),
+});
+
+const PlaceReferenceSchema = z.object({
+  placeId: z.string(),
+  relation: z.string().optional(),
+  note: z.string().optional(),
+});
+
+const DesignReferenceSchema = z.object({
+  styleSheet: z.string().optional(),
+  characterSheet: z.string().optional(),
+  profileImage: z.string().optional(),
+  imageAsset: z.string().optional(),
+  mapIllustration: z.string().optional(),
+  sceneStyle: z.string().optional(),
+});
+
+const SourceTraditionSchema = z.object({
+  title: z.string(),
+  role: z.string().optional(),
+  section: z.string().optional(),
+  note: z.string().optional(),
+});
+
 // ─── Entity 공통 스키마 ──────────────────────────────────
 const EntityBaseSchema = z.object({
   id: z.string(),
@@ -29,6 +70,11 @@ const EntityBaseSchema = z.object({
   aliases: z.array(z.string()).default([]),
   description: z.string().optional(),
   relations: z.array(RelationSchema).default([]),
+  appearsIn: z.array(ContentReferenceSchema).default([]),
+  relatedText: z.array(ContentReferenceSchema).default([]),
+  relatedDesign: z.array(ContentReferenceSchema).default([]),
+  design: DesignReferenceSchema.optional(),
+  sourceTraditions: z.array(SourceTraditionSchema).default([]),
   tags: z.array(z.string()).default([]),
   sources: z.array(z.string()).default([]),
   external_ids: z.object({
@@ -51,16 +97,45 @@ const PersonSchema = EntityBaseSchema.extend({
   }).optional(),
   tradition: z.string().optional(),
   nationality: z.string().optional(),
+  primaryPlaces: z.array(PlaceReferenceSchema).default([]),
+  spiritualStatus: z.object({
+    pathStage: z.string().optional(),
+    attainment: z.string().optional(),
+    finalState: z.string().optional(),
+    notes: z.array(z.string()).default([]),
+  }).optional(),
 });
 
 const PlaceSchema = EntityBaseSchema.extend({
   type: z.literal('place'),
+  placeType: z.string().optional(),
   location: z.object({
     country: z.string().optional(),
     region: z.string().optional(),
     lat: z.number().optional(),
     lng: z.number().optional(),
   }).optional(),
+  geo: z.object({
+    lat: z.number().optional(),
+    lng: z.number().optional(),
+    confidence: z.enum(['high', 'medium', 'low', 'unknown']).default('unknown'),
+    coordinateType: z.enum(['exact', 'approximate', 'traditional', 'unknown']).default('unknown'),
+    note: z.string().optional(),
+  }).optional(),
+  kingdom: z.string().optional(),
+  historical: z.object({
+    kingdom: z.string().optional(),
+    period: z.array(z.string()).default([]),
+    presentLocation: z.string().optional(),
+  }).optional(),
+  map: z.object({
+    showOnMap: z.boolean().default(true),
+    markerLabel: z.string().optional(),
+    defaultZoomLevel: z.number().optional(),
+  }).optional(),
+  relatedPersons: z.array(RelatedEntitySchema).default([]),
+  relatedStories: z.array(ContentReferenceSchema).default([]),
+  relatedText: z.array(ContentReferenceSchema).default([]),
   era: z.string().optional(),
 });
 
@@ -189,7 +264,15 @@ const storyCollection = defineCollection({
     status: z.enum(['draft', 'revising', 'ready', 'published']).default('draft'),
     publishedAt: z.coerce.date().optional(),
     primaryEntities: z.array(z.string()).default([]),
+    primaryPlaces: z.array(z.string()).default([]),
     description: z.string().optional(),
+    sourceTraditions: z.array(z.object({
+      title: z.string(),
+      role: z.string().optional(),
+      section: z.string().optional(),
+      note: z.string().optional(),
+    })).default([]),
+    relatedTextCandidates: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
     tagAliases: z.record(z.string(), z.array(z.string())).default({}),
     prefixTags: z.array(z.string()).default([]),
