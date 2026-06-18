@@ -190,3 +190,12 @@ This file records concise date-based work summaries for continuity across Codex 
 - Removed the unused `storyAsset()` helper and updated the internal content management manual to reflect the new STORY rule set.
 - Local validation: `npm run build` passed before push.
 - Deployment completion was not checked by design.
+
+### Docs Planning Update Upload
+
+- Pushed commit `c2124bb` (`Update docs for NET and story planning`) to `origin/main`.
+- Updated the 붓다스토리, NET, and STORY rules documents to reflect the current decisions: no public source-narrative release, no `memoryPhrase`, NET as a separate search/filter/map menu, and ENTITY kept as the existing detail-document system.
+- Added a new NET map SVG implementation planning document under `docs/`.
+- Included the reference images and the table-of-contents note files under `docs/` as part of the planning package.
+- Local validation: not run; this was a documentation-only update.
+- Deployment completion was not checked by design.
