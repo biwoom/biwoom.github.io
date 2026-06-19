@@ -239,6 +239,21 @@ This file records concise date-based work summaries for continuity across Codex 
 - Local validation: not run; this was a documentation-only update.
 - Deployment completion was not checked by design.
 
+## 2026-06-19
+
+### NET And Entity UX Upload
+
+- Pushed commit `4f4a56b` (`Update NET and entity UX`) to `origin/main`.
+- Scope uploaded:
+  - NET main and explore page UX updates
+  - entity detail mobile layout and breadcrumb updates
+  - NET page styles split into `src/styles/pages/net.css`
+  - entity page responsive styles in `src/styles/pages/entity.css`
+  - `OLEntityCard`, `OLEntityPanel`, and `EntityLayout` updates
+  - docs cleanup including the NET roadmap and NET SVG plan deletion
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
+
 ### NET Entry Page Phase 1 Upload
 
 - Pushed commit `17c15b3` (`feat: add NET entry page`) to `origin/main`.
