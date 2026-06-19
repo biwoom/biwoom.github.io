@@ -257,6 +257,31 @@ This file records concise date-based work summaries for continuity across Codex 
 ### NET Entry Page Phase 1 Upload
 
 - Pushed commit `17c15b3` (`feat: add NET entry page`) to `origin/main`.
+
+## 2026-06-20
+
+### NET, TEXT, STORY Name-Card Integration
+
+- Unified TEXT and STORY document-level Entity links to `entities: string[]`.
+- Added shared right-side Entity name-card panel behavior for TEXT and STORY detail pages:
+  - list mode
+  - inline detail mode
+  - back-to-list action
+  - compact switching between remaining cards
+- Added Concept Entity test cards:
+  - `five-aggregates`
+  - `twelve-sense-bases`
+- Connected those two cards to:
+  - `/text/body-mind-transformation/02-buddhist-worldview-two-perspectives/`
+- Fixed Entity detail relation and backlink links so they use typed Entity routes and display card titles instead of raw ids.
+- Adjusted STORY mobile responsive behavior after the new 3-column desktop layout introduced a specificity conflict.
+- Adjusted Entity detail mobile layout so the breadcrumb appears first and the side detail card moves above the article body.
+- Updated the NET explore center reset button to a stronger emphasized style.
+- Local validation: `npm run build` passed after the implementation changes.
+
+### Blog Post For This Development Slice
+
+- Added a public blog entry summarizing the first NET implementation slice and the shared name-card work across NET, TEXT, STORY, and ENTITY.
 - Added the first minimal `/net` route as the NET menu entry page.
 - Added `NET` to the main header navigation.
 - The page currently provides a hero section, Entity-only search form shell, Entity type count chips, and a latest Entity card list using the existing Entity card component.
@@ -303,3 +328,25 @@ This file records concise date-based work summaries for continuity across Codex 
 - Confirmed current Entity counts: 6 persons, 4 places, 2 concepts.
 - Local validation: `npm run build` passed and generated `/net/index.html`, `/net/explore/index.html`, and current Entity detail pages.
 - Deployment completion was not checked by design.
+
+### TEXT/STORY Entity Side Panel
+
+- Unified TEXT and STORY document Entity references on the shared `entities` frontmatter field.
+- Migrated current Buddha Story documents from `primaryEntities` / `primaryPlaces` to `entities`.
+- Added Concept Entity documents:
+  - `five-aggregates`
+  - `twelve-sense-bases`
+- Connected those two Concept Entities to `src/content/text/body-mind-transformation/part/02-buddhist-worldview-two-perspectives.md`.
+- Added a reusable `OLEntitySidePanel` for document-side name-card lists and in-panel detail switching.
+- Applied the Entity side panel to TEXT and STORY detail pages.
+- Updated internal content authoring guidance and the content management manual for the new `entities` rule.
+- Local validation: `npm run build` passed and generated the new concept detail routes plus updated TEXT/STORY detail pages.
+- Browser verification: in-app Browser was unavailable in this session; static HTML inspection confirmed side-panel markup, back control, alternate-card controls, and client script presence in the built TEXT/STORY pages.
+
+### Entity Detail Relation Link Fix
+
+- Fixed Entity detail relation/backlink links so they resolve to typed Entity routes such as `/entity/concepts/dependent-origination/` instead of missing `/entity/{id}` routes.
+- Updated relation/backlink display text to use Entity Korean names and type labels instead of raw ids.
+- Restyled relation/backlink lists to match the compact name-card/detail-panel direction used in NET.
+- Fixed STORY detail mobile layout override so the new 3-column desktop reader collapses back to one column on mobile.
+- Local validation: `npm run build` passed.

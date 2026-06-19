@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import TextLayout from '../../../layouts/TextLayout.astro';
+import OLEntitySidePanel from '../../../components/entity/OLEntitySidePanel.astro';
 import { url } from '../../../lib/url';
 import { getTextDocSlug, getTextEntryUrl, getTextSeriesSlug, formatTextTag, isTextDocumentEntry, getTextSeries } from '../../../lib/text';
 
@@ -39,6 +40,11 @@ const currentUrl = url(getTextEntryUrl(entry));
 const pagefindBreadcrumb = ['TEXT', entry.data.series, entry.data.part, entry.data.group]
   .filter(Boolean)
   .join(' · ');
+const allEntities = await getCollection('entities', e => e.data.published);
+const entityById = new Map(allEntities.map(entity => [entity.data.id, entity]));
+const documentEntities = Array.from(new Set(entry.data.entities))
+  .map(id => entityById.get(id))
+  .filter((entity): entity is typeof allEntities[number] => Boolean(entity));
 ---
 
 <TextLayout
@@ -56,8 +62,9 @@ const pagefindBreadcrumb = ['TEXT', entry.data.series, entry.data.part, entry.da
     breadcrumb: pagefindBreadcrumb,
   }}
 >
-  <article class="ol-text-article">
-    <header class="ol-text-doc-header">
+  <div class:list={['ol-text-doc-shell', documentEntities.length > 0 && 'ol-text-doc-shell--with-entities']}>
+    <article class="ol-text-article">
+      <header class="ol-text-doc-header">
       <div class="ol-text-doc-topline">
         <div class="ol-text-breadcrumb">
           <a href={url('/text')}>TEXT</a>
@@ -158,43 +165,46 @@ const pagefindBreadcrumb = ['TEXT', entry.data.series, entry.data.part, entry.da
           {entry.data.copyrightNotice && <span>{entry.data.copyrightNotice}</span>}
         </div>
       )}
-    </header>
+      </header>
 
-    <div class="ol-prose ol-kr">
-      <Content />
-    </div>
+      <div class="ol-prose ol-kr">
+        <Content />
+      </div>
 
-    {(prevEntry || nextEntry) && (
-      <nav class="ol-doc-nav" aria-label="이전 다음 문서">
-        {prevEntry ? (
-          <a class="ol-doc-nav-item ol-doc-nav-item--prev" href={url(getTextEntryUrl(prevEntry))}>
-            <span class="ol-doc-nav-kicker">이전 문서</span>
-            <strong class="ol-kr">{prevEntry.data.title}</strong>
-          </a>
-        ) : <span class="ol-doc-nav-spacer" />}
-        {nextEntry ? (
-          <a class="ol-doc-nav-item ol-doc-nav-item--next" href={url(getTextEntryUrl(nextEntry))}>
-            <span class="ol-doc-nav-kicker">다음 문서</span>
-            <strong class="ol-kr">{nextEntry.data.title}</strong>
-          </a>
-        ) : <span class="ol-doc-nav-spacer" />}
-      </nav>
-    )}
+      {(prevEntry || nextEntry) && (
+        <nav class="ol-doc-nav" aria-label="이전 다음 문서">
+          {prevEntry ? (
+            <a class="ol-doc-nav-item ol-doc-nav-item--prev" href={url(getTextEntryUrl(prevEntry))}>
+              <span class="ol-doc-nav-kicker">이전 문서</span>
+              <strong class="ol-kr">{prevEntry.data.title}</strong>
+            </a>
+          ) : <span class="ol-doc-nav-spacer" />}
+          {nextEntry ? (
+            <a class="ol-doc-nav-item ol-doc-nav-item--next" href={url(getTextEntryUrl(nextEntry))}>
+              <span class="ol-doc-nav-kicker">다음 문서</span>
+              <strong class="ol-kr">{nextEntry.data.title}</strong>
+            </a>
+          ) : <span class="ol-doc-nav-spacer" />}
+        </nav>
+      )}
 
-    {entry.data.sources.length > 0 && (
-      <footer class="ol-text-sources">
-        <h2 class="ol-kicker">참고 문헌</h2>
-        <ul>
-          {entry.data.sources.map(src => (
-            <li>
-              <span class="ol-kr">{src.text}</span>
-              {src.passage && <span>{src.passage}</span>}
-            </li>
-          ))}
-        </ul>
-      </footer>
-    )}
-  </article>
+      {entry.data.sources.length > 0 && (
+        <footer class="ol-text-sources">
+          <h2 class="ol-kicker">참고 문헌</h2>
+          <ul>
+            {entry.data.sources.map(src => (
+              <li>
+                <span class="ol-kr">{src.text}</span>
+                {src.passage && <span>{src.passage}</span>}
+              </li>
+            ))}
+          </ul>
+        </footer>
+      )}
+    </article>
+
+    <OLEntitySidePanel entities={documentEntities.map(entity => entity.data)} title="TEXT 이름카드" />
+  </div>
 </TextLayout>
 
 <script>

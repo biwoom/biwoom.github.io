@@ -114,6 +114,11 @@
     min-height: auto;
   }
 
+  .ol-story-doc-page .ol-story-part-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
   .ol-story-part-sidebar {
     border-right: none;
     border-bottom: 1px solid var(--ol-border);

@@ -23,10 +23,8 @@ version: "v0.1.0"
 status: "draft"
 publishedAt: 2026-06-18
 
-primaryEntities:
+entities:
   - "sumedha"
-
-primaryPlaces:
   - "amaravati"
 
 description: "수메다가 자신의 삶과 몸을 바라보며, 열반을 찾기 위해 새로운 길을 결심하다."

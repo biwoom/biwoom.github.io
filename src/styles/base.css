@@ -46,6 +46,7 @@ a { color: inherit; }
 /* ===== Typography helpers ===== */
 .ol-font-mono { font-family: var(--ol-font-mono); }
 .ol-mono-label {
+  display: block;
   font-family: var(--ol-font-mono);
   font-size: 11px;
   letter-spacing: 0.06em;

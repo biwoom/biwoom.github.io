@@ -4,6 +4,10 @@
   min-height: 720px;
 }
 
+.ol-story-doc-page .ol-story-part-layout {
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) 280px;
+}
+
 .ol-story-part-sidebar {
   position: sticky;
   top: 64px;

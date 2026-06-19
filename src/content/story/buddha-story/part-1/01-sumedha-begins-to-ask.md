@@ -23,10 +23,8 @@ version: "v0.1.0"
 status: "draft"
 publishedAt: 2026-06-18
 
-primaryEntities:
+entities:
   - "sumedha"
-
-primaryPlaces:
   - "amaravati"
 
 description: "명문 브라만 가문에서 태어난 수메다가 부모의 죽음과 선조들의 유산을 마주하며 삶의 덧없음을 처음 깊이 바라보기 시작하다."

@@ -26,7 +26,7 @@ export async function buildSearchIndex() {
       id: doc.id,
       title: doc.data.title,
       excerpt: doc.data.description ?? '',
-      entities: doc.data.primaryEntities ?? [],
+      entities: doc.data.entities ?? [],
       tags: doc.data.tags ?? [],
       url: getStoryEntryUrl(doc),
     })),

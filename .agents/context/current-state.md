@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-06-12
+Last updated: 2026-06-20
 
 ## Project
 
@@ -25,6 +25,8 @@ Last updated: 2026-06-12
 - `src/content/entities/` and `src/content/ontology/` hold knowledge graph material.
 - `public/atlas/` holds static ATLAS HTML archives.
 - `public/generated/` is generated from content assets and should not be committed.
+- TEXT and STORY document-level Entity links use a shared `entities: string[]` frontmatter field.
+- TEXT and STORY detail pages can render a right-side Entity name-card panel from the document `entities` list.
 
 ## Deployment State
 
@@ -52,12 +54,15 @@ Last updated: 2026-06-12
   - `/pages/content-management-manual/`
 - Added Codex project guidance, skills, config, and rules.
 - Added continuity context documents under `.agents/context/`.
+- Added the first shared TEXT/STORY Entity side-panel implementation.
+- Added Concept Entity test cards for `five-aggregates` and `twelve-sense-bases`.
 
 ## Open Follow-ups
 
 - Keep context files updated after meaningful work and after GitHub upload/deploy requests.
 - Consider adding examples to OL content skills if future content tasks reveal repeated patterns.
 - Keep deployment docs aligned if GitHub Pages settings or repository naming changes again.
+- If older planning docs mention STORY `primaryEntities` or `primaryPlaces`, treat them as historical notes; current TEXT/STORY document linking uses `entities`.
 
 ## Known Acceptable Warnings
 

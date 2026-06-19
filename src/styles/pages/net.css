@@ -494,6 +494,22 @@
   color: var(--ol-ink);
 }
 
+.net-reset-button--primary {
+  min-height: 34px;
+  padding: 6px 12px;
+  border-color: var(--ol-ink);
+  background: var(--ol-ink);
+  color: var(--ol-bg);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.net-reset-button--primary:hover {
+  border-color: var(--ol-ink);
+  background: var(--ol-ink-strong);
+  color: var(--ol-ink);
+}
+
 .net-reset-button--sidebar {
   width: 100%;
   min-height: 34px;

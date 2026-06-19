@@ -222,7 +222,6 @@ const textCollection = defineCollection({
     status: z.enum(['draft', 'revising', 'ready', 'published']).default('draft'),
     entities: z.array(z.string()).default([]),
     relations: z.array(RelationSchema).default([]),
-    primary_entity: z.string().optional(),
     sources: z.array(z.object({
       text: z.string(),
       ref: z.string().optional(),
@@ -263,8 +262,7 @@ const storyCollection = defineCollection({
     version: z.string().default('v1.0'),
     status: z.enum(['draft', 'revising', 'ready', 'published']).default('draft'),
     publishedAt: z.coerce.date().optional(),
-    primaryEntities: z.array(z.string()).default([]),
-    primaryPlaces: z.array(z.string()).default([]),
+    entities: z.array(z.string()).default([]),
     description: z.string().optional(),
     sourceTraditions: z.array(z.object({
       title: z.string(),

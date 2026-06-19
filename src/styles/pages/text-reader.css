@@ -242,6 +242,22 @@
   max-width: 860px;
 }
 
+.ol-text-main > .ol-text-doc-shell {
+  width: 100%;
+  max-width: 1120px;
+}
+
+.ol-text-doc-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 780px);
+  gap: 32px;
+  align-items: start;
+}
+
+.ol-text-doc-shell--with-entities {
+  grid-template-columns: minmax(0, 780px) 280px;
+}
+
 .ol-text-article {
   color: #2d2924;
 }
@@ -406,4 +422,3 @@
 .ol-text-series-page .ol-text-doc-header {
   margin-bottom: 34px;
 }
-

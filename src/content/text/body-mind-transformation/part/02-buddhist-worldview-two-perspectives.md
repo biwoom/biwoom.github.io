@@ -13,6 +13,9 @@ chapter: 2
 order: 2
 date: 2026-06-13
 status: revising
+entities:
+  - "five-aggregates"
+  - "twelve-sense-bases"
 tags:
   - "개념/불교세계관"
   - "개념/오온"

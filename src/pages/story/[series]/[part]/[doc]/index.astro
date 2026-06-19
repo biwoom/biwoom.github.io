@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import OLEntitySidePanel from '../../../../../components/entity/OLEntitySidePanel.astro';
 import { url } from '../../../../../lib/url';
 import {
   buildStoryHierarchy,
@@ -65,6 +66,11 @@ const currentUrl = url(getStoryEntryUrl(entry));
 const pagefindBreadcrumb = ['STORY', series?.label ?? entry.data.series, entry.data.part, entry.data.group]
   .filter(Boolean)
   .join(' · ');
+const allEntities = await getCollection('entities', e => e.data.published);
+const entityById = new Map(allEntities.map(entity => [entity.data.id, entity]));
+const documentEntities = Array.from(new Set(entry.data.entities))
+  .map(id => entityById.get(id))
+  .filter((entity): entity is typeof allEntities[number] => Boolean(entity));
 ---
 
 <BaseLayout
@@ -287,6 +293,8 @@ const pagefindBreadcrumb = ['STORY', series?.label ?? entry.data.series, entry.d
             </nav>
           )}
         </article>
+
+        <OLEntitySidePanel entities={documentEntities.map(entity => entity.data)} title="STORY 이름카드" />
       </div>
     </section>
   </main>

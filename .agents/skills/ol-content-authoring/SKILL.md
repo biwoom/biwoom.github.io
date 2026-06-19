@@ -49,7 +49,7 @@ prefixTags:
 ## Entity Rules
 
 - Place entity documents under `src/content/entities/{type}s/`, such as `src/content/entities/persons/sumedha.md` or `src/content/entities/places/amaravati.md`.
-- Use `id` as the stable internal key. STORY `primaryEntities` and `primaryPlaces` must reference these ids, not Korean labels.
+- Use `id` as the stable internal key. TEXT and STORY document `entities` arrays must reference these ids, not Korean labels.
 - Use current schema field names:
   - `type: "person"` or `type: "place"`.
   - `name.en`, not `name.english`.
@@ -78,7 +78,7 @@ primaryPlaces:
     relation: "출신지"
 ```
 
-- When a STORY document uses `primaryPlaces`, make sure matching Place Entity documents exist under `src/content/entities/places/`.
+- When a TEXT or STORY document lists a place id in `entities`, make sure the matching Place Entity document exists under `src/content/entities/places/`.
 - Place Entity coordinates belong in `geo`. Do not put `lat`/`lng` directly in STORY or Person Entity documents.
 - If a place is legendary, broad, or uncertain, set `geo.confidence` to `low` or `unknown` and use `map.showOnMap: false` when a marker would mislead.
 - For NET readiness, fill these fields when the source supports them:

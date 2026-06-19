@@ -8,7 +8,7 @@ seriesOrder: 10
 category: "부처님 일대기"
 version: "v0.1.0"
 status: "draft"
-primaryEntities:
+entities:
   - "sumedha"
 description: ""
 tags:

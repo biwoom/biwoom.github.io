@@ -23,12 +23,10 @@ version: "v0.1.0"
 status: "draft"
 publishedAt: 2026-06-18
 
-primaryEntities:
+entities:
   - "sumedha"
   - "sakka"
   - "vissukamma"
-
-primaryPlaces:
   - "amaravati"
   - "himalaya"
   - "dhammika-mountain"

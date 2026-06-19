@@ -1,0 +1,304 @@
+---
+import { url } from '../../lib/url';
+
+interface EntityReference {
+  title: string;
+  path: string;
+  role?: string;
+}
+
+interface EntityData {
+  id: string;
+  type: string;
+  name: {
+    ko: string;
+    en?: string;
+    pali?: string;
+    sanskrit?: string;
+    chinese?: string;
+  };
+  aliases?: string[];
+  description?: string;
+  tags?: string[];
+  relatedText?: EntityReference[];
+  relatedDesign?: EntityReference[];
+  appearsIn?: EntityReference[];
+  sources?: string[];
+  design?: {
+    profileImage?: string;
+  };
+}
+
+interface Props {
+  entities: EntityData[];
+  title?: string;
+}
+
+const { entities, title = '문서 이름카드' } = Astro.props;
+const typeLabels: Record<string, string> = {
+  person: '인물',
+  place: '장소',
+  concept: '개념',
+  text: '문헌',
+  event: '사건',
+  practice: '수행',
+  school: '학파',
+};
+
+const entityHref = (entity: EntityData) => url(`/entity/${entity.type}s/${entity.id}`);
+const entityNames = (entity: EntityData) => [
+  entity.name.en,
+  entity.name.sanskrit,
+  entity.name.pali,
+  entity.name.chinese,
+].filter(Boolean);
+
+const prepared = entities.map(entity => ({
+  entity,
+  href: entityHref(entity),
+  detail: JSON.stringify({
+    id: entity.id,
+    type: typeLabels[entity.type] ?? entity.type,
+    name: entity.name.ko,
+    names: entityNames(entity),
+    aliases: entity.aliases ?? [],
+    description: entity.description ?? '',
+    tags: entity.tags ?? [],
+    profileImage: entity.design?.profileImage ? url(entity.design.profileImage) : '',
+    href: entityHref(entity),
+    relatedText: entity.relatedText ?? [],
+    relatedDesign: entity.relatedDesign ?? [],
+    appearsIn: entity.appearsIn ?? [],
+    sourceCount: entity.sources?.length ?? 0,
+  }),
+}));
+---
+
+{prepared.length > 0 && (
+  <aside class="ol-entity-side-panel" data-entity-side-panel data-pagefind-ignore>
+    <div class="ol-entity-side-list" data-entity-side-list>
+      <div class="ol-entity-side-head">
+        <span class="ol-mono-label">{title}</span>
+        <strong>{prepared.length}</strong>
+      </div>
+      <div class="ol-entity-side-cards">
+        {prepared.map(({ entity, detail }) => (
+          <button
+            type="button"
+            class="ol-entity-side-card"
+            data-entity-side-card
+            data-entity-detail={detail}
+          >
+            <span class="ol-mono-label">{typeLabels[entity.type] ?? entity.type}</span>
+            <strong class="ol-kr">{entity.name.ko}</strong>
+            {entity.description && <span class="ol-kr">{entity.description}</span>}
+            {entity.tags && entity.tags.length > 0 && (
+              <em>
+                {entity.tags.slice(0, 2).map(tag => (
+                  <span class="ol-code">{tag}</span>
+                ))}
+              </em>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="ol-entity-side-detail" data-entity-side-detail hidden>
+      <button type="button" class="ol-entity-side-back" data-entity-side-back>
+        <span aria-hidden="true">←</span>
+        이름카드 목록
+      </button>
+      <figure class="ol-entity-side-profile" data-entity-side-profile hidden>
+        <img src="" alt="" loading="lazy" decoding="async" data-entity-side-profile-image />
+      </figure>
+      <span class="ol-mono-label" data-entity-side-type></span>
+      <h2 class="ol-kr" data-entity-side-name></h2>
+      <p class="ol-entity-side-names" data-entity-side-names hidden></p>
+      <p class="ol-kr ol-entity-side-description" data-entity-side-description></p>
+      <div class="ol-entity-side-tags" data-entity-side-tags hidden></div>
+      <div class="ol-entity-side-stats" data-entity-side-stats hidden></div>
+      <div class="ol-entity-side-links" data-entity-side-links hidden></div>
+      <a class="ol-entity-side-link" href="#" data-entity-side-link>상세 문서 열기</a>
+      {prepared.length > 1 && (
+        <div class="ol-entity-side-others">
+          <span class="ol-mono-label">다른 이름카드</span>
+          <div>
+            {prepared.map(({ entity, detail }) => (
+              <button
+                type="button"
+                class="ol-entity-side-other"
+                data-entity-side-other={entity.id}
+                data-entity-detail={detail}
+              >
+                {entity.name.ko}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </aside>
+)}
+
+<script>
+  type EntitySideReference = {
+    title: string;
+    path: string;
+    role?: string;
+  };
+
+  type EntitySideDetail = {
+    id: string;
+    type: string;
+    name: string;
+    names: string[];
+    aliases: string[];
+    description: string;
+    tags: string[];
+    profileImage: string;
+    href: string;
+    relatedText: EntitySideReference[];
+    relatedDesign: EntitySideReference[];
+    appearsIn: EntitySideReference[];
+    sourceCount: number;
+  };
+
+  const readEntitySideDetail = (button: HTMLElement) => {
+    try {
+      return JSON.parse(button.dataset.entityDetail || '{}') as EntitySideDetail;
+    } catch {
+      return null;
+    }
+  };
+
+  const appendEntitySideLinkSection = (
+    container: HTMLElement,
+    title: string,
+    refs: EntitySideReference[],
+  ) => {
+    if (!refs.length) return;
+    const section = document.createElement('section');
+    const heading = document.createElement('h3');
+    const list = document.createElement('ul');
+    heading.textContent = title;
+    refs.forEach(ref => {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = ref.path;
+      link.textContent = ref.role ? `${ref.title} · ${ref.role}` : ref.title;
+      item.append(link);
+      list.append(item);
+    });
+    section.append(heading, list);
+    container.append(section);
+  };
+
+  const setupEntitySidePanels = () => {
+    document.querySelectorAll<HTMLElement>('[data-entity-side-panel]').forEach(panel => {
+      if (panel.dataset.ready === 'true') return;
+      panel.dataset.ready = 'true';
+
+      const list = panel.querySelector<HTMLElement>('[data-entity-side-list]');
+      const detail = panel.querySelector<HTMLElement>('[data-entity-side-detail]');
+      const cards = Array.from(panel.querySelectorAll<HTMLElement>('[data-entity-side-card]'));
+      const otherCards = Array.from(panel.querySelectorAll<HTMLElement>('[data-entity-side-other]'));
+      const back = panel.querySelector<HTMLButtonElement>('[data-entity-side-back]');
+      const type = panel.querySelector<HTMLElement>('[data-entity-side-type]');
+      const name = panel.querySelector<HTMLElement>('[data-entity-side-name]');
+      const names = panel.querySelector<HTMLElement>('[data-entity-side-names]');
+      const profile = panel.querySelector<HTMLElement>('[data-entity-side-profile]');
+      const profileImage = panel.querySelector<HTMLImageElement>('[data-entity-side-profile-image]');
+      const description = panel.querySelector<HTMLElement>('[data-entity-side-description]');
+      const tags = panel.querySelector<HTMLElement>('[data-entity-side-tags]');
+      const stats = panel.querySelector<HTMLElement>('[data-entity-side-stats]');
+      const links = panel.querySelector<HTMLElement>('[data-entity-side-links]');
+      const detailLink = panel.querySelector<HTMLAnchorElement>('[data-entity-side-link]');
+
+      const showList = () => {
+        if (list) list.hidden = false;
+        if (detail) detail.hidden = true;
+        cards.forEach(card => card.classList.remove('active'));
+        otherCards.forEach(card => card.classList.remove('active'));
+      };
+
+      const showDetail = (trigger: HTMLElement) => {
+        const data = readEntitySideDetail(trigger);
+        if (!data || !detail) return;
+        cards.forEach(card => {
+          const item = readEntitySideDetail(card);
+          card.classList.toggle('active', item?.id === data.id);
+        });
+        otherCards.forEach(card => {
+          const item = readEntitySideDetail(card);
+          card.classList.toggle('active', item?.id === data.id);
+          card.hidden = item?.id === data.id;
+        });
+        if (type) type.textContent = data.type;
+        if (name) name.textContent = data.name;
+        if (names) {
+          const allNames = [...data.names, ...data.aliases];
+          names.textContent = allNames.join(' · ');
+          names.hidden = allNames.length === 0;
+        }
+        if (profile && profileImage) {
+          if (data.profileImage) {
+            profileImage.src = data.profileImage;
+            profileImage.alt = `${data.name} 프로필 이미지`;
+            profile.hidden = false;
+          } else {
+            profileImage.removeAttribute('src');
+            profileImage.alt = '';
+            profile.hidden = true;
+          }
+        }
+        if (description) {
+          description.textContent = data.description || '아직 요약 설명이 준비되지 않았습니다.';
+        }
+        if (tags) {
+          tags.innerHTML = '';
+          data.tags.forEach(tag => {
+            const chip = document.createElement('span');
+            chip.className = 'ol-code';
+            chip.textContent = tag;
+            tags.append(chip);
+          });
+          tags.hidden = data.tags.length === 0;
+        }
+        if (stats) {
+          stats.innerHTML = '';
+          [
+            ['관련 문서', data.relatedText.length + data.relatedDesign.length + data.appearsIn.length],
+            ['태그', data.tags.length],
+            ['출처', data.sourceCount],
+          ].forEach(([label, value]) => {
+            const item = document.createElement('span');
+            item.innerHTML = `<strong>${value}</strong><em>${label}</em>`;
+            stats.append(item);
+          });
+          stats.hidden = false;
+        }
+        if (links) {
+          links.innerHTML = '';
+          appendEntitySideLinkSection(links, '관련 STORY', data.appearsIn);
+          appendEntitySideLinkSection(links, '관련 TEXT', data.relatedText);
+          appendEntitySideLinkSection(links, '관련 DESIGN', data.relatedDesign);
+          links.hidden = links.children.length === 0;
+        }
+        if (detailLink) detailLink.href = data.href;
+        if (list) list.hidden = true;
+        detail.hidden = false;
+      };
+
+      cards.forEach(card => {
+        card.addEventListener('click', () => showDetail(card));
+      });
+      otherCards.forEach(card => {
+        card.addEventListener('click', () => showDetail(card));
+      });
+      back?.addEventListener('click', showList);
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', setupEntitySidePanels);
+</script>

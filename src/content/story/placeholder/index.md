@@ -6,7 +6,7 @@ part: "PART 1"
 partSlug: "part-1"
 version: "v0.1"
 publishedAt: 2026-05-29
-primaryEntities: []
+entities: []
 description: "첫 번째 완결 STORY가 곧 출판됩니다."
 tags:
   - "상태/준비중"

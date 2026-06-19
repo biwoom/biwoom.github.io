@@ -76,3 +76,13 @@ This file records durable project decisions that future Codex sessions should pr
 
 - The project previously used or referenced `ol-home` and project-page style URLs.
 - Those references may remain in historical blog content but should not drive current deployment configuration.
+
+## 2026-06-20
+
+### TEXT/STORY Entity Links
+
+- TEXT and STORY document frontmatter should use `entities: string[]` for document-level Entity links.
+- The `entities` array may contain person, place, concept, or other Entity ids together; type is resolved from the Entity document.
+- STORY document fields `primaryEntities` and `primaryPlaces` are no longer used.
+- TEXT document field `primary_entity` is no longer used.
+- The order of ids in `entities` is the display order for document-side name-card panels.

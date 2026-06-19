@@ -2,34 +2,69 @@
 import type { Triple } from '../../lib/relations';
 import { url } from '../../lib/url';
 
+type EntityLike = {
+  data: {
+    id: string;
+    type: string;
+    name: {
+      ko: string;
+      en?: string;
+    };
+    description?: string;
+  };
+};
+
 interface Props {
   title: string;
   relations: Triple[];
   direction: 'outgoing' | 'incoming';
+  entityMap: Map<string, EntityLike>;
 }
 
-const { title, relations, direction } = Astro.props;
+const { title, relations, direction, entityMap } = Astro.props;
+const typeLabels: Record<string, string> = {
+  person: '인물',
+  place: '장소',
+  concept: '개념',
+  text: '문헌',
+  event: '사건',
+  practice: '수행',
+  school: '학파',
+};
+const targetId = (rel: Triple) => direction === 'outgoing' ? rel.object : rel.subject;
+const targetEntity = (rel: Triple) => entityMap.get(targetId(rel));
+const targetHref = (entity: EntityLike | undefined, id: string) =>
+  entity ? url(`/entity/${entity.data.type}s/${entity.data.id}`) : '';
 ---
 
 <section class="ol-relation-links">
   <h2 class="ol-mono-label">{title} ({relations.length})</h2>
   <ul>
-    {relations.map(rel => (
+    {relations.map(rel => {
+      const id = targetId(rel);
+      const entity = targetEntity(rel);
+      const href = targetHref(entity, id);
+      const typeLabel = entity ? typeLabels[entity.data.type] ?? entity.data.type : '미등록';
+      return (
       <li>
         <span class="ol-relation-predicate">{rel.predicate}</span>
-        {direction === 'outgoing' ? (
-          <a href={url(`/entity/${rel.object}`)} style="color: var(--ol-ink); text-decoration: none; border-bottom: 1px solid var(--ol-border);">
-            {rel.object}
+        {entity ? (
+          <a href={href} class="ol-relation-target">
+            <span>{typeLabel}</span>
+            <strong class="ol-kr">{entity.data.name.ko}</strong>
+            {entity.data.name.en && <em>{entity.data.name.en}</em>}
           </a>
         ) : (
-          <a href={url(`/entity/${rel.subject}`)} style="color: var(--ol-ink); text-decoration: none; border-bottom: 1px solid var(--ol-border);">
-            {rel.subject}
-          </a>
+          <span class="ol-relation-target ol-relation-target--missing">
+            <span>{typeLabel}</span>
+            <strong>{id}</strong>
+          </span>
         )}
         {rel.note && (
-          <span style="color: var(--ol-muted); font-size: 12px;">— {rel.note}</span>
+          <span class="ol-relation-note">— {rel.note}</span>
         )}
       </li>
-    ))}
+      );
+    })}
   </ul>
 </section>
