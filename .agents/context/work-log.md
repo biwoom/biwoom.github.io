@@ -280,3 +280,26 @@ This file records concise date-based work summaries for continuity across Codex 
 - Refined the `/net` hero headline and lead copy to better fit the new NET exploratory framing.
 - Local validation: `npm run build` passed before push.
 - Deployment completion was not checked by design.
+
+### NET Profile Image And Mobile Detail Panel Upload
+
+- Pushed commit `6f6adae` (`MAKE:profile image`) to `origin/main`.
+- Added Sumitta profile image source/reference assets and a new `sumitta-profile` DESIGN entry.
+- Added `sumitta` as an Entity person entry and connected profile-image data into Entity/NET UI surfaces.
+- Updated `OLEntityPanel`, NET explore detail data, home product/stat components, footer navigation, design helper handling, and Entity/NET styles for profile-image display.
+- Pushed commit `9d08cae` (`net모바일 상세패널 모달 닫기버튼 숨김처리`) to `origin/main`.
+- Adjusted the NET explore mobile detail-panel modal close-button treatment.
+- Local validation: not recorded at push time; `npm run build` later passed on 2026-06-20 while reviewing current NET state.
+- Deployment completion was not checked by design.
+
+## 2026-06-20
+
+### NET Current State Review And Log Backfill
+
+- Reviewed current project state, OL brand identity, and `docs/NET 구현 로드맵 v0.1.md`.
+- Confirmed current NET implementation status against the roadmap:
+  - `/net` entry page, `/net/explore`, type filters, prefix tag filters, client search, detail panel, profile image display, mobile detail modal behavior, and related STORY/TEXT/DESIGN/name-card output are implemented.
+  - Concept Entity schema expansion, relationship graph, map-tab placeholder, and SVG map connection remain future roadmap work.
+- Confirmed current Entity counts: 6 persons, 4 places, 2 concepts.
+- Local validation: `npm run build` passed and generated `/net/index.html`, `/net/explore/index.html`, and current Entity detail pages.
+- Deployment completion was not checked by design.
