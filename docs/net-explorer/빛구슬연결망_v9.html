@@ -1,0 +1,922 @@
+<!-- 빛구슬 연결망 v9 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>빛구슬 연결망</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    /* 캔버스 */
+    #network { 
+      width: 100%; height: 1000px; background:#ffffff;
+      position: relative; /* ← 툴팁을 이 안에 절대배치 */
+      border: 3px solid #e0e0e0;
+      border-radius: 30px;
+    }
+
+    /* 툴팁(노드 위) */
+    .bigu-tooltip {
+      position: absolute; z-index: 9999;
+      min-width: min(92vw, 360px);
+      max-width: min(92vw, 420px);
+      background: #fff; border: 1px solid #e5e5e5; border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+      padding: 12px 14px;
+      transform: translate(-50%, -100%); /* 기준점: 중앙-아래 */
+      pointer-events: auto;
+    }
+    .bigu-tooltip .head {
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid #eee; padding-bottom:6px; margin-bottom:8px;
+      gap:8px;
+    }
+    .bigu-tooltip .close {
+      border:0; background:#eee; border-radius:8px; padding:4px 8px; cursor:pointer;
+    }
+    .bigu-tooltip .body { font-size:14px; line-height:1.6; color:#444; }
+    .bigu-tooltip .sub { margin:6px 0; white-space: pre-line;}
+
+/* 빛구슬 문장 박스: PC(툴팁) 및 모바일(모달) 통합 스타일 */
+.bigu-lightTx {
+  display: block !important;    /* 인라인 속성 강제 해제 */
+  margin-top: 12px !important;    /* 음수 마진 제거 및 위아래 적정 간격 확보 */
+  padding: 16px;               /* 내부 여백 */
+  background-color: #f9f9f9;    /* 연한 회색 배경 */
+  border: 1.2px solid #e0e0e0;  /* 옅은 회색 테두리 */
+  border-radius: 12px;         /* 부드러운 곡률 */
+  
+  /* 모바일 최적화 핵심 */
+  width: 100% !important;       /* 부모 너비에 맞춤 */
+  box-sizing: border-box;       /* 패딩이 너비를 넘지 않도록 함 */
+  word-break: keep-all;         /* 한글 단어 단위 줄바꿈 */
+  
+  /* 가독성 */
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* 모바일 모달 내부에서 문장 박스가 더 잘 보이도록 보정 */
+.bigu-modal .bigu-lightTx {
+  background-color: #fffef5;    /* 모바일 모달에서는 약간 더 따뜻한 색상 (선택사항) */
+  border-color: #d1b74f;        /* 포인트 컬러 테두리 */
+}
+
+    .bigu-btn {
+      display:inline-block; margin-top:1px; padding:8px 14px;
+      background:#d1b74f; color:#fff; border-radius:20px; text-decoration:none; font-size:14px;
+    }
+    .bigu-btn:hover { background:#c3a837; }
+
+    /* 접근성용 힌트 포커스 */
+    .vis-network:focus { outline: 2px solid #7f5af0; outline-offset:2px; }
+
+    /* === 중앙 팝업 모달 === */
+.bigu-backdrop{
+  position:fixed; inset:0; background:rgba(0,0,0,.4);
+  z-index: 9998; display:none;
+}
+.bigu-modal{
+position:fixed; z-index: 9999;
+left:50%; top:50%; transform:translate(-50%, -50%);
+width: min(92vw, 520px);
+max-height: calc(100vh - 32px); /* 화면 넘치지 않도록 제한 */
+background:#fff; border-radius:16px; border:1px solid #e5e5e5;
+box-shadow:0 20px 60px rgba(0,0,0,.25);
+padding:0;
+display:none;             /* 기본은 숨김 */
+overflow:hidden;
+/* flex는 '열릴 때' 클래스에서 부여 */
+padding-left: env(safe-area-inset-left);
+padding-right: env(safe-area-inset-right);
+}
+.bigu-modal.is-open{
+  display:flex;
+  flex-direction:column;
+}
+.bigu-modal .head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  position: sticky; top:0; z-index:1;
+  background:#fff;
+  border-bottom:1px solid #eee;
+  padding:12px 16px;         /* 기존 padding 재배치 */
+}
+.bigu-modal .close{
+  border:0; background:#eee; border-radius:8px; padding:6px 10px; cursor:pointer;
+}
+.bigu-modal .body{ 
+  font-size:15px; line-height:1.7; color:#333;
+  padding:12px 16px 16px;
+  overflow:auto;                     /* 본문만 스크롤 */
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
+  flex:1 1 auto; min-height:0;       /* 플렉스 컨테이너에서 스크롤 작동 */
+  word-break: break-word; overflow-wrap:anywhere; 
+}
+
+.bigu-modal .sub{ margin:8px 0; white-space: pre-line; }
+.bigu-modal .bigu-btn{ display:inline-block; margin-top:1px; padding:10px 16px;
+  background:#d1b74f; color:#fff; border-radius:22px; text-decoration:none; font-size:15px; }
+.bigu-modal .bigu-btn:hover{ background:#c3a837; }
+
+@media (max-width: 768px){
+  .bigu-tooltip{ display:none !important; }
+  .bigu-modal{ max-height: calc(100vh - 24px);}
+
+}
+  </style>
+
+<style>
+/* ===== 그래프 상단 검색바 ===== */
+.bigu-graph-search{
+  position: relative;
+  max-width: 1100px;
+  margin: 8px auto 10px;
+  display: flex; gap: 8px; align-items: center;
+  padding: 10px; border: 1px solid #eaeaea; border-radius: 10px; background: #fafafa;
+}
+.bigu-graph-search input[type="search"]{
+  flex: 1 1 auto; padding: 10px 12px; font-size: 15px; border: 1px solid #ddd; border-radius: 8px;
+  -webkit-appearance: none; min-width: 0; box-sizing: border-box;
+}
+.bigu-graph-search button{
+  padding: 10px 14px; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 14px;
+}
+
+/* ===== 오른쪽 사이드 패널 ===== */
+.bigu-graph-side{
+  /* position: fixed; top: 12px; right: 12px; z-index: 10000; */
+  position: absolute; top: 0px; right: 0px; z-index: 10000;
+  width: min(340px, 92vw); max-height: calc(100vh - 24px);
+  background: #fff; border: 1px solid #e5e5e5; border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  display: none; overflow: hidden;
+}
+.bigu-graph-side.open{ display: flex; flex-direction: column; }
+.bigu-graph-side .side-head{
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid #eee; background: #fff;
+}
+.bigu-graph-side .side-close{ border: 0; background: #eee; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.bigu-graph-side .side-body{
+  padding: 10px 12px; overflow: auto; -webkit-overflow-scrolling: touch; flex: 1 1 auto; min-height: 0;
+}
+.bigu-graph-side .result-item{ border-bottom: 1px solid #f0f0f0; padding: 10px 6px; cursor: pointer; border-radius: 8px; }
+.bigu-graph-side .result-item:hover{ background: #fafafa; }
+.bigu-graph-side .result-title{ font-weight: 600; margin: 0 0 4px; font-size: 14.5px; }
+.bigu-graph-side .result-meta{ font-size: 13px; color: #666; }
+.bigu-graph-side .result-preview{ font-size: 13.5px; color: #444; margin-top: 6px; line-height: 1.55; }
+
+/* 검색어 하이라이트 */
+.bigu-graph-side mark{ background: #fff6a3; padding: 0 2px; border-radius: 3px; }
+
+/* 매치 노드 색상(다중 결과 표시용) */
+:root{
+  --bigu-match-bg: #ffb84d;
+  --bigu-match-border: #e09100;
+}
+
+/* 모바일: 사이드 패널 하단 시트 */
+/*@media (max-width: 768px){
+  .bigu-graph-side{ left: 12px; right: 12px; width: auto; bottom: 12px; top: auto; max-height: 60vh; }
+}*/
+
+@media (max-width: 768px){
+  .bigu-graph-side{ display:none !important; }
+      /* 캔버스 */
+  #network { width: 100%; height: 500px;}
+}
+
+</style>
+
+
+<style>
+/* ===== 검색 패널 오픈 시 레이아웃 축소 (데스크톱 전용) ===== */
+@media (min-width: 769px){
+  body.bigu-search-open #network{
+    width: 75% !important;
+  }
+  body.bigu-search-open .bigu-graph-search{
+    max-width: none !important;
+    width: 75% !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+}
+</style>
+
+</head>
+
+<body>
+<!-- ===== 상단 검색바 (그래프 상단 고정 배치) ===== -->
+<div id="bigu-graph-searchbar" class="bigu-graph-search">
+  <input id="bigu-graph-q" type="search" placeholder="이름, 법명, 본문, 번호 등" />
+  <button id="bigu-graph-search-btn" type="button" title="검색">검색</button>
+</div>
+
+<!-- ===== 오른쪽 사이드 검색결과 패널 ===== -->
+<aside id="bigu-graph-side" class="bigu-graph-side" aria-live="polite" aria-label="검색 결과 패널">
+  <div class="side-head">
+    <strong id="bigu-graph-side-title">검색 결과</strong>
+    <button id="bigu-graph-side-close" class="side-close" aria-label="닫기">닫기</button>
+  </div>
+  <div id="bigu-graph-side-body" class="side-body"></div>
+</aside>
+
+
+  <div id="network" tabindex="0" aria-label="빛구슬 연결망 그래프"></div>
+
+<div id="bigu-backdrop" class="bigu-backdrop" aria-hidden="true"></div>
+<div id="bigu-modal" class="bigu-modal" role="dialog" aria-modal="true" aria-labelledby="bigu-modal-title"></div>
+
+  <!-- 클릭 시 생기는 툴팁 컨테이너(동적 생성/삭제) -->
+  <div id="bigu-tooltip-layer" style="position:relative;"></div>
+
+<script>
+/* ===== v4에서 사용하던 시트/폼 설정 유지 ===== */
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1gfBPO9stTfRBb6u488HtxkZX_pUfr1jeS8R-v7tTbHI/gviz/tq?tqx=out:json&gid=1392815037";
+const FORM_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSdE5GtQ4PSXSbx1HYk9TjFp-JdApSJuEWdNlNj8lAMx4yNO9A/viewform?entry.1093444845=";
+
+/* ===== 상태 ===== */
+const STATE = {
+  rows: [],
+  items: [],      // {regNo, date, name, dharma, lightNo, lightNoNum, lightTx, preview}
+  byNo: new Map() // regNo -> item
+};
+
+/* ===== 유틸 (v4 로직 최대한 유지) ===== */
+function parseGviz(text){ return JSON.parse(text.substr(47).slice(0,-2)); } // v4 파서
+function esc(s){
+  return (s??"").toString()
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+}
+
+/* ===== 데이터 로드 ===== */
+async function loadData(){
+  const res = await fetch(SHEET_URL);
+  const text = await res.text();
+  const json = parseGviz(text);
+  const rows = (json.table && json.table.rows) || [];
+  STATE.rows = rows;
+
+  // regNo: 시트 등록 순서 기준(1부터). v4도 regNo를 i+1로 부여 후 역순 정렬에서 사용. 여기선 고유ID로 사용.
+  STATE.items = rows.map((r,i)=>{
+    const c = r.c || [];
+    const date      = (c[0] && (c[0].f || c[0].v)) || ""; // 날짜/타임스탬프
+    const name      = (c[3] && c[3].v) || "익명";         // 이름
+    const dharma    = "";
+    const lightNo   = (c[4] && (c[4].f || c[4].v)) || ""; // 이 빛은 어디서 왔는가(출발점 글번호)
+    const lightTx   = (c[5] && c[5].v) || "";             // 내게 깨달음을 준 문장
+    const lightNoNum = Number(String(lightNo).replace(/[^0-9]/g,"")) || 0;
+    const regNo = i+1;
+    const preview = lightTx && lightTx.length>50 ? lightTx.slice(0,50)+"…" : (lightTx||"");
+    return { regNo, date, name, dharma, lightNo, lightNoNum, lightTx, preview };
+  });
+
+  STATE.byNo.clear();
+  STATE.items.forEach(d=>STATE.byNo.set(d.regNo,d));
+}
+
+/* ===== 그래프 생성 ===== */
+let network, nodesDS, edgesDS, tooltipEl;
+function buildGraph(){
+  const container = document.getElementById("network");
+
+  // 1) 노드: id=행번호(regNo), label=이름(name)
+  const nodes = STATE.items.map(d=>{
+    const pal = pickNodePalette(d.regNo); // 행번호 기반 고정 랜덤
+    return {
+      id: d.regNo,
+      label: d.name || ("익명#"+d.regNo),
+      shape: "dot",
+      size: 18,
+      color: {
+        background: pal.bg,
+        border: pal.border,
+        highlight: { background: "#7f5af0", border: "#7f5af0" },
+        hover:     { background: "#64c3fa", border: pal.highlight }
+      },
+      font: { color: "#444" }
+    };
+  });
+
+  // 2) 엣지: from=출발점(lightNoNum), to=현재(regNo)
+  const edges = [];
+  for(const d of STATE.items){
+    if(d.lightNoNum && STATE.byNo.has(d.lightNoNum)){
+      edges.push({ from: d.lightNoNum, to: d.regNo, color: "#888", width: 1 });
+    }
+  }
+
+  nodesDS = new vis.DataSet(nodes);
+  edgesDS = new vis.DataSet(edges);
+
+  const data = { nodes: nodesDS, edges: edgesDS };
+  const options = {
+    physics: { stabilization: true },
+    nodes: { shape: "dot" },
+    edges: { arrows: { to: false } },
+    interaction: { hover: true }
+  };
+
+  network = new vis.Network(container, data, options);
+
+  // 클릭 이벤트: 노드 상세 툴팁
+  network.on("click", params=>{
+    // 배경 클릭이면 닫기
+    if(!params || !params.nodes || !params.nodes.length){
+      closeTooltip();
+      return;
+    }
+    const id = params.nodes[0];
+    if(isMobile()){
+    closeTooltip();
+    openModalForNode(id);
+    }else{
+    closeModal();
+    openTooltipForNode(id);
+    }
+  });
+
+  // 드래그/줌 시 열린 툴팁 위치 갱신
+  ["dragEnd","zoom","resize","animationFinished"].forEach(ev=>{
+    network.on(ev, ()=>{
+      if(tooltipEl && tooltipEl.dataset.no){
+        positionTooltip(Number(tooltipEl.dataset.no));
+      }
+    });
+  });
+}
+
+/* ===== 툴팁 ===== */
+function ensureTooltip(){
+  if(tooltipEl && tooltipEl.isConnected) return tooltipEl;
+  tooltipEl = document.createElement("div");
+  tooltipEl.className = "bigu-tooltip";
+  document.getElementById("network").appendChild(tooltipEl);
+  return tooltipEl;
+}
+function closeTooltip(){
+  if(tooltipEl && tooltipEl.parentNode){
+    tooltipEl.parentNode.removeChild(tooltipEl);
+    tooltipEl = null;
+  }
+}
+function openTooltipForNode(regNo){
+  const d = STATE.byNo.get(regNo);
+  if(!d){ closeTooltip(); return; }
+
+  const el = ensureTooltip();
+  el.dataset.no = String(regNo);
+  el.innerHTML = `
+    <div class="head">
+      <strong>빛구슬 ${regNo}</strong>
+      <button class="close" aria-label="닫기" data-bigu-close>닫기</button>
+    </div>
+    <div class="body">
+      <p class="sub"><strong>날짜:</strong> ${esc(d.date)}</p>
+      <p class="sub"><strong>이름:</strong> ${esc(d.name)}</p>
+      <p class="sub"><strong>🔗 이 빛의 출발점:</strong> ${d.lightNoNum ? "빛구슬"+esc(d.lightNoNum) : "-"}</p>
+      <p class="sub"><strong>💡 내게 깨달음을 준 빛구슬 문장:</strong>
+      <span class="bigu-lightTx">${esc(d.lightTx)}</span>
+      </p>
+      <a class="bigu-btn" target="_blank" rel="noopener" href="${FORM_BASE + encodeURIComponent(regNo)}">이어 참여하기</a>
+    </div>
+  `;
+  el.querySelector('[data-bigu-close]').addEventListener('click', closeTooltip);
+  positionTooltip(regNo);
+}
+function positionTooltip(regNo){
+  const pos = network.getPositions([regNo])[regNo];
+  if(!pos) return;
+  const dom = network.canvasToDOM(pos);
+  tooltipEl.style.left = dom.x + "px";
+  tooltipEl.style.top  = (dom.y - 8) + "px";
+}
+
+/* ===== 랜덤(시드) 컬러 팔레트: v4의 컬러셋 재사용 ===== */
+const BIGU_COLORS = ["#f9ebea","#fdedec","#f5eef8","#f4ecf7","#eaf2f8","#ebf5fb",
+  "#e8f8f5","#e8f6f3","#e9f7ef","#eafaf1","#fef9e7","#fef5e7","#fdf2e9",
+  "#fbeee6","#fdfefe","#f8f9f9","#f4f6f6","#ebedef"];
+
+/* 간단한 시드 난수 & HEX 블렌드 */
+function seededIndex(seed, mod){ return Math.abs((seed * 9301 + 49297) % 233280) % mod; }
+
+function hexToRgb(h){
+  const x = h.replace('#','');
+  const n = x.length === 3
+    ? x.split('').map(s=>parseInt(s+s,16))
+    : [x.slice(0,2),x.slice(2,4),x.slice(4,6)].map(s=>parseInt(s,16));
+  return {r:n[0], g:n[1], b:n[2]};
+}
+function rgbToHex({r,g,b}){
+  const to = v => v.toString(16).padStart(2,'0');
+  return `#${to(r)}${to(g)}${to(b)}`;
+}
+function mixHex(h1,h2,t=0.6){ // t=0.6: 두 번째 컬러 쪽으로 살짝 더
+  const a=hexToRgb(h1), b=hexToRgb(h2);
+  const m = { r: Math.round(a.r*(1-t)+b.r*t),
+              g: Math.round(a.g*(1-t)+b.g*t),
+              b: Math.round(a.b*(1-t)+b.b*t) };
+  return rgbToHex(m);
+}
+
+/* 노드 팔레트: regNo 시드 기반으로 2색 고르고 섞기 */
+function pickNodePalette(seed){
+  const i1 = seededIndex(seed, BIGU_COLORS.length);
+  const i2 = seededIndex(seed*7+3, BIGU_COLORS.length);
+  const c1 = BIGU_COLORS[i1], c2 = BIGU_COLORS[i2];
+  const bg        = mixHex(c1, c2, 0.60); // 기본 배경
+  const highlight = mixHex(c1, c2, 0.75); // hover/select 시
+  const border    = mixHex(c1, c2, 0.30); // 테두리(살짝 진하게)
+  return { bg, highlight, border };
+}
+
+
+/* === 디바이스 판별 === */
+function isMobile(){
+  return window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window);
+}
+
+/* === 모달 제어 === */
+let modalEl, backdropEl;
+function ensureModal(){
+  if(!modalEl) modalEl = document.getElementById('bigu-modal');
+  if(!backdropEl) backdropEl = document.getElementById('bigu-backdrop');
+  return { modalEl, backdropEl };
+}
+function openModalForNode(regNo){
+  const d = STATE.byNo.get(regNo); if(!d) return;
+  const { modalEl, backdropEl } = ensureModal();
+  modalEl.innerHTML = `
+    <div class="head">
+      <strong id="bigu-modal-title">빛구슬 ${regNo}</strong>
+      <button class="close" aria-label="닫기" data-bm-close>닫기</button>
+    </div>
+    <div class="body">
+      <p class="sub"><strong>날짜:</strong> ${esc(d.date)}</p>
+      <p class="sub"><strong>이름:</strong> ${esc(d.name)}${d.dharma ? " ("+esc(d.dharma)+")" : ""}</p>
+      <p class="sub"><strong>🔗 이 빛의 출발점:</strong> ${d.lightNoNum ? "빛구슬"+esc(d.lightNoNum) : "-"}</p>
+      <p class="sub"><strong>💡 내게 깨달음을 준 빛구슬 문장:</strong>
+      <span class="bigu-lightTx">${esc(d.lightTx)}</span>
+      </p>
+      <a class="bigu-btn" target="_blank" rel="noopener" href="${FORM_BASE + encodeURIComponent(regNo)}">이어 참여하기</a>
+    </div>
+  `;
+  modalEl.style.display = 'block';
+  backdropEl.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+
+  modalEl.querySelector('[data-bm-close]').addEventListener('click', closeModal);
+  backdropEl.addEventListener('click', closeModal, { once:true });
+  window.addEventListener('keydown', escCloseOnce);
+}
+function closeModal(){
+  const { modalEl, backdropEl } = ensureModal();
+  modalEl.classList.remove('is-open');
+  modalEl.style.display = 'none';
+  backdropEl.style.display = 'none';
+  document.body.style.overflow = '';
+  window.removeEventListener('keydown', escCloseOnce);
+}
+function escCloseOnce(e){ if(e.key === 'Escape') closeModal(); }
+
+
+/* ===== 시작 ===== */
+(async function init(){
+  try{
+    await loadData();     // v4와 동일한 시트 파서/필드 구성 사용
+    buildGraph();  
+
+    // ✅ [추가할 코드 1]: NETWORK_SHEET_URL 전역 변수 설정 (망v6의 SHEET_URL을 사용)
+    window.NETWORK_SHEET_URL = SHEET_URL;
+
+    // ✅ [추가할 코드 2]: 추가v1 숫자 갱신 함수 호출
+    if (typeof window.updateNetworkNumbers_v1 === 'function') {
+        window.updateNetworkNumbers_v1(); 
+    }
+
+    biguMyFormInit();       // id/label/edge 모두 시트 기반
+    // 배경 클릭으로 닫기
+    document.addEventListener("click", (e)=>{
+      // 툴팁 내부 클릭은 유지
+      if(tooltipEl && tooltipEl.contains(e.target)) return;
+      // 네트워크 캔버스 클릭은 network.on("click")에서 처리
+    });
+  }catch(err){
+    console.error("연결망 로딩 오류:", err);
+    document.getElementById("network").innerHTML =
+      "<p>연결망을 불러오는 중 오류가 발생했습니다.</p>";
+  }
+})();
+</script>
+
+<script>
+/* ===== 검색 유틸 ===== */
+function norm(s){ return (s??"").toString().toLowerCase().replace(/\s+/g," ").trim(); }
+function escRE(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); }
+function highlightInElement(root, terms){
+  const list=[...new Set((terms||[]).filter(Boolean))];
+  if(!list.length) return;
+  list.sort((a,b)=>b.length-a.length);
+  const pattern=new RegExp(list.map(escRE).join("|"), "gi");
+  const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const p=node.parentNode && node.parentNode.nodeName;
+      if(p==="SCRIPT"||p==="STYLE") return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes=[]; let n; while(n=walker.nextNode()) nodes.push(n);
+  nodes.forEach(tn=>{
+    const text=tn.nodeValue; if(!pattern.test(text)) return;
+    const frag=document.createDocumentFragment(); let last=0;
+    text.replace(pattern,(m, off)=>{
+      if(off>last) frag.appendChild(document.createTextNode(text.slice(last,off)));
+      const mark=document.createElement("mark"); mark.textContent=m; frag.appendChild(mark);
+      last=off+m.length; return m;
+    });
+    if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    tn.parentNode.replaceChild(frag, tn);
+  });
+}
+
+/* 쿼리 파서: #번호, 빛구슬N, 출발점N, 일반어절 */
+function parseQuery(q){
+  const raw=norm(q);
+  const tokens=raw.split(" ").filter(Boolean);
+  const filters={ terms:[], regNo:null, from:null };
+  tokens.forEach(t=>{
+    const mHash=t.match(/^#?(\d{1,6})$/);
+    const mLabel=t.match(/^빛구슬(\d{1,6})$/);
+    const mFrom=t.match(/^(출발점|from|source)(:?)(\d{1,6})$/);
+    if(mHash){ filters.regNo=Number(mHash[1]); return; }
+    if(mLabel){ filters.regNo=Number(mLabel[1]); return; }
+    if(mFrom){ filters.from=Number(mFrom[3]); return; }
+    filters.terms.push(t);
+  });
+  return filters;
+}
+function matchItem(d, f){
+  if(f.regNo && d.regNo!==f.regNo) return false;
+  if(f.from && d.lightNoNum!==f.from) return false;
+  const hay=norm(`${d.regNo} ${d.name} ${d.dharma} ${d.lightTx} ${d.lightNoNum||""}`);
+  return f.terms.every(t=>hay.includes(t));
+}
+function searchItems(q){
+  const f=parseQuery(q);
+  const out=[];
+  if(!window.STATE || !Array.isArray(STATE.items)){ console.warn("STATE.items가 없습니다."); return {filters:f, results: out}; }
+  for(const d of STATE.items){ if(matchItem(d,f)) out.push(d); }
+  return { filters:f, results: out };
+}
+
+/* ===== 그래프 데이터셋 참조 (vis-network) ===== */
+const ORIGINAL_COLORS = new Map(); // id -> original color
+function cacheOriginalColor(id){
+  try{
+    if(ORIGINAL_COLORS.has(id)) return;
+    const n=nodesDS.get(id);
+    if(!n||!n.color) return;
+    ORIGINAL_COLORS.set(id, JSON.parse(JSON.stringify(n.color)));
+  }catch(e){ /* pass */ }
+}
+function restoreAllColors(){
+  try{
+    const updates=[];
+    nodesDS.forEach(n=>{
+      const orig=ORIGINAL_COLORS.get(n.id);
+      if(orig){ updates.push({id:n.id, color:orig}); }
+    });
+    if(updates.length) nodesDS.update(updates);
+  }catch(e){ /* pass */ }
+}
+function colorAsMatch(ids){
+  try{
+    const updates=[];
+    ids.forEach(id=>{
+      cacheOriginalColor(id);
+      updates.push({
+        id,
+        color:{
+          background: getComputedStyle(document.documentElement).getPropertyValue('--bigu-match-bg').trim() || '#ffb84d',
+          border:     getComputedStyle(document.documentElement).getPropertyValue('--bigu-match-border').trim() || '#e09100',
+          highlight: { background: "#7f5af0", border: "#7f5af0" },
+          hover:     { background: "#64c3fa", border: "#64c3fa" }
+        }
+      });
+    });
+    if(updates.length) nodesDS.update(updates);
+  }catch(e){ /* pass */ }
+}
+function focusAndSelect(id){
+  try{
+    network.selectNodes([id], false);
+    network.focus(id, {scale: 1.1, animation:{duration: 500, easingFunction: "easeInOutCubic"}});
+  }catch(e){ console.warn("network focus/select 실패", e); }
+}
+
+// 단일 클릭에서도 더블클릭과 같은 타이밍 안정성을 주기 위한 보조 함수
+function openAfterFocus(nodeId, openFn, fallbackDelay = 380) {
+  // 1) 먼저 포커스/선택
+  focusAndSelect(nodeId);
+
+  // 2) 애니메이션 종료(or 한 프레임 경과) 후에만 openFn 실행
+  let done = false;
+  const tryOpen = () => {
+    if (done) return;
+    done = true;
+    // 혹시 모를 잔여 프레임 반영
+    requestAnimationFrame(() => {
+      openFn();
+    });
+    network.off('animationFinished', tryOpen);
+  };
+
+  // vis-network 애니메이션 종료 이벤트
+  network.on('animationFinished', tryOpen);
+
+  // 일부 케이스(애니메이션 없이 바로 이동 등) 대비 폴백
+  network.once('afterDrawing', () => { setTimeout(tryOpen, 0); });
+  setTimeout(tryOpen, fallbackDelay); // 더블클릭 대기시간(≈250ms) + 여유
+}
+
+/* ===== 사이드 패널 ===== */
+function openSidePanel(titleHTML, bodyEl, terms){
+  const side=document.getElementById('bigu-graph-side');
+  const head=document.getElementById('bigu-graph-side-title');
+  const body=document.getElementById('bigu-graph-side-body');
+  if(!side||!head||!body) return;
+  head.innerHTML = titleHTML;
+  body.innerHTML = "";
+  if(bodyEl) body.appendChild(bodyEl);
+  side.classList.add('open');
+  
+  try{ if(!(typeof isMobile==="function" && isMobile())) document.body.classList.add('bigu-search-open'); }catch(e){}
+if(terms && terms.length) highlightInElement(body, terms);
+}
+function closeSidePanel(){
+  const side=document.getElementById('bigu-graph-side');
+  if(side) side.classList.remove('open');
+  try{ document.body.classList.remove('bigu-search-open'); }catch(e){}
+}
+function buildSideResultItem(d){
+  const el=document.createElement('div');
+  el.className='result-item';
+  el.dataset.no=d.regNo;
+  const esc = s => (s??"").toString().replace(/[&<>"]/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[m]));
+  el.innerHTML=`
+    <div class="result-title">빛구슬 ${esc(d.regNo)} · ${esc(d.name)}</div>
+    <div class="result-meta">출발점: ${d.lightNoNum?("빛구슬 "+esc(d.lightNoNum)):"-"}${d.date?(" | 날짜: "+esc(d.date)):""}</div>
+    <div class="result-preview">${esc(d.preview||d.lightTx||"")}</div>
+  `;
+  // el.addEventListener('click', ()=>{
+  //   focusAndSelect(d.regNo);
+  //   focusAndSelect(d.regNo);
+  //   const open = ()=> {
+  //     if(typeof isMobile==="function" && isMobile() && typeof openModalForNode==="function"){ openModalForNode(d.regNo); }
+  //     else if(typeof openTooltipForNode==="function"){ openTooltipForNode(d.regNo); }
+  //     network.off('animationFinished', open);
+  //   };
+  //   // 애니메이션이 없는 경우를 대비해 안전장치(짧은 타임아웃)도 함께 사용
+  //   network.on('animationFinished', open);
+  //   setTimeout(open, 550); // focus() 기본 duration 500ms 기준, 폴백
+  // });
+// 기존 단일 클릭 핸들러 교체
+el.addEventListener('click', () => {
+  // 더블클릭 대기와 동일한 지연을 줘서 포커스 애니메이션이 먼저 진행되게 함
+  if (el._singleTimer) clearTimeout(el._singleTimer);
+  el._singleTimer = setTimeout(() => {
+    // 1) 먼저 포커스/선택 (중복 호출 제거)
+    focusAndSelect(d.regNo);
+
+    // 2) 열기 함수 (모바일/PC 공통)
+    const openFn = () => {
+      if (typeof isMobile === "function" && isMobile() && typeof openModalForNode === "function") {
+        openModalForNode(d.regNo);
+      } else if (typeof openTooltipForNode === "function") {
+        openTooltipForNode(d.regNo);
+      }
+    };
+
+    // 3) 애니메이션 종료 후 + 다음 프레임에서 열기 (정밀 좌표 보정)
+    network.once('animationFinished', () => {
+      requestAnimationFrame(openFn);
+    });
+
+    // 4) 애니메이션이 없는 경우(또는 즉시 이동 케이스) 대비 폴백
+    setTimeout(() => requestAnimationFrame(openFn), 420); // focus duration(≈350~400ms) 대비 여유
+  }, 260); // 단일 클릭 디바운스 (더블클릭 대기시간 수준)
+});
+
+el.addEventListener('dblclick', () => {
+  if (el._singleTimer) { clearTimeout(el._singleTimer); el._singleTimer = null; }
+  // (이하 기존 더블클릭 로직 그대로)
+});
+
+  return el;
+}
+
+/* ===== 검색 실행 ===== */
+function runGraphSearch(qRaw){
+  const q=(qRaw||"").trim();
+  if(!q){ closeSidePanel(); restoreAllColors(); try{ network.unselectAll(); }catch(e){} return; }
+  const {filters, results} = searchItems(q);
+  const ids = results.map(r=>r.regNo);
+
+    // ✅ 모바일: 결과 패널/모달/툴팁 전혀 열지 않고, 오렌지 컬러만 적용
+  if (typeof isMobile==="function" && isMobile()) {
+    restoreAllColors();
+    try{ network.unselectAll(); }catch(e){}
+    closeSidePanel();           // 혹시 열려있다면 닫기
+    if (ids.length){            // 매치 있을 때만 컬러 적용
+      colorAsMatch(ids);        // 오렌지( --bigu-match-* )로 하이라이트
+      // 포커싱/선택/모달/툴팁은 열지 않음 (요청사항)
+    }
+    return;                     // ← 여기서 끝
+  }
+
+  // ✅ PC: 기존 동작 유지 (사이드패널/툴팁 사용)
+  restoreAllColors();
+  try{ network.unselectAll(); }catch(e){}
+  closeSidePanel();
+  if(ids.length===0){
+    const wrap=document.createElement('div');
+    wrap.innerHTML = `<p style="margin:8px 2px;">일치하는 결과가 없습니다. (힌트: <code>#번호</code>, <code>빛구슬N</code>, <code>출발점N</code>)</p>`;
+    openSidePanel(`🔎 “${q}” 검색결과 없음`, wrap, q.split(/\s+/));
+    return;
+  }
+  if(ids.length===1){
+    colorAsMatch(ids);
+    focusAndSelect(ids[0]);
+    if(typeof isMobile==="function" && isMobile() && typeof openModalForNode==="function"){ openModalForNode(ids[0]); }
+    else if(typeof openTooltipForNode==="function"){ openTooltipForNode(ids[0]); }
+    const wrap=document.createElement('div'); wrap.appendChild(buildSideResultItem(results[0]));
+    openSidePanel(`🔎 “${q}” 1건`, wrap, q.split(/\s+/));
+  }else{
+    colorAsMatch(ids);
+    const list=document.createElement('div');
+    results.forEach(d=> list.appendChild( buildSideResultItem(d) ) );
+    openSidePanel(`🔎 “${q}” ${results.length}건`, list, q.split(/\s+/));
+    focusAndSelect(ids[0]);
+  }
+}
+
+/* ===== 검색 UI 바인딩 ===== */
+function bindGraphSearchUI(){
+  const $q  = document.getElementById('bigu-graph-q');
+  const $go = document.getElementById('bigu-graph-search-btn');
+  const $x  = document.getElementById('bigu-graph-side-close');
+  if(!$q || !$go) return;
+  function go(){ runGraphSearch($q.value||""); }
+  $go.addEventListener('click', go);
+  $q.addEventListener('keydown', (e)=>{ if(e.key==='Enter') go(); });
+  if($x) $x.addEventListener('click', ()=>{ closeSidePanel(); restoreAllColors(); try{ network.unselectAll(); }catch(e){} });
+}
+
+/* ===== 폴백(프로젝트 함수가 없을 때) ===== */
+function isMobile(){ return window.matchMedia && window.matchMedia("(max-width: 768px)").matches; }
+if(typeof openTooltipForNode!=="function"){ function openTooltipForNode(id){ console.log("Tooltip fallback", id); } }
+if(typeof openModalForNode!=="function"){ function openModalForNode(id){ openTooltipForNode(id); } }
+
+/* ===== 초기화 훅: 데이터/그래프 생성 후 아래 한 줄이 실행되도록 보장 ===== */
+document.addEventListener("DOMContentLoaded", function(){
+  try{ bindGraphSearchUI(); }catch(e){ console.warn("bindGraphSearchUI 실패", e); }
+});
+</script>
+
+
+
+
+
+
+
+
+<script data-bigu="search-bootstrap">
+(function(){
+  if (window.__BGR_SEARCH_BOOTSTRAPPED__) return;
+  window.__BGR_SEARCH_BOOTSTRAPPED__ = true;
+
+  function norm(s){ return (s??"").toString().toLowerCase().replace(/\s+/g," ").trim(); }
+
+  // Public helper: register GViz rows
+  window.registerRelayRows = window.registerRelayRows || function(rows){
+    try{
+      if(!Array.isArray(rows)) return;
+      const mapRow = (r)=>{
+        const num = Number(r.no ?? r.regNo ?? r.번호 ?? r.id ?? r.ID ?? r.index);
+        const fromNum = Number(r.fromNo ?? r.lightNoNum ?? r.parent ?? r.이빛은어디서 ?? r.이어진문장번호 ?? r.source);
+        const name = r.name ?? r.이름 ?? r.person ?? r.작성자 ?? r.author ?? "";
+        const dharma = r.dharma ?? r.법명 ?? r.alias ?? r.nick ?? r.nickname ?? r.별명 ?? "";
+        const text = r.lightTx ?? r.text ?? r.body ?? r.content ?? r.본문 ?? r.내용 ?? "";
+        const date = r.date ?? r.날짜 ?? r.created ?? r.생성일 ?? "";
+        const preview = (r.preview ?? r.excerpt ?? "").toString();
+        return {
+          regNo: Number.isFinite(num) ? num : undefined,
+          name: String(name || ""),
+          dharma: String(dharma || ""),
+          lightTx: String(text || ""),
+          lightNoNum: Number.isFinite(fromNum) ? fromNum : null,
+          date: String(date || ""),
+          preview: preview || String(text).slice(0,140)
+        };
+      };
+      window.STATE = window.STATE || {};
+      const items = rows.map(mapRow).filter(x=>x && typeof x.regNo==="number");
+      // Merge with nodesDS if available
+      try{
+        if(typeof nodesDS!=="undefined"){
+          const byId = new Map(items.map(x=>[x.regNo, x]));
+          nodesDS.forEach(n=>{
+            const it = byId.get(n.id);
+            if(!it){
+              const labelNum = Number(String(n.label||"").replace(/[^0-9]/g,"")) || Number(n.id);
+              items.push({
+                regNo: labelNum,
+                name: (n.data && (n.data.name||n.data.person)) || "",
+                dharma: (n.data && (n.data.dharma||n.data.alias||n.data.nick)) || "",
+                lightTx: (n.data && (n.data.lightTx||n.data.text||n.data.body)) || "",
+                lightNoNum: (n.data && (n.data.lightNoNum||n.data.fromNo)) || null,
+                date: (n.data && (n.data.date||n.data.created)) || "",
+                preview: (n.data && (n.data.preview||"")) || ""
+              });
+            }else{
+              if(!it.name && n.label) it.name = String(n.label).replace(/빛구슬\s*/,"").trim();
+            }
+          });
+        }
+      }catch(e){}
+      items.sort((a,b)=>a.regNo-b.regNo);
+      STATE.items = items;
+      console.log("[bigu] STATE.items 등록:", STATE.items.length);
+    }catch(e){ console.warn("[bigu] registerRelayRows 오류", e); }
+  };
+
+  function deriveItemsFromNodes(){
+    if(typeof nodesDS==="undefined") return [];
+    const out = [];
+    nodesDS.forEach(n=>{
+      const d = (n.data || n.meta || n._data || {});
+      out.push({
+        regNo: Number(n.id),
+        name: (d.name||d.person||"").toString(),
+        dharma: (d.dharma||d.alias||d.nick||"").toString(),
+        lightTx: (d.lightTx||d.text||d.body||"").toString(),
+        lightNoNum: (d.lightNoNum||d.fromNo||null),
+        date: (d.date||d.created||"").toString(),
+        preview: (d.preview||"").toString()
+      });
+    });
+    return out;
+  }
+
+  function ensureSearchItems(){
+    window.STATE = window.STATE || {};
+    if(Array.isArray(STATE.items) && STATE.items.length) return true;
+    const candidates = [
+      window.rows, window.gvizRows, window.sheetRows, window.biguRows, window.LIGHT_ROWS, window.DATA_ROWS
+    ].filter(Boolean);
+    if(candidates.length){
+      try{ window.registerRelayRows(candidates[0]); }catch(e){}
+    }
+    if((!STATE.items || !STATE.items.length) && (typeof nodesDS!=="undefined")){
+      const derived = deriveItemsFromNodes();
+      if(derived.length) STATE.items = derived;
+    }
+    return Array.isArray(STATE.items) && STATE.items.length>0;
+  }
+
+  function wrapRunGraphSearchOnce(){
+    if(window.__BIGU_RUNSEARCH_WRAPPED__) return;
+    if(typeof window.runGraphSearch !== "function") return;
+    window.__BIGU_RUNSEARCH_WRAPPED__ = true;
+    var original = window.runGraphSearch;
+    window.__orig_runGraphSearch = window.__orig_runGraphSearch || original;
+    window.runGraphSearch = function(qRaw){
+      if(!ensureSearchItems()){
+        if(typeof nodesDS!=="undefined"){
+          const arr = []; nodesDS.forEach(n=> arr.push({regNo:Number(n.id), name:"", dharma:"", lightTx:"", lightNoNum:null, date:"", preview:""}));
+          if(arr.length){ window.STATE = window.STATE || {}; STATE.items = arr; }
+        }
+      }
+      return original.apply(this, arguments);
+    };
+    console.log("[bigu] runGraphSearch wrapped");
+  }
+
+  // Try wrapping now and again on DOM ready
+  wrapRunGraphSearchOnce();
+  document.addEventListener("DOMContentLoaded", wrapRunGraphSearchOnce);
+  // Also fallback: poll briefly in case runGraphSearch is defined late
+  var tries = 0;
+  var iv = setInterval(function(){
+    if(window.__BIGU_RUNSEARCH_WRAPPED__) { clearInterval(iv); return; }
+    wrapRunGraphSearchOnce();
+    if(++tries>50) clearInterval(iv);
+  }, 100);
+})();
+</script>
+
+</body>
+</html>
