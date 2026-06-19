@@ -1,7 +1,7 @@
 /* ===== Stats ===== */
 .ol-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   border: 1px solid var(--ol-border);
   border-radius: var(--ol-r);
   background: var(--ol-surface);
@@ -62,4 +62,3 @@
   color: var(--ol-ink);
   box-shadow: var(--ol-shadow-sm);
 }
-

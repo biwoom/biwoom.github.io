@@ -179,6 +179,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
                         entity.data.name.chinese,
                       ].filter(Boolean),
                       aliases: entity.data.aliases ?? [],
+                      profileImage: entity.data.design?.profileImage ? url(entity.data.design.profileImage) : '',
                       description: entity.data.description ?? '',
                       tags: entity.data.tags ?? [],
                       relatedStories: [
@@ -227,6 +228,9 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
           <div class="net-detail-backdrop" data-net-detail-close hidden></div>
           <aside class="net-detail-panel" aria-label="이름카드 상세 패널 예정 영역">
             <button type="button" class="net-detail-close" data-net-detail-close aria-label="상세 패널 닫기">닫기</button>
+            <figure class="net-detail-profile" data-net-detail-profile hidden>
+              <img src="" alt="" loading="lazy" decoding="async" data-net-detail-profile-image />
+            </figure>
             <span class="ol-mono-label" data-net-detail-type>NAME CARD DETAIL</span>
             <h2 class="ol-kr" data-net-detail-name>선택한 이름카드의 맥락</h2>
             <p class="net-detail-names" data-net-detail-names hidden></p>
@@ -284,6 +288,8 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
     const detailType = document.querySelector<HTMLElement>('[data-net-detail-type]');
     const detailName = document.querySelector<HTMLElement>('[data-net-detail-name]');
     const detailNames = document.querySelector<HTMLElement>('[data-net-detail-names]');
+    const detailProfile = document.querySelector<HTMLElement>('[data-net-detail-profile]');
+    const detailProfileImage = document.querySelector<HTMLImageElement>('[data-net-detail-profile-image]');
     const detailDescription = document.querySelector<HTMLElement>('[data-net-detail-description]');
     const detailTags = document.querySelector<HTMLElement>('[data-net-detail-tags]');
     const detailContext = document.querySelector<HTMLElement>('[data-net-detail-context]');
@@ -301,6 +307,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
       name: string;
       names: string[];
       aliases: string[];
+      profileImage?: string;
       description: string;
       tags: string[];
       relatedStories: DetailReference[];
@@ -383,6 +390,18 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
         const names = [...detail.names, ...detail.aliases];
         detailNames.textContent = names.join(' · ');
         detailNames.hidden = names.length === 0;
+      }
+      if (detailProfile && detailProfileImage) {
+        const profileImage = detail.profileImage?.trim();
+        if (profileImage) {
+          detailProfileImage.src = profileImage;
+          detailProfileImage.alt = `${detail.name} 프로필 이미지`;
+          detailProfile.hidden = false;
+        } else {
+          detailProfileImage.removeAttribute('src');
+          detailProfileImage.alt = '';
+          detailProfile.hidden = true;
+        }
       }
       if (detailDescription) {
         detailDescription.textContent = detail.description || '아직 요약 설명이 준비되지 않았습니다.';

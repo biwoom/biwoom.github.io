@@ -1,4 +1,6 @@
 ---
+import { url } from '../../lib/url';
+
 interface Props {
   entity: {
     id: string;
@@ -7,14 +9,23 @@ interface Props {
     aliases?: string[];
     description?: string;
     tags?: string[];
+    design?: {
+      profileImage?: string;
+    };
   };
 }
 
 const { entity } = Astro.props;
 const names = [entity.name.en, entity.name.sanskrit, entity.name.pali, entity.name.chinese].filter(Boolean);
+const profileImage = entity.design?.profileImage ? url(entity.design.profileImage) : '';
 ---
 
 <aside class="ol-card ol-entity-panel">
+  {profileImage && (
+    <figure class="ol-entity-panel-profile">
+      <img src={profileImage} alt={`${entity.name.ko} 프로필 이미지`} loading="lazy" decoding="async" />
+    </figure>
+  )}
   <div class="ol-mono-label">{entity.type.toUpperCase()}</div>
   <h2 style="font-size: 22px; margin-top: 8px;" class="ol-kr">{entity.name.ko}</h2>
 

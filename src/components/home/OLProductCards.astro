@@ -10,6 +10,7 @@ const storyEntries = await getCollection('story', ({ data }) => data.published);
 const stories = buildStoryHierarchy(storyEntries);
 const blogs = await getCollection('blog', ({ data }) => data.published);
 const designs = await getCollection('design', ({ data }) => data.published);
+const netEntities = await getCollection('entities', ({ data }) => data.published);
 
 const atlasVersion = getLatestAtlasBuild().version;
 ---
@@ -52,6 +53,17 @@ const atlasVersion = getLatestAtlasBuild().version;
         <p class="ol-kr">불교 지식을 시각화하는 인포그래픽 라이브러리. 삽화와 스타일시트도 함께 보관합니다.</p>
         <div class="ol-product-foot">
           <span class="ol-code">{designs.length} visuals</span>
+          <span class="ol-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- 04 NET -->
+      <a href={url('/net')} class="ol-product-card">
+        <span class="ol-mono-label">04 / CONNECT</span>
+        <h3>OL NET</h3>
+        <p class="ol-kr">인물·장소·개념 이름을 찾고, 서로의 관계를 따라가며 맥락을 이어보는 탐색 메뉴입니다.</p>
+        <div class="ol-product-foot">
+          <span class="ol-code">{netEntities.length} name cards</span>
           <span class="ol-arrow">→</span>
         </div>
       </a>

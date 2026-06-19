@@ -2,11 +2,12 @@ export const primaryKindLabel: Record<string, string> = {
   infographic: '인포그래픽',
   illustration: '삽화',
   'style-sheet': '스타일시트',
+  profile: '프로필',
   reference: '레퍼런스',
 };
 
 export const primaryKindOrder = [
-  'infographic', 'illustration', 'style-sheet', 'reference',
+  'infographic', 'illustration', 'style-sheet', 'profile', 'reference',
 ] as const;
 
 export const typeLabel: Record<string, string> = {
@@ -18,6 +19,7 @@ export const typeLabel: Record<string, string> = {
   flowchart:    '흐름도',
   'concept-map': '개념 지도',
   'style-sheet': '스타일시트',
+  profile:      '프로필 이미지',
   illustration: '삽화',
   poster:       '포스터',
   turnaround:   '턴어라운드',
@@ -34,7 +36,7 @@ export const typeOrder = [
   'infographic', 'timeline', 'diagram', 'map', 'comparison',
   'flowchart', 'concept-map', 'poster',
   'illustration', 'style-sheet', 'turnaround',
-  'portrait', 'costume', 'architecture', 'landscape',
+  'profile', 'portrait', 'costume', 'architecture', 'landscape',
   'manuscript', 'artifact', 'other',
 ] as const;
 

@@ -8,6 +8,7 @@ const stories = await getCollection('story', entry => entry.data.published && is
 const texts = await getCollection('text', entry => entry.data.published !== false && isTextDocumentEntry(entry));
 const designs = await getCollection('design', ({ data }) => data.published);
 const blogs = await getCollection('blog', ({ data }) => data.published);
+const netEntities = await getCollection('entities', ({ data }) => data.published);
 
 const atlasVersion = getLatestAtlasBuild().version;
 ---
@@ -29,6 +30,10 @@ const atlasVersion = getLatestAtlasBuild().version;
       <div class="ol-stat">
         <div class="n"><em>{blogs.length}</em></div>
         <div class="l">BLOG 기록</div>
+      </div>
+      <div class="ol-stat">
+        <div class="n"><em>{netEntities.length}</em></div>
+        <div class="l">NET 이름카드</div>
       </div>
       <!-- <div class="ol-stat">
         <div class="n"><em>v{atlasVersion}</em></div>

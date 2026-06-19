@@ -118,6 +118,23 @@
   top: 88px;
 }
 
+.ol-entity-panel-profile {
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  margin: 0 0 14px;
+  border: 1px solid var(--ol-border);
+  border-radius: calc(var(--ol-r) - 2px);
+  background: var(--ol-surface-2);
+}
+
+.ol-entity-panel-profile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
 @media (max-width: 980px) {
   .ol-entity-detail-shell {
     grid-template-columns: 1fr;

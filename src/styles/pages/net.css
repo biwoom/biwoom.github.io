@@ -554,6 +554,28 @@
   letter-spacing: -0.02em;
 }
 
+.net-detail-profile {
+  position: relative;
+  margin: 0 0 14px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--ol-border);
+  border-radius: calc(var(--ol-r) - 2px);
+  background: var(--ol-surface-2);
+}
+
+.net-detail-profile[hidden] {
+  display: none;
+}
+
+.net-detail-profile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
 .net-detail-panel p {
   margin-top: 10px;
   color: var(--ol-ink-2);

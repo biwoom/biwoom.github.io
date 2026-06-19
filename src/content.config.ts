@@ -293,14 +293,14 @@ const designCollection = defineCollection({
     description: z.string().optional(),
     summary: z.string().optional(),
     primaryKind: z.enum([
-      'infographic', 'illustration', 'style-sheet', 'reference',
+      'infographic', 'illustration', 'style-sheet', 'profile', 'reference',
     ]).default('infographic'),
     category: z.string().optional(),
     type: z.enum([
       'infographic', 'timeline', 'diagram', 'map', 'comparison',
       'flowchart', 'concept-map', 'poster',
       'illustration', 'style-sheet', 'turnaround',
-      'portrait', 'costume', 'architecture',
+      'profile', 'portrait', 'costume', 'architecture',
       'landscape', 'manuscript', 'artifact', 'other',
     ]).optional(),
     series: z.string().optional(),
