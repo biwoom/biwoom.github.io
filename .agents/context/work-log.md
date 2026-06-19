@@ -238,3 +238,12 @@ This file records concise date-based work summaries for continuity across Codex 
 - The roadmap defines stepwise NET implementation from a minimal `/net` entry page through filters, search, detail panel, related content, concept schema expansion, relationship graph, and future map tab.
 - Local validation: not run; this was a documentation-only update.
 - Deployment completion was not checked by design.
+
+### NET Entry Page Phase 1 Upload
+
+- Pushed commit `17c15b3` (`feat: add NET entry page`) to `origin/main`.
+- Added the first minimal `/net` route as the NET menu entry page.
+- Added `NET` to the main header navigation.
+- The page currently provides a hero section, Entity-only search form shell, Entity type count chips, and a latest Entity card list using the existing Entity card component.
+- Local validation: `npm run build` passed and generated `/net/index.html`.
+- Deployment completion was not checked by design.
