@@ -50,7 +50,7 @@ src/content.config.ts
 ```txt
 0단계: 현재 Entity 기반 점검
 1단계: /net 정적 진입 페이지
-2단계: /net Entity 목록 페이지
+2단계: /net/explore Entity 검색결과·탐색 페이지
 3단계: 유형 필터와 prefix 태그 필터
 4단계: 클라이언트 검색
 5단계: 선택 Entity 상세 패널
@@ -154,16 +154,21 @@ Entity 카드가 너무 백과사전처럼 보이지 않는가?
 
 ---
 
-## 4. 2단계: /net Entity 목록 페이지
+## 4. 2단계: /net/explore Entity 검색결과·탐색 페이지
 
 ### 목표
 
-`/entity` 목록과 별도로, NET의 탐색 화면 기본 골격을 만든다.
+`/net` 진입 메인페이지와 별도로, NET의 검색결과·탐색 화면 기본 골격을 만든다.
+
+`/net`은 히어로, Entity 전용 검색폼, 최근 Entity 카드만 담는 진입 페이지로 유지한다.
+좌측 필터, 중앙 결과 목록, 우측 상세 패널, 하단 관련 정보 구조는 `/net/explore`에서 구현한다.
 
 ### 구현 내용
 
 ```txt
-/net 페이지 안에 검색·탐색 레이아웃 추가
+src/pages/net/explore.astro 생성
+/net 검색폼 action을 /net/explore로 연결
+/net 유형 빠른 링크를 /net/explore?type=...로 연결
 좌측 필터 영역 placeholder
 중앙 Entity 카드 목록
 우측 상세 패널 placeholder

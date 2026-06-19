@@ -11,10 +11,6 @@ const TYPE_LABELS: Record<string, string> = {
   person: '인물',
   place: '장소',
   concept: '개념',
-  text: '문헌',
-  event: '사건',
-  practice: '수행',
-  school: '학파',
 };
 
 const coreTypes = ['person', 'place', 'concept'];
@@ -26,7 +22,6 @@ const typeCounts = coreTypes.map(type => ({
 
 const featuredEntities = [
   ...coreTypes.flatMap(type => entities.filter(entity => entity.data.type === type).slice(0, 4)),
-  ...entities.filter(entity => !coreTypes.includes(entity.data.type)).slice(0, 4),
 ].slice(0, 12);
 ---
 
@@ -37,7 +32,7 @@ const featuredEntities = [
 >
   <main>
     <section class="ol-hero net-hero">
-      <div class="ol-container">
+      <div class="ol-container net-hero-inner">
         <span class="ol-kicker">NET · 지식 연결망</span>
         <h1 class="ol-kr">
           <em>인물, 장소, 개념</em>을<br />
@@ -48,7 +43,7 @@ const featuredEntities = [
           한 장소에서 한 개념으로, 다시 관련 STORY와 TEXT로 이어지는 길을 엽니다.
         </p>
 
-        <form class="net-hero-search" action={url('/net')} method="get" role="search" aria-label="Entity 검색">
+        <form class="net-hero-search" action={url('/net/explore')} method="get" role="search" aria-label="Entity 검색">
           <label class="net-search-label" for="net-q">Entity 검색</label>
           <div class="net-search-box">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -67,11 +62,11 @@ const featuredEntities = [
         </form>
 
         <div class="net-type-strip" aria-label="Entity 유형">
-          <a href={url('/net')} class="net-type-chip active">
+          <a href={url('/net/explore')} class="net-type-chip active">
             전체 <span>{entities.length}</span>
           </a>
           {typeCounts.map(item => (
-            <a href={url(`/net?type=${item.type}`)} class="net-type-chip">
+            <a href={url(`/net/explore?type=${item.type}`)} class="net-type-chip">
               {item.label} <span>{item.count}</span>
             </a>
           ))}
@@ -79,16 +74,14 @@ const featuredEntities = [
       </div>
     </section>
 
-    <hr style="margin:80px auto 0; width:80%;" />
-
-    <section class="ol-section">
+    <section class="ol-section net-featured-section">
       <div class="ol-container">
         <div class="net-section-head">
           <div>
-            <span class="ol-kicker">ENTITY · 최신 탐색 항목</span>
-            <h2 class="ol-kr">NET의 첫 기준점</h2>
+            <span class="ol-kicker">ENTITY · 최근 기준점</span>
+            <h2 class="ol-kr">NET으로 들어가는 첫 항목</h2>
           </div>
-          <a href={url('/entity')} class="ol-btn ol-btn-outline ol-btn-sm">ENTITY 전체 보기</a>
+          <a href={url('/net/explore')} class="ol-btn ol-btn-outline ol-btn-sm">탐색 페이지 열기</a>
         </div>
 
         {featuredEntities.length > 0 ? (
@@ -110,9 +103,16 @@ const featuredEntities = [
     padding-bottom: 56px;
   }
 
+  .net-hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
   .net-hero-search {
-    max-width: 680px;
-    margin-top: 32px;
+    width: min(100%, 680px);
+    margin: 32px auto 0;
   }
 
   .net-search-label {
@@ -136,6 +136,7 @@ const featuredEntities = [
     border-radius: var(--ol-r);
     background: var(--ol-surface);
     color: var(--ol-muted);
+    text-align: left;
   }
 
   .net-search-box input {
@@ -167,8 +168,9 @@ const featuredEntities = [
   .net-type-strip {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
-    margin-top: 16px;
+    margin: 16px auto 0;
   }
 
   .net-type-chip {
@@ -194,6 +196,10 @@ const featuredEntities = [
   .net-type-chip.active,
   .net-type-chip:hover {
     border-color: var(--ol-ink);
+  }
+
+  .net-featured-section {
+    border-top: 1px solid var(--ol-border);
   }
 
   .net-section-head {

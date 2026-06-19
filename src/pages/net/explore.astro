@@ -1,0 +1,675 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OLEntityCard from '../../components/entity/OLEntityCard.astro';
+import { url } from '../../lib/url';
+import { groupTagsByPrefix } from '../../lib/tags';
+
+const entities = (await getCollection('entities', entry => entry.data.published))
+  .sort((a, b) => a.data.name.ko.localeCompare(b.data.name.ko, 'ko'));
+
+const TYPE_LABELS: Record<string, string> = {
+  person: '인물',
+  place: '장소',
+  concept: '개념',
+  text: '문헌',
+  event: '사건',
+  practice: '수행',
+  school: '학파',
+};
+
+const coreTypes = ['person', 'place', 'concept'];
+const visibleEntities = entities.filter(entity => coreTypes.includes(entity.data.type));
+const typeCounts = coreTypes.map(type => ({
+  type,
+  label: TYPE_LABELS[type],
+  count: visibleEntities.filter(entity => entity.data.type === type).length,
+}));
+
+const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.data.tags ?? []));
+---
+
+<BaseLayout
+  title="OL NET Explore — Entity 탐색"
+  description="OL Entity를 검색하고 필터링하기 위한 NET 탐색 전용 페이지입니다."
+  pagefindBody={false}
+>
+  <main class="net-explore-page" data-net-explore>
+    <section class="net-explore-head">
+      <div class="net-explore-container">
+        <div class="net-breadcrumb">
+          <a href={url('/net')}>NET</a>
+          <span>/</span>
+          <strong>EXPLORE</strong>
+        </div>
+        <div class="net-explore-title">
+          <div>
+            <span class="ol-kicker">NET EXPLORER · 검색결과 전용 화면</span>
+            <h1 class="ol-kr">Entity를 찾고 관계를 확인합니다.</h1>
+          </div>
+          <form class="net-explore-search" action={url('/net/explore')} method="get" role="search" aria-label="NET 탐색 검색">
+            <input name="q" type="search" placeholder="Entity 검색" autocomplete="off" />
+            <button type="submit">검색</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="net-explorer-section">
+      <div class="net-explore-container">
+        <div class="net-explorer-shell">
+          <aside class="net-filter-panel" aria-label="NET 필터">
+            <div class="net-panel-block">
+              <span class="ol-mono-label">TYPE FILTER</span>
+              <div class="net-filter-list" data-net-type-filter>
+                <button type="button" class="net-filter-option active" data-net-type="all">전체 <span>{visibleEntities.length}</span></button>
+                {typeCounts.map(item => (
+                  <button type="button" class="net-filter-option" data-net-type={item.type}>
+                    {item.label} <span>{item.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div class="net-panel-block">
+              <span class="ol-mono-label">PREFIX TAGS</span>
+              {tagGroups.length > 0 ? (
+                <div class="net-prefix-filter" data-net-tag-filter>
+                  {tagGroups.map(group => (
+                    <details class="net-prefix-group" data-prefix={group.prefix}>
+                      <summary>
+                        <span>{group.prefix}</span>
+                        <em>{group.tags.length}</em>
+                      </summary>
+                      <div class="net-prefix-options">
+                        {group.tags.map(item => (
+                          <button type="button" data-net-tag={item.tag} data-net-prefix={group.prefix}>
+                            <span>{item.label}</span>
+                            <em>{item.count}</em>
+                          </button>
+                        ))}
+                      </div>
+                    </details>
+                  ))}
+                </div>
+              ) : (
+                <p class="net-panel-note ol-kr">태그 필터는 다음 단계에서 연결합니다.</p>
+              )}
+            </div>
+
+            <p class="net-panel-note ol-kr">
+              같은 prefix 안에서는 OR, 서로 다른 prefix 사이는 AND 조건으로 필터링합니다.
+            </p>
+            <button type="button" class="net-reset-button net-reset-button--sidebar" data-net-reset>
+              필터 초기화
+            </button>
+          </aside>
+
+          <div class="net-list-panel">
+            <div class="net-list-toolbar">
+              <div>
+                <span class="ol-mono-label">RESULT LIST</span>
+                <strong class="ol-kr"><span data-net-result-count>{visibleEntities.length}</span>개 항목</strong>
+              </div>
+              <button type="button" class="net-reset-button" data-net-reset>필터 초기화</button>
+            </div>
+
+            {visibleEntities.length > 0 ? (
+              <div class="net-entity-grid">
+                {visibleEntities.map(entity => (
+                  <div
+                    class="net-entity-item"
+                    data-net-entity
+                    data-type={entity.data.type}
+                    data-tags={JSON.stringify(entity.data.tags ?? [])}
+                  >
+                    <OLEntityCard entity={entity.data} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p class="ol-kr net-empty">아직 공개된 Entity가 없습니다.</p>
+            )}
+            <p class="ol-kr net-empty" data-net-empty hidden>조건에 맞는 Entity가 없습니다.</p>
+          </div>
+
+          <aside class="net-detail-panel" aria-label="Entity 상세 패널 예정 영역">
+            <span class="ol-mono-label">DETAIL PANEL</span>
+            <h2 class="ol-kr">선택한 Entity의 맥락</h2>
+            <p class="ol-kr">
+              선택한 Entity 카드의 상세 내용이 표시될 영역입니다. 하단에는 관련 STORY, TEXT,
+              DESIGN 정보가 이어지고, 이후 관계망 그래프가 이 패널의 중심 시각화가 됩니다.
+            </p>
+            <div class="net-detail-placeholder">
+              <span>Entity 상세</span>
+              <span>관련 STORY / TEXT / DESIGN</span>
+              <span>관계망 그래프</span>
+              <span>장소 Entity 지도 탭</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .net-explore-page {
+    background:
+      linear-gradient(to bottom, var(--ol-surface-2), var(--ol-bg) 260px);
+  }
+
+  .net-explore-container {
+    width: calc(100% - 64px);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .net-explore-head {
+    padding: 44px 0 24px;
+    border-bottom: 1px solid var(--ol-border);
+  }
+
+  .net-breadcrumb {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 20px;
+    color: var(--ol-muted);
+    font-family: var(--ol-font-mono);
+    font-size: 11px;
+  }
+
+  .net-breadcrumb a {
+    color: var(--ol-ink);
+    text-decoration: none;
+  }
+
+  .net-explore-title {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+    gap: 24px;
+    align-items: end;
+  }
+
+  .net-explore-title h1 {
+    margin-top: 10px;
+    font-size: clamp(30px, 4vw, 48px);
+    letter-spacing: -0.02em;
+  }
+
+  .net-explore-search {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 6px;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    background: var(--ol-surface);
+  }
+
+  .net-explore-search input {
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ol-ink);
+    font: inherit;
+    padding: 0 10px;
+  }
+
+  .net-explore-search button {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--ol-ink);
+    border-radius: calc(var(--ol-r) - 2px);
+    background: var(--ol-ink);
+    color: var(--ol-bg);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .net-explorer-section {
+    padding: 24px 0 72px;
+  }
+
+  .net-explorer-shell {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(220px, 300px);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .net-filter-panel,
+  .net-list-panel,
+  .net-detail-panel {
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    background: var(--ol-surface);
+  }
+
+  .net-filter-panel,
+  .net-detail-panel {
+    position: sticky;
+    top: 88px;
+    padding: 16px;
+  }
+
+  .net-filter-panel .ol-mono-label,
+  .net-list-toolbar .ol-mono-label,
+  .net-detail-panel .ol-mono-label {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .net-entity-grid :global(.ol-mono-label),
+  .net-entity-grid :global(.ol-code) {
+    max-width: 100%;
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  .net-entity-grid :global(.ol-mono-label) {
+    display: block;
+  }
+
+  .net-entity-grid :global(.ol-code) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .net-panel-block + .net-panel-block {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ol-border);
+  }
+
+  .net-filter-list {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .net-filter-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--ol-border);
+    border-radius: calc(var(--ol-r) - 2px);
+    background: var(--ol-bg);
+    color: var(--ol-ink);
+    font: inherit;
+    font-size: 13px;
+    cursor: default;
+  }
+
+  .net-filter-option.active {
+    border-color: var(--ol-ink);
+  }
+
+  .net-filter-option span {
+    color: var(--ol-muted);
+    font-family: var(--ol-font-mono);
+    font-size: 11px;
+  }
+
+  .net-prefix-filter {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .net-prefix-group {
+    border: 1px solid var(--ol-border);
+    border-radius: calc(var(--ol-r) - 2px);
+    background: var(--ol-bg);
+  }
+
+  .net-prefix-group[open],
+  .net-prefix-group.active {
+    border-color: var(--ol-border-strong);
+  }
+
+  .net-prefix-group summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 36px;
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 13px;
+    list-style: none;
+  }
+
+  .net-prefix-group summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .net-prefix-group summary em,
+  .net-prefix-options button em {
+    color: var(--ol-muted);
+    font-family: var(--ol-font-mono);
+    font-size: 11px;
+    font-style: normal;
+  }
+
+  .net-prefix-options {
+    display: grid;
+    gap: 4px;
+    max-height: 240px;
+    overflow: auto;
+    padding: 0 8px 8px;
+  }
+
+  .net-prefix-options button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 32px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: calc(var(--ol-r) - 3px);
+    background: transparent;
+    color: var(--ol-ink-2);
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .net-prefix-options button:hover,
+  .net-prefix-options button.active {
+    background: var(--ol-surface-2);
+    color: var(--ol-ink);
+  }
+
+  .net-panel-note {
+    margin-top: 16px;
+    color: var(--ol-muted);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .net-list-panel {
+    padding: 16px;
+  }
+
+  .net-list-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .net-list-toolbar strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 18px;
+  }
+
+  .net-reset-button {
+    border: 1px solid var(--ol-border);
+    border-radius: calc(var(--ol-r) - 2px);
+    padding: 5px 8px;
+    background: var(--ol-bg);
+    color: var(--ol-muted);
+    font-family: var(--ol-font-mono);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .net-reset-button:hover {
+    border-color: var(--ol-border-strong);
+    color: var(--ol-ink);
+  }
+
+  .net-reset-button--sidebar {
+    width: 100%;
+    min-height: 34px;
+    margin-top: 14px;
+    color: var(--ol-ink-2);
+  }
+
+  .net-entity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .net-entity-item {
+    min-width: 0;
+  }
+
+  .net-entity-item[hidden] {
+    display: none;
+  }
+
+  .net-entity-item :global(.ol-entity-card) {
+    display: block;
+    height: 100%;
+  }
+
+  .net-detail-panel h2 {
+    margin-top: 8px;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .net-detail-panel p {
+    margin-top: 10px;
+    color: var(--ol-ink-2);
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .net-detail-placeholder {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .net-detail-placeholder span {
+    min-height: 44px;
+    padding: 12px;
+    border: 1px dashed var(--ol-border);
+    border-radius: calc(var(--ol-r) - 2px);
+    color: var(--ol-muted);
+    font-size: 13px;
+  }
+
+  .net-empty {
+    padding: 56px 0;
+    color: var(--ol-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 1180px) {
+    .net-explorer-shell {
+      grid-template-columns: 190px minmax(0, 1fr);
+    }
+
+    .net-detail-panel {
+      position: static;
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .net-explore-title {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .net-explorer-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .net-filter-panel {
+      position: static;
+    }
+
+    .net-entity-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .net-explore-container {
+      width: calc(100% - 32px);
+      margin: 0 auto;
+    }
+
+    .net-explore-search {
+      grid-template-columns: 1fr;
+    }
+
+    .net-explore-search button {
+      width: 100%;
+    }
+
+    .net-list-panel {
+      padding: 12px;
+    }
+
+    .net-entity-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function setupNetExploreFilters() {
+    const root = document.querySelector<HTMLElement>('[data-net-explore]');
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-net-entity]'));
+    const typeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-net-type]'));
+    const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-net-tag]'));
+    const resultCount = document.querySelector<HTMLElement>('[data-net-result-count]');
+    const empty = document.querySelector<HTMLElement>('[data-net-empty]');
+    const resetButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-net-reset]'));
+    if (!cards.length || !typeButtons.length || root?.dataset.ready === 'true') return;
+    if (root) root.dataset.ready = 'true';
+
+    const selectedTags = new Map<string, Set<string>>();
+    let selectedType = 'all';
+
+    const readCardTags = (card: HTMLElement) => {
+      try {
+        return JSON.parse(card.dataset.tags || '[]') as string[];
+      } catch {
+        return [];
+      }
+    };
+
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      const type = params.get('type');
+      selectedType = type && typeButtons.some(button => button.dataset.netType === type) ? type : 'all';
+      selectedTags.clear();
+      params.getAll('tag').forEach(tag => {
+        const button = tagButtons.find(item => item.dataset.netTag === tag);
+        const prefix = button?.dataset.netPrefix;
+        if (!prefix) return;
+        const group = selectedTags.get(prefix) ?? new Set<string>();
+        group.add(tag);
+        selectedTags.set(prefix, group);
+      });
+    };
+
+    const writeUrl = () => {
+      const params = new URLSearchParams();
+      if (selectedType !== 'all') params.set('type', selectedType);
+      selectedTags.forEach(tags => {
+        tags.forEach(tag => params.append('tag', tag));
+      });
+      const query = params.toString();
+      window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
+    };
+
+    const cardMatches = (card: HTMLElement) => {
+      if (selectedType !== 'all' && card.dataset.type !== selectedType) return false;
+      const tags = readCardTags(card);
+      return Array.from(selectedTags.values()).every(group =>
+        Array.from(group).some(tag => tags.includes(tag)),
+      );
+    };
+
+    const syncControls = () => {
+      typeButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.netType === selectedType);
+      });
+      tagButtons.forEach(button => {
+        const prefix = button.dataset.netPrefix;
+        const tag = button.dataset.netTag;
+        button.classList.toggle('active', Boolean(prefix && tag && selectedTags.get(prefix)?.has(tag)));
+      });
+      document.querySelectorAll<HTMLElement>('.net-prefix-group').forEach(group => {
+        const prefix = group.dataset.prefix;
+        group.classList.toggle('active', Boolean(prefix && selectedTags.get(prefix)?.size));
+      });
+    };
+
+    const apply = ({ updateUrl = true } = {}) => {
+      let visible = 0;
+      cards.forEach(card => {
+        const matches = cardMatches(card);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      });
+      if (resultCount) resultCount.textContent = String(visible);
+      if (empty) empty.hidden = visible > 0;
+      syncControls();
+      if (updateUrl) writeUrl();
+    };
+
+    typeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        selectedType = button.dataset.netType || 'all';
+        apply();
+      });
+    });
+
+    tagButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const prefix = button.dataset.netPrefix;
+        const tag = button.dataset.netTag;
+        if (!prefix || !tag) return;
+        const group = selectedTags.get(prefix) ?? new Set<string>();
+        if (group.has(tag)) {
+          group.delete(tag);
+        } else {
+          group.add(tag);
+        }
+        if (group.size > 0) {
+          selectedTags.set(prefix, group);
+        } else {
+          selectedTags.delete(prefix);
+        }
+        apply();
+      });
+    });
+
+    const resetFilters = () => {
+      selectedType = 'all';
+      selectedTags.clear();
+      apply();
+    };
+
+    resetButtons.forEach(button => {
+      button.addEventListener('click', resetFilters);
+    });
+
+    syncFromUrl();
+    apply({ updateUrl: false });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupNetExploreFilters);
+</script>

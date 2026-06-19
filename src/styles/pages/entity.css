@@ -69,6 +69,8 @@
   gap: 12px;
 }
 .ol-entity-card {
+  display: block;
+  box-sizing: border-box;
   background: var(--ol-surface);
   border: 1px solid var(--ol-border);
   border-radius: var(--ol-r);

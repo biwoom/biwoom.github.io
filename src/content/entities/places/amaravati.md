@@ -47,7 +47,7 @@ relatedStories:
     order: 3
 tags:
   - "장소/아마라와띠"
-  - "유형/전승상도시"
+  - "장소유형/전승 도시"
   - "경전/마하붓다왐사"
 sources:
   - "Mahābuddhavaṃsa, Chapter 3 — Sumedha the Brahmin"
