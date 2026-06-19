@@ -364,3 +364,22 @@ This file records concise date-based work summaries for continuity across Codex 
   - public blog post `/blog/net-menu-name-card-phase1/`
 - Local validation: `npm run build` passed before push.
 - Deployment completion was not checked by design.
+
+### Documentation And Skill Alignment
+
+- Reviewed public and internal documentation against the current live site structure.
+- Updated `.agents/context/current-state.md` so it reflects:
+  - `NET` as a first-class public menu
+  - the current public header structure
+  - `src/content/pages/` as public permanent documents rather than internal manuals
+- Updated `.agents/context/decisions.md` to remove the stale public `/pages/content-management-manual/` route reference.
+- Updated `.agents/references/ol-home-content-management-manual.md` to:
+  - reflect the current homepage menu structure
+  - document the TEXT/STORY right-side Entity name-card panel rule
+  - add an ENTITY/NET operating section
+  - restate the current `pages` vs `.agents/references/` split
+- Updated `src/content/pages/brand.md` so the current product system includes `OL NET` and the current homepage/menu structure.
+- Updated skill docs:
+  - `.agents/skills/ol-doc-maintenance/SKILL.md`
+  - `.agents/skills/ol-content-authoring/SKILL.md`
+- Local validation: `npm run build` passed.

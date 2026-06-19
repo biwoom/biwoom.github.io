@@ -17,7 +17,7 @@ Last updated: 2026-06-20
 
 - `src/content/` is the content source of truth.
 - `src/content.config.ts` defines collection schemas.
-- `src/content/pages/` holds permanent project documents and manuals.
+- `src/content/pages/` holds public permanent project documents such as the brand definition.
 - `src/content/text/` holds TEXT series and documents.
 - `src/content/story/` holds STORY series and chapters.
 - `src/content/design/` holds DESIGN metadata and source assets.
@@ -27,6 +27,10 @@ Last updated: 2026-06-20
 - `public/generated/` is generated from content assets and should not be committed.
 - TEXT and STORY document-level Entity links use a shared `entities: string[]` frontmatter field.
 - TEXT and STORY detail pages can render a right-side Entity name-card panel from the document `entities` list.
+- `NET` is now a first-class public menu with:
+  - `/net/` as the entry page
+  - `/net/explore/` as the Entity name-card exploration view
+- The main public header currently exposes `HOME`, `TEXT`, `STORY`, `DESIGN`, `NET`, plus a separate `BLOG` action.
 
 ## Deployment State
 
@@ -49,13 +53,15 @@ Last updated: 2026-06-20
 
 - Migrated GitHub Pages configuration from project-page assumptions to root user-page deployment.
 - Updated README for OL HOME.
-- Added and updated public OL project manuals:
-  - `/pages/brand/`
-  - `/pages/content-management-manual/`
+- Kept the public permanent document surface focused on `/pages/brand/`.
 - Added Codex project guidance, skills, config, and rules.
 - Added continuity context documents under `.agents/context/`.
 - Added the first shared TEXT/STORY Entity side-panel implementation.
 - Added Concept Entity test cards for `five-aggregates` and `twelve-sense-bases`.
+- Added the first public NET implementation slice:
+  - `/net/`
+  - `/net/explore/`
+  - shared name-card behavior across NET, TEXT, STORY, and ENTITY
 
 ## Open Follow-ups
 

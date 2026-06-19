@@ -12,7 +12,7 @@ description: Create or update OL HOME content entries under src/content. Use whe
 3. For internal content-management rules, read `.agents/references/ol-home-content-management-manual.md`.
 4. Inspect a nearby existing entry in the same collection and follow its structure.
 5. Place content in the correct folder:
-   - `src/content/pages/` for public permanent project documents.
+   - `src/content/pages/` for public permanent project documents only.
    - `src/content/blog/{slug}/index.md` for dated work logs.
    - `src/content/text/{series}/` for TEXT series and documents.
    - `src/content/story/{series}/` for STORY series and chapters.
@@ -28,6 +28,7 @@ description: Create or update OL HOME content entries under src/content. Use whe
 - Do not invent frontmatter fields without updating `src/content.config.ts`.
 - Preserve URL stability unless the user explicitly requests a rename.
 - Use `date` or `publishedAt` formats already used in nearby entries.
+- Internal operating manuals belong under `.agents/references/`, not `src/content/pages/`.
 - For BuddhaStory part names and candidate chapter titles, consult `docs/toc/붓다스토리(Buddha Story) 목차 v0.1.md` first. Treat it as a planning reference, not as a final route source; actual URLs follow `src/content/story/buddha-story`.
 - For TEXT and STORY tags, prefer `prefix/name` form:
 
@@ -50,6 +51,7 @@ prefixTags:
 
 - Place entity documents under `src/content/entities/{type}s/`, such as `src/content/entities/persons/sumedha.md` or `src/content/entities/places/amaravati.md`.
 - Use `id` as the stable internal key. TEXT and STORY document `entities` arrays must reference these ids, not Korean labels.
+- The order of ids in TEXT/STORY `entities` arrays is the display order for the document-side name-card panel.
 - Use current schema field names:
   - `type: "person"` or `type: "place"`.
   - `name.en`, not `name.english`.

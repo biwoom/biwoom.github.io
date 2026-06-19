@@ -44,7 +44,7 @@ This file records durable project decisions that future Codex sessions should pr
 ### Current Public Manual Routes
 
 - Brand definition: `/pages/brand/`
-- Content management manual: `/pages/content-management-manual/`
+- Internal content management manual is no longer a public route.
 
 ### Codex Project Memory
 

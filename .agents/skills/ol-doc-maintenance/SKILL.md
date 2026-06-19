@@ -39,6 +39,7 @@ published: true
 - Content source root: `src/content/`
 - Generated asset output: `public/generated/`
 - Deploy workflow: `.github/workflows/deploy.yml`
+- Public primary navigation currently includes `HOME`, `TEXT`, `STORY`, `DESIGN`, `NET`, with `BLOG` as a separate action link.
 
 ## Document Placement
 
@@ -46,6 +47,7 @@ published: true
 - Content management manual: `.agents/references/ol-home-content-management-manual.md`.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
+- `src/content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
 
 ## Style
 

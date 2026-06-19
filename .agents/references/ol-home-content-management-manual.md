@@ -1,7 +1,7 @@
 # OL 홈페이지 콘텐츠 관리 매뉴얼
 
-**문서 버전**: v1.6  
-**최종 업데이트**: 2026-06-16  
+**문서 버전**: v1.7  
+**최종 업데이트**: 2026-06-20  
 **대상 프로젝트**: OL HOME (`biwoom.github.io`)  
 **기술 스택**: Astro 6 + GitHub Pages + Pagefind  
 **기준 배포 URL**: `https://biwoom.github.io/`  
@@ -35,13 +35,21 @@ src/content/
 ├── text/       → 번역, 주석, 연구 노트를 중심으로 한 문헌 콘텐츠
 ├── story/      → 불교 인물·설화·가르침을 이야기 형식으로 재구성한 서사 콘텐츠
 ├── design/     → 인포그래픽, 도식, 이미지 자료
-├── pages/      → 공개 브랜드 문서, 선언문, 안내문 등 상설 문서
+├── pages/      → 공개 브랜드 문서와 방문자용 상설 문서
 ├── entities/   → 인물, 장소, 개념 등 엔티티
 ├── ontology/   → 온톨로지 정의
 └── ai/         → AI workflow 기록용 예약 컬렉션
 ```
 
 `book/`과 `works/` 라우트는 호환과 과거 구조 연결을 위해 남아 있지만, 신규 콘텐츠 운영의 중심은 `text/`, `story/`, `design/`, `blog/`, `pages/`, `entities/`입니다.
+
+현재 공개 홈페이지의 주요 메뉴 구조는 다음과 같습니다.
+
+```txt
+HOME / TEXT / STORY / DESIGN / NET (+ BLOG)
+```
+
+`NET`은 별도 컬렉션이 아니라 `entities` 컬렉션을 탐색하는 공개 메뉴입니다.
 
 ### 0.2 자산 관리 원칙
 
@@ -248,6 +256,14 @@ published: true
 | `prefixTags` | 관리용 prefix 태그 |
 | `published` | 공개 여부. 기본값은 `false` |
 
+### 1.5 TEXT 이름카드 패널
+
+TEXT 문서의 `entities` 배열은 단순 참고 메모가 아니라, 상세 페이지 우측 이름카드 패널의 표시 순서를 결정합니다.
+
+- 배열에 적은 Entity id만 표시합니다.
+- 자동 추론이나 본문 기반 자동 수집은 하지 않습니다.
+- 인물, 장소, 개념을 같은 배열에 섞어 넣을 수 있습니다.
+
 ---
 
 ## 2. STORY 콘텐츠
@@ -355,6 +371,42 @@ published: true
 - Copy 드롭다운
 - 이전 문서 / 다음 문서
 - 모바일 문서 목록과 목차 패널
+- 문서 `entities` 기반 우측 이름카드 패널
+
+### 2.5 STORY 이름카드 패널
+
+STORY도 TEXT와 동일하게 문서 frontmatter의 `entities` 배열을 사용합니다.
+
+- 우측 패널에는 배열에 명시한 Entity만 표시합니다.
+- 이름카드 목록과 상세 전환 UI는 TEXT와 공용 컴포넌트를 사용합니다.
+- 모바일에서는 본문 흐름을 우선하고, 패널은 단일 컬럼 흐름에 맞게 접힙니다.
+
+---
+
+## 2A. ENTITY와 NET
+
+ENTITY는 개별 이름카드의 기준 문서이고, NET은 그 이름카드들을 모아 탐색하는 메뉴입니다.
+
+### 2A.1 Entity 문서 위치
+
+```txt
+src/content/entities/persons/
+src/content/entities/places/
+src/content/entities/concepts/
+```
+
+### 2A.2 기본 원칙
+
+- Entity `id`는 안정적인 내부 참조 키입니다.
+- TEXT/STORY/BLOG 등의 `entities` 배열은 한국어 이름이 아니라 Entity `id`를 넣습니다.
+- Entity 상세 페이지의 관계 링크와 역참조 링크는 raw id가 아니라 실제 Entity route와 이름을 보여줘야 합니다.
+
+### 2A.3 NET과의 연결
+
+- `/net/`은 NET 진입 페이지입니다.
+- `/net/explore/`은 이름카드 탐색 화면입니다.
+- NET 탐색 결과와 TEXT/STORY 우측 이름카드 패널은 같은 Entity 데이터를 재사용합니다.
+- Person, Place, Concept 문서는 NET 탐색 품질에 직접 영향을 주므로 설명, 태그, 관련 콘텐츠 필드를 가능한 한 채우는 편이 좋습니다.
 
 ---
 
@@ -467,6 +519,8 @@ BLOG의 `published` 기본값은 `false`입니다. 공개하려면 반드시 `pu
 src/content/pages/brand.md
 → /pages/brand/
 ```
+
+현재 기준으로 공개 상설 문서의 대표 예시는 브랜드 정의서입니다. 내부 운영 매뉴얼은 계속 `.agents/references/` 아래에서 관리합니다.
 
 현재 `pages` 스키마는 다음 frontmatter만 허용합니다.
 
@@ -646,6 +700,13 @@ tags:
 
 - STORY frontmatter에서 더 이상 사용하지 않는 `htmlAsset` 필드를 제거했습니다.
 - STORY 시리즈 및 개별 문서 작성 규칙, 체크리스트, 예시에서 `htmlAsset` 관련 설명을 삭제했습니다.
+
+### 2026-06-20 · v1.7
+
+- 현재 공개 홈페이지 메뉴 구조에 `NET`을 반영했습니다.
+- TEXT/STORY 문서 `entities` 배열이 우측 이름카드 패널의 직접 입력값이라는 점을 명시했습니다.
+- ENTITY와 NET의 역할 분리를 추가했습니다.
+- `src/content/pages/`는 공개 상설 문서용이고, 내부 운영 매뉴얼은 `.agents/references/`에 둔다는 현재 원칙을 다시 정리했습니다.
 
 ### 2026-06-15 · v1.5
 
