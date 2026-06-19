@@ -218,3 +218,15 @@ This file records concise date-based work summaries for continuity across Codex 
 - Included the reference images and the table-of-contents note files under `docs/` as part of the planning package.
 - Local validation: not run; this was a documentation-only update.
 - Deployment completion was not checked by design.
+
+### NET Planning v0.3.1 Upload
+
+- Pushed commit `591e9c2` (`docs: update NET planning references`) to `origin/main`.
+- Replaced `docs/NET 기획 v0.2.md` with `docs/NET 기획 v0.3.1.md`.
+- Added NET Explorer reference files under `docs/net-explorer/`:
+  - `net-explorer-reference.png`
+  - `ol-atlas_v0.0.8.html`
+  - `빛구슬연결망_v9.html`
+- Updated the NET plan with the entry-page hero/search design, latest Entity card list, prefix tag filter behavior, reference search-page layout, and second-phase relationship graph guidance.
+- Local validation: not run; this was a documentation-only update.
+- Deployment completion was not checked by design.
