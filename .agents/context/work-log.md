@@ -258,3 +258,10 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated initial NET roadmap notes and clarified selected place tag labels for prefix filtering.
 - Local validation: `npm run build` passed before push.
 - Deployment completion was not checked by design.
+
+### NET Hero Copy Tweak Upload
+
+- Pushed commit `1abe4ba` (`Tweak NET hero copy`) to `origin/main`.
+- Refined the `/net` hero headline and lead copy to better fit the new NET exploratory framing.
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
