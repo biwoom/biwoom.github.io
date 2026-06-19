@@ -247,3 +247,14 @@ This file records concise date-based work summaries for continuity across Codex 
 - The page currently provides a hero section, Entity-only search form shell, Entity type count chips, and a latest Entity card list using the existing Entity card component.
 - Local validation: `npm run build` passed and generated `/net/index.html`.
 - Deployment completion was not checked by design.
+
+### NET Explorer Filters Upload
+
+- Pushed commit `fe6d91a` (`Implement NET explorer filters`) to `origin/main`.
+- Added `/net/explore` as the NET search result and exploration page with left filters, center Entity card results, and right detail-panel placeholder.
+- Connected `/net` hero search and type chips to `/net/explore`.
+- Added type filters, prefix tag dropdown filters, URL query synchronization, result counts, empty-state handling, and filter reset controls in both the result toolbar and sidebar.
+- Adjusted Entity card display so cards render as full block cards inside the NET explorer grid.
+- Updated initial NET roadmap notes and clarified selected place tag labels for prefix filtering.
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
