@@ -230,3 +230,11 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated the NET plan with the entry-page hero/search design, latest Entity card list, prefix tag filter behavior, reference search-page layout, and second-phase relationship graph guidance.
 - Local validation: not run; this was a documentation-only update.
 - Deployment completion was not checked by design.
+
+### NET Implementation Roadmap Upload
+
+- Pushed commit `4b1213f` (`docs: add NET implementation roadmap`) to `origin/main`.
+- Added `docs/NET 구현 로드맵 v0.1.md`.
+- The roadmap defines stepwise NET implementation from a minimal `/net` entry page through filters, search, detail panel, related content, concept schema expansion, relationship graph, and future map tab.
+- Local validation: not run; this was a documentation-only update.
+- Deployment completion was not checked by design.
