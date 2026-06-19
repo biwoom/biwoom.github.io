@@ -14,7 +14,7 @@ const { entity } = Astro.props;
 const names = [entity.name.en, entity.name.sanskrit, entity.name.pali, entity.name.chinese].filter(Boolean);
 ---
 
-<aside class="ol-card" style="position: sticky; top: 88px;">
+<aside class="ol-card ol-entity-panel">
   <div class="ol-mono-label">{entity.type.toUpperCase()}</div>
   <h2 style="font-size: 22px; margin-top: 8px;" class="ol-kr">{entity.name.ko}</h2>
 

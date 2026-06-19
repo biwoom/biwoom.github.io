@@ -27,11 +27,42 @@ const typeCounts = coreTypes.map(type => ({
 }));
 
 const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.data.tags ?? []));
+const PAGE_SIZE = 12;
+const initialQuery = Astro.url.searchParams.get('q') ?? '';
+const dataList = (entity: { data: Record<string, any> }, key: string) =>
+  Array.isArray(entity.data[key]) ? entity.data[key] : [];
+const entityById = new Map(entities.map(entity => [entity.data.id, entity]));
+const toNameCardReference = (id: string) => {
+  const target = entityById.get(id);
+  if (!target) return null;
+  return {
+    title: target.data.name.ko,
+    path: url(`/entity/${target.data.type}s/${target.data.id}`),
+  };
+};
+const relatedNameCards = (entity: { data: Record<string, any> }) => {
+  const refs = [
+    ...dataList(entity, 'primaryPlaces').map((item: any) => toNameCardReference(item.placeId)),
+    ...dataList(entity, 'relatedPersons').map((item: any) => toNameCardReference(item.id)),
+    ...dataList(entity, 'relatedConcepts').map((item: any) => toNameCardReference(item.id)),
+    ...dataList(entity, 'relations').map((item: any) => {
+      const targetId = item.subject === entity.data.id ? item.object : item.subject;
+      return toNameCardReference(targetId);
+    }),
+  ].filter((item): item is { title: string; path: string } => Boolean(item?.title));
+  const seen = new Set<string>();
+  return refs.filter(item => {
+    const key = `${item.title}|${item.path}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 6);
+};
 ---
 
 <BaseLayout
-  title="OL NET Explore — Entity 탐색"
-  description="OL Entity를 검색하고 필터링하기 위한 NET 탐색 전용 페이지입니다."
+  title="OL NET Explore — 이름 탐색"
+  description="OL 이름카드를 검색하고 필터링하기 위한 NET 탐색 전용 페이지입니다."
   pagefindBody={false}
 >
   <main class="net-explore-page" data-net-explore>
@@ -45,11 +76,18 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
         <div class="net-explore-title">
           <div>
             <span class="ol-kicker">NET EXPLORER · 검색결과 전용 화면</span>
-            <h1 class="ol-kr">Entity를 찾고 관계를 확인합니다.</h1>
+            <h1 class="ol-kr">이름을 찾고 관계를 확인합니다.</h1>
           </div>
-          <form class="net-explore-search" action={url('/net/explore')} method="get" role="search" aria-label="NET 탐색 검색">
-            <input name="q" type="search" placeholder="Entity 검색" autocomplete="off" />
-            <button type="submit">검색</button>
+          <form class="net-explore-search" action={url('/net/explore')} method="get" role="search" aria-label="NET 이름카드 검색">
+            <input name="q" type="search" placeholder="이름카드 검색" autocomplete="off" value={initialQuery} data-net-query />
+            <button type="submit" class="net-search-submit" aria-label="검색">
+              <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <span>검색</span>
+            </button>
+            <button type="button" class="net-search-clear" data-net-search-clear hidden>검색어 초기화</button>
           </form>
         </div>
       </div>
@@ -59,50 +97,58 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
       <div class="net-explore-container">
         <div class="net-explorer-shell">
           <aside class="net-filter-panel" aria-label="NET 필터">
-            <div class="net-panel-block">
-              <span class="ol-mono-label">TYPE FILTER</span>
-              <div class="net-filter-list" data-net-type-filter>
-                <button type="button" class="net-filter-option active" data-net-type="all">전체 <span>{visibleEntities.length}</span></button>
-                {typeCounts.map(item => (
-                  <button type="button" class="net-filter-option" data-net-type={item.type}>
-                    {item.label} <span>{item.count}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div class="net-panel-block">
-              <span class="ol-mono-label">PREFIX TAGS</span>
-              {tagGroups.length > 0 ? (
-                <div class="net-prefix-filter" data-net-tag-filter>
-                  {tagGroups.map(group => (
-                    <details class="net-prefix-group" data-prefix={group.prefix}>
-                      <summary>
-                        <span>{group.prefix}</span>
-                        <em>{group.tags.length}</em>
-                      </summary>
-                      <div class="net-prefix-options">
-                        {group.tags.map(item => (
-                          <button type="button" data-net-tag={item.tag} data-net-prefix={group.prefix}>
-                            <span>{item.label}</span>
-                            <em>{item.count}</em>
-                          </button>
-                        ))}
-                      </div>
-                    </details>
-                  ))}
+            <details class="net-filter-disclosure" open data-net-filter-disclosure>
+              <summary>
+                <span>필터</span>
+                <em data-net-filter-count hidden>0</em>
+              </summary>
+              <div class="net-filter-content">
+                <div class="net-panel-block">
+                  <span class="ol-mono-label">TYPE FILTER</span>
+                  <div class="net-filter-list" data-net-type-filter>
+                    <button type="button" class="net-filter-option active" data-net-type="all">전체 <span>{visibleEntities.length}</span></button>
+                    {typeCounts.map(item => (
+                      <button type="button" class="net-filter-option" data-net-type={item.type}>
+                        {item.label} <span>{item.count}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <p class="net-panel-note ol-kr">태그 필터는 다음 단계에서 연결합니다.</p>
-              )}
-            </div>
 
-            <p class="net-panel-note ol-kr">
-              같은 prefix 안에서는 OR, 서로 다른 prefix 사이는 AND 조건으로 필터링합니다.
-            </p>
-            <button type="button" class="net-reset-button net-reset-button--sidebar" data-net-reset>
-              필터 초기화
-            </button>
+                <div class="net-panel-block">
+                  <span class="ol-mono-label">PREFIX TAGS</span>
+                  {tagGroups.length > 0 ? (
+                    <div class="net-prefix-filter" data-net-tag-filter>
+                      {tagGroups.map(group => (
+                        <details class="net-prefix-group" data-prefix={group.prefix}>
+                          <summary>
+                            <span>{group.prefix}</span>
+                            <em>{group.tags.length}</em>
+                          </summary>
+                          <div class="net-prefix-options">
+                            {group.tags.map(item => (
+                              <button type="button" data-net-tag={item.tag} data-net-prefix={group.prefix}>
+                                <span>{item.label}</span>
+                                <em>{item.count}</em>
+                              </button>
+                            ))}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  ) : (
+                    <p class="net-panel-note ol-kr">태그 필터는 다음 단계에서 연결합니다.</p>
+                  )}
+                </div>
+
+                <p class="net-panel-note ol-kr">
+                  같은 prefix 안에서는 OR, 서로 다른 prefix 사이는 AND 조건으로 필터링합니다.
+                </p>
+                <button type="button" class="net-reset-button net-reset-button--sidebar" data-net-reset>
+                  필터 초기화
+                </button>
+              </div>
+            </details>
           </aside>
 
           <div class="net-list-panel">
@@ -120,431 +166,89 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
                   <div
                     class="net-entity-item"
                     data-net-entity
+                    data-id={entity.data.id}
                     data-type={entity.data.type}
                     data-tags={JSON.stringify(entity.data.tags ?? [])}
+                    data-detail={JSON.stringify({
+                      type: TYPE_LABELS[entity.data.type] ?? entity.data.type,
+                      name: entity.data.name.ko,
+                      names: [
+                        entity.data.name.en,
+                        entity.data.name.sanskrit,
+                        entity.data.name.pali,
+                        entity.data.name.chinese,
+                      ].filter(Boolean),
+                      aliases: entity.data.aliases ?? [],
+                      description: entity.data.description ?? '',
+                      tags: entity.data.tags ?? [],
+                      relatedStories: [
+                        ...dataList(entity, 'appearsIn').filter((item: any) => item.type === 'story'),
+                        ...dataList(entity, 'relatedStories'),
+                      ].slice(0, 4),
+                      relatedText: dataList(entity, 'relatedText').slice(0, 4),
+                      relatedDesign: dataList(entity, 'relatedDesign').slice(0, 4),
+                      relatedNameCards: relatedNameCards(entity),
+                      relationCount: dataList(entity, 'relations').length
+                        + dataList(entity, 'primaryPlaces').length
+                        + dataList(entity, 'relatedPersons').length
+                        + dataList(entity, 'relatedConcepts').length,
+                      sourceCount: entity.data.sources?.length ?? 0,
+                      href: url(`/entity/${entity.data.type}s/${entity.data.id}`),
+                    })}
+                    data-search-text={[
+                      entity.data.name.ko,
+                      entity.data.name.en,
+                      entity.data.name.sanskrit,
+                      entity.data.name.pali,
+                      entity.data.name.chinese,
+                      entity.data.description,
+                      ...(entity.data.aliases ?? []),
+                      ...(entity.data.tags ?? []),
+                    ].filter(Boolean).join(' ')}
                   >
                     <OLEntityCard entity={entity.data} />
                   </div>
                 ))}
               </div>
             ) : (
-              <p class="ol-kr net-empty">아직 공개된 Entity가 없습니다.</p>
+              <p class="ol-kr net-empty">아직 공개된 이름카드가 없습니다.</p>
             )}
-            <p class="ol-kr net-empty" data-net-empty hidden>조건에 맞는 Entity가 없습니다.</p>
+            <p class="ol-kr net-empty" data-net-empty hidden>조건에 맞는 이름카드가 없습니다.</p>
+            {visibleEntities.length > PAGE_SIZE && (
+              <div class="net-loadmore-wrap" data-net-loadmore-wrap>
+                <button type="button" class="ol-btn ol-btn-outline" data-net-loadmore>
+                  더 보기
+                  <span data-net-loadmore-remaining>({visibleEntities.length - PAGE_SIZE})</span>
+                </button>
+              </div>
+            )}
           </div>
 
-          <aside class="net-detail-panel" aria-label="Entity 상세 패널 예정 영역">
-            <span class="ol-mono-label">DETAIL PANEL</span>
-            <h2 class="ol-kr">선택한 Entity의 맥락</h2>
-            <p class="ol-kr">
-              선택한 Entity 카드의 상세 내용이 표시될 영역입니다. 하단에는 관련 STORY, TEXT,
+          <div class="net-detail-backdrop" data-net-detail-close hidden></div>
+          <aside class="net-detail-panel" aria-label="이름카드 상세 패널 예정 영역">
+            <button type="button" class="net-detail-close" data-net-detail-close aria-label="상세 패널 닫기">닫기</button>
+            <span class="ol-mono-label" data-net-detail-type>NAME CARD DETAIL</span>
+            <h2 class="ol-kr" data-net-detail-name>선택한 이름카드의 맥락</h2>
+            <p class="net-detail-names" data-net-detail-names hidden></p>
+            <p class="ol-kr" data-net-detail-description>
+              선택한 이름카드의 상세 내용이 표시될 영역입니다. 하단에는 관련 STORY, TEXT,
               DESIGN 정보가 이어지고, 이후 관계망 그래프가 이 패널의 중심 시각화가 됩니다.
             </p>
-            <div class="net-detail-placeholder">
-              <span>Entity 상세</span>
-              <span>관련 STORY / TEXT / DESIGN</span>
+            <div class="net-detail-tags" data-net-detail-tags hidden></div>
+            <div class="net-detail-context" data-net-detail-context hidden></div>
+            <div class="net-detail-placeholder" data-net-detail-placeholder>
+              <span>이름카드를 선택하면 요약 정보가 표시됩니다.</span>
+              <span>상세 문서는 선택 후 링크로 이동합니다.</span>
               <span>관계망 그래프</span>
-              <span>장소 Entity 지도 탭</span>
+              <span>장소 이름카드 지도 탭</span>
             </div>
+            <a class="net-detail-link" href="#" data-net-detail-link hidden>상세 문서 열기</a>
           </aside>
         </div>
       </div>
     </section>
   </main>
 </BaseLayout>
-
-<style>
-  .net-explore-page {
-    background:
-      linear-gradient(to bottom, var(--ol-surface-2), var(--ol-bg) 260px);
-  }
-
-  .net-explore-container {
-    width: calc(100% - 64px);
-    max-width: 1440px;
-    margin: 0 auto;
-  }
-
-  .net-explore-head {
-    padding: 44px 0 24px;
-    border-bottom: 1px solid var(--ol-border);
-  }
-
-  .net-breadcrumb {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 20px;
-    color: var(--ol-muted);
-    font-family: var(--ol-font-mono);
-    font-size: 11px;
-  }
-
-  .net-breadcrumb a {
-    color: var(--ol-ink);
-    text-decoration: none;
-  }
-
-  .net-explore-title {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
-    gap: 24px;
-    align-items: end;
-  }
-
-  .net-explore-title h1 {
-    margin-top: 10px;
-    font-size: clamp(30px, 4vw, 48px);
-    letter-spacing: -0.02em;
-  }
-
-  .net-explore-search {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 6px;
-    border: 1px solid var(--ol-border);
-    border-radius: var(--ol-r);
-    background: var(--ol-surface);
-  }
-
-  .net-explore-search input {
-    min-width: 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: var(--ol-ink);
-    font: inherit;
-    padding: 0 10px;
-  }
-
-  .net-explore-search button {
-    min-height: 40px;
-    padding: 0 14px;
-    border: 1px solid var(--ol-ink);
-    border-radius: calc(var(--ol-r) - 2px);
-    background: var(--ol-ink);
-    color: var(--ol-bg);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .net-explorer-section {
-    padding: 24px 0 72px;
-  }
-
-  .net-explorer-shell {
-    display: grid;
-    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(220px, 300px);
-    gap: 16px;
-    align-items: start;
-  }
-
-  .net-filter-panel,
-  .net-list-panel,
-  .net-detail-panel {
-    border: 1px solid var(--ol-border);
-    border-radius: var(--ol-r);
-    background: var(--ol-surface);
-  }
-
-  .net-filter-panel,
-  .net-detail-panel {
-    position: sticky;
-    top: 88px;
-    padding: 16px;
-  }
-
-  .net-filter-panel .ol-mono-label,
-  .net-list-toolbar .ol-mono-label,
-  .net-detail-panel .ol-mono-label {
-    display: block;
-    white-space: nowrap;
-  }
-
-  .net-entity-grid :global(.ol-mono-label),
-  .net-entity-grid :global(.ol-code) {
-    max-width: 100%;
-    width: fit-content;
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap;
-    word-break: keep-all;
-    overflow-wrap: normal;
-  }
-
-  .net-entity-grid :global(.ol-mono-label) {
-    display: block;
-  }
-
-  .net-entity-grid :global(.ol-code) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .net-panel-block + .net-panel-block {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--ol-border);
-  }
-
-  .net-filter-list {
-    display: grid;
-    gap: 6px;
-    margin-top: 10px;
-  }
-
-  .net-filter-option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 36px;
-    padding: 0 10px;
-    border: 1px solid var(--ol-border);
-    border-radius: calc(var(--ol-r) - 2px);
-    background: var(--ol-bg);
-    color: var(--ol-ink);
-    font: inherit;
-    font-size: 13px;
-    cursor: default;
-  }
-
-  .net-filter-option.active {
-    border-color: var(--ol-ink);
-  }
-
-  .net-filter-option span {
-    color: var(--ol-muted);
-    font-family: var(--ol-font-mono);
-    font-size: 11px;
-  }
-
-  .net-prefix-filter {
-    display: grid;
-    gap: 6px;
-    margin-top: 10px;
-  }
-
-  .net-prefix-group {
-    border: 1px solid var(--ol-border);
-    border-radius: calc(var(--ol-r) - 2px);
-    background: var(--ol-bg);
-  }
-
-  .net-prefix-group[open],
-  .net-prefix-group.active {
-    border-color: var(--ol-border-strong);
-  }
-
-  .net-prefix-group summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 36px;
-    padding: 0 10px;
-    cursor: pointer;
-    font-size: 13px;
-    list-style: none;
-  }
-
-  .net-prefix-group summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .net-prefix-group summary em,
-  .net-prefix-options button em {
-    color: var(--ol-muted);
-    font-family: var(--ol-font-mono);
-    font-size: 11px;
-    font-style: normal;
-  }
-
-  .net-prefix-options {
-    display: grid;
-    gap: 4px;
-    max-height: 240px;
-    overflow: auto;
-    padding: 0 8px 8px;
-  }
-
-  .net-prefix-options button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    min-height: 32px;
-    padding: 0 8px;
-    border: 0;
-    border-radius: calc(var(--ol-r) - 3px);
-    background: transparent;
-    color: var(--ol-ink-2);
-    font: inherit;
-    font-size: 13px;
-    text-align: left;
-    cursor: pointer;
-  }
-
-  .net-prefix-options button:hover,
-  .net-prefix-options button.active {
-    background: var(--ol-surface-2);
-    color: var(--ol-ink);
-  }
-
-  .net-panel-note {
-    margin-top: 16px;
-    color: var(--ol-muted);
-    font-size: 13px;
-    line-height: 1.65;
-  }
-
-  .net-list-panel {
-    padding: 16px;
-  }
-
-  .net-list-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 14px;
-  }
-
-  .net-list-toolbar strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 18px;
-  }
-
-  .net-reset-button {
-    border: 1px solid var(--ol-border);
-    border-radius: calc(var(--ol-r) - 2px);
-    padding: 5px 8px;
-    background: var(--ol-bg);
-    color: var(--ol-muted);
-    font-family: var(--ol-font-mono);
-    font-size: 11px;
-    cursor: pointer;
-  }
-
-  .net-reset-button:hover {
-    border-color: var(--ol-border-strong);
-    color: var(--ol-ink);
-  }
-
-  .net-reset-button--sidebar {
-    width: 100%;
-    min-height: 34px;
-    margin-top: 14px;
-    color: var(--ol-ink-2);
-  }
-
-  .net-entity-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .net-entity-item {
-    min-width: 0;
-  }
-
-  .net-entity-item[hidden] {
-    display: none;
-  }
-
-  .net-entity-item :global(.ol-entity-card) {
-    display: block;
-    height: 100%;
-  }
-
-  .net-detail-panel h2 {
-    margin-top: 8px;
-    font-size: 20px;
-    letter-spacing: -0.02em;
-  }
-
-  .net-detail-panel p {
-    margin-top: 10px;
-    color: var(--ol-ink-2);
-    font-size: 14px;
-    line-height: 1.65;
-  }
-
-  .net-detail-placeholder {
-    display: grid;
-    gap: 8px;
-    margin-top: 18px;
-  }
-
-  .net-detail-placeholder span {
-    min-height: 44px;
-    padding: 12px;
-    border: 1px dashed var(--ol-border);
-    border-radius: calc(var(--ol-r) - 2px);
-    color: var(--ol-muted);
-    font-size: 13px;
-  }
-
-  .net-empty {
-    padding: 56px 0;
-    color: var(--ol-muted);
-    text-align: center;
-  }
-
-  @media (max-width: 1180px) {
-    .net-explorer-shell {
-      grid-template-columns: 190px minmax(0, 1fr);
-    }
-
-    .net-detail-panel {
-      position: static;
-      grid-column: 1 / -1;
-    }
-  }
-
-  @media (max-width: 980px) {
-    .net-explore-title {
-      grid-template-columns: 1fr;
-      align-items: start;
-    }
-
-    .net-explorer-shell {
-      grid-template-columns: 1fr;
-    }
-
-    .net-filter-panel {
-      position: static;
-    }
-
-    .net-entity-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 640px) {
-    .net-explore-container {
-      width: calc(100% - 32px);
-      margin: 0 auto;
-    }
-
-    .net-explore-search {
-      grid-template-columns: 1fr;
-    }
-
-    .net-explore-search button {
-      width: 100%;
-    }
-
-    .net-list-panel {
-      padding: 12px;
-    }
-
-    .net-entity-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
 
 <script>
   function setupNetExploreFilters() {
@@ -555,11 +259,58 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
     const resultCount = document.querySelector<HTMLElement>('[data-net-result-count]');
     const empty = document.querySelector<HTMLElement>('[data-net-empty]');
     const resetButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-net-reset]'));
+    const loadmoreWrap = document.querySelector<HTMLElement>('[data-net-loadmore-wrap]');
+    const loadmoreButton = document.querySelector<HTMLButtonElement>('[data-net-loadmore]');
+    const loadmoreRemaining = document.querySelector<HTMLElement>('[data-net-loadmore-remaining]');
+    const searchForm = document.querySelector<HTMLFormElement>('.net-explore-search');
+    const searchInput = document.querySelector<HTMLInputElement>('[data-net-query]');
+    const searchClear = document.querySelector<HTMLButtonElement>('[data-net-search-clear]');
+    const filterDisclosure = document.querySelector<HTMLDetailsElement>('[data-net-filter-disclosure]');
+    const filterCount = document.querySelector<HTMLElement>('[data-net-filter-count]');
+    const detailPanel = document.querySelector<HTMLElement>('.net-detail-panel');
+    const detailBackdrop = document.querySelector<HTMLElement>('.net-detail-backdrop');
+    const detailCloseButtons = Array.from(document.querySelectorAll<HTMLElement>('[data-net-detail-close]'));
     if (!cards.length || !typeButtons.length || root?.dataset.ready === 'true') return;
     if (root) root.dataset.ready = 'true';
 
+    const PAGE_SIZE = 12;
+    const mobileQuery = window.matchMedia('(max-width: 640px)');
     const selectedTags = new Map<string, Set<string>>();
     let selectedType = 'all';
+    let selectedQuery = '';
+    let focusId = '';
+    let visibleCount = PAGE_SIZE;
+    const normalize = (value: string) => value.trim().toLocaleLowerCase('ko-KR');
+    const detailType = document.querySelector<HTMLElement>('[data-net-detail-type]');
+    const detailName = document.querySelector<HTMLElement>('[data-net-detail-name]');
+    const detailNames = document.querySelector<HTMLElement>('[data-net-detail-names]');
+    const detailDescription = document.querySelector<HTMLElement>('[data-net-detail-description]');
+    const detailTags = document.querySelector<HTMLElement>('[data-net-detail-tags]');
+    const detailContext = document.querySelector<HTMLElement>('[data-net-detail-context]');
+    const detailPlaceholder = document.querySelector<HTMLElement>('[data-net-detail-placeholder]');
+    const detailLink = document.querySelector<HTMLAnchorElement>('[data-net-detail-link]');
+
+    type DetailReference = {
+      title: string;
+      path: string;
+      role?: string;
+    };
+
+    type DetailData = {
+      type: string;
+      name: string;
+      names: string[];
+      aliases: string[];
+      description: string;
+      tags: string[];
+      relatedStories: DetailReference[];
+      relatedText: DetailReference[];
+      relatedDesign: DetailReference[];
+      relatedNameCards: DetailReference[];
+      relationCount: number;
+      sourceCount: number;
+      href: string;
+    };
 
     const readCardTags = (card: HTMLElement) => {
       try {
@@ -569,9 +320,126 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
       }
     };
 
+    const readCardDetail = (card: HTMLElement) => {
+      try {
+        return JSON.parse(card.dataset.detail || '{}') as DetailData;
+      } catch {
+        return null;
+      }
+    };
+
+    const appendReferenceSection = (
+      container: HTMLElement,
+      title: string,
+      refs: DetailReference[],
+      { showRole = false, plainLinks = false } = {},
+    ) => {
+      if (!refs.length) return;
+      const section = document.createElement('section');
+      section.className = 'net-detail-context-section';
+      if (plainLinks) section.dataset.linkPlain = 'true';
+      const heading = document.createElement('h3');
+      heading.textContent = title;
+      const list = document.createElement('ul');
+      refs.forEach(ref => {
+        const item = document.createElement('li');
+        const label = showRole && ref.role ? `${ref.title} · ${ref.role}` : ref.title;
+        if (ref.path) {
+          const link = document.createElement('a');
+          link.href = ref.path;
+          link.textContent = label;
+          item.append(link);
+        } else {
+          const text = document.createElement('span');
+          text.textContent = label;
+          item.append(text);
+        }
+        list.append(item);
+      });
+      section.append(heading, list);
+      container.append(section);
+    };
+
+    const closeDetailModal = () => {
+      detailPanel?.classList.remove('mobile-open');
+      if (detailBackdrop) detailBackdrop.hidden = true;
+      document.documentElement.classList.remove('net-detail-modal-lock');
+    };
+
+    const openDetailModal = () => {
+      if (!mobileQuery.matches) return;
+      detailPanel?.classList.add('mobile-open');
+      if (detailBackdrop) detailBackdrop.hidden = false;
+      document.documentElement.classList.add('net-detail-modal-lock');
+    };
+
+    const selectCard = (card: HTMLElement) => {
+      const detail = readCardDetail(card);
+      if (!detail) return;
+      cards.forEach(item => item.classList.toggle('active', item === card));
+      if (detailType) detailType.textContent = detail.type;
+      if (detailName) detailName.textContent = detail.name;
+      if (detailNames) {
+        const names = [...detail.names, ...detail.aliases];
+        detailNames.textContent = names.join(' · ');
+        detailNames.hidden = names.length === 0;
+      }
+      if (detailDescription) {
+        detailDescription.textContent = detail.description || '아직 요약 설명이 준비되지 않았습니다.';
+      }
+      if (detailTags) {
+        detailTags.innerHTML = '';
+        detail.tags.forEach(tag => {
+          const chip = document.createElement('span');
+          chip.className = 'ol-code';
+          chip.textContent = tag;
+          detailTags.append(chip);
+        });
+        detailTags.hidden = detail.tags.length === 0;
+      }
+      if (detailContext) {
+        detailContext.innerHTML = '';
+        const stats = document.createElement('div');
+        stats.className = 'net-detail-stats';
+        [
+          ['관련 문서', detail.relatedStories.length + detail.relatedText.length + detail.relatedDesign.length],
+          ['관련 이름', detail.relatedNameCards.length],
+          ['태그', detail.tags.length],
+          ['출처', detail.sourceCount],
+        ].forEach(([label, value]) => {
+          const stat = document.createElement('div');
+          stat.className = 'net-detail-stat';
+          const number = document.createElement('strong');
+          number.textContent = String(value);
+          const caption = document.createElement('span');
+          caption.textContent = String(label);
+          stat.append(number, caption);
+          stats.append(stat);
+        });
+        detailContext.append(stats);
+        appendReferenceSection(detailContext, '관련 STORY', detail.relatedStories);
+        appendReferenceSection(detailContext, '관련 TEXT', detail.relatedText);
+        appendReferenceSection(detailContext, '관련 DESIGN', detail.relatedDesign);
+        appendReferenceSection(detailContext, '관련 이름카드', detail.relatedNameCards, {
+          showRole: false,
+          plainLinks: true,
+        });
+        detailContext.hidden = false;
+      }
+      if (detailPlaceholder) detailPlaceholder.hidden = true;
+      if (detailLink) {
+        detailLink.href = detail.href;
+        detailLink.hidden = false;
+      }
+      openDetailModal();
+    };
+
     const syncFromUrl = () => {
       const params = new URLSearchParams(window.location.search);
       const type = params.get('type');
+      focusId = params.get('focus') ?? '';
+      selectedQuery = normalize(params.get('q') ?? '');
+      if (searchInput) searchInput.value = params.get('q') ?? '';
       selectedType = type && typeButtons.some(button => button.dataset.netType === type) ? type : 'all';
       selectedTags.clear();
       params.getAll('tag').forEach(tag => {
@@ -586,7 +454,9 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
 
     const writeUrl = () => {
       const params = new URLSearchParams();
+      if (selectedQuery) params.set('q', selectedQuery);
       if (selectedType !== 'all') params.set('type', selectedType);
+      if (focusId) params.set('focus', focusId);
       selectedTags.forEach(tags => {
         tags.forEach(tag => params.append('tag', tag));
       });
@@ -595,6 +465,7 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
     };
 
     const cardMatches = (card: HTMLElement) => {
+      if (selectedQuery && !normalize(card.dataset.searchText || '').includes(selectedQuery)) return false;
       if (selectedType !== 'all' && card.dataset.type !== selectedType) return false;
       const tags = readCardTags(card);
       return Array.from(selectedTags.values()).every(group =>
@@ -615,25 +486,57 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
         const prefix = group.dataset.prefix;
         group.classList.toggle('active', Boolean(prefix && selectedTags.get(prefix)?.size));
       });
+      if (searchClear) searchClear.hidden = !selectedQuery;
+      if (filterCount) {
+        const selectedFilterCount = (selectedType !== 'all' ? 1 : 0)
+          + Array.from(selectedTags.values()).reduce((total, group) => total + group.size, 0);
+        filterCount.textContent = String(selectedFilterCount);
+        filterCount.hidden = selectedFilterCount === 0;
+      }
     };
 
-    const apply = ({ updateUrl = true } = {}) => {
-      let visible = 0;
+    const apply = ({ updateUrl = true, resetPage = false } = {}) => {
+      if (resetPage) visibleCount = PAGE_SIZE;
+      const matchedCards = cards.filter(cardMatches);
       cards.forEach(card => {
-        const matches = cardMatches(card);
-        card.hidden = !matches;
-        if (matches) visible += 1;
+        card.hidden = true;
       });
-      if (resultCount) resultCount.textContent = String(visible);
-      if (empty) empty.hidden = visible > 0;
+      matchedCards.forEach((card, index) => {
+        card.hidden = index >= visibleCount;
+      });
+      if (resultCount) resultCount.textContent = String(matchedCards.length);
+      if (empty) empty.hidden = matchedCards.length > 0;
+      if (loadmoreWrap && loadmoreRemaining) {
+        const remaining = matchedCards.length - visibleCount;
+        loadmoreWrap.hidden = remaining <= 0;
+        loadmoreRemaining.textContent = `(${remaining})`;
+      }
       syncControls();
+      if (focusId) {
+        const focusedCard = matchedCards.find(card => !card.hidden && card.dataset.id === focusId);
+        if (focusedCard) {
+          selectCard(focusedCard);
+          focusId = '';
+          if (updateUrl) writeUrl();
+        }
+      }
       if (updateUrl) writeUrl();
     };
 
     typeButtons.forEach(button => {
       button.addEventListener('click', () => {
-        selectedType = button.dataset.netType || 'all';
-        apply();
+      selectedType = button.dataset.netType || 'all';
+      focusId = '';
+      apply({ resetPage: true });
+    });
+    });
+
+    cards.forEach(card => {
+      const link = card.querySelector<HTMLAnchorElement>('a');
+      link?.addEventListener('click', event => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        selectCard(card);
       });
     });
 
@@ -653,22 +556,67 @@ const tagGroups = groupTagsByPrefix(visibleEntities.flatMap(entity => entity.dat
         } else {
           selectedTags.delete(prefix);
         }
-        apply();
+        focusId = '';
+        apply({ resetPage: true });
       });
     });
 
     const resetFilters = () => {
       selectedType = 'all';
+      selectedQuery = '';
+      focusId = '';
+      if (searchInput) searchInput.value = '';
       selectedTags.clear();
-      apply();
+      apply({ resetPage: true });
     };
 
     resetButtons.forEach(button => {
       button.addEventListener('click', resetFilters);
     });
 
+    loadmoreButton?.addEventListener('click', () => {
+      visibleCount += PAGE_SIZE;
+      apply({ updateUrl: false });
+    });
+
+    searchForm?.addEventListener('submit', event => {
+      event.preventDefault();
+      selectedQuery = normalize(searchInput?.value ?? '');
+      focusId = '';
+      apply({ resetPage: true });
+    });
+
+    searchClear?.addEventListener('click', () => {
+      selectedQuery = '';
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      focusId = '';
+      apply({ resetPage: true });
+    });
+
+    detailCloseButtons.forEach(button => {
+      button.addEventListener('click', closeDetailModal);
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeDetailModal();
+    });
+
+    mobileQuery.addEventListener('change', event => {
+      if (event.matches && filterDisclosure) {
+        filterDisclosure.open = false;
+      }
+      if (!event.matches) closeDetailModal();
+    });
+
+    if (mobileQuery.matches && filterDisclosure) {
+      filterDisclosure.open = false;
+    }
+
     syncFromUrl();
-    apply({ updateUrl: false });
+    apply({ updateUrl: false, resetPage: true });
   }
 
   document.addEventListener('DOMContentLoaded', setupNetExploreFilters);

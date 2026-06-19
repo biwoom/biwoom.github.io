@@ -9,13 +9,14 @@ interface Props {
     description?: string;
     tags?: string[];
   };
+  href?: string;
+  compact?: boolean;
 }
 
-const { entity } = Astro.props;
-const href = url(`/entity/${entity.type}s/${entity.id}`);
+const { entity, href = url(`/entity/${entity.type}s/${entity.id}`), compact = false } = Astro.props;
 ---
 
-<a href={href} class="ol-entity-card">
+<a href={href} class:list={['ol-entity-card', compact && 'ol-entity-card--compact']}>
   <span class="ol-mono-label">{entity.type}</span>
   <h4 class="ol-kr">{entity.name.ko}</h4>
   {entity.description && <p class="ol-kr">{entity.description}</p>}

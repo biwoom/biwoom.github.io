@@ -23,11 +23,13 @@ const typeCounts = coreTypes.map(type => ({
 const featuredEntities = [
   ...coreTypes.flatMap(type => entities.filter(entity => entity.data.type === type).slice(0, 4)),
 ].slice(0, 12);
+const netExploreHref = (entity: { data: { id: string; type: string; name: { ko: string } } }) =>
+  url(`/net/explore?type=${entity.data.type}&q=${encodeURIComponent(entity.data.name.ko)}&focus=${entity.data.id}`);
 ---
 
 <BaseLayout
   title="OL NET — 불교 지식 연결망"
-  description="인물, 장소, 개념을 중심으로 OL의 STORY, TEXT, DESIGN을 연결하는 Entity 탐색 메뉴입니다."
+  description="인물, 장소, 개념의 이름을 중심으로 OL의 STORY, TEXT, DESIGN을 연결하는 탐색 메뉴입니다."
   pagefindBody={false}
 >
   <main>
@@ -42,8 +44,8 @@ const featuredEntities = [
           OL NET은 인물, 장소, 개념의 이름을 따라 불교 콘텐츠의 흐름을 살펴보는 탐색 공간입니다. 하나의 이름에서 다른 이름으로, 다시 이야기와 문헌으로 이어지는 길이 이어집니다.
         </p>
 
-        <form class="net-hero-search" action={url('/net/explore')} method="get" role="search" aria-label="Entity 검색">
-          <label class="net-search-label" for="net-q">Entity 검색</label>
+        <form class="net-hero-search" action={url('/net/explore')} method="get" role="search" aria-label="이름카드 검색">
+          <label class="net-search-label" for="net-q">이름카드 검색</label>
           <div class="net-search-box">
             <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8" />
@@ -60,7 +62,7 @@ const featuredEntities = [
           </div>
         </form>
 
-        <div class="net-type-strip" aria-label="Entity 유형">
+        <div class="net-type-strip" aria-label="이름카드 유형">
           <a href={url('/net/explore')} class="net-type-chip active">
             전체 <span>{entities.length}</span>
           </a>
@@ -77,179 +79,28 @@ const featuredEntities = [
       <div class="ol-container">
         <div class="net-section-head">
           <div>
-            <span class="ol-kicker">ENTITY · 최근 기준점</span>
+            <span class="ol-kicker">이름카드 · 최근 기준점</span>
             <h2 class="ol-kr">NET으로 들어가는 첫 항목</h2>
           </div>
-          <a href={url('/net/explore')} class="ol-btn ol-btn-outline ol-btn-sm">탐색 페이지 열기</a>
+          <a href={url('/net/explore')} class="net-explore-cta">
+            <span>탐색 페이지 열기</span>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
         </div>
 
         {featuredEntities.length > 0 ? (
           <div class="net-entity-grid">
             {featuredEntities.map(entity => (
-              <OLEntityCard entity={entity.data} />
+              <OLEntityCard entity={entity.data} href={netExploreHref(entity)} compact />
             ))}
           </div>
         ) : (
-          <p class="ol-kr net-empty">아직 공개된 Entity가 없습니다.</p>
+          <p class="ol-kr net-empty">아직 공개된 이름카드가 없습니다.</p>
         )}
       </div>
     </section>
   </main>
 </BaseLayout>
-
-<style>
-  .net-hero {
-    padding-bottom: 56px;
-  }
-
-  .net-hero-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .net-hero-search {
-    width: min(100%, 680px);
-    margin: 32px auto 0;
-  }
-
-  .net-search-label {
-    display: block;
-    margin-bottom: 8px;
-    font-family: var(--ol-font-mono);
-    font-size: 11px;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    color: var(--ol-muted);
-  }
-
-  .net-search-box {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 10px;
-    min-height: 52px;
-    padding: 6px 6px 6px 16px;
-    border: 1px solid var(--ol-border);
-    border-radius: var(--ol-r);
-    background: var(--ol-surface);
-    color: var(--ol-muted);
-    text-align: left;
-  }
-
-  .net-search-box input {
-    min-width: 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    color: var(--ol-ink);
-    font: inherit;
-    font-size: 15px;
-  }
-
-  .net-search-box input::placeholder {
-    color: var(--ol-muted);
-  }
-
-  .net-search-box button {
-    height: 40px;
-    padding: 0 16px;
-    border: 1px solid var(--ol-ink);
-    border-radius: calc(var(--ol-r) - 2px);
-    background: var(--ol-ink);
-    color: var(--ol-bg);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .net-type-strip {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin: 16px auto 0;
-  }
-
-  .net-type-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 34px;
-    padding: 0 12px;
-    border: 1px solid var(--ol-border);
-    border-radius: var(--ol-r);
-    color: var(--ol-ink);
-    text-decoration: none;
-    font-size: 13px;
-    background: var(--ol-surface);
-  }
-
-  .net-type-chip span {
-    font-family: var(--ol-font-mono);
-    font-size: 11px;
-    color: var(--ol-muted);
-  }
-
-  .net-type-chip.active,
-  .net-type-chip:hover {
-    border-color: var(--ol-ink);
-  }
-
-  .net-featured-section {
-    border-top: 1px solid var(--ol-border);
-  }
-
-  .net-section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 20px;
-    margin-bottom: 28px;
-  }
-
-  .net-section-head h2 {
-    margin-top: 10px;
-    font-size: 30px;
-    letter-spacing: -0.02em;
-  }
-
-  .net-entity-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .net-empty {
-    padding: 56px 0;
-    color: var(--ol-muted);
-    text-align: center;
-  }
-
-  @media (max-width: 980px) {
-    .net-entity-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 640px) {
-    .net-search-box {
-      grid-template-columns: auto 1fr;
-    }
-
-    .net-search-box button {
-      grid-column: 1 / -1;
-      width: 100%;
-    }
-
-    .net-section-head {
-      align-items: start;
-      flex-direction: column;
-    }
-
-    .net-entity-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

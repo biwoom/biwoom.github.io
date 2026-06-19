@@ -28,4 +28,6 @@ pnpm-debug.log*
 .claude/
 
 biwoom.code-workspace
-.ol-ref/
+
+docs/net-map/
+docs/net-explorer/

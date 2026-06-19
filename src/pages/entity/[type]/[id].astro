@@ -4,6 +4,7 @@ import EntityLayout from '../../../layouts/EntityLayout.astro';
 import OLEntityPanel from '../../../components/entity/OLEntityPanel.astro';
 import OLRelationLinks from '../../../components/entity/OLRelationLinks.astro';
 import { getEntityRelations, getBacklinks } from '../../../lib/relations';
+import { url } from '../../../lib/url';
 
 export async function getStaticPaths() {
   const entities = await getCollection('entities', e => e.data.published);
@@ -49,15 +50,20 @@ const pagefindBreadcrumb = ['ENTITY', pagefindType]
     breadcrumb: pagefindBreadcrumb,
   }}
 >
-  <div style="display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-items: start;">
-    <article>
-      <header style="margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--ol-border);">
+  <div class="ol-entity-detail-shell">
+    <article class="ol-entity-detail-main">
+      <header class="ol-entity-detail-header">
+        <div class="ol-text-breadcrumb ol-entity-breadcrumb">
+          <a href={url('/entity')}>ENTITY</a>
+          <span>/</span>
+          <span>{pagefindType}</span>
+        </div>
         <span class="ol-mono-label">{entry.data.type.toUpperCase()}</span>
-        <h1 style="font-size: 36px; margin-top: 8px; letter-spacing: -0.03em;" class="ol-kr">
+        <h1 class="ol-kr">
           {entry.data.name.ko}
         </h1>
         {entry.data.name.en && (
-          <div style="margin-top: 6px; font-family: var(--ol-font-mono); font-size: 13px; color: var(--ol-muted);">
+          <div class="ol-entity-detail-meta">
             {entry.data.name.en}
             {entry.data.name.sanskrit && ` · Skt. ${entry.data.name.sanskrit}`}
             {entry.data.name.pali && ` · Pāli ${entry.data.name.pali}`}
@@ -77,7 +83,7 @@ const pagefindBreadcrumb = ['ENTITY', pagefindType]
       )}
     </article>
 
-    <aside style="position: sticky; top: 80px;">
+    <aside class="ol-entity-detail-side">
       <OLEntityPanel entity={entry.data} />
     </aside>
   </div>
