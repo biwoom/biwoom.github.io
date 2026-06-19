@@ -350,3 +350,17 @@ This file records concise date-based work summaries for continuity across Codex 
 - Restyled relation/backlink lists to match the compact name-card/detail-panel direction used in NET.
 - Fixed STORY detail mobile layout override so the new 3-column desktop reader collapses back to one column on mobile.
 - Local validation: `npm run build` passed.
+
+### NET, Entity, And Blog Upload
+
+- Pushed commit `04e383a` (`Implement NET name-card integration`) to `origin/main`.
+- Uploaded scope:
+  - TEXT/STORY shared `entities` schema alignment
+  - `OLEntitySidePanel` and TEXT/STORY right-side name-card panel integration
+  - new Concept Entity entries for `five-aggregates` and `twelve-sense-bases`
+  - Entity detail relation/backlink route and display-text fixes
+  - mobile adjustments for STORY and Entity detail layouts
+  - NET explore center reset-button emphasis style
+  - public blog post `/blog/net-menu-name-card-phase1/`
+- Local validation: `npm run build` passed before push.
+- Deployment completion was not checked by design.
