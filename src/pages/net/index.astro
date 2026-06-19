@@ -1,0 +1,250 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OLEntityCard from '../../components/entity/OLEntityCard.astro';
+import { url } from '../../lib/url';
+
+const entities = (await getCollection('entities', entry => entry.data.published))
+  .sort((a, b) => a.data.name.ko.localeCompare(b.data.name.ko, 'ko'));
+
+const TYPE_LABELS: Record<string, string> = {
+  person: '인물',
+  place: '장소',
+  concept: '개념',
+  text: '문헌',
+  event: '사건',
+  practice: '수행',
+  school: '학파',
+};
+
+const coreTypes = ['person', 'place', 'concept'];
+const typeCounts = coreTypes.map(type => ({
+  type,
+  label: TYPE_LABELS[type],
+  count: entities.filter(entity => entity.data.type === type).length,
+}));
+
+const featuredEntities = [
+  ...coreTypes.flatMap(type => entities.filter(entity => entity.data.type === type).slice(0, 4)),
+  ...entities.filter(entity => !coreTypes.includes(entity.data.type)).slice(0, 4),
+].slice(0, 12);
+---
+
+<BaseLayout
+  title="OL NET — 불교 지식 연결망"
+  description="인물, 장소, 개념을 중심으로 OL의 STORY, TEXT, DESIGN을 연결하는 Entity 탐색 메뉴입니다."
+  pagefindBody={false}
+>
+  <main>
+    <section class="ol-hero net-hero">
+      <div class="ol-container">
+        <span class="ol-kicker">NET · 지식 연결망</span>
+        <h1 class="ol-kr">
+          <em>인물, 장소, 개념</em>을<br />
+          하나의 흐름으로 찾습니다.
+        </h1>
+        <p class="ol-lead ol-kr">
+          OL NET은 불교 콘텐츠 안의 Entity를 탐색하는 메뉴입니다. 한 인물에서 한 장소로,
+          한 장소에서 한 개념으로, 다시 관련 STORY와 TEXT로 이어지는 길을 엽니다.
+        </p>
+
+        <form class="net-hero-search" action={url('/net')} method="get" role="search" aria-label="Entity 검색">
+          <label class="net-search-label" for="net-q">Entity 검색</label>
+          <div class="net-search-box">
+            <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              id="net-q"
+              name="q"
+              type="search"
+              placeholder="예: 붓다, 사위성, 연기, 공"
+              autocomplete="off"
+            />
+            <button type="submit">검색</button>
+          </div>
+        </form>
+
+        <div class="net-type-strip" aria-label="Entity 유형">
+          <a href={url('/net')} class="net-type-chip active">
+            전체 <span>{entities.length}</span>
+          </a>
+          {typeCounts.map(item => (
+            <a href={url(`/net?type=${item.type}`)} class="net-type-chip">
+              {item.label} <span>{item.count}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <hr style="margin:80px auto 0; width:80%;" />
+
+    <section class="ol-section">
+      <div class="ol-container">
+        <div class="net-section-head">
+          <div>
+            <span class="ol-kicker">ENTITY · 최신 탐색 항목</span>
+            <h2 class="ol-kr">NET의 첫 기준점</h2>
+          </div>
+          <a href={url('/entity')} class="ol-btn ol-btn-outline ol-btn-sm">ENTITY 전체 보기</a>
+        </div>
+
+        {featuredEntities.length > 0 ? (
+          <div class="net-entity-grid">
+            {featuredEntities.map(entity => (
+              <OLEntityCard entity={entity.data} />
+            ))}
+          </div>
+        ) : (
+          <p class="ol-kr net-empty">아직 공개된 Entity가 없습니다.</p>
+        )}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .net-hero {
+    padding-bottom: 56px;
+  }
+
+  .net-hero-search {
+    max-width: 680px;
+    margin-top: 32px;
+  }
+
+  .net-search-label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--ol-font-mono);
+    font-size: 11px;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--ol-muted);
+  }
+
+  .net-search-box {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 6px 6px 6px 16px;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    background: var(--ol-surface);
+    color: var(--ol-muted);
+  }
+
+  .net-search-box input {
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ol-ink);
+    font: inherit;
+    font-size: 15px;
+  }
+
+  .net-search-box input::placeholder {
+    color: var(--ol-muted);
+  }
+
+  .net-search-box button {
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--ol-ink);
+    border-radius: calc(var(--ol-r) - 2px);
+    background: var(--ol-ink);
+    color: var(--ol-bg);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .net-type-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .net-type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    color: var(--ol-ink);
+    text-decoration: none;
+    font-size: 13px;
+    background: var(--ol-surface);
+  }
+
+  .net-type-chip span {
+    font-family: var(--ol-font-mono);
+    font-size: 11px;
+    color: var(--ol-muted);
+  }
+
+  .net-type-chip.active,
+  .net-type-chip:hover {
+    border-color: var(--ol-ink);
+  }
+
+  .net-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .net-section-head h2 {
+    margin-top: 10px;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+  }
+
+  .net-entity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .net-empty {
+    padding: 56px 0;
+    color: var(--ol-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 980px) {
+    .net-entity-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .net-search-box {
+      grid-template-columns: auto 1fr;
+    }
+
+    .net-search-box button {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    .net-section-head {
+      align-items: start;
+      flex-direction: column;
+    }
+
+    .net-entity-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
