@@ -17,30 +17,31 @@ origin main
 
 ## Workflow
 
-1. Inspect the worktree:
+1. Inspect the worktree, current branch, and upstream sync state:
 
 ```sh
 git status --short --branch
 ```
 
-2. If unrelated changes exist, stage only the files that belong to the user's requested upload.
-3. Run relevant local validation if it has not already been run for the changed files.
-4. Commit the requested code/content/documentation changes with a concise message.
-5. Push the requested change to GitHub:
+2. Confirm the current branch is `main` and that it is not behind `origin/main`. If it is behind or diverged, stop the upload process, analyze the cause, resolve the branch state, and restart the upload workflow.
+3. If unrelated changes exist, stage only the files that belong to the user's requested upload.
+4. Run relevant local validation if it has not already been run for the changed files.
+5. Commit the requested code/content/documentation changes with a concise message.
+6. Push the requested change to GitHub:
 
 ```sh
 git push origin main
 ```
 
-6. Stop deployment waiting here. Do not run `gh run list`, `gh run watch`, or live-site checks unless the user explicitly asks for deployment verification.
-7. Immediately update `.agents/context/work-log.md` with:
+7. Stop deployment waiting here. Do not run `gh run list`, `gh run watch`, or live-site checks unless the user explicitly asks for deployment verification.
+8. Immediately update `.agents/context/work-log.md` with:
    - date
    - pushed commit or branch
    - files or scope uploaded
    - local validation result if available
    - deployment status only if explicitly checked
-8. Commit the work-log update as a follow-up commit.
-9. Push the work-log commit to GitHub:
+9. Commit the work-log update as a follow-up commit.
+10. Push the work-log commit to GitHub:
 
 ```sh
 git push origin main
