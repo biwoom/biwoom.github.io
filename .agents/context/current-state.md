@@ -34,6 +34,7 @@ Last updated: 2026-06-20
 - Typography now defaults site-wide to the sans body stack for general UI and content.
 - Mono typography is reserved for code-like surfaces such as `code`, `pre`, `kbd`, `samp`, and explicit code-chip style elements.
 - Shared semantic typography classes now use `ol-meta-label` and `ol-section-label` instead of the older mono-named labels.
+- TEXT and STORY use the shared Entity side-panel component with explicit `variant` props so each menu can carry its own styling without a single universal panel skin.
 
 ## Deployment State
 
@@ -62,6 +63,7 @@ Last updated: 2026-06-20
 - Added Codex project guidance, skills, config, and rules.
 - Added continuity context documents under `.agents/context/`.
 - Added the first shared TEXT/STORY Entity side-panel implementation.
+- Split the shared TEXT/STORY Entity side-panel into explicit `text` and `story` variants.
 - Added Concept Entity test cards for `five-aggregates` and `twelve-sense-bases`.
 - Added the first public NET implementation slice:
   - `/net/`

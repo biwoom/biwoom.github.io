@@ -94,6 +94,12 @@ This file records durable project decisions that future Codex sessions should pr
 - Labels, section kickers, filter controls, navigation metadata, and ordinary descriptive text should not depend on a separate code or mono stack.
 - Shared semantic label classes should prefer names that describe role rather than rendering, such as `ol-meta-label` and `ol-section-label`.
 
+### TEXT/STORY Entity Side Panel Variants
+
+- The shared Entity side-panel component should remain a single implementation, but TEXT and STORY must render with explicit variants.
+- `TEXT` and `STORY` pages should pass `variant="text"` and `variant="story"` respectively instead of relying on a single shared visual treatment.
+- Page-specific differences should be expressed through modifier classes or CSS variables, not by reintroducing mono-centered shared styling.
+
 ### DESIGN Download Filenames
 
 - DESIGN detail-page download links for PDF and image assets should use the content title and version as the browser download filename.

@@ -32,9 +32,10 @@ interface EntityData {
 interface Props {
   entities: EntityData[];
   title?: string;
+  variant?: 'text' | 'story';
 }
 
-const { entities, title = '문서 이름카드' } = Astro.props;
+const { entities, title = '문서 이름카드', variant = 'text' } = Astro.props;
 const typeLabels: Record<string, string> = {
   person: '인물',
   place: '장소',
@@ -75,7 +76,15 @@ const prepared = entities.map(entity => ({
 ---
 
 {prepared.length > 0 && (
-  <aside class="ol-entity-side-panel" data-entity-side-panel data-pagefind-ignore>
+  <aside
+    class:list={[
+      'ol-entity-side-panel',
+      `ol-entity-side-panel--${variant}`,
+    ]}
+    data-entity-side-panel
+    data-entity-side-variant={variant}
+    data-pagefind-ignore
+  >
     <button
       type="button"
       class="ol-entity-side-fab"

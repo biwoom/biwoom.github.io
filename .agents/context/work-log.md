@@ -107,6 +107,13 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-06-20
 
+### TEXT/STORY Entity Side Panel Variant Split
+
+- Added explicit `variant` support to the shared Entity side-panel component so TEXT and STORY can carry different visual treatments.
+- TEXT pages now pass `variant="text"` and STORY pages pass `variant="story"`.
+- Updated `src/styles/pages/entity.css` to define variant-specific side-panel variables for compact TEXT and roomier STORY presentation.
+- Local validation: `npm run build` passed.
+
 ### Typography Name Cleanup
 
 - Renamed shared mono-centric label classes to semantic names:
