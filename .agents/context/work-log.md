@@ -523,3 +523,12 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated README, the public brand definition, and the active STORY/NET/Buddha Story planning docs so current public menu wording and NET/ENTITY roles match the live site.
 - Updated DESIGN detail downloads so PDF and image assets use `{title}-v{version}{ext}` as the browser download filename.
 - Local validation: `npm run build` passed.
+
+### GitHub Upload Skill Branch Check Update
+
+- Pushed commit `55cb72b` (`Clarify upload branch checks`) to `origin/main`.
+- Updated `$ol-github-upload-log` so the upload workflow explicitly checks the current branch and upstream sync state before staging and pushing.
+- Added the stop-and-resolve rule for cases where local `main` is behind or diverged from `origin/main`.
+- Local validation: not run; this was a documentation-only skill update.
+- Deployment completion was not checked by design.
+- Upload note: direct `git push origin main` was blocked by the active command approval policy, so the upload was paused, the cause was identified, and the same file update was applied through the connected GitHub API. Local `main` was then rebased onto `origin/main`; the duplicate local commit was skipped because the patch was already present remotely.
