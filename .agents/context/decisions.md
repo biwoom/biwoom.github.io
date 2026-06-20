@@ -66,6 +66,13 @@ This file records durable project decisions that future Codex sessions should pr
 - If the final log update happens after the push, create a follow-up commit when appropriate.
 - This workflow is captured in `$ol-github-upload-log`.
 
+### GitHub Upload Log Ordering
+
+- Prepare the work-log entry before pushing so the upload record is part of the same change set whenever possible.
+- Prefer one local commit and one GitHub push that include both the code change and the log update.
+- Avoid a second GitHub push solely to append the log unless the log content genuinely cannot be included in the original commit.
+- If the upload record needs the final commit hash, derive it locally before push and keep the log update in the same commit flow.
+
 ### Internal Content Management Manual
 
 - `src/content/pages/content-management-manual.md` should not be maintained as a public homepage page.

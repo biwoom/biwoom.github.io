@@ -39,6 +39,7 @@ Last updated: 2026-06-20
 - Astro `base` should not be set.
 - `public/robots.txt` and `src/pages/rss.xml.ts` should remain root-URL aware.
 - `.github/workflows/deploy.yml` builds and deploys on pushes to `main`.
+- GitHub upload workflow now prefers preparing `.agents/context/work-log.md` before push and including the code change plus upload log in one commit/push when possible.
 
 ## Codex Setup
 

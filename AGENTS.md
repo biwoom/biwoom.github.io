@@ -26,7 +26,7 @@ This repository is OL HOME, the public Astro site for the OL project.
 - Update `.agents/context/current-state.md` when project structure, deployment status, active priorities, or known risks change.
 - Update `.agents/context/decisions.md` when a durable architectural, content, naming, deployment, or workflow decision is made.
 - Update `.agents/context/work-log.md` after meaningful implementation, documentation, deployment, or repository-management work.
-- When the user asks to upload, publish, push, or deploy to GitHub, complete the GitHub push without pausing for deployment checks. Immediately after a successful push, update the context files with the pushed commit/branch and create a follow-up commit if needed. Do not wait for or inspect GitHub Pages deployment completion unless the user explicitly asks for deployment verification.
+- When the user asks to upload, publish, push, or deploy to GitHub, prepare the work-log entry before the push, then include the code changes and log update in the same commit when possible. Complete the GitHub push without pausing for deployment checks. Avoid a second push just for the log unless the log genuinely cannot be included in the original commit. Do not wait for or inspect GitHub Pages deployment completion unless the user explicitly asks for deployment verification.
 
 ## Content Placement
 

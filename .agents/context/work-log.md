@@ -117,6 +117,13 @@ This file records concise date-based work summaries for continuity across Codex 
 - Local validation: `npm run build` passed.
 - Deployment completion was not checked by design.
 
+### GitHub Upload Workflow Update
+
+- Updated the GitHub upload workflow so the work-log entry is prepared before push and included with the code change in one commit when possible.
+- Revised the upload skill and repository operating rules to avoid the previous pattern of pushing code first and then pushing a separate log-only commit.
+- Updated the long-term decisions and current state notes to reflect the new ordering rule.
+- Local validation: not run; documentation-only update.
+
 ## 2026-06-18
 
 ### STORY, ENTITY, NET Planning Sync Upload
