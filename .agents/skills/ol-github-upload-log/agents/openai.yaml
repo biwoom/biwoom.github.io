@@ -1,4 +1,4 @@
 interface:
-  display_name: "OL GitHub Upload Log"
-  short_description: "Push OL HOME changes and record the result without waiting for deploy checks."
-  default_prompt: "Use $ol-github-upload-log to push OL HOME changes and update the work log."
+  display_name: "OL GitHub Upload"
+  short_description: "Push OL HOME changes without work-log coupling or deploy checks."
+  default_prompt: "Use $ol-github-upload-log to push OL HOME changes only."

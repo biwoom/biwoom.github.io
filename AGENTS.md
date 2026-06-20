@@ -26,7 +26,7 @@ This repository is OL HOME, the public Astro site for the OL project.
 - Update `.agents/context/current-state.md` when project structure, deployment status, active priorities, or known risks change.
 - Update `.agents/context/decisions.md` when a durable architectural, content, naming, deployment, or workflow decision is made.
 - Update `.agents/context/work-log.md` after meaningful implementation, documentation, deployment, or repository-management work.
-- When the user asks to upload, publish, push, or deploy to GitHub, complete the requested code/content/documentation push first. Then update `.agents/context/work-log.md` with the pushed result and push that log update as a follow-up commit. Do not wait for or inspect GitHub Pages deployment completion unless the user explicitly asks for deployment verification.
+- When the user asks to upload, publish, push, or deploy to GitHub, perform only the requested code/content/documentation upload. Do not update `.agents/context/work-log.md`, create a follow-up log commit, wait for GitHub Pages, or inspect GitHub Actions unless the user explicitly asks for those extra actions.
 
 ## Content Placement
 
@@ -57,11 +57,11 @@ This repository is OL HOME, the public Astro site for the OL project.
 - The deploy workflow is `.github/workflows/deploy.yml`.
 - Pushing to `main` should build and publish the site.
 - Root URL errors usually indicate GitHub Pages settings, Actions status, CDN delay, or an accidental Astro `base`.
-- After push work, record the pushed commit/branch and any follow-up in `.agents/context/work-log.md`. Record deployment status only when it was explicitly checked or requested.
+- GitHub upload requests should stop after the requested push. Record deployment status only when it was explicitly checked or requested.
 
 ## Codex Skills
 
 - Use `$ol-content-authoring` for adding or revising `src/content` entries.
 - Use `$ol-doc-maintenance` for maintaining manuals, brand docs, and project rules.
 - Use `$ol-deploy-check` before or after deployment-related changes.
-- Use `$ol-github-upload-log` when the user asks to upload, push, publish, or deploy current changes to GitHub and record the result.
+- Use `$ol-github-upload-log` when the user asks to upload, push, publish, or deploy current changes to GitHub. The skill performs the upload only.

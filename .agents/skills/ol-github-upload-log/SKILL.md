@@ -1,9 +1,9 @@
 ---
 name: ol-github-upload-log
-description: Push OL HOME changes to GitHub and immediately record the pushed result. Use when the user asks to upload, push, publish, or deploy changes to GitHub. This workflow must not wait for or inspect GitHub Pages or GitHub Actions deployment completion unless the user explicitly requests deployment verification.
+description: Push OL HOME changes to GitHub. Use when the user asks to upload, push, publish, or deploy changes to GitHub. This workflow performs the upload only; it does not update work logs or wait for deployment verification unless explicitly requested.
 ---
 
-# OL GitHub Upload Log
+# OL GitHub Upload
 
 ## Scope
 
@@ -33,19 +33,7 @@ git status --short --branch
 git push origin main
 ```
 
-7. Stop deployment waiting here. Do not run `gh run list`, `gh run watch`, or live-site checks unless the user explicitly asks for deployment verification.
-8. Immediately update `.agents/context/work-log.md` with:
-   - date
-   - pushed commit or branch
-   - files or scope uploaded
-   - local validation result if available
-   - deployment status only if explicitly checked
-9. Commit the work-log update as a follow-up commit.
-10. Push the work-log commit to GitHub:
-
-```sh
-git push origin main
-```
+7. Stop here. Do not update `.agents/context/work-log.md`, create a follow-up log commit, run `gh run list`, run `gh run watch`, or check the live site unless the user explicitly asks for those extra actions.
 
 ## Reporting
 
@@ -53,13 +41,13 @@ Report:
 
 - pushed commit hash
 - remote branch
-- whether work-log was updated and pushed
 - local validation result if available
 - note that deployment completion was not checked unless explicitly requested
 
 ## Safety
 
 - Do not silently stage unrelated user changes.
+- Do not couple upload requests to work-log edits or follow-up log commits.
 - Do not wait for GitHub Pages deployment completion by default.
 - Do not interpret "deploy" as "wait until the Pages site is live" unless the user asks for deployment verification.
 - Use the default `git push origin main` path for OL HOME uploads; non-default push targets should still be confirmed.

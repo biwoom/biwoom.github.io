@@ -53,18 +53,12 @@ This file records durable project decisions that future Codex sessions should pr
 - `.agents/context/` contains continuity records for future sessions.
 - `.codex/config.toml` and `.codex/rules/default.rules` provide project-local Codex settings and command policy.
 
-### GitHub Upload Logging
+### GitHub Upload Workflow
 
-- When the user asks to upload, publish, push, or deploy to GitHub, complete the requested operation first.
-- Do not pause after push to check GitHub Pages or GitHub Actions deployment completion unless the user explicitly asks for deployment verification.
-- After the operation, update `.agents/context/work-log.md` with:
-  - date
-  - commit or pushed branch
-  - local validation result if it was already run
-  - deployment result only if explicitly checked
-  - follow-up items
-- If the final log update happens after the push, create a follow-up commit when appropriate.
-- This workflow is captured in `$ol-github-upload-log`.
+- When the user asks to upload, publish, push, or deploy to GitHub, perform only the requested upload.
+- Do not update `.agents/context/work-log.md`, create a follow-up log commit, check GitHub Pages, or inspect GitHub Actions unless the user explicitly asks for those extra actions.
+- Work-log maintenance remains useful after meaningful implementation, documentation, deployment, or repository-management work, but it is no longer part of the default GitHub upload workflow.
+- This upload-only workflow is captured in `$ol-github-upload-log`.
 
 ### GitHub Push Command Policy
 

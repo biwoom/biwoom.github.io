@@ -39,7 +39,7 @@ Last updated: 2026-06-20
 - Astro `base` should not be set.
 - `public/robots.txt` and `src/pages/rss.xml.ts` should remain root-URL aware.
 - `.github/workflows/deploy.yml` builds and deploys on pushes to `main`.
-- GitHub upload workflow now pushes the requested change first, then records the pushed result in `.agents/context/work-log.md` and pushes that log update as a follow-up commit.
+- GitHub upload workflow performs only the requested push. Work-log updates and deployment checks are separate actions that require an explicit request.
 - `git push origin main` is allowed as the default OL HOME upload command; non-default push targets still require confirmation.
 
 ## Codex Setup
@@ -67,7 +67,7 @@ Last updated: 2026-06-20
 
 ## Open Follow-ups
 
-- Keep context files updated after meaningful work and after GitHub upload/deploy requests.
+- Keep context files updated after meaningful implementation, documentation, deployment, or repository-management work. Do not couple routine GitHub upload requests to automatic work-log commits.
 - Consider adding examples to OL content skills if future content tasks reveal repeated patterns.
 - Keep deployment docs aligned if GitHub Pages settings or repository naming changes again.
 - If older planning docs mention STORY `primaryEntities` or `primaryPlaces`, treat them as historical notes; current TEXT/STORY document linking uses `entities`.
