@@ -28,7 +28,7 @@
 .ol-story-part-sidebar-head span {
   display: block;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   letter-spacing: 0.08em;
 }
@@ -87,7 +87,7 @@
 .ol-story-part-sidebar a span,
 .ol-story-part-sidebar button span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -220,7 +220,7 @@
 .ol-story-chapters-panel a span,
 .ol-story-chapters-panel button span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -244,7 +244,7 @@
 .ol-story-content-group-title {
   margin: 0 0 24px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -261,7 +261,7 @@
 
 .ol-story-chapter-kicker {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;

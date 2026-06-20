@@ -21,7 +21,7 @@
 }
 .ol-design-filter-group {}
 .ol-design-filter-label {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10.5px;
   letter-spacing: 0.1em;
   color: var(--ol-muted);
@@ -57,7 +57,7 @@
 .ol-design-cat-btn:disabled { opacity: 0.35; cursor: default; }
 .ol-design-cat-btn .cat-name { font-weight: 500; }
 .ol-design-cat-btn .cat-count {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   color: var(--ol-muted);
   min-width: 20px;
@@ -111,7 +111,7 @@
   margin-bottom: 20px;
 }
 .ol-design-toolbar-count {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   color: var(--ol-muted);
 }
@@ -131,7 +131,7 @@
   color: var(--ol-bg);
   border-radius: 100px;
   font-size: 11.5px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
 }
 .ol-design-filter-pill button {
   border: none;
@@ -185,7 +185,7 @@
   padding: 12px 14px 14px;
 }
 .ol-design-card-type {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10.5px;
   letter-spacing: 0.07em;
   color: var(--ol-muted);
@@ -212,7 +212,7 @@
   font-size: 11.5px;
   color: var(--ol-muted);
   margin-top: 4px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
 }
 .ol-design-format-row {
   display: flex;
@@ -228,7 +228,7 @@
   padding: 0 7px;
   border: 1px solid var(--ol-border);
   border-radius: var(--ol-r-sm, 6px);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   color: var(--ol-ink-2);
   background: var(--ol-surface-3);
@@ -254,7 +254,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11.5px;
   letter-spacing: 0.08em;
   color: var(--ol-muted);
@@ -292,7 +292,7 @@
 .ol-design-detail-img-frame figcaption {
   padding: 7px 10px;
   border-top: 1px solid var(--ol-border);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   color: var(--ol-muted);
   letter-spacing: 0.08em;
@@ -307,7 +307,7 @@
 }
 .ol-design-detail-type-badge {
   display: inline-block;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10.5px;
   letter-spacing: 0.1em;
   color: var(--ol-muted);
@@ -341,7 +341,7 @@
   padding: 0;
 }
 .ol-design-detail-dl dt {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10.5px;
   letter-spacing: 0.08em;
   color: var(--ol-muted);
@@ -379,7 +379,7 @@
   font-size: 12px;
   color: var(--ol-muted);
   text-decoration: none;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   transition: border-color 120ms, color 120ms;
 }
 .ol-design-tag-link:hover { border-color: var(--ol-border-strong); color: var(--ol-ink); }
@@ -407,7 +407,7 @@
   background: var(--ol-bg);
 }
 .ol-design-related-stats strong {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   line-height: 1;
 }
@@ -419,7 +419,7 @@
 .ol-design-related-section h2 {
   margin: 0;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0;
@@ -449,7 +449,7 @@
 .ol-design-related-section a::before {
   content: "↗";
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
 }
 .ol-design-related-section a em {

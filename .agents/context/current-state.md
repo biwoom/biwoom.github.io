@@ -67,8 +67,8 @@ Last updated: 2026-06-20
   - `/net/`
   - `/net/explore/`
   - shared name-card behavior across NET, TEXT, STORY, and ENTITY
-- Unified the default site typography so UI labels and metadata no longer depend on the mono stack by default.
-- Renamed shared label classes away from mono-centric names and aligned CSS code-font references to `--ol-font-code`.
+- Unified the default site typography so UI labels and metadata use the shared `--ol-font-ui` stack by default.
+- Menu/main/detail pages now use `.ol-meta-badge` and inherited sans typography for badges, tags, and helper text.
 
 ## Open Follow-ups
 

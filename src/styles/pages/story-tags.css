@@ -41,7 +41,7 @@
 
 .ol-story-tag-menu-trigger strong {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
 }
@@ -93,7 +93,7 @@
 
 .ol-story-tag-menu-panel button strong {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
 }
@@ -217,7 +217,7 @@
 .ol-story-tag-result-summary span,
 .ol-story-tag-result-summary em {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-style: normal;
 }
@@ -239,7 +239,7 @@
 .ol-story-tag-result-list h3 {
   margin: 0 0 12px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.04em;
 }
@@ -279,7 +279,7 @@
 .ol-story-tag-result-list a span,
 .ol-story-tag-result-list button span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -305,7 +305,7 @@
 
 .ol-story-tag span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   letter-spacing: 0.04em;
   text-transform: uppercase;

@@ -24,7 +24,7 @@
 
 .ol-text-series-section-head span {
   color: #9b9388;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -67,7 +67,7 @@
 
 .ol-text-series-doc-num {
   color: #a49c92;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
 }
 

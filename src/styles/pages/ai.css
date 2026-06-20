@@ -47,6 +47,5 @@
   box-shadow: 0 0 0 4px var(--ol-surface-2);
 }
 .ol-timeline-item h4 { font-size: 15px; font-weight: 600; }
-.ol-timeline-item .when { font-family: var(--ol-font-code); font-size: 11px; color: var(--ol-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.ol-timeline-item .when { font-family: inherit; font-size: 11px; color: var(--ol-muted); letter-spacing: 0.06em; text-transform: uppercase; }
 .ol-timeline-item p { color: var(--ol-muted); font-size: 13.5px; margin: 4px 0 0; line-height: 1.6; }
-

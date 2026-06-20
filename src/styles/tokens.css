@@ -19,9 +19,7 @@
   /* ── Typography ── */
   --ol-font-sans:    "Pretendard", "Noto Sans KR", "Inter",
                      -apple-system, BlinkMacSystemFont, sans-serif;
-  --ol-font-body:    var(--ol-font-sans);
-  --ol-font-code:    "JetBrains Mono", "IBM Plex Mono",
-                     ui-monospace, monospace;
+  --ol-font-ui:      var(--ol-font-sans);
 
   /* ── Radius ── */
   --ol-r-sm:  6px;

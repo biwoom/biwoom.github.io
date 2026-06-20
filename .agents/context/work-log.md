@@ -112,22 +112,16 @@ This file records concise date-based work summaries for continuity across Codex 
 - Renamed shared mono-centric label classes to semantic names:
   - `ol-mono-label` → `ol-meta-label`
   - `ol-kicker` → `ol-section-label`
-- Updated shared CSS so code-oriented font references now use `--ol-font-code`.
-- Removed the former mono alias so only `--ol-font-code` remains for code-like surfaces.
+- Renamed the shared inline badge helper to `.ol-meta-badge`.
+- Removed the old code-only font token and moved shared UI typography to `--ol-font-ui`.
+- Menu main/detail page styles and inline metadata now inherit the site sans stack directly for tags, badges, and helper text.
 - Local validation: `npm run build` passed.
 
 ### Typography Unification
 
-- Updated typography tokens so the former mono UI stack now aliases to the site sans stack by default.
+- Updated typography tokens so the shared UI stack now aliases to the site sans stack by default.
 - Added a global typography reset so `button`, `input`, `select`, `textarea`, `optgroup`, and `summary` inherit the body font consistently.
-- Reserved the true mono stack for code-like surfaces only:
-  - `code`
-  - `pre`
-  - `kbd`
-  - `samp`
-  - `.ol-code`
-  - prose footnote number markers
-- Updated shared base and search styles to use the code stack only where explicitly needed.
+- Updated shared base and search styles to keep UI metadata aligned with the body stack.
 - Local validation: `npm run build` passed.
 
 ### Menu Hero Backgrounds Upload

@@ -120,7 +120,7 @@ const prepared = entities.map(entity => ({
               {entity.tags && entity.tags.length > 0 && (
                 <em>
                   {entity.tags.slice(0, 2).map(tag => (
-                    <span class="ol-code">{tag}</span>
+                    <span class="ol-meta-badge">{tag}</span>
                   ))}
                 </em>
               )}
@@ -289,7 +289,7 @@ const prepared = entities.map(entity => ({
           tags.innerHTML = '';
           data.tags.forEach(tag => {
             const chip = document.createElement('span');
-            chip.className = 'ol-code';
+            chip.className = 'ol-meta-badge';
             chip.textContent = tag;
             tags.append(chip);
           });

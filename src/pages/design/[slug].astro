@@ -249,7 +249,7 @@ const typeLabels: Record<string, string> = {
               <dd>{formatLabel[entry.data.format] ?? entry.data.format}</dd>
 
               <dt>버전</dt>
-              <dd><span class="ol-code">v{entry.data.version}</span></dd>
+              <dd><span class="ol-meta-badge">v{entry.data.version}</span></dd>
 
               <dt>상태</dt>
               <dd>{entry.data.status}</dd>
@@ -321,7 +321,7 @@ const typeLabels: Record<string, string> = {
                 </>
               )}
               <dt>라이선스</dt>
-              <dd><span class="ol-code">{entry.data.license}</span></dd>
+              <dd><span class="ol-meta-badge">{entry.data.license}</span></dd>
             </dl>
 
             {allTags.length > 0 && (

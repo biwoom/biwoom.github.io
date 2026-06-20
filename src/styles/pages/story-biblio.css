@@ -42,7 +42,7 @@
 
 .ol-story-book-cover span,
 .ol-story-book-cover em {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-style: normal;
   letter-spacing: 0.08em;
@@ -130,7 +130,7 @@
 
 .ol-story-biblio-list dt {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -174,7 +174,7 @@
 .ol-story-full-toc h3 {
   margin: 0 0 12px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.04em;
 }
@@ -220,7 +220,7 @@
 
 .ol-story-full-toc button span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -286,7 +286,7 @@
 .ol-story-part-overview-item summary span,
 .ol-story-part-overview-item summary em {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-style: normal;
 }
@@ -352,7 +352,7 @@
 
 .ol-story-part-overview-group a span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   line-height: 1.5;
 }
@@ -366,7 +366,7 @@
 .ol-story-part-overview-start {
   justify-self: start;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   text-decoration: none;
 }

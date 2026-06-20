@@ -61,7 +61,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -73,7 +73,7 @@
 .ol-text-sidebar-title:hover { opacity: 0.7; }
 
 .ol-text-sidebar-count {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   color: var(--ol-muted);
   background: var(--ol-surface);
@@ -104,7 +104,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -214,7 +214,7 @@
 .ol-tag-dropdown-badge {
   background: var(--ol-ink);
   color: var(--ol-bg);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   min-width: 16px;
   height: 16px;
@@ -257,7 +257,7 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   color: var(--ol-muted);
   padding: 0;
@@ -287,7 +287,7 @@
 }
 .ol-tag-dropdown-item span:first-of-type { flex: 1; }
 .ol-tag-dropdown-count {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   color: var(--ol-muted);
 }
@@ -348,7 +348,7 @@
 
 .ol-text-entry-part-count {
   flex-shrink: 0;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   color: var(--ol-muted);
 }
@@ -386,7 +386,7 @@
 
 .ol-text-entry-group-count {
   flex-shrink: 0;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   color: var(--ol-muted);
 }
@@ -558,7 +558,7 @@
 }
 
 .ol-text-toc-title {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.08em;

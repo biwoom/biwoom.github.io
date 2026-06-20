@@ -36,7 +36,7 @@
 
 .ol-text-tag-menu-trigger strong {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
 }
@@ -87,7 +87,7 @@
 
 .ol-text-tag-menu-panel button strong {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
 }
@@ -188,7 +188,7 @@
 .ol-text-tag-result-summary span,
 .ol-text-tag-result-summary em {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-style: normal;
 }
@@ -209,7 +209,7 @@
 .ol-text-tag-result-list h3 {
   margin: 0 0 12px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.04em;
 }
@@ -252,7 +252,7 @@
 
 .ol-text-tag-result-group a span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 

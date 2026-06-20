@@ -90,8 +90,8 @@ This file records durable project decisions that future Codex sessions should pr
 
 - The site-wide default typography should use the sans body stack for general content and UI.
 - The preferred body stack order is `Pretendard` → `Noto Sans KR` → `Inter` for non-mono surfaces.
-- Mono typography should be limited to code-like surfaces and explicit machine-style tokens such as `code`, `pre`, `kbd`, `samp`, and code-chip elements.
-- Labels, section kickers, filter controls, navigation metadata, and ordinary descriptive text should not depend on the mono stack by default.
+- Shared typography should stay on the sans stack by default, including badge-like metadata surfaces that previously used mono styling.
+- Labels, section kickers, filter controls, navigation metadata, and ordinary descriptive text should not depend on a separate code or mono stack.
 - Shared semantic label classes should prefer names that describe role rather than rendering, such as `ol-meta-label` and `ol-section-label`.
 
 ### DESIGN Download Filenames

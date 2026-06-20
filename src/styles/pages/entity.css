@@ -13,7 +13,7 @@
   color: var(--ol-muted);
   font-size: 15px;
   margin-top: 8px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
 }
 .ol-backlinks {
   margin-top: 48px;
@@ -58,7 +58,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 42px;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   color: var(--ol-muted);
   background: var(--ol-bg);
@@ -85,7 +85,7 @@
 }
 .ol-relation-target span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 .ol-relation-target strong {
@@ -96,7 +96,7 @@
 .ol-relation-target em {
   grid-column: 2;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-style: normal;
   line-height: 1.35;
@@ -156,7 +156,7 @@
 .ol-entity-detail-meta {
   margin-top: 6px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 13px;
 }
 
@@ -218,7 +218,7 @@
   border: 1px solid var(--ol-border);
   border-radius: 999px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -328,7 +328,7 @@
 .ol-entity-side-names {
   margin-top: 6px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -379,7 +379,7 @@
 }
 
 .ol-entity-side-stats strong {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 
@@ -397,7 +397,7 @@
 .ol-entity-side-links h3,
 .ol-entity-side-others > .ol-meta-label {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0;
@@ -541,7 +541,7 @@
     border-radius: 999px;
     background: var(--ol-bg);
     color: var(--ol-ink);
-    font-family: var(--ol-font-code);
+    font-family: inherit;
     font-size: 11px;
     font-weight: 700;
   }
@@ -615,7 +615,7 @@
     border: 1px solid var(--ol-border);
     border-radius: 999px;
     color: var(--ol-muted);
-    font-family: var(--ol-font-code);
+    font-family: inherit;
     font-size: 11px;
   }
 

@@ -11,7 +11,7 @@
 .ol-stat:first-child { border-left: none; }
 .ol-stat .n { font-size: 34px; letter-spacing: -0.03em; color: var(--ol-ink); font-weight: 700; }
 .ol-stat .n em { font-style: normal; }
-.ol-stat .l { font-family: var(--ol-font-code); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ol-muted); margin-top: 4px; }
+.ol-stat .l { font-family: inherit; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ol-muted); margin-top: 4px; }
 
 /* ===== Manifest box ===== */
 .ol-manifest {

@@ -108,7 +108,7 @@
 
 .ol-story-part-nav span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 

@@ -11,7 +11,7 @@
 html { scroll-padding-top: 80px; }
 
 html {
-  font-family: var(--ol-font-body);
+  font-family: var(--ol-font-ui);
   font-size: 15px;
   line-height: 1.55;
   letter-spacing: -0.01em;
@@ -42,7 +42,7 @@ code,
 pre,
 kbd,
 samp {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
 }
 
 h1, h2, h3, h4 {
@@ -68,7 +68,6 @@ a { color: inherit; }
 }
 
 /* ===== Typography helpers ===== */
-.ol-code-font { font-family: var(--ol-font-code); }
 .ol-meta-label {
   display: block;
   font-family: inherit;
@@ -572,9 +571,9 @@ a { color: inherit; }
   border-color: var(--ol-ink);
 }
 
-/* Code chip */
-.ol-code {
-  font-family: var(--ol-font-code);
+/* Meta badge */
+.ol-meta-badge {
+  font-family: inherit;
   font-size: 12px;
   background: var(--ol-surface-2);
   border: 1px solid var(--ol-border);
@@ -652,7 +651,7 @@ a { color: inherit; }
   color: var(--ol-bg);
   display: grid;
   place-items: center;
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 12px;
   font-weight: 600;
 }
@@ -730,7 +729,7 @@ a { color: inherit; }
 }
 .ol-chip:hover { border-color: var(--ol-border-strong); }
 .ol-chip.active { background: var(--ol-ink); color: var(--ol-bg); border-color: var(--ol-ink); }
-.ol-chip .count { font-family: var(--ol-font-code); font-size: 11px; opacity: 0.55; }
+.ol-chip .count { font-family: inherit; font-size: 11px; opacity: 0.55; }
 
 /* Prefix tag filters */
 .ol-prefix-filter {
@@ -776,7 +775,7 @@ a { color: inherit; }
 
 .ol-prefix-filter-reset span,
 .ol-prefix-filter-count {
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
   opacity: 0.62;
 }
@@ -835,7 +834,7 @@ a { color: inherit; }
 
 .ol-prefix-filter-panel button span:last-child {
   color: var(--ol-muted);
-  font-family: var(--ol-font-code);
+  font-family: inherit;
   font-size: 11px;
 }
 

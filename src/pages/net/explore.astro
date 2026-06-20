@@ -411,7 +411,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
         detailTags.innerHTML = '';
         detail.tags.forEach(tag => {
           const chip = document.createElement('span');
-          chip.className = 'ol-code';
+          chip.className = 'ol-meta-badge';
           chip.textContent = tag;
           detailTags.append(chip);
         });
