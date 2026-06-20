@@ -24,24 +24,27 @@ git status --short --branch
 ```
 
 2. If unrelated changes exist, stage only the files that belong to the user's requested upload.
-3. Update `.agents/context/work-log.md` in the working tree first so the upload log is prepared before the GitHub push.
-4. If the log needs a precise pushed commit hash, record the pending upload scope first, then update the log entry after the local commit is created and before pushing. Keep that as a single local commit flow, not a second push.
-5. Run relevant local validation if it has not already been run for the changed files.
-6. Commit the code changes and log update together with a concise message. Avoid a separate follow-up push just for the log when the log can be included in the same commit.
-7. Push to GitHub:
+3. Run relevant local validation if it has not already been run for the changed files.
+4. Commit the requested code/content/documentation changes with a concise message.
+5. Push the requested change to GitHub:
 
 ```sh
 git push origin main
 ```
 
-8. Stop deployment waiting here. Do not run `gh run list`, `gh run watch`, or live-site checks unless the user explicitly asks for deployment verification.
-9. Immediately update `.agents/context/work-log.md` with:
+6. Stop deployment waiting here. Do not run `gh run list`, `gh run watch`, or live-site checks unless the user explicitly asks for deployment verification.
+7. Immediately update `.agents/context/work-log.md` with:
    - date
    - pushed commit or branch
    - files or scope uploaded
    - local validation result if available
    - deployment status only if explicitly checked
-10. Only create a follow-up commit if the log genuinely cannot be included in the original commit. Do not default to a second push.
+8. Commit the work-log update as a follow-up commit.
+9. Push the work-log commit to GitHub:
+
+```sh
+git push origin main
+```
 
 ## Reporting
 
@@ -58,3 +61,4 @@ Report:
 - Do not silently stage unrelated user changes.
 - Do not wait for GitHub Pages deployment completion by default.
 - Do not interpret "deploy" as "wait until the Pages site is live" unless the user asks for deployment verification.
+- Use the default `git push origin main` path for OL HOME uploads; non-default push targets should still be confirmed.

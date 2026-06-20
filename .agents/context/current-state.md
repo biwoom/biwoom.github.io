@@ -39,7 +39,8 @@ Last updated: 2026-06-20
 - Astro `base` should not be set.
 - `public/robots.txt` and `src/pages/rss.xml.ts` should remain root-URL aware.
 - `.github/workflows/deploy.yml` builds and deploys on pushes to `main`.
-- GitHub upload workflow now prefers preparing `.agents/context/work-log.md` before push and including the code change plus upload log in one commit/push when possible.
+- GitHub upload workflow now pushes the requested change first, then records the pushed result in `.agents/context/work-log.md` and pushes that log update as a follow-up commit.
+- `git push origin main` is allowed as the default OL HOME upload command; non-default push targets still require confirmation.
 
 ## Codex Setup
 

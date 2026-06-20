@@ -18,12 +18,20 @@ prefix_rule(
 )
 
 prefix_rule(
+    pattern = ["git", "push", "origin", "main"],
+    decision = "allow",
+    justification = "User-requested OL HOME uploads use origin main as the default publishing target.",
+    match = [
+        "git push origin main",
+    ],
+)
+
+prefix_rule(
     pattern = ["git", "push"],
     decision = "prompt",
-    justification = "Publishing changes should be confirmed before updating the remote repository.",
+    justification = "Non-default pushes should be confirmed before updating a remote repository.",
     match = [
         "git push",
-        "git push origin main",
     ],
 )
 
