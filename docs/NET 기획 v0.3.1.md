@@ -1406,15 +1406,11 @@ STORY 문서는 NET에 직접 종속되지 않는다. 다만 STORY 문서의 프
 권장 필드:
 
 ```yaml
-primaryEntities:
+entities:
   - "buddha"
   - "ananda"
-
-primaryPlaces:
   - "sravasti"
   - "jetavana"
-
-primaryConcepts:
   - "dhamma-teaching"
   - "renunciation"
 
@@ -1430,9 +1426,7 @@ tags:
 구분 원칙:
 
 ```txt
-primaryEntities = 내부 연결용 인물 id
-primaryPlaces   = 내부 연결용 장소 id
-primaryConcepts = 내부 연결용 개념 id
+entities        = 내부 연결용 Entity id
 tags            = 검색·필터·사용자 탐색용
 ```
 

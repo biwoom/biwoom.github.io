@@ -91,3 +91,9 @@ This file records durable project decisions that future Codex sessions should pr
 - STORY document fields `primaryEntities` and `primaryPlaces` are no longer used.
 - TEXT document field `primary_entity` is no longer used.
 - The order of ids in `entities` is the display order for document-side name-card panels.
+
+### DESIGN Download Filenames
+
+- DESIGN detail-page download links for PDF and image assets should use the content title and version as the browser download filename.
+- The filename format is `{title}-v{version}{original_extension}`.
+- The HTML asset action remains a view/open link, not a forced download.

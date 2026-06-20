@@ -144,15 +144,15 @@ OL은 하나의 앱이 아니라 역할이 분리된 체계입니다.
 | **OL DESIGN** | 시각 콘텐츠 | 인포그래픽과 시각 자료 라이브러리 |
 | **OL NET** | 탐색 메뉴 | 인물·장소·개념 이름카드를 중심으로 STORY, TEXT, DESIGN을 연결하는 탐색 레이어 |
 | **OL BLOG** | 작업 기록 | 콘텐츠 개발 과정과 코드 수정 과정 기록 |
-| **OL ENTITY** | 지식 그래프 | 인물, 장소, 개념 등의 관계형 기준 데이터 |
+| **OL ENTITY** | 지식 그래프 | 인물, 장소, 개념 등의 관계형 기준 데이터이자 개별 상세 문서 |
 | **OL ATLAS** | 도구/아카이브 | 단일 HTML 산출물을 `public/atlas/`에서 제공 |
 
-`BOOK`과 `WORKS` 라우트는 호환 및 과거 구조 연결을 위해 남아 있으나, 신규 운영의 중심은 `TEXT`, `STORY`, `DESIGN`, `NET`, `BLOG`, `ENTITY`입니다.
+`BOOK`과 `WORKS` 라우트는 호환 및 과거 구조 연결을 위해 남아 있으나, 신규 운영의 중심은 `TEXT`, `STORY`, `DESIGN`, `NET`, `BLOG`입니다. `ENTITY`는 상단 공개 메뉴가 아니라, NET과 각 콘텐츠에서 연결되는 개별 상세 문서 체계로 유지합니다.
 
 현재 공개 홈페이지의 상단 구조는 다음 흐름을 기준으로 합니다.
 
 ```txt
-HOME / TEXT / STORY / DESIGN / NET (+ BLOG, GitHub)
+HOME / TEXT / STORY / DESIGN / NET (+ BLOG)
 ```
 
 여기서 `NET`은 기존 `ENTITY` 문서를 대체하는 메뉴가 아니라, 이름과 관계를 먼저 훑어본 뒤 다시 STORY, TEXT, DESIGN, ENTITY 상세로 이어지는 탐색 입구입니다.
@@ -297,14 +297,14 @@ OL 개발 중 어떤 결정 앞에 섰을 때 다음 질문을 확인합니다.
 - 저장소 기준을 `biwoom.github.io`로 업데이트했습니다.
 - 배포 주소를 `https://biwoom.github.io/`로 명시했습니다.
 - 기존 `ol-home` 프로젝트 페이지 구조 설명을 GitHub Pages 루트 사이트 구조로 수정했습니다.
-- 현재 운영 중심을 `TEXT`, `STORY`, `DESIGN`, `BLOG`, `ENTITY`, `ATLAS`로 정리했습니다.
+- 현재 운영 중심을 `TEXT`, `STORY`, `DESIGN`, `NET`, `BLOG`, `ATLAS`로 정리했습니다.
 - `BOOK`, `WORKS`는 호환 라우트로 남아 있음을 명시했습니다.
 - 디자인 시스템 설명을 현재 CSS 토큰·폰트 구성에 맞게 조정했습니다.
 
 ### 2026-06-20 · v1.3
 
 - 현재 공개 제품 체계에 `OL NET`을 추가했습니다.
-- 상단 홈페이지 메뉴 구조를 `HOME / TEXT / STORY / DESIGN / NET (+ BLOG, GitHub)` 기준으로 반영했습니다.
+- 상단 홈페이지 메뉴 구조를 `HOME / TEXT / STORY / DESIGN / NET (+ BLOG)` 기준으로 반영했습니다.
 - `NET`이 `ENTITY`를 대체하는 문서 시스템이 아니라, 이름카드 탐색 레이어라는 점을 명시했습니다.
 - 현재 운영 중심 목록에 `NET`을 포함하도록 수정했습니다.
 
