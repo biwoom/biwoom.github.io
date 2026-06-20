@@ -184,4 +184,4 @@ published: true
 ---
 
 ## 원전
-Mahābuddhavaṃsa, Chapter 3 — Sumedha the Brahmin (해당 구간 재구성)
+> Mahābuddhavaṃsa, Chapter 3 — Sumedha the Brahmin (해당 구간 재구성) 
