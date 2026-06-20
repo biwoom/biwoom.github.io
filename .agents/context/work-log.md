@@ -490,4 +490,4 @@ This file records concise date-based work summaries for continuity across Codex 
   - DESIGN detail related-context panel
   - mobile NET hero simplification
 - Local validation: `npm run build` passed.
-- Pushed commit hash: pending
+- Pushed commit hash: `71738a4` (`Improve mobile NET and entity UX`)
