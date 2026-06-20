@@ -412,15 +412,8 @@ a { color: inherit; }
 }
 
 .ol-grid-bg--design::after {
-  background:
-    linear-gradient(to right, transparent 0 10%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 10% 10.2%, transparent 10.2% 89.8%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 89.8% 90%, transparent 90%),
-    linear-gradient(to bottom, transparent 0 16%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 16% 16.2%, transparent 16.2% 83.8%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 83.8% 84%, transparent 84%),
-    linear-gradient(90deg, transparent 0 22%, color-mix(in oklab, var(--ol-surface-2) 82%, transparent) 22% 44%, transparent 44% 100%),
-    linear-gradient(90deg, transparent 0 58%, color-mix(in oklab, var(--ol-surface-2) 70%, transparent) 58% 78%, transparent 78% 100%);
-  background-repeat: no-repeat;
-  background-size: 64% 52%, 64% 52%, 100% 62px, 100% 44px;
-  background-position: center, center, center 26%, center 70%;
-  opacity: 0.58;
+  background: none;
+  opacity: 0;
 }
 
 .ol-grid-bg--net {

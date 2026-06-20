@@ -124,6 +124,16 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated the long-term decisions and current state notes to reflect the new ordering rule.
 - Local validation: not run; documentation-only update.
 
+### Design Hero Background Simplification Upload
+
+- Prepared the work-log entry before push so the design hero change can travel with the record in the same commit.
+- Scope uploaded:
+  - simplified `ol-grid-bg--design` to a plain grid
+  - kept the existing grid spacing
+  - removed the extra divider and card-like overlay lines
+- Local validation: `npm run build` passed.
+- Deployment completion was not checked by design.
+
 ## 2026-06-18
 
 ### STORY, ENTITY, NET Planning Sync Upload
