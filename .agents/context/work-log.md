@@ -490,5 +490,27 @@ This file records concise date-based work summaries for continuity across Codex 
   - DESIGN detail related-context panel
   - mobile NET hero simplification
 - Local validation: `npm run build` passed.
-- Pushed commits: `71738a4` (`Improve mobile NET and entity UX`), `3636f48` (`Record mobile UX upload`)
+- Pushed commits: `71738a4` (`Improve mobile NET and entity UX`), `3636f48` (`Record mobile UX upload`), `8ef9d33` (`Refine upload log`)
 - Remote branch: `origin/main`
+
+### GitHub Upload Workflow Reversion And Push Rule Update
+
+- Restored the OL HOME GitHub upload workflow to the previous ordering:
+  - push the requested code/content/documentation change first
+  - update `.agents/context/work-log.md` with the pushed result afterward
+  - push the work-log update as a follow-up commit
+- Added a Codex rule allowing the default OL HOME upload command, `git push origin main`.
+- Kept non-default GitHub push targets behind confirmation.
+- Updated `AGENTS.md`, `$ol-github-upload-log`, `current-state.md`, and `decisions.md` to match the restored workflow and push policy.
+- Local validation: not run; this change only updates internal agent rules and context documents.
+
+### GitHub Upload Log Follow-Up
+
+- Pushed commit `2ef85df` (`Update upload workflow rules`) to `origin/main`.
+- Uploaded scope:
+  - `AGENTS.md`
+  - `.agents/context/current-state.md`
+  - `.agents/context/decisions.md`
+  - `.agents/skills/ol-github-upload-log/SKILL.md`
+  - `.codex/rules/default.rules`
+- This work-log entry is the follow-up record after the main push.
