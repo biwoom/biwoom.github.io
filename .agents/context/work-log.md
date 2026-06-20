@@ -514,3 +514,12 @@ This file records concise date-based work summaries for continuity across Codex 
   - `.agents/skills/ol-github-upload-log/SKILL.md`
   - `.codex/rules/default.rules`
 - This work-log entry is the follow-up record after the main push.
+
+### Schema Alignment And DESIGN Download Naming
+
+- Aligned active code and planning docs with the current TEXT/STORY linking rule: document-level links now consistently refer to `entities`, not legacy STORY/TEXT fields such as `primaryEntities`, `primaryPlaces`, or `primary_entity`.
+- Updated the placeholder STORY series frontmatter to match the current `kind: series` pattern and removed document-only metadata from that series index.
+- Synced the fallback nav definition with the live public header menu by replacing legacy `ATLAS`/`AI` items with `NET`.
+- Updated README, the public brand definition, and the active STORY/NET/Buddha Story planning docs so current public menu wording and NET/ENTITY roles match the live site.
+- Updated DESIGN detail downloads so PDF and image assets use `{title}-v{version}{ext}` as the browser download filename.
+- Local validation: `npm run build` passed.
