@@ -40,7 +40,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     <!-- Hero -->
     <section class="ol-hero ol-grid-bg ol-grid-bg--blog" style="padding-bottom: 32px;">
       <div class="ol-container">
-        <span class="ol-kicker">JOURNAL · 작업 일지</span>
+        <span class="ol-section-label">JOURNAL · 작업 일지</span>
         <h1 class="ol-kr">
           만들고 고친 자취를<br>
           <em>그대로</em> 적어둡니다.
@@ -72,7 +72,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
           <div>
             <div id="blog-posts">
               {posts.length === 0 ? (
-                <div style="padding: 48px 0; color: var(--ol-muted); font-family: var(--ol-font-mono); font-size: 13px;">
+                <div style="padding: 48px 0; color: var(--ol-muted); font-size: 13px;">
                   아직 발행된 글이 없습니다.
                 </div>
               ) : posts.map((post, i) => {
@@ -123,7 +123,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
               })}
             </div>
 
-            <div id="blog-no-results" style="display:none; padding: 48px 0; color: var(--ol-muted); font-family: var(--ol-font-mono); font-size: 13px;" class="ol-kr">
+            <div id="blog-no-results" style="display:none; padding: 48px 0; color: var(--ol-muted); font-size: 13px;" class="ol-kr">
               선택한 필터에 해당하는 글이 없습니다.
             </div>
 
@@ -140,7 +140,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
           <!-- Sidebar -->
           <aside style="position: sticky; top: 80px;">
             <div class="ol-card" style="padding: 24px;">
-              <div class="ol-mono-label">ARCHIVE</div>
+              <div class="ol-meta-label">ARCHIVE</div>
               <div class="ol-blog-archive-list" id="blog-archive">
                 <button class="ol-blog-archive-btn active" data-year="all">
                   <span class="ol-kr">전체</span>

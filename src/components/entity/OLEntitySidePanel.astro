@@ -96,14 +96,14 @@ const prepared = entities.map(entity => ({
 
     <div class="ol-entity-side-sheet" data-entity-side-sheet aria-label={title}>
       <div class="ol-entity-side-sheet-head">
-        <span class="ol-mono-label">{title}</span>
+        <span class="ol-meta-label">{title}</span>
         <strong>{prepared.length}</strong>
         <button type="button" data-entity-side-close aria-label="이름카드 패널 닫기">닫기</button>
       </div>
 
       <div class="ol-entity-side-list" data-entity-side-list>
         <div class="ol-entity-side-head">
-          <span class="ol-mono-label">{title}</span>
+          <span class="ol-meta-label">{title}</span>
           <strong>{prepared.length}</strong>
         </div>
         <div class="ol-entity-side-cards">
@@ -114,7 +114,7 @@ const prepared = entities.map(entity => ({
               data-entity-side-card
               data-entity-detail={detail}
             >
-              <span class="ol-mono-label">{typeLabels[entity.type] ?? entity.type}</span>
+              <span class="ol-meta-label">{typeLabels[entity.type] ?? entity.type}</span>
               <strong class="ol-kr">{entity.name.ko}</strong>
               {entity.description && <span class="ol-kr">{entity.description}</span>}
               {entity.tags && entity.tags.length > 0 && (
@@ -137,7 +137,7 @@ const prepared = entities.map(entity => ({
         <figure class="ol-entity-side-profile" data-entity-side-profile hidden>
           <img src="" alt="" loading="lazy" decoding="async" data-entity-side-profile-image />
         </figure>
-        <span class="ol-mono-label" data-entity-side-type></span>
+        <span class="ol-meta-label" data-entity-side-type></span>
         <h2 class="ol-kr" data-entity-side-name></h2>
         <p class="ol-entity-side-names" data-entity-side-names hidden></p>
         <p class="ol-kr ol-entity-side-description" data-entity-side-description></p>
@@ -147,7 +147,7 @@ const prepared = entities.map(entity => ({
         <a class="ol-entity-side-link" href="#" data-entity-side-link>상세 문서 열기</a>
         {prepared.length > 1 && (
           <div class="ol-entity-side-others">
-            <span class="ol-mono-label">다른 이름카드</span>
+            <span class="ol-meta-label">다른 이름카드</span>
             <div>
               {prepared.map(({ entity, detail }) => (
                 <button

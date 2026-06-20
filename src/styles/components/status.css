@@ -1,6 +1,6 @@
 .ol-text-status {
   flex-shrink: 0;
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.05em;

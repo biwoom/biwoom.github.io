@@ -71,7 +71,7 @@ const statusKey = cover.data.status ?? 'draft';
 >
   <main class="ol-story-reader-page">
     <section class="ol-story-series-hero ol-story-series-hero--centered">
-      <span class="ol-kicker">STORY SERIES</span>
+      <span class="ol-section-label">STORY SERIES</span>
       <h1 class="ol-kr">{series.label}</h1>
       {cover.data.description && <p class="ol-kr">{cover.data.description}</p>}
 
@@ -99,7 +99,7 @@ const statusKey = cover.data.status ?? 'draft';
           <section class="ol-story-tag-results" data-story-tag-results hidden>
             <div class="ol-story-tag-results-head">
               <div>
-                <span class="ol-kicker">Tag index</span>
+                <span class="ol-section-label">Tag index</span>
                 <h2 class="ol-kr" data-story-tag-results-title>태그 문서</h2>
                 <p class="ol-story-tag-result-summary" data-story-tag-results-summary>
                   <em>선택한 태그를 모두 포함한 문서를 표시합니다.</em>
@@ -171,7 +171,7 @@ const statusKey = cover.data.status ?? 'draft';
         <section class="ol-story-biblio-toc-card" data-story-mobile-collapsible data-mobile-collapsed="true">
           <div class="ol-story-biblio-card-head">
             <div>
-              <span class="ol-kicker">Contents</span>
+              <span class="ol-section-label">Contents</span>
               <h2 class="ol-kr">파트 목록</h2>
             </div>
             <button class="ol-story-biblio-toggle" type="button" aria-expanded="false" aria-label="파트 목록 펼치기" data-story-biblio-toggle>
@@ -223,7 +223,7 @@ const statusKey = cover.data.status ?? 'draft';
         <section class="ol-story-biblio-body" data-story-mobile-collapsible data-mobile-collapsed="true">
           <div class="ol-story-biblio-card-head">
             <div>
-              <span class="ol-kicker">Metadata</span>
+              <span class="ol-section-label">Metadata</span>
               <h2 class="ol-kr">서지정보</h2>
             </div>
             <button class="ol-story-biblio-toggle" type="button" aria-expanded="false" aria-label="서지정보 펼치기" data-story-biblio-toggle>
@@ -237,7 +237,7 @@ const statusKey = cover.data.status ?? 'draft';
             <div class="ol-story-biblio-head">
               <span class={`ol-text-status ol-text-status--${statusKey}`}>{statusLabel[statusKey]}</span>
               {cover.data.publishedAt && (
-                <span class="ol-mono-label">{new Date(cover.data.publishedAt).toLocaleDateString('ko-KR')}</span>
+                <span class="ol-meta-label">{new Date(cover.data.publishedAt).toLocaleDateString('ko-KR')}</span>
               )}
             </div>
 

@@ -47,7 +47,7 @@
 
 .ol-doc-nav-kicker {
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;

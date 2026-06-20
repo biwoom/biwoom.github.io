@@ -75,7 +75,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
         </div>
         <div class="net-explore-title">
           <div>
-            <span class="ol-kicker">NET EXPLORER · 검색결과 전용 화면</span>
+            <span class="ol-section-label">NET EXPLORER · 검색결과 전용 화면</span>
             <h1 class="ol-kr">이름을 찾고 관계를 확인합니다.</h1>
           </div>
           <form class="net-explore-search" action={url('/net/explore')} method="get" role="search" aria-label="NET 이름카드 검색">
@@ -104,7 +104,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
               </summary>
               <div class="net-filter-content">
                 <div class="net-panel-block">
-                  <span class="ol-mono-label">TYPE FILTER</span>
+                  <span class="ol-meta-label">TYPE FILTER</span>
                   <div class="net-filter-list" data-net-type-filter>
                     <button type="button" class="net-filter-option active" data-net-type="all">전체 <span>{visibleEntities.length}</span></button>
                     {typeCounts.map(item => (
@@ -116,7 +116,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
                 </div>
 
                 <div class="net-panel-block">
-                  <span class="ol-mono-label">PREFIX TAGS</span>
+                  <span class="ol-meta-label">PREFIX TAGS</span>
                   {tagGroups.length > 0 ? (
                     <div class="net-prefix-filter" data-net-tag-filter>
                       {tagGroups.map(group => (
@@ -154,7 +154,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
           <div class="net-list-panel">
             <div class="net-list-toolbar">
               <div>
-                <span class="ol-mono-label">RESULT LIST</span>
+                <span class="ol-meta-label">RESULT LIST</span>
                 <strong class="ol-kr"><span data-net-result-count>{visibleEntities.length}</span>개 항목</strong>
               </div>
               <button type="button" class="net-reset-button net-reset-button--primary" data-net-reset>필터 초기화</button>
@@ -231,7 +231,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
             <figure class="net-detail-profile" data-net-detail-profile hidden>
               <img src="" alt="" loading="lazy" decoding="async" data-net-detail-profile-image />
             </figure>
-            <span class="ol-mono-label" data-net-detail-type>NAME CARD DETAIL</span>
+            <span class="ol-meta-label" data-net-detail-type>NAME CARD DETAIL</span>
             <h2 class="ol-kr" data-net-detail-name>선택한 이름카드의 맥락</h2>
             <p class="net-detail-names" data-net-detail-names hidden></p>
             <p class="ol-kr" data-net-detail-description>

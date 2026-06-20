@@ -100,7 +100,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
         )}
       </div>
 
-      <!-- <span class="ol-kicker">STORY DOCUMENT</span> -->
+      <!-- <span class="ol-section-label">STORY DOCUMENT</span> -->
       <h1 class="ol-kr">{entry.data.title}</h1>
       {entry.data.description && <p class="ol-kr">{entry.data.description}</p>}
     </section>
@@ -144,7 +144,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
         <article class="ol-story-part-content" data-pagefind-body>
           <header class="ol-story-part-content-head">
             <div>
-              <span class="ol-kicker">{currentPart?.label ?? entry.data.part} · CHAPTER {String(entry.data.chapter ?? 1).padStart(2, '0')}</span>
+              <span class="ol-section-label">{currentPart?.label ?? entry.data.part} · CHAPTER {String(entry.data.chapter ?? 1).padStart(2, '0')}</span>
               <h2 class="ol-kr">{entry.data.title}</h2>
             </div>
             <div class="ol-story-part-tools">
@@ -246,7 +246,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
           <div class="ol-story-active-doc-actions">
             <div class="ol-text-doc-meta">
               <span class={`ol-text-status ol-text-status--${statusKey}`}>{statusLabel[statusKey]}</span>
-              <span class="ol-mono-label">
+              <span class="ol-meta-label">
                 {entry.data.publishedAt && new Date(entry.data.publishedAt).toLocaleDateString('ko-KR', {
                   year: 'numeric',
                   month: 'long',

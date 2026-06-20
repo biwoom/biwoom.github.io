@@ -124,7 +124,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
             {statusLabel[statusKey]}
           </span>
           {entry.data.date && (
-            <span class="ol-mono-label">
+            <span class="ol-meta-label">
               {new Date(entry.data.date).toLocaleDateString('ko-KR', {
                 year: 'numeric',
                 month: 'long',
@@ -190,7 +190,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
 
       {entry.data.sources.length > 0 && (
         <footer class="ol-text-sources">
-          <h2 class="ol-kicker">참고 문헌</h2>
+          <h2 class="ol-section-label">참고 문헌</h2>
           <ul>
             {entry.data.sources.map(src => (
               <li>

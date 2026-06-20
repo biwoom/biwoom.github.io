@@ -38,7 +38,7 @@ const targetHref = (entity: EntityLike | undefined, id: string) =>
 ---
 
 <section class="ol-relation-links">
-  <h2 class="ol-mono-label">{title} ({relations.length})</h2>
+  <h2 class="ol-meta-label">{title} ({relations.length})</h2>
   <ul>
     {relations.map(rel => {
       const id = targetId(rel);

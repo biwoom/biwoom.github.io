@@ -78,7 +78,7 @@
 
 /* ── Code ── */
 .ol-prose code {
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 0.875em;
   background: var(--ol-surface-2);
   padding: 0.15em 0.4em;
@@ -165,7 +165,7 @@
   color: var(--ol-muted);
 }
 .ol-prose .footnotes #footnote-label {
-  font-family: var(--ol-font-mono);
+  font-family: inherit;
   font-size: 15px;
   letter-spacing: 0.08em;
   color: var(--ol-muted);
@@ -190,7 +190,7 @@
 }
 .ol-prose .footnotes li::before {
   content: "[" counter(footnote-counter) "]";
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   color: var(--ol-muted);
   margin-right: 8px;
@@ -216,7 +216,7 @@
   color: var(--ol-ink);
 }
 .ol-prose sup a[data-footnote-ref] {
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   color: var(--ol-ink-2);
   text-decoration: none;

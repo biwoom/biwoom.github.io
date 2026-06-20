@@ -14,7 +14,7 @@
 
 .ol-text-tag span {
   color: #9a9288;
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 10px;
   letter-spacing: 0.04em;
   text-transform: uppercase;

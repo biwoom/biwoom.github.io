@@ -357,7 +357,7 @@ const typeLabels: Record<string, string> = {
                       {designEntities.map(entity => (
                         <li>
                           <a href={url(`/entity/${entity.data.type}s/${entity.data.id}`)}>
-                            <span class="ol-mono-label">{typeLabels[entity.data.type] ?? entity.data.type}</span>
+                            <span class="ol-meta-label">{typeLabels[entity.data.type] ?? entity.data.type}</span>
                             <strong class="ol-kr">{entity.data.name.ko}</strong>
                             {entity.data.description && <em class="ol-kr">{entity.data.description}</em>}
                           </a>

@@ -17,9 +17,10 @@
   --ol-subtle:          #a3a3a3;
 
   /* ── Typography ── */
-  --ol-font-sans:    "Inter", "Pretendard", "Noto Sans KR",
+  --ol-font-sans:    "Pretendard", "Noto Sans KR", "Inter",
                      -apple-system, BlinkMacSystemFont, sans-serif;
-  --ol-font-mono:    "JetBrains Mono", "IBM Plex Mono",
+  --ol-font-body:    var(--ol-font-sans);
+  --ol-font-code:    "JetBrains Mono", "IBM Plex Mono",
                      ui-monospace, monospace;
 
   /* ── Radius ── */

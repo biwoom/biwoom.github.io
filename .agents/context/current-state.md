@@ -31,6 +31,9 @@ Last updated: 2026-06-20
   - `/net/` as the entry page
   - `/net/explore/` as the Entity name-card exploration view
 - The main public header currently exposes `HOME`, `TEXT`, `STORY`, `DESIGN`, `NET`, plus a separate `BLOG` action.
+- Typography now defaults site-wide to the sans body stack for general UI and content.
+- Mono typography is reserved for code-like surfaces such as `code`, `pre`, `kbd`, `samp`, and explicit code-chip style elements.
+- Shared semantic typography classes now use `ol-meta-label` and `ol-section-label` instead of the older mono-named labels.
 
 ## Deployment State
 
@@ -64,6 +67,8 @@ Last updated: 2026-06-20
   - `/net/`
   - `/net/explore/`
   - shared name-card behavior across NET, TEXT, STORY, and ENTITY
+- Unified the default site typography so UI labels and metadata no longer depend on the mono stack by default.
+- Renamed shared label classes away from mono-centric names and aligned CSS code-font references to `--ol-font-code`.
 
 ## Open Follow-ups
 

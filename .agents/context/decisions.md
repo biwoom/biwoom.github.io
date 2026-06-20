@@ -86,6 +86,14 @@ This file records durable project decisions that future Codex sessions should pr
 - TEXT document field `primary_entity` is no longer used.
 - The order of ids in `entities` is the display order for document-side name-card panels.
 
+### Typography Scope
+
+- The site-wide default typography should use the sans body stack for general content and UI.
+- The preferred body stack order is `Pretendard` → `Noto Sans KR` → `Inter` for non-mono surfaces.
+- Mono typography should be limited to code-like surfaces and explicit machine-style tokens such as `code`, `pre`, `kbd`, `samp`, and code-chip elements.
+- Labels, section kickers, filter controls, navigation metadata, and ordinary descriptive text should not depend on the mono stack by default.
+- Shared semantic label classes should prefer names that describe role rather than rendering, such as `ol-meta-label` and `ol-section-label`.
+
 ### DESIGN Download Filenames
 
 - DESIGN detail-page download links for PDF and image assets should use the content title and version as the browser download filename.

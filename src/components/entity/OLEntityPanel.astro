@@ -26,18 +26,18 @@ const profileImage = entity.design?.profileImage ? url(entity.design.profileImag
       <img src={profileImage} alt={`${entity.name.ko} 프로필 이미지`} loading="lazy" decoding="async" />
     </figure>
   )}
-  <div class="ol-mono-label">{entity.type.toUpperCase()}</div>
+  <div class="ol-meta-label">{entity.type.toUpperCase()}</div>
   <h2 style="font-size: 22px; margin-top: 8px;" class="ol-kr">{entity.name.ko}</h2>
 
   {names.length > 0 && (
-    <p style="color: var(--ol-muted); font-size: 13px; margin-top: 4px; font-family: var(--ol-font-mono);">
+    <p style="color: var(--ol-muted); font-size: 13px; margin-top: 4px;">
       {names.join(' · ')}
     </p>
   )}
 
   {entity.aliases && entity.aliases.length > 0 && (
     <div style="margin-top: 12px;">
-      <div class="ol-mono-label" style="margin-bottom: 4px;">별칭</div>
+      <div class="ol-meta-label" style="margin-bottom: 4px;">별칭</div>
       <p style="font-size: 13px; color: var(--ol-ink-2);">{entity.aliases.join(', ')}</p>
     </div>
   )}
@@ -50,7 +50,7 @@ const profileImage = entity.design?.profileImage ? url(entity.design.profileImag
 
   {entity.tags && entity.tags.length > 0 && (
     <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--ol-border);">
-      <div class="ol-mono-label" style="margin-bottom: 8px;">태그</div>
+      <div class="ol-meta-label" style="margin-bottom: 8px;">태그</div>
       <div style="display: flex; flex-wrap: wrap; gap: 4px;">
         {entity.tags.map(tag => (
           <span class="ol-code">{tag}</span>

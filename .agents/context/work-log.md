@@ -107,6 +107,29 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-06-20
 
+### Typography Name Cleanup
+
+- Renamed shared mono-centric label classes to semantic names:
+  - `ol-mono-label` → `ol-meta-label`
+  - `ol-kicker` → `ol-section-label`
+- Updated shared CSS so code-oriented font references now use `--ol-font-code`.
+- Removed the former mono alias so only `--ol-font-code` remains for code-like surfaces.
+- Local validation: `npm run build` passed.
+
+### Typography Unification
+
+- Updated typography tokens so the former mono UI stack now aliases to the site sans stack by default.
+- Added a global typography reset so `button`, `input`, `select`, `textarea`, `optgroup`, and `summary` inherit the body font consistently.
+- Reserved the true mono stack for code-like surfaces only:
+  - `code`
+  - `pre`
+  - `kbd`
+  - `samp`
+  - `.ol-code`
+  - prose footnote number markers
+- Updated shared base and search styles to use the code stack only where explicitly needed.
+- Local validation: `npm run build` passed.
+
 ### Menu Hero Backgrounds Upload
 
 - Pushed commit `a794c4a` (`Add menu hero background variants`) to `origin/main`.

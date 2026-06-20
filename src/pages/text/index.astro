@@ -27,7 +27,7 @@ const tagGroups = groupTagsByPrefix(seriesCards.flatMap(item => item.tags));
   <main>
     <section class="ol-hero ol-grid-bg ol-grid-bg--text">
       <div class="ol-container">
-        <span class="ol-kicker">TEXT · 문헌 콘텐츠</span>
+        <span class="ol-section-label">TEXT · 문헌 콘텐츠</span>
         <h1 class="ol-kr">
           <em>날카롭고 통쾌한</em><br>
           불교문헌들.
@@ -44,7 +44,7 @@ const tagGroups = groupTagsByPrefix(seriesCards.flatMap(item => item.tags));
       <div class="ol-container">
         <div class="ol-text-index">
           <div style="margin-bottom: 48px;">
-            <span class="ol-kicker">TEXT · 불교 문헌</span>
+            <span class="ol-section-label">TEXT · 불교 문헌</span>
             <h1 style="font-size: 32px; margin-top: 10px; margin-bottom: 20px;" class="ol-kr">
               OL TEXT 시리즈
             </h1>
@@ -63,7 +63,7 @@ const tagGroups = groupTagsByPrefix(seriesCards.flatMap(item => item.tags));
               return (
                 <a class="ol-text-series-card" href={url(`/text/${series.slug}`)} data-tags={JSON.stringify(tags)}>
                   <div>
-                    <span class="ol-mono-label">{String(series.count).padStart(2, '0')} docs</span>
+                    <span class="ol-meta-label">{String(series.count).padStart(2, '0')} docs</span>
                     <h2 class="ol-kr">{series.label}</h2>
                     {summary && (
                       <p class="ol-kr">{summary}</p>

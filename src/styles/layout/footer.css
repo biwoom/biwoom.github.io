@@ -12,7 +12,7 @@
 }
 .ol-footer h4 {
   font-size: 12px;
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--ol-muted);
@@ -35,7 +35,7 @@
   justify-content: space-between;
   color: var(--ol-muted);
   font-size: 12.5px;
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   letter-spacing: 0.02em;
 }
 

@@ -103,7 +103,7 @@
 .ol-story-mobile-info-section h3 {
   margin: 0 0 10px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -180,7 +180,7 @@
 .ol-story-mobile-info-links a span,
 .ol-story-mobile-info-links button span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
 }
 

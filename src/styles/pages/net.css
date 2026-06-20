@@ -39,7 +39,7 @@
 .net-search-label {
   display: block;
   margin-bottom: 8px;
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -114,7 +114,7 @@
 }
 
 .net-type-chip span {
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   color: var(--ol-muted);
 }
@@ -191,7 +191,7 @@
   padding: 12px;
 }
 
-.net-featured-section .ol-entity-card--compact .ol-mono-label,
+.net-featured-section .ol-entity-card--compact .ol-meta-label,
 .net-featured-section .ol-entity-card--compact h4,
 .net-featured-section .ol-entity-card--compact p {
   min-width: 0;
@@ -240,7 +240,7 @@
   align-items: center;
   margin-bottom: 20px;
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
 }
 
@@ -343,14 +343,14 @@
   display: block;
 }
 
-.net-filter-panel .ol-mono-label,
-.net-list-toolbar .ol-mono-label,
-.net-detail-panel .ol-mono-label {
+.net-filter-panel .ol-meta-label,
+.net-list-toolbar .ol-meta-label,
+.net-detail-panel .ol-meta-label {
   display: block;
   white-space: nowrap;
 }
 
-.net-list-panel .net-entity-grid .ol-mono-label,
+.net-list-panel .net-entity-grid .ol-meta-label,
 .net-list-panel .net-entity-grid .ol-code {
   max-width: 100%;
   width: fit-content;
@@ -361,7 +361,7 @@
   overflow-wrap: normal;
 }
 
-.net-list-panel .net-entity-grid .ol-mono-label {
+.net-list-panel .net-entity-grid .ol-meta-label {
   display: block;
 }
 
@@ -403,7 +403,7 @@
 
 .net-filter-option span {
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
 }
 
@@ -442,7 +442,7 @@
 .net-prefix-group summary em,
 .net-prefix-options button em {
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   font-style: normal;
 }
@@ -509,7 +509,7 @@
   padding: 5px 8px;
   background: var(--ol-bg);
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   cursor: pointer;
 }
@@ -625,7 +625,7 @@
 }
 
 .net-detail-names {
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 12px;
   color: var(--ol-muted);
 }
@@ -673,7 +673,7 @@
 }
 
 .net-detail-stat strong {
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 12px;
   line-height: 1;
 }
@@ -685,7 +685,7 @@
 
 .net-detail-context-section h3 {
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0;
@@ -718,7 +718,7 @@
 .net-detail-context-section a::before {
   content: "↗";
   color: var(--ol-muted);
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 10px;
 }
 
@@ -945,7 +945,7 @@
   .net-filter-disclosure > summary::after {
     content: "펼치기";
     color: var(--ol-muted);
-    font-family: var(--ol-font-mono);
+    font-family: var(--ol-font-code);
     font-size: 11px;
     font-weight: 500;
   }
@@ -964,7 +964,7 @@
     border-radius: 999px;
     background: var(--ol-ink);
     color: var(--ol-bg);
-    font-family: var(--ol-font-mono);
+    font-family: var(--ol-font-code);
     font-size: 11px;
     font-style: normal;
     margin-right: 10px;

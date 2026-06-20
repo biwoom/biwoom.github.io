@@ -154,7 +154,7 @@
 .ol-text-nav-group summary span:last-child {
   flex-shrink: 0;
   color: #a49c92;
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 10px;
   font-weight: 500;
 }
@@ -414,7 +414,7 @@
 }
 
 .ol-text-sources li span:last-child {
-  font-family: var(--ol-font-mono);
+  font-family: var(--ol-font-code);
   font-size: 11px;
   color: #9b9388;
 }
