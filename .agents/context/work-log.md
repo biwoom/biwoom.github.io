@@ -105,6 +105,18 @@ This file records concise date-based work summaries for continuity across Codex 
 - After GitHub upload/deploy requests, record the final pushed commit or branch immediately after push.
 - If deployment status is explicitly checked through GitHub Actions, add the run result here.
 
+## 2026-06-20
+
+### Menu Hero Backgrounds Upload
+
+- Pushed commit `a794c4a` (`Add menu hero background variants`) to `origin/main`.
+- Scope uploaded:
+  - shared hero background split between home and menu pages
+  - menu hero background variants for `TEXT`, `STORY`, `DESIGN`, `NET`, `BLOG`, and `ENTITY`
+  - supporting global hero background styles in `src/styles/base.css`
+- Local validation: `npm run build` passed.
+- Deployment completion was not checked by design.
+
 ## 2026-06-18
 
 ### STORY, ENTITY, NET Planning Sync Upload
@@ -382,4 +394,40 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated skill docs:
   - `.agents/skills/ol-doc-maintenance/SKILL.md`
   - `.agents/skills/ol-content-authoring/SKILL.md`
+- Local validation: `npm run build` passed.
+
+### Menu Hero Backgrounds Phase 1
+
+- Added a shared multi-layer hero background system on top of the existing `.ol-grid-bg` base.
+- Applied menu-specific hero background variants to the top-level public menu pages:
+  - `TEXT`
+  - `STORY`
+  - `DESIGN`
+  - `NET`
+  - `BLOG`
+  - `ENTITY`
+- Each variant keeps the OL monochrome grid language but changes the structural motif:
+  - TEXT: manuscript and annotation lines
+  - STORY: path and node flow
+  - DESIGN: frame and layout guides
+  - NET: connection lines and nodes
+  - BLOG: timeline and log columns
+  - ENTITY: index columns and card-like slots
+- Local validation: `npm run build` passed.
+- Browser verification: attempted, but the in-app Browser `iab` target was unavailable in this session.
+
+### Menu Hero Background Refinement
+
+- Refined the menu-specific hero backgrounds to reduce visual similarity between sections.
+- Updated `BLOG` to use a full-width crossing X-line structure.
+- Updated `NET` with a sparse grid plus a denser field of small dots and concentric rings.
+- Updated `DESIGN` so the grid motif is constrained behind the central hero text instead of filling the whole hero.
+- Updated `ENTITY` with a denser full-background field of varied dot and concentric-ring sizes.
+- Local validation: `npm run build` passed.
+
+### Hero Background Flicker Fix
+
+- Split the shared `.ol-grid-bg` base into a structural wrapper and a `--home` variant so menu pages no longer inherit the home grid during navigation.
+- Moved the home hero grid background into `.ol-grid-bg--home`.
+- This removes the brief grid flash seen while switching between menu pages and their custom hero backgrounds.
 - Local validation: `npm run build` passed.
