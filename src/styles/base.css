@@ -315,10 +315,205 @@ a { color: inherit; }
 
 /* ===== Grid backgrounds ===== */
 .ol-grid-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: color-mix(in oklab, var(--ol-surface) 90%, var(--ol-bg));
+}
+
+.ol-grid-bg > .ol-container {
+  position: relative;
+  z-index: 1;
+}
+
+.ol-grid-bg::before,
+.ol-grid-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ol-grid-bg--text,
+.ol-grid-bg--story,
+.ol-grid-bg--net,
+.ol-grid-bg--blog,
+.ol-grid-bg--entity,
+.ol-grid-bg--design {
+  background-image: none;
+}
+
+.ol-grid-bg--home {
   background-image:
-    linear-gradient(to right, var(--ol-border) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--ol-border) 1px, transparent 1px);
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 84%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--ol-border) 84%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
+}
+
+.ol-grid-bg--text::before {
+  background:
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 68%, transparent) 0 100%),
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 56%, transparent) 0 100%),
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 44%, transparent) 0 100%),
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 60%, transparent) 0 100%),
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 38%, transparent) 0 100%),
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 54%, transparent) 0 100%);
+  background-size: 72% 1px, 88% 1px, 64% 1px, 83% 1px, 58% 1px, 76% 1px;
+  background-position: 12% 18%, 6% 31%, 24% 45%, 10% 59%, 28% 73%, 14% 86%;
+  background-repeat: no-repeat;
+  opacity: 0.92;
+}
+
+.ol-grid-bg--text::after {
+  background:
+    linear-gradient(color-mix(in oklab, var(--ol-ink) 28%, transparent) 0 100%),
+    linear-gradient(45deg, transparent 0 50%, color-mix(in oklab, var(--ol-ink) 24%, transparent) 50% 100%),
+    linear-gradient(color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 100%),
+    linear-gradient(45deg, transparent 0 50%, color-mix(in oklab, var(--ol-ink) 22%, transparent) 50% 100%),
+    linear-gradient(color-mix(in oklab, var(--ol-ink) 20%, transparent) 0 100%),
+    linear-gradient(45deg, transparent 0 50%, color-mix(in oklab, var(--ol-ink) 18%, transparent) 50% 100%),
+    linear-gradient(color-mix(in oklab, var(--ol-ink) 24%, transparent) 0 100%),
+    linear-gradient(45deg, transparent 0 50%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 50% 100%),
+    linear-gradient(color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 100%);
+  background-size: 8px 8px, 10px 10px, 6px 6px, 9px 9px, 7px 7px, 8px 8px, 5px 5px, 11px 11px, 6px 6px;
+  background-position: 16% 22%, 74% 26%, 58% 36%, 28% 49%, 82% 57%, 44% 68%, 66% 76%, 18% 82%, 88% 88%;
+  background-repeat: no-repeat;
+  opacity: 0.56;
+}
+
+.ol-grid-bg--story::before {
+  background:
+    repeating-radial-gradient(circle at 18% 30%, transparent 0 18px, color-mix(in oklab, var(--ol-border) 54%, transparent) 18px 19px, transparent 19px 38px),
+    repeating-radial-gradient(circle at 52% 58%, transparent 0 16px, color-mix(in oklab, var(--ol-border) 46%, transparent) 16px 17px, transparent 17px 34px),
+    repeating-radial-gradient(circle at 82% 34%, transparent 0 20px, color-mix(in oklab, var(--ol-border) 42%, transparent) 20px 21px, transparent 21px 42px),
+    repeating-radial-gradient(circle at 68% 82%, transparent 0 14px, color-mix(in oklab, var(--ol-border) 34%, transparent) 14px 15px, transparent 15px 30px);
+  opacity: 0.96;
+}
+
+.ol-grid-bg--story::after {
+  background:
+    radial-gradient(circle at 18% 30%, color-mix(in oklab, var(--ol-surface-2) 84%, transparent) 0 42px, transparent 42px),
+    radial-gradient(circle at 52% 58%, color-mix(in oklab, var(--ol-surface-2) 72%, transparent) 0 56px, transparent 56px),
+    radial-gradient(circle at 82% 34%, color-mix(in oklab, var(--ol-surface-2) 76%, transparent) 0 46px, transparent 46px);
+  background-repeat: no-repeat;
+  opacity: 0.34;
+}
+
+.ol-grid-bg--design::before {
+  background:
+    linear-gradient(to right, color-mix(in oklab, var(--ol-border) 82%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--ol-border) 82%, transparent) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center;
+  background-repeat: repeat;
+  inset: 22% 18%;
+  opacity: 0.82;
+}
+
+.ol-grid-bg--design::after {
+  background:
+    linear-gradient(to right, transparent 0 10%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 10% 10.2%, transparent 10.2% 89.8%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 89.8% 90%, transparent 90%),
+    linear-gradient(to bottom, transparent 0 16%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 16% 16.2%, transparent 16.2% 83.8%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 83.8% 84%, transparent 84%),
+    linear-gradient(90deg, transparent 0 22%, color-mix(in oklab, var(--ol-surface-2) 82%, transparent) 22% 44%, transparent 44% 100%),
+    linear-gradient(90deg, transparent 0 58%, color-mix(in oklab, var(--ol-surface-2) 70%, transparent) 58% 78%, transparent 78% 100%);
+  background-repeat: no-repeat;
+  background-size: 64% 52%, 64% 52%, 100% 62px, 100% 44px;
+  background-position: center, center, center 26%, center 70%;
+  opacity: 0.58;
+}
+
+.ol-grid-bg--net {
+  background-image:
+    linear-gradient(to right, transparent 0 9.05%, color-mix(in oklab, var(--ol-border) 45%, transparent) 9.05% 9.15%, transparent 9.15% 18.15%, color-mix(in oklab, var(--ol-border) 45%, transparent) 18.15% 18.25%, transparent 18.25% 27.25%, color-mix(in oklab, var(--ol-border) 45%, transparent) 27.25% 27.35%, transparent 27.35% 36.35%, color-mix(in oklab, var(--ol-border) 45%, transparent) 36.35% 36.45%, transparent 36.45% 45.45%, color-mix(in oklab, var(--ol-border) 45%, transparent) 45.45% 45.55%, transparent 45.55% 54.55%, color-mix(in oklab, var(--ol-border) 45%, transparent) 54.55% 54.65%, transparent 54.65% 63.65%, color-mix(in oklab, var(--ol-border) 45%, transparent) 63.65% 63.75%, transparent 63.75% 72.75%, color-mix(in oklab, var(--ol-border) 45%, transparent) 72.75% 72.85%, transparent 72.85% 81.85%, color-mix(in oklab, var(--ol-border) 45%, transparent) 81.85% 81.95%, transparent 81.95% 90.9%, color-mix(in oklab, var(--ol-border) 45%, transparent) 90.9% 91%, transparent 91%),
+    linear-gradient(to bottom, transparent 0 16.6%, color-mix(in oklab, var(--ol-border) 38%, transparent) 16.6% 16.75%, transparent 16.75% 33.25%, color-mix(in oklab, var(--ol-border) 38%, transparent) 33.25% 33.4%, transparent 33.4% 49.9%, color-mix(in oklab, var(--ol-border) 38%, transparent) 49.9% 50.05%, transparent 50.05% 66.55%, color-mix(in oklab, var(--ol-border) 38%, transparent) 66.55% 66.7%, transparent 66.7% 83.2%, color-mix(in oklab, var(--ol-border) 38%, transparent) 83.2% 83.35%, transparent 83.35%);
+}
+
+.ol-grid-bg--net::before {
+  background:
+    radial-gradient(circle at 8% 18%, color-mix(in oklab, var(--ol-ink) 28%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 16% 70%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 24% 36%, transparent 0 8px, color-mix(in oklab, var(--ol-border) 46%, transparent) 8px 9px, transparent 9px 15px, color-mix(in oklab, var(--ol-border) 26%, transparent) 15px 16px, transparent 16px),
+    radial-gradient(circle at 32% 84%, color-mix(in oklab, var(--ol-ink) 24%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 40% 22%, transparent 0 5px, color-mix(in oklab, var(--ol-border) 42%, transparent) 5px 6px, transparent 6px 12px),
+    radial-gradient(circle at 48% 62%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 56% 14%, color-mix(in oklab, var(--ol-ink) 22%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 64% 78%, transparent 0 10px, color-mix(in oklab, var(--ol-border) 42%, transparent) 10px 11px, transparent 11px 18px, color-mix(in oklab, var(--ol-border) 24%, transparent) 18px 19px, transparent 19px),
+    radial-gradient(circle at 72% 42%, color-mix(in oklab, var(--ol-ink) 22%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 82% 24%, transparent 0 6px, color-mix(in oklab, var(--ol-border) 38%, transparent) 6px 7px, transparent 7px 13px),
+    radial-gradient(circle at 88% 72%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 94% 48%, color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 12% 44%, transparent 0 4px, color-mix(in oklab, var(--ol-border) 34%, transparent) 4px 5px, transparent 5px 10px),
+    radial-gradient(circle at 36% 52%, color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 58% 38%, color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 76% 86%, transparent 0 7px, color-mix(in oklab, var(--ol-border) 34%, transparent) 7px 8px, transparent 8px 14px);
+  background-repeat: no-repeat;
+  opacity: 0.98;
+}
+
+.ol-grid-bg--net::after {
+  background:
+    radial-gradient(circle at 4% 12%, color-mix(in oklab, var(--ol-ink) 14%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 10%, color-mix(in oklab, var(--ol-ink) 12%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 34% 72%, color-mix(in oklab, var(--ol-ink) 12%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 46% 88%, color-mix(in oklab, var(--ol-ink) 14%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 62% 54%, color-mix(in oklab, var(--ol-ink) 12%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 70% 18%, color-mix(in oklab, var(--ol-ink) 12%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 92% 12%, color-mix(in oklab, var(--ol-ink) 14%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 96% 88%, color-mix(in oklab, var(--ol-ink) 12%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 24% 36%, color-mix(in oklab, var(--ol-surface-2) 72%, transparent) 0 34px, transparent 34px),
+    radial-gradient(circle at 64% 78%, color-mix(in oklab, var(--ol-surface-2) 66%, transparent) 0 42px, transparent 42px);
+  background-repeat: no-repeat;
+  opacity: 0.62;
+}
+
+.ol-grid-bg--blog::before {
+  background:
+    repeating-linear-gradient(45deg, transparent 0 70px, color-mix(in oklab, var(--ol-border) 64%, transparent) 70px 71px, transparent 71px 140px),
+    repeating-linear-gradient(-45deg, transparent 0 74px, color-mix(in oklab, var(--ol-border) 56%, transparent) 74px 75px, transparent 75px 148px);
+  opacity: 0.82;
+}
+
+.ol-grid-bg--blog::after {
+  background:
+    repeating-linear-gradient(45deg, transparent 0 138px, color-mix(in oklab, var(--ol-surface-2) 84%, transparent) 138px 156px, transparent 156px 280px),
+    repeating-linear-gradient(-45deg, transparent 0 150px, color-mix(in oklab, var(--ol-surface-2) 72%, transparent) 150px 168px, transparent 168px 300px);
+  opacity: 0.36;
+}
+
+.ol-grid-bg--entity::before {
+  background:
+    radial-gradient(circle at 8% 18%, color-mix(in oklab, var(--ol-ink) 26%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 8% 18%, transparent 0 9px, color-mix(in oklab, var(--ol-border) 42%, transparent) 9px 10px, transparent 10px 18px, color-mix(in oklab, var(--ol-border) 22%, transparent) 18px 19px, transparent 19px),
+    radial-gradient(circle at 22% 64%, color-mix(in oklab, var(--ol-ink) 22%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 22% 64%, transparent 0 15px, color-mix(in oklab, var(--ol-border) 50%, transparent) 15px 16px, transparent 16px 30px, color-mix(in oklab, var(--ol-border) 28%, transparent) 30px 31px, transparent 31px),
+    radial-gradient(circle at 36% 30%, color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 36% 30%, transparent 0 7px, color-mix(in oklab, var(--ol-border) 38%, transparent) 7px 8px, transparent 8px 14px),
+    radial-gradient(circle at 52% 76%, color-mix(in oklab, var(--ol-ink) 22%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 52% 76%, transparent 0 20px, color-mix(in oklab, var(--ol-border) 42%, transparent) 20px 21px, transparent 21px 38px, color-mix(in oklab, var(--ol-border) 22%, transparent) 38px 39px, transparent 39px),
+    radial-gradient(circle at 66% 24%, color-mix(in oklab, var(--ol-ink) 20%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 66% 24%, transparent 0 13px, color-mix(in oklab, var(--ol-border) 48%, transparent) 13px 14px, transparent 14px 26px, color-mix(in oklab, var(--ol-border) 26%, transparent) 26px 27px, transparent 27px),
+    radial-gradient(circle at 84% 58%, color-mix(in oklab, var(--ol-ink) 24%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 84% 58%, transparent 0 10px, color-mix(in oklab, var(--ol-border) 44%, transparent) 10px 11px, transparent 11px 21px, color-mix(in oklab, var(--ol-border) 24%, transparent) 21px 22px, transparent 22px),
+    radial-gradient(circle at 94% 28%, color-mix(in oklab, var(--ol-ink) 18%, transparent) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 94% 28%, transparent 0 18px, color-mix(in oklab, var(--ol-border) 36%, transparent) 18px 19px, transparent 19px 34px);
+  background-repeat: no-repeat;
+  opacity: 0.96;
+}
+
+.ol-grid-bg--entity::after {
+  background:
+    radial-gradient(circle at 14% 42%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 30% 86%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 42% 14%, color-mix(in oklab, var(--ol-ink) 14%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 58% 46%, color-mix(in oklab, var(--ol-ink) 14%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 72% 82%, color-mix(in oklab, var(--ol-ink) 16%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 90% 78%, color-mix(in oklab, var(--ol-ink) 14%, transparent) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 64%, color-mix(in oklab, var(--ol-surface-2) 76%, transparent) 0 44px, transparent 44px),
+    radial-gradient(circle at 52% 76%, color-mix(in oklab, var(--ol-surface-2) 68%, transparent) 0 56px, transparent 56px),
+    radial-gradient(circle at 84% 58%, color-mix(in oklab, var(--ol-surface-2) 72%, transparent) 0 40px, transparent 40px);
+  background-repeat: no-repeat;
+  opacity: 0.54;
 }
 
 /* ===== Grids & utilities ===== */
@@ -649,4 +844,3 @@ a { color: inherit; }
   border-color: var(--ol-border-strong);
   color: var(--ol-ink);
 }
-
