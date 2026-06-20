@@ -76,67 +76,93 @@ const prepared = entities.map(entity => ({
 
 {prepared.length > 0 && (
   <aside class="ol-entity-side-panel" data-entity-side-panel data-pagefind-ignore>
-    <div class="ol-entity-side-list" data-entity-side-list>
-      <div class="ol-entity-side-head">
+    <button
+      type="button"
+      class="ol-entity-side-fab"
+      data-entity-side-open
+      aria-expanded="false"
+      aria-label={`${title} ${prepared.length}개 열기`}
+    >
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="4" y="5" width="16" height="14" rx="2" />
+        <circle cx="9" cy="11" r="2" />
+        <path d="M14 9h3" />
+        <path d="M14 13h3" />
+        <path d="M7 16c.7-1.2 3.3-1.2 4 0" />
+      </svg>
+      <span>{prepared.length}</span>
+    </button>
+    <div class="ol-entity-side-backdrop" data-entity-side-close hidden></div>
+
+    <div class="ol-entity-side-sheet" data-entity-side-sheet aria-label={title}>
+      <div class="ol-entity-side-sheet-head">
         <span class="ol-mono-label">{title}</span>
         <strong>{prepared.length}</strong>
+        <button type="button" data-entity-side-close aria-label="이름카드 패널 닫기">닫기</button>
       </div>
-      <div class="ol-entity-side-cards">
-        {prepared.map(({ entity, detail }) => (
-          <button
-            type="button"
-            class="ol-entity-side-card"
-            data-entity-side-card
-            data-entity-detail={detail}
-          >
-            <span class="ol-mono-label">{typeLabels[entity.type] ?? entity.type}</span>
-            <strong class="ol-kr">{entity.name.ko}</strong>
-            {entity.description && <span class="ol-kr">{entity.description}</span>}
-            {entity.tags && entity.tags.length > 0 && (
-              <em>
-                {entity.tags.slice(0, 2).map(tag => (
-                  <span class="ol-code">{tag}</span>
-                ))}
-              </em>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
 
-    <div class="ol-entity-side-detail" data-entity-side-detail hidden>
-      <button type="button" class="ol-entity-side-back" data-entity-side-back>
-        <span aria-hidden="true">←</span>
-        이름카드 목록
-      </button>
-      <figure class="ol-entity-side-profile" data-entity-side-profile hidden>
-        <img src="" alt="" loading="lazy" decoding="async" data-entity-side-profile-image />
-      </figure>
-      <span class="ol-mono-label" data-entity-side-type></span>
-      <h2 class="ol-kr" data-entity-side-name></h2>
-      <p class="ol-entity-side-names" data-entity-side-names hidden></p>
-      <p class="ol-kr ol-entity-side-description" data-entity-side-description></p>
-      <div class="ol-entity-side-tags" data-entity-side-tags hidden></div>
-      <div class="ol-entity-side-stats" data-entity-side-stats hidden></div>
-      <div class="ol-entity-side-links" data-entity-side-links hidden></div>
-      <a class="ol-entity-side-link" href="#" data-entity-side-link>상세 문서 열기</a>
-      {prepared.length > 1 && (
-        <div class="ol-entity-side-others">
-          <span class="ol-mono-label">다른 이름카드</span>
-          <div>
-            {prepared.map(({ entity, detail }) => (
-              <button
-                type="button"
-                class="ol-entity-side-other"
-                data-entity-side-other={entity.id}
-                data-entity-detail={detail}
-              >
-                {entity.name.ko}
-              </button>
-            ))}
-          </div>
+      <div class="ol-entity-side-list" data-entity-side-list>
+        <div class="ol-entity-side-head">
+          <span class="ol-mono-label">{title}</span>
+          <strong>{prepared.length}</strong>
         </div>
-      )}
+        <div class="ol-entity-side-cards">
+          {prepared.map(({ entity, detail }) => (
+            <button
+              type="button"
+              class="ol-entity-side-card"
+              data-entity-side-card
+              data-entity-detail={detail}
+            >
+              <span class="ol-mono-label">{typeLabels[entity.type] ?? entity.type}</span>
+              <strong class="ol-kr">{entity.name.ko}</strong>
+              {entity.description && <span class="ol-kr">{entity.description}</span>}
+              {entity.tags && entity.tags.length > 0 && (
+                <em>
+                  {entity.tags.slice(0, 2).map(tag => (
+                    <span class="ol-code">{tag}</span>
+                  ))}
+                </em>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="ol-entity-side-detail" data-entity-side-detail hidden>
+        <button type="button" class="ol-entity-side-back" data-entity-side-back>
+          <span aria-hidden="true">←</span>
+          이름카드 목록
+        </button>
+        <figure class="ol-entity-side-profile" data-entity-side-profile hidden>
+          <img src="" alt="" loading="lazy" decoding="async" data-entity-side-profile-image />
+        </figure>
+        <span class="ol-mono-label" data-entity-side-type></span>
+        <h2 class="ol-kr" data-entity-side-name></h2>
+        <p class="ol-entity-side-names" data-entity-side-names hidden></p>
+        <p class="ol-kr ol-entity-side-description" data-entity-side-description></p>
+        <div class="ol-entity-side-tags" data-entity-side-tags hidden></div>
+        <div class="ol-entity-side-stats" data-entity-side-stats hidden></div>
+        <div class="ol-entity-side-links" data-entity-side-links hidden></div>
+        <a class="ol-entity-side-link" href="#" data-entity-side-link>상세 문서 열기</a>
+        {prepared.length > 1 && (
+          <div class="ol-entity-side-others">
+            <span class="ol-mono-label">다른 이름카드</span>
+            <div>
+              {prepared.map(({ entity, detail }) => (
+                <button
+                  type="button"
+                  class="ol-entity-side-other"
+                  data-entity-side-other={entity.id}
+                  data-entity-detail={detail}
+                >
+                  {entity.name.ko}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   </aside>
 )}
@@ -214,6 +240,10 @@ const prepared = entities.map(entity => ({
       const stats = panel.querySelector<HTMLElement>('[data-entity-side-stats]');
       const links = panel.querySelector<HTMLElement>('[data-entity-side-links]');
       const detailLink = panel.querySelector<HTMLAnchorElement>('[data-entity-side-link]');
+      const openButton = panel.querySelector<HTMLButtonElement>('[data-entity-side-open]');
+      const closeButtons = Array.from(panel.querySelectorAll<HTMLElement>('[data-entity-side-close]'));
+      const sheet = panel.querySelector<HTMLElement>('[data-entity-side-sheet]');
+      const backdrop = panel.querySelector<HTMLElement>('.ol-entity-side-backdrop');
 
       const showList = () => {
         if (list) list.hidden = false;
@@ -290,6 +320,25 @@ const prepared = entities.map(entity => ({
         detail.hidden = false;
       };
 
+      const openMobileSheet = () => {
+        showList();
+        panel.classList.add('mobile-open');
+        openButton?.setAttribute('aria-expanded', 'true');
+        sheet?.setAttribute('role', 'dialog');
+        sheet?.setAttribute('aria-modal', 'true');
+        if (backdrop) backdrop.hidden = false;
+        document.documentElement.classList.add('ol-entity-side-modal-lock');
+      };
+
+      const closeMobileSheet = () => {
+        panel.classList.remove('mobile-open');
+        openButton?.setAttribute('aria-expanded', 'false');
+        sheet?.removeAttribute('role');
+        sheet?.removeAttribute('aria-modal');
+        if (backdrop) backdrop.hidden = true;
+        document.documentElement.classList.remove('ol-entity-side-modal-lock');
+      };
+
       cards.forEach(card => {
         card.addEventListener('click', () => showDetail(card));
       });
@@ -297,8 +346,23 @@ const prepared = entities.map(entity => ({
         card.addEventListener('click', () => showDetail(card));
       });
       back?.addEventListener('click', showList);
+      openButton?.addEventListener('click', openMobileSheet);
+      closeButtons.forEach(button => button.addEventListener('click', closeMobileSheet));
     });
   };
 
   document.addEventListener('DOMContentLoaded', setupEntitySidePanels);
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll<HTMLElement>('.ol-entity-side-panel.mobile-open').forEach(panel => {
+      panel.classList.remove('mobile-open');
+      panel.querySelector<HTMLButtonElement>('[data-entity-side-open]')?.setAttribute('aria-expanded', 'false');
+      const backdrop = panel.querySelector<HTMLElement>('.ol-entity-side-backdrop');
+      if (backdrop) backdrop.hidden = true;
+      const sheet = panel.querySelector<HTMLElement>('[data-entity-side-sheet]');
+      sheet?.removeAttribute('role');
+      sheet?.removeAttribute('aria-modal');
+    });
+    document.documentElement.classList.remove('ol-entity-side-modal-lock');
+  });
 </script>

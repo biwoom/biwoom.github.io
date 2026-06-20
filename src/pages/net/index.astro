@@ -44,6 +44,14 @@ const netExploreHref = (entity: { data: { id: string; type: string; name: { ko: 
           OL NET은 인물, 장소, 개념의 이름을 따라 불교 콘텐츠의 흐름을 살펴보는 탐색 공간입니다. 하나의 이름에서 다른 이름으로, 다시 이야기와 문헌으로 이어지는 길이 이어집니다.
         </p>
 
+        <a href={url('/net/explore')} class="net-hero-cta">
+          <span>이름카드 탐색하기</span>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+
         <form class="net-hero-search" action={url('/net/explore')} method="get" role="search" aria-label="이름카드 검색">
           <label class="net-search-label" for="net-q">이름카드 검색</label>
           <div class="net-search-box">
@@ -61,8 +69,12 @@ const netExploreHref = (entity: { data: { id: string; type: string; name: { ko: 
             <button type="submit">검색</button>
           </div>
         </form>
+      </div>
+    </section>
 
-        <div class="net-type-strip" aria-label="이름카드 유형">
+    <section class="ol-section net-featured-section">
+      <div class="ol-container">
+        <div class="net-type-strip net-type-strip--section" aria-label="이름카드 유형">
           <a href={url('/net/explore')} class="net-type-chip active">
             전체 <span>{entities.length}</span>
           </a>
@@ -72,11 +84,7 @@ const netExploreHref = (entity: { data: { id: string; type: string; name: { ko: 
             </a>
           ))}
         </div>
-      </div>
-    </section>
 
-    <section class="ol-section net-featured-section">
-      <div class="ol-container">
         <div class="net-section-head">
           <div>
             <span class="ol-kicker">이름카드 · 최근 기준점</span>

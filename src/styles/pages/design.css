@@ -384,6 +384,108 @@
 }
 .ol-design-tag-link:hover { border-color: var(--ol-border-strong); color: var(--ol-ink); }
 
+.ol-design-related-panel {
+  display: grid;
+  gap: 16px;
+  margin: 0 0 24px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--ol-border);
+}
+.ol-design-related-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ol-design-related-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--ol-border);
+  border-radius: 999px;
+  background: var(--ol-bg);
+}
+.ol-design-related-stats strong {
+  font-family: var(--ol-font-mono);
+  font-size: 12px;
+  line-height: 1;
+}
+.ol-design-related-stats em {
+  color: var(--ol-muted);
+  font-size: 11px;
+  font-style: normal;
+}
+.ol-design-related-section h2 {
+  margin: 0;
+  color: var(--ol-muted);
+  font-family: var(--ol-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+.ol-design-related-section ul {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ol-design-related-section a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--ol-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ol-border);
+}
+.ol-design-related-section a:hover {
+  color: var(--ol-ink);
+  border-color: var(--ol-border-strong);
+}
+.ol-design-related-section a::before {
+  content: "↗";
+  color: var(--ol-muted);
+  font-family: var(--ol-font-mono);
+  font-size: 10px;
+}
+.ol-design-related-section a em {
+  color: var(--ol-muted);
+  font-size: 12px;
+  font-style: normal;
+}
+.ol-design-related-section--cards ul {
+  gap: 8px;
+}
+.ol-design-related-section--cards a {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid var(--ol-border);
+  border-radius: var(--ol-r);
+  background: var(--ol-surface);
+}
+.ol-design-related-section--cards a::before {
+  content: "";
+  display: none;
+}
+.ol-design-related-section--cards strong {
+  color: var(--ol-ink);
+  font-size: 14px;
+}
+.ol-design-related-section--cards em {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--ol-muted);
+  font-size: 12px;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 /* ── Design responsive ── */
 @media (max-width: 1100px) {
   .ol-design-detail { grid-template-columns: 1fr 320px; gap: 32px; }
@@ -405,4 +507,3 @@
   .ol-design-detail-nav { margin-bottom: 24px; }
   .ol-design-detail-wrap { padding-bottom: 48px; }
 }
-

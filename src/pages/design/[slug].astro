@@ -3,6 +3,8 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { url } from '../../lib/url';
 import { formatLabel, primaryKindLabel, typeLabel } from '../../lib/design';
+import { getStoryEntryUrl, isStoryDocumentEntry, sortStoryEntries } from '../../lib/story';
+import { getTextEntryUrl, isTextDocumentEntry, sortTextEntries } from '../../lib/text';
 
 export async function getStaticPaths() {
   const items = await getCollection('design', e => e.data.published);
@@ -27,10 +29,95 @@ const pagefindType = entry.data.type ? (typeLabel[entry.data.type] ?? entry.data
 const pagefindBreadcrumb = ['DESIGN', pagefindKind, pagefindType, entry.data.series]
   .filter(Boolean)
   .join(' · ');
+const allEntities = await getCollection('entities', e => e.data.published);
+const entityById = new Map(allEntities.map(entity => [entity.data.id, entity]));
+const designEntityIds = new Set(entry.data.entities);
+const designEntities = Array.from(designEntityIds)
+  .map(id => entityById.get(id))
+  .filter((entity): entity is typeof allEntities[number] => Boolean(entity));
+const textEntries = sortTextEntries(
+  await getCollection('text', e => e.data.published !== false && isTextDocumentEntry(e)),
+);
+const storyEntries = sortStoryEntries(
+  await getCollection('story', e => e.data.published && isStoryDocumentEntry(e)),
+);
+
+type RelatedReference = {
+  type?: string;
+  title: string;
+  path: string;
+  role?: string;
+};
 
 function designAsset(asset?: string) {
   return asset ? url(`/generated/design/${entry.id}/${asset}`) : '';
 }
+
+function normalizeReferenceKey(value: string) {
+  return value
+    .trim()
+    .replace(/^https?:\/\/biwoom\.github\.io/i, '')
+    .replace(/^\/+|\/+$/g, '');
+}
+
+function uniqueReferences(refs: RelatedReference[]) {
+  const seen = new Set<string>();
+  return refs.filter(ref => {
+    const key = `${normalizeReferenceKey(ref.path)}|${ref.title}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+const textReferenceCandidates = new Map<string, typeof textEntries[number]>();
+textEntries.forEach(text => {
+  const path = getTextEntryUrl(text);
+  [
+    text.id,
+    path,
+    path.replace(/^\/text\//, ''),
+  ].forEach(key => textReferenceCandidates.set(normalizeReferenceKey(key), text));
+});
+
+const storyReferenceCandidates = new Map<string, typeof storyEntries[number]>();
+storyEntries.forEach(story => {
+  const path = getStoryEntryUrl(story);
+  [
+    story.id,
+    path,
+    path.replace(/^\/story\//, ''),
+  ].forEach(key => storyReferenceCandidates.set(normalizeReferenceKey(key), story));
+});
+
+const relatedWorksText = entry.data.relatedWorks
+  .map(work => textReferenceCandidates.get(normalizeReferenceKey(work)))
+  .filter((text): text is typeof textEntries[number] => Boolean(text))
+  .map(text => ({
+    title: text.data.title,
+    path: url(getTextEntryUrl(text)),
+  }));
+
+const relatedWorksStory = entry.data.relatedWorks
+  .map(work => storyReferenceCandidates.get(normalizeReferenceKey(work)))
+  .filter((story): story is typeof storyEntries[number] => Boolean(story))
+  .map(story => ({
+    title: story.data.title,
+    path: url(getStoryEntryUrl(story)),
+  }));
+
+const relatedTextLinks = uniqueReferences(relatedWorksText);
+const relatedStoryLinks = uniqueReferences(relatedWorksStory);
+const hasRelatedContext = designEntities.length > 0 || relatedTextLinks.length > 0 || relatedStoryLinks.length > 0;
+const typeLabels: Record<string, string> = {
+  person: '인물',
+  place: '장소',
+  concept: '개념',
+  text: '문헌',
+  event: '사건',
+  practice: '수행',
+  school: '학파',
+};
 ---
 
 <BaseLayout
@@ -233,6 +320,70 @@ function designAsset(asset?: string) {
                   </a>
                 ))}
               </div>
+            )}
+
+            {hasRelatedContext && (
+              <aside class="ol-design-related-panel" aria-label="관련 이름카드와 문서" data-pagefind-ignore>
+                <div class="ol-design-related-stats">
+                  <span>
+                    <strong>{designEntities.length}</strong>
+                    <em>이름카드</em>
+                  </span>
+                  <span>
+                    <strong>{relatedStoryLinks.length + relatedTextLinks.length}</strong>
+                    <em>관련 문서</em>
+                  </span>
+                </div>
+
+                {designEntities.length > 0 && (
+                  <section class="ol-design-related-section ol-design-related-section--cards">
+                    <h2>관련 이름카드</h2>
+                    <ul>
+                      {designEntities.map(entity => (
+                        <li>
+                          <a href={url(`/entity/${entity.data.type}s/${entity.data.id}`)}>
+                            <span class="ol-mono-label">{typeLabels[entity.data.type] ?? entity.data.type}</span>
+                            <strong class="ol-kr">{entity.data.name.ko}</strong>
+                            {entity.data.description && <em class="ol-kr">{entity.data.description}</em>}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                {relatedStoryLinks.length > 0 && (
+                  <section class="ol-design-related-section">
+                    <h2>관련 STORY</h2>
+                    <ul>
+                      {relatedStoryLinks.map(ref => (
+                        <li>
+                          <a href={ref.path}>
+                            <span>{ref.title}</span>
+                            {ref.role && <em>{ref.role}</em>}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                {relatedTextLinks.length > 0 && (
+                  <section class="ol-design-related-section">
+                    <h2>관련 TEXT</h2>
+                    <ul>
+                      {relatedTextLinks.map(ref => (
+                        <li>
+                          <a href={ref.path}>
+                            <span>{ref.title}</span>
+                            {ref.role && <em>{ref.role}</em>}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </aside>
             )}
 
             <div class="ol-divider"></div>

@@ -448,3 +448,46 @@ This file records concise date-based work summaries for continuity across Codex 
 - Moved the home hero grid background into `.ol-grid-bg--home`.
 - This removes the brief grid flash seen while switching between menu pages and their custom hero backgrounds.
 - Local validation: `npm run build` passed.
+
+### DESIGN Detail Related Context Panel
+
+- Added a related-context panel to DESIGN detail metadata pages.
+- The panel reuses existing DESIGN `entities` and `relatedWorks` data to show:
+  - related Entity name-card links
+  - related STORY document title links
+  - related TEXT document title links
+- TEXT/STORY links are intentionally limited to explicit DESIGN `relatedWorks` entries so shared Entity name-cards do not create overly broad document links.
+- Connected `two-perspectives` to the current Concept Entity cards:
+  - `five-aggregates`
+  - `twelve-sense-bases`
+  - `dependent-origination`
+- Added an explicit `relatedWorks` link from `two-perspectives` to the corresponding TEXT document.
+- Local validation: `npm run build` passed and generated the updated `/design/two-perspectives/` related panel.
+
+### Mobile TEXT/STORY Entity Sheet
+
+- Updated the shared `OLEntitySidePanel` so TEXT and STORY document name-cards use a mobile floating action button and bottom sheet instead of appearing at the bottom of the article flow.
+- Desktop behavior remains the existing right-side sticky panel.
+- At mobile/tablet reader widths, the floating button shows a name-card icon and count badge, opens the sheet with the existing list/detail switching UI, locks background scroll, and supports backdrop, close button, and Escape close behavior.
+- Local validation: `npm run build` passed.
+- Static verification confirmed the generated TEXT and STORY detail pages include the floating trigger, sheet, backdrop, and client script.
+- Browser interaction verification was not run because the local project does not include Playwright.
+
+### NET Mobile Hero Simplification
+
+- Simplified the mobile `/net` main hero so the search form no longer dominates the first viewport.
+- Added a single mobile hero CTA, `이름카드 탐색하기`, that links to `/net/explore`.
+- Moved the Entity type chips out of the hero and into the start of the featured Entity section.
+- Reduced the mobile emphasis of the lower `탐색 페이지 열기` link so it no longer competes with the hero CTA.
+- Desktop NET main search behavior remains unchanged.
+- Local validation: `npm run build` passed and generated `/net/index.html`.
+
+### GitHub Upload Prep
+
+- Preparing an upload for the current NET, DESIGN, and TEXT/STORY mobile UX changes.
+- Upload scope includes:
+  - mobile TEXT/STORY name-card sheet
+  - DESIGN detail related-context panel
+  - mobile NET hero simplification
+- Local validation: `npm run build` passed.
+- Pushed commit hash: pending

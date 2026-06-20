@@ -24,6 +24,12 @@ source: "OL Project"
 credits: ["비움"]
 license: "CC0"
 
+entities:
+  - "five-aggregates"
+  - "twelve-sense-bases"
+  - "dependent-origination"
+relatedWorks:
+  - "body-mind-transformation/02-buddhist-worldview-two-perspectives"
 prefixTags:
   - "kind:infographic"
   - "topic:불교세계관"

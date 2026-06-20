@@ -16,6 +16,26 @@
   margin: 32px auto 0;
 }
 
+.net-hero-cta {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin-top: 24px;
+  padding: 0 14px;
+  border: 1px solid var(--ol-border-strong);
+  border-radius: var(--ol-r);
+  background: var(--ol-surface);
+  color: var(--ol-ink);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.net-hero-cta svg {
+  flex: none;
+}
+
 .net-search-label {
   display: block;
   margin-bottom: 8px;
@@ -72,6 +92,11 @@
   justify-content: center;
   gap: 8px;
   margin: 16px auto 0;
+}
+
+.net-type-strip--section {
+  justify-content: flex-start;
+  margin: 0 0 22px;
 }
 
 .net-type-chip {
@@ -802,6 +827,22 @@
     overflow: hidden;
   }
 
+  .net-hero {
+    padding-bottom: 36px;
+  }
+
+  .net-hero-search {
+    display: none;
+  }
+
+  .net-hero-cta {
+    display: inline-flex;
+  }
+
+  .net-type-strip--section {
+    margin-bottom: 20px;
+  }
+
   .net-search-box {
     grid-template-columns: auto 1fr;
   }
@@ -817,8 +858,20 @@
   }
 
   .net-explore-cta {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    min-height: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ol-muted);
+    box-shadow: none;
+    font-size: 13px;
+  }
+
+  .net-explore-cta:hover {
+    transform: none;
+    box-shadow: none;
+    color: var(--ol-ink);
   }
 
   .net-featured-section .net-entity-grid,
