@@ -16,7 +16,7 @@ previewAssets:
 imageAlt: "보리수와 인드라망을 결합한 상징 문양"
 
 medium: "Raster reference image, PNG"
-source: "docs/ref"
+source: "OL Project"
 credits: ["비움"]
 license: "CC0"
 

@@ -16,7 +16,7 @@ previewAssets:
 imageAlt: "인드라망을 픽토그래프 형태로 변형한 참고 이미지"
 
 medium: "Raster reference image, PNG"
-source: "docs/ref"
+source: "OL Project"
 credits: ["비움"]
 license: "CC0"
 

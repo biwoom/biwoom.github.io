@@ -16,7 +16,7 @@ previewAssets:
 imageAlt: "다양성과 상호연결성을 상징하는 인드라망 문양"
 
 medium: "Raster reference image, PNG"
-source: "docs/ref"
+source: "OL Project"
 credits: ["비움"]
 license: "CC0"
 

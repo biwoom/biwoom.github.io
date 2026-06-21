@@ -16,7 +16,7 @@ previewAssets:
 imageAlt: "생명평화를 상징하는 인드라망 문양"
 
 medium: "Raster reference image, PNG"
-source: "docs/ref"
+source: "Silsangsa: silsangsa.or.kr"
 credits: ["비움"]
 license: "CC-BY-SA 4.0 © 2025 안상수 All Rights Reserved."
 
