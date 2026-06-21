@@ -27,19 +27,14 @@ entities:
   - "sumitta"
 relatedWorks:
   - "buddha-story/part-1/01-sumedha-begins-to-ask"
-prefixTags:
-  - "kind:illustration"
-  - "project:buddha-story"
-  - "entity:sumedha"
-  - "entity:sumitta"
-  - "use:story-illustration"
 tags:
-  - 수메다
-  - 수밋타
-  - 첫 만남
-  - 연꽃
-  - 붓다스토리
-  - 삽화
+  - "종류/삽화"
+  - "프로젝트/붓다스토리"
+  - "인물/수메다"
+  - "인물/수밋타"
+  - "주제/첫 만남"
+  - "주제/연꽃"
+  - "용도/스토리 삽화"
 published: true
 ---
 

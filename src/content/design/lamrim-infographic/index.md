@@ -29,21 +29,16 @@ license: "CC0"
 relatedWorks:
   - "donam-kim-sung-chul/paper/systematic_buddhology/systematic_buddhology"
 
-prefixTags:
-  - "kind:infographic"
-  - "topic:람림"
-  - "topic:보리도차제"
-  - "format:html"
-  - "format:pdf"
-  - "level:intermediate"
-  - "tradition:티베트불교"
 tags:
-  - 람림
-  - 삼사도
-  - 보리도차제론
-  - 수행체계
-  - 티베트불교
-  - 인포그래픽
+  - "종류/인포그래픽"
+  - "주제/람림"
+  - "주제/삼사도"
+  - "주제/보리도차제론"
+  - "주제/수행체계"
+  - "형식/HTML"
+  - "형식/PDF"
+  - "수준/중급"
+  - "전통/티베트불교"
 published: true
 ---
 

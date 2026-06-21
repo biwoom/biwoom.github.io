@@ -218,11 +218,49 @@ This file records concise date-based work summaries for continuity across Codex 
 
 - Updated `OLSearchModal.astro` so Pagefind results show section, breadcrumb, title, route path, and excerpt instead of title/excerpt only.
 - Added automatic Pagefind metadata output through `BaseLayout` and the TEXT/STORY/DESIGN/BLOG/ENTITY detail templates.
+
+## 2026-06-21
+
+### Indramang Design Reference Assets
+
+- Registered five reference-style DESIGN entries under `src/content/design/`:
+  - `bodhi-tree-indramang`
+  - `diversity-indramang`
+  - `life-peace-indramang`
+  - `pictograph-indramang-1`
+  - `pictograph-indramang-2`
+- Each entry uses `primaryKind: reference` and `type: artifact` with the original PNG copied into the matching `assets/` folder.
+- The new assets are sourced from `docs/ref/` and are intended as transparent PNG reference images rather than explanatory infographics.
 - Search metadata is derived from existing frontmatter and page context, so content authors do not need to write Pagefind-specific fields.
 - Added `data-pagefind-ignore` to the search modal overlay so command-palette UI text is not indexed as page content.
 - Local validation: `npm run build` passed and generated HTML includes Pagefind metadata for TEXT, STORY, DESIGN, BLOG, and ENTITY sample pages.
 - Pushed commit `08c06ce` (`Improve README and search result context`) to `origin/main`.
 - Deployment completion was not checked by design.
+
+### DESIGN Prefix Tag Panel
+
+- Updated the DESIGN main page sidebar so the tag section now uses a NET-style prefix tag panel instead of a flat tag cloud.
+- The DESIGN filter sidebar now groups `tags` by prefix, keeps the `kind` filter separate, and supports prefix-aware filtering and URL state.
+- Local validation: `npm run build` passed.
+
+### DESIGN Tag Field Migration
+
+- Migrated DESIGN content from the separate `prefixTags` field to prefix-form strings inside the existing `tags` array.
+- Updated the DESIGN collection schema and sidebar/detail filtering to read prefix-form `tags` directly.
+- Refreshed all DESIGN entries so their tags now follow `prefix/value` formatting and the old `prefixTags` frontmatter is removed.
+- Local validation: `npm run build` passed.
+
+### DESIGN Prefix Panel Default State
+
+- Changed the DESIGN prefix tag panel so each group starts collapsed by default.
+- Kept the NET-style disclosure structure and filtering behavior unchanged.
+- Local validation: `npm run build` passed.
+
+### DESIGN Korean Prefix Labels
+
+- Updated DESIGN content tags so prefix names use Korean labels such as `종류`, `주제`, `형식`, `수준`, `용도`, `프로젝트`, and `인물`.
+- Updated the DESIGN sidebar labels to match the Korean prefix vocabulary.
+- Local validation: `npm run build` passed.
 
 ### Search Index Scope Cleanup
 

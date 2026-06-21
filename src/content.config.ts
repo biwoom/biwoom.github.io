@@ -327,7 +327,6 @@ const designCollection = defineCollection({
     credits: z.array(z.string()).default([]),
     license: z.string().default('CC0'),
     tags: z.array(z.string()).default([]),
-    prefixTags: z.array(z.string()).default([]),
     published: z.boolean().default(false),
   }),
 });

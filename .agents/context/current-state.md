@@ -21,6 +21,8 @@ Last updated: 2026-06-20
 - `src/content/text/` holds TEXT series and documents.
 - `src/content/story/` holds STORY series and chapters.
 - `src/content/design/` holds DESIGN metadata and source assets.
+- DESIGN tag filtering now uses prefix-form strings in `tags` instead of a separate `prefixTags` field.
+- DESIGN prefix labels now use Korean names in the sidebar and content tags.
 - `src/content/blog/` holds dated work logs.
 - `src/content/entities/` and `src/content/ontology/` hold knowledge graph material.
 - `public/atlas/` holds static ATLAS HTML archives.

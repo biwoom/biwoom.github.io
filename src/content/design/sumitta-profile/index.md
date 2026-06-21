@@ -26,19 +26,13 @@ entities:
   - "sumitta"
 relatedWorks:
   - "붓다스토리"
-prefixTags:
-  - "kind:profile"
-  - "project:buddha-story"
-  - "entity:sumitta"
-  - "use:name-card"
-  - "use:profile-image"
 tags:
-  - 수밋타
-  - 붓다스토리
-  - 인물 프로필
-  - 연꽃
+  - "종류/프로필"
+  - "프로젝트/붓다스토리"
+  - "인물/수밋타"
+  - "용도/이름카드"
+  - "용도/프로필 이미지"
 published: true
 ---
 
 붓다스토리의 수밋타 이름카드, NET 탐색 상세 패널, 향후 STORY 인물카드에서 공통으로 사용할 인물 프로필 이미지입니다.
-

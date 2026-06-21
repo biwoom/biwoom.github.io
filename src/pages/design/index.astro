@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { url } from '../../lib/url';
+import { groupTagsByPrefix } from '../../lib/tags';
 import {
   formatLabel,
   primaryKindLabel,
@@ -25,8 +26,7 @@ const kindCounts = allItems.reduce((acc, item) => {
   return acc;
 }, {} as Record<string, number>);
 
-const allTags = [...new Set(allItems.flatMap(i => i.data.tags))]
-  .sort((a, b) => a.localeCompare(b, 'ko'));
+const prefixTagGroups = groupTagsByPrefix(allItems.flatMap(i => i.data.tags ?? []));
 
 function assetUrl(entryId: string, asset?: string) {
   return asset ? url(`/generated/design/${entryId}/${asset}`) : '';
@@ -69,7 +69,7 @@ function itemFormats(item: typeof allItems[number]) {
             <div class="ol-design-sidebar-inner">
 
               <div class="ol-design-filter-group">
-                <div class="ol-design-filter-label">KIND</div>
+                <div class="ol-design-filter-label">종류</div>
                 <ul class="ol-design-cat-list">
                   <li>
                     <button
@@ -100,14 +100,30 @@ function itemFormats(item: typeof allItems[number]) {
                 </ul>
               </div>
 
-              {allTags.length > 0 && (
+              {prefixTagGroups.length > 0 && (
                 <div class="ol-design-filter-group">
-                  <div class="ol-design-filter-label">TAGS</div>
-                  <div class="ol-design-tag-cloud">
-                    {allTags.map(tag => (
-                      <button class="ol-design-tag-btn" data-filter-tag={tag}>
-                        {tag}
-                      </button>
+                  <div class="ol-design-filter-label">태그 분류</div>
+                  <div class="ol-design-prefix-filter" data-design-prefix-filter>
+                    {prefixTagGroups.map(group => (
+                      <details class="ol-design-prefix-group" data-design-prefix={group.prefix}>
+                        <summary>
+                          <span>{group.prefix}</span>
+                          <em>{group.tags.length}</em>
+                        </summary>
+                        <div class="ol-design-prefix-options">
+                          {group.tags.map(item => (
+                            <button
+                              type="button"
+                              data-filter-prefix={group.prefix}
+                              data-filter-tag={item.tag}
+                              data-filter-label={item.label}
+                            >
+                              <span>{item.label}</span>
+                              <em>{item.count}</em>
+                            </button>
+                          ))}
+                        </div>
+                      </details>
                     ))}
                   </div>
                 </div>
@@ -120,6 +136,10 @@ function itemFormats(item: typeof allItems[number]) {
                   라이선스는 자료별 메타데이터를 따릅니다.
                 </p>
               </div>
+
+              <button type="button" class="ol-design-reset-button ol-design-reset-button--sidebar" data-design-reset>
+                필터 초기화
+              </button>
 
             </div>
           </aside>
@@ -148,7 +168,7 @@ function itemFormats(item: typeof allItems[number]) {
                     class="ol-design-card"
                     href={url(`/design/${item.id}`)}
                     data-kind={item.data.primaryKind}
-                    data-tags={tags.join(',')}
+                    data-tags={JSON.stringify(tags)}
                     data-index={i}
                     style={i >= PAGE_SIZE ? 'display:none;' : ''}
                   >
@@ -214,7 +234,6 @@ function itemFormats(item: typeof allItems[number]) {
 <script>
   const PAGE_SIZE = 12;
   let activeKind = 'all';
-  let activeTag: string | null = null;
   let visibleCount = PAGE_SIZE;
 
   const grid = document.getElementById('design-grid')!;
@@ -227,14 +246,33 @@ function itemFormats(item: typeof allItems[number]) {
   const loadmoreRemaining = document.getElementById('design-loadmore-remaining');
   const kindLabels: Record<string, string> = JSON.parse(document.getElementById('design-kind-labels')!.textContent!);
   const kindButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.ol-design-cat-btn'));
-  const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.ol-design-tag-btn'));
+  const prefixButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter-prefix]'));
+  const resetButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-design-reset]'));
+  const prefixGroups = Array.from(document.querySelectorAll<HTMLElement>('[data-design-prefix]'));
+  const selectedPrefixTags = new Map<string, Set<string>>();
 
   function matchCard(card: HTMLElement): boolean {
     const kind = card.dataset.kind ?? 'infographic';
-    const tags = (card.dataset.tags ?? '').split(',').filter(Boolean);
+    const tags = JSON.parse(card.dataset.tags ?? '[]') as string[];
     if (activeKind !== 'all' && kind !== activeKind) return false;
-    if (activeTag && !tags.includes(activeTag)) return false;
-    return true;
+    return Array.from(selectedPrefixTags.values()).every(group =>
+      Array.from(group).some(tag => tags.includes(tag)),
+    );
+  }
+
+  function syncControls() {
+    kindButtons.forEach(button => {
+      button.classList.toggle('active', button.dataset.filterKind === activeKind);
+    });
+    prefixButtons.forEach(button => {
+      const prefix = button.dataset.filterPrefix;
+      const tag = button.dataset.filterTag;
+      button.classList.toggle('active', Boolean(prefix && tag && selectedPrefixTags.get(prefix)?.has(tag)));
+    });
+    prefixGroups.forEach(group => {
+      const prefix = group.dataset.designPrefix;
+      group.classList.toggle('active', Boolean(prefix && selectedPrefixTags.get(prefix)?.size));
+    });
   }
 
   function updateUrl() {
@@ -244,11 +282,10 @@ function itemFormats(item: typeof allItems[number]) {
     } else {
       nextUrl.searchParams.delete('kind');
     }
-    if (activeTag) {
-      nextUrl.searchParams.set('tag', activeTag);
-    } else {
-      nextUrl.searchParams.delete('tag');
-    }
+    nextUrl.searchParams.delete('tag');
+    selectedPrefixTags.forEach(group => {
+      group.forEach(tag => nextUrl.searchParams.append('tag', tag));
+    });
     window.history.replaceState({}, '', nextUrl);
   }
 
@@ -277,6 +314,7 @@ function itemFormats(item: typeof allItems[number]) {
     }
 
     updateFilterPills();
+    syncControls();
     if (syncUrl) updateUrl();
   }
 
@@ -291,13 +329,20 @@ function itemFormats(item: typeof allItems[number]) {
         applyFilters();
       }));
     }
-    if (activeTag) {
-      activeFiltersEl.appendChild(makePill(`#${activeTag}`, () => {
-        activeTag = null;
-        tagButtons.forEach(b => b.classList.remove('active'));
-        applyFilters();
-      }));
-    }
+    selectedPrefixTags.forEach((group, prefix) => {
+      group.forEach(tag => {
+        activeFiltersEl.appendChild(makePill(tag, () => {
+          const nextGroup = selectedPrefixTags.get(prefix);
+          nextGroup?.delete(tag);
+          if (nextGroup && nextGroup.size > 0) {
+            selectedPrefixTags.set(prefix, nextGroup);
+          } else {
+            selectedPrefixTags.delete(prefix);
+          }
+          applyFilters();
+        }));
+      });
+    });
   }
 
   function makePill(label: string, onClose: () => void) {
@@ -318,17 +363,29 @@ function itemFormats(item: typeof allItems[number]) {
     });
   });
 
-  tagButtons.forEach(btn => {
+  prefixButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const tag = btn.dataset.filterTag ?? '';
-      if (activeTag === tag) {
-        activeTag = null;
-        btn.classList.remove('active');
+      const prefix = btn.dataset.filterPrefix;
+      const tag = btn.dataset.filterTag;
+      if (!prefix || !tag) return;
+      const group = selectedPrefixTags.get(prefix) ?? new Set<string>();
+      if (group.has(tag)) {
+        group.delete(tag);
       } else {
-        activeTag = tag;
-        tagButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        group.add(tag);
       }
+      if (group.size > 0) selectedPrefixTags.set(prefix, group);
+      else selectedPrefixTags.delete(prefix);
+      applyFilters();
+    });
+  });
+
+  resetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeKind = 'all';
+      selectedPrefixTags.clear();
+      kindButtons.forEach(b => b.classList.toggle('active', b.dataset.filterKind === 'all'));
+      prefixButtons.forEach(b => b.classList.remove('active'));
       applyFilters();
     });
   });
@@ -347,23 +404,22 @@ function itemFormats(item: typeof allItems[number]) {
 
   const initialParams = new URLSearchParams(window.location.search);
   const initialKind = initialParams.get('kind');
-  const initialTag = initialParams.get('tag');
+  const initialTags = initialParams.getAll('tag');
 
   if (initialKind && kindButtons.some(btn => btn.dataset.filterKind === initialKind)) {
     activeKind = initialKind;
-    kindButtons.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.filterKind === initialKind);
+  }
+
+  if (initialTags.length > 0) {
+    initialTags.forEach(tag => {
+      const button = prefixButtons.find(btn => btn.dataset.filterTag === tag);
+      const prefix = button?.dataset.filterPrefix;
+      if (!prefix) return;
+      const group = selectedPrefixTags.get(prefix) ?? new Set<string>();
+      group.add(tag);
+      selectedPrefixTags.set(prefix, group);
     });
   }
 
-  if (initialTag && tagButtons.some(btn => btn.dataset.filterTag === initialTag)) {
-    activeTag = initialTag;
-    tagButtons.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.filterTag === initialTag);
-    });
-  }
-
-  if (initialKind || initialTag) {
-    applyFilters({ syncUrl: false });
-  }
+  applyFilters({ syncUrl: false });
 </script>

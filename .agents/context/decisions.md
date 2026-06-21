@@ -105,3 +105,12 @@ This file records durable project decisions that future Codex sessions should pr
 - DESIGN detail-page download links for PDF and image assets should use the content title and version as the browser download filename.
 - The filename format is `{title}-v{version}{original_extension}`.
 - The HTML asset action remains a view/open link, not a forced download.
+
+## 2026-06-21
+
+### DESIGN Tag Storage
+
+- DESIGN content should use the existing `tags` field for prefix-form tags such as `topic/정화` or `entity/수밋타`.
+- The DESIGN collection no longer uses a separate `prefixTags` field.
+- DESIGN sidebar filtering should group `tags` by prefix when presenting the left-hand panel.
+- DESIGN prefix labels should use Korean field names such as `종류`, `주제`, `형식`, `수준`, `용도`, `프로젝트`, `인물`, and `전통`.

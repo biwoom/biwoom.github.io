@@ -30,25 +30,18 @@ entities:
   - "dependent-origination"
 relatedWorks:
   - "body-mind-transformation/02-buddhist-worldview-two-perspectives"
-prefixTags:
-  - "kind:infographic"
-  - "topic:불교세계관"
-  - "topic:무아"
-  - "topic:연기"
-  - "topic:윤회"
-  - "topic:사성제"
-  - "format:html"
-  - "level:introductory"
-  - "use:education"
 tags:
-  - 불교세계관
-  - 두 가지 관점
-  - 무아
-  - 윤회
-  - 연기
-  - 사성제
-  - 열반
-  - 인포그래픽
+  - "종류/인포그래픽"
+  - "주제/불교세계관"
+  - "주제/두 가지 관점"
+  - "주제/무아"
+  - "주제/윤회"
+  - "주제/연기"
+  - "주제/사성제"
+  - "주제/열반"
+  - "형식/HTML"
+  - "수준/입문"
+  - "용도/교육"
 published: true
 ---
 

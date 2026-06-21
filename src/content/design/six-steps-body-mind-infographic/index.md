@@ -28,21 +28,17 @@ license: "CC0"
 relatedWorks:
   - "body-mind-transformation/01-six-steps"
 
-prefixTags:
-  - "kind:infographic"
-  - "topic:정화"
-  - "topic:불교명상"
-  - "format:html"
-  - "format:pdf"
-  - "level:introductory"
-  - "use:education"
 tags:
-  - 정화
-  - 불교명상
-  - 기초수행
-  - 몸과 마음
-  - 수행 프로그램
-  - 인포그래픽
+  - "종류/인포그래픽"
+  - "주제/정화"
+  - "주제/불교명상"
+  - "주제/기초수행"
+  - "주제/몸과 마음"
+  - "주제/수행 프로그램"
+  - "형식/HTML"
+  - "형식/PDF"
+  - "수준/입문"
+  - "용도/교육"
 published: true
 ---
 
