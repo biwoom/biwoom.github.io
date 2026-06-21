@@ -262,6 +262,19 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated the DESIGN sidebar labels to match the Korean prefix vocabulary.
 - Local validation: `npm run build` passed.
 
+### Indramang Design Blog Post
+
+- Added a public BLOG post about the five DESIGN assets derived from the 실상사 생명평화 문양 lineage.
+- The post explains the relationship between the base 생명평화문양, the 보리수/인드라망 variations, the 다양성 motif, and the two 픽토그래프 variants inspired by oracle-bone-script-like form language.
+- Local validation: `npm run build` passed.
+
+### Blog Thumbnail Frontmatter
+
+- Added `thumbnailAsset` to the BLOG collection schema so list cards can read an explicit thumbnail path from frontmatter.
+- Updated the blog index to prefer `thumbnailAsset` and keep the existing relative-body-image fallback for older posts.
+- Set `thumbnailAsset: "thumb.jpg"` on `src/content/blog/indramang-life-peace-patterns/index.md` so the new post appears with its thumbnail in the blog list.
+- Local validation: `npm run build` passed.
+
 ### Search Index Scope Cleanup
 
 - Added `pagefindBody` control to `BaseLayout` so route templates can opt out of Pagefind body indexing.

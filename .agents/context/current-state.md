@@ -24,6 +24,7 @@ Last updated: 2026-06-20
 - DESIGN tag filtering now uses prefix-form strings in `tags` instead of a separate `prefixTags` field.
 - DESIGN prefix labels now use Korean names in the sidebar and content tags.
 - `src/content/blog/` holds dated work logs.
+- Blog list thumbnails now prefer a `thumbnailAsset` frontmatter field and fall back to the first relative Markdown image in the body.
 - `src/content/entities/` and `src/content/ontology/` hold knowledge graph material.
 - `public/atlas/` holds static ATLAS HTML archives.
 - `public/generated/` is generated from content assets and should not be committed.

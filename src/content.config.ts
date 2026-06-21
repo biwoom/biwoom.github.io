@@ -186,6 +186,7 @@ const blogCollection = defineCollection({
     description: z.string().optional(),
     date: z.coerce.date(),
     readingTime: z.number().optional(),
+    thumbnailAsset: z.string().optional(),
     tags: z.array(z.string()).default([]),
     prefixTags: z.array(z.string()).default([]),
     category: z.string().optional(),

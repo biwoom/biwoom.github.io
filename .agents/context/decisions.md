@@ -114,3 +114,8 @@ This file records durable project decisions that future Codex sessions should pr
 - The DESIGN collection no longer uses a separate `prefixTags` field.
 - DESIGN sidebar filtering should group `tags` by prefix when presenting the left-hand panel.
 - DESIGN prefix labels should use Korean field names such as `종류`, `주제`, `형식`, `수준`, `용도`, `프로젝트`, `인물`, and `전통`.
+
+### Blog Thumbnail Metadata
+
+- BLOG entries may define an optional `thumbnailAsset` frontmatter field for list-card thumbnails.
+- The blog list should prefer `thumbnailAsset` and continue to fall back to the first relative Markdown image for older entries.

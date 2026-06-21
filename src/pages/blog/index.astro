@@ -12,15 +12,22 @@ const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true }
 );
 
+const normalizeAssetPath = (value: string) => value.replace(/^\.\//, '').replace(/^\/+/, '');
+
 const thumbnails: Record<string, ImageMetadata> = {};
 for (const post of posts) {
-  const body = post.body ?? '';
-  const match = body.match(/!\[.*?\]\((\.\/[^)]+)\)/);
-  if (match) {
-    const filename = match[1].replace('./', '');
+  const thumbnailAsset = post.data.thumbnailAsset?.trim();
+  const candidatePaths = thumbnailAsset
+    ? [normalizeAssetPath(thumbnailAsset)]
+    : Array.from((post.body ?? '').matchAll(/!\[.*?\]\((\.\/[^)]+)\)/g)).map(match => match[1].replace('./', ''));
+
+  for (const filename of candidatePaths) {
     const key = `/src/content/blog/${post.id}/${filename}`;
     const mod = imageModules[key];
-    if (mod) thumbnails[post.id] = mod.default;
+    if (mod) {
+      thumbnails[post.id] = mod.default;
+      break;
+    }
   }
 }
 
