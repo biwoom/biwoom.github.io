@@ -38,8 +38,11 @@ jobs:
           restore-keys: |
             generated-assets-
 
+      - name: Check content
+        run: npm run check
+
       - name: Build
-        run: npm run build
+        run: npm run build:site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

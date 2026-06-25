@@ -20,10 +20,10 @@ relations:
     predicate: originated_in
     object: madhyamaka-school
 tags:
-  - 개념
-  - 중관학파
-  - 반야부
-  - 핵심교리
+  - 종류/개념
+  - 전통/중관학파
+  - 경전/반야부
+  - 주제/핵심교리
 sources:
   - "Garfield, Jay L. *The Fundamental Wisdom of the Middle Way*. Oxford University Press, 1995."
 published: true

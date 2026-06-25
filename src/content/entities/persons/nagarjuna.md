@@ -24,11 +24,11 @@ relations:
     predicate: is_related_to
     object: dependent-origination
 tags:
-  - 인물
-  - 중관학파
-  - 대승불교
-  - 인도불교
-  - 2~3세기
+  - 종류/인물
+  - 전통/중관학파
+  - 전통/대승불교
+  - 지역/인도불교
+  - 시대/2~3세기
 sources:
   - "Walser, Joseph. *Nāgārjuna in Context: Mahāyāna Buddhism and Early Indian Culture*. Columbia University Press, 2005."
   - "Williams, Paul. *Mahāyāna Buddhism: The Doctrinal Foundations*. Routledge, 2009."

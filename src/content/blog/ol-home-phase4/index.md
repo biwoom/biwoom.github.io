@@ -1,16 +1,18 @@
 ---
-title: "Phase 4 — 필터, 페이지네이션, Pages 컬렉션, 사이트 설정 통합"
-description: "BLOG·BOOK·WORKS·DESIGN 페이지에 필터와 페이지네이션을 적용하고, 상설 문서용 Pages 컬렉션을 신설하고, 사이트 정보를 한 곳으로 통합한 작업 기록."
-date: 2026-05-31
+title: Phase 4 — 필터, 페이지네이션, Pages 컬렉션, 사이트 설정 통합
+description: BLOG·BOOK·WORKS·DESIGN 페이지에 필터와 페이지네이션을 적용하고, 상설 문서용 Pages 컬렉션을 신설하고, 사이트 정보를 한 곳으로 통합한 작업 기록.
+date: 2026-05-31T00:00:00.000Z
 category: OL
 readingTime: 7
-tags: ["개발", "필터", "페이지네이션"]
-prefixTags:
-  - "kind:blog"
-  - "project:ol-home"
-  - "topic:development"
-  - "feature:filter"
-  - "feature:pagination"
+tags:
+  - topic/개발
+  - topic/필터
+  - topic/페이지네이션
+  - kind/blog
+  - project/ol-home
+  - topic/development
+  - feature/filter
+  - feature/pagination
 published: true
 ---
 

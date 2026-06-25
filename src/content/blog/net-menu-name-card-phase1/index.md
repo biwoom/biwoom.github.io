@@ -1,21 +1,20 @@
 ---
-title: "NET 메뉴 1차 구현 기록 — 이름카드 탐색과 TEXT/STORY 연동"
-description: "NET 메뉴 신설부터 이름카드 목록·상세 패널 구체화, 그리고 TEXT/STORY 상세 페이지 우측 이름카드 호출 구조까지 이번 1차 개발 범위를 정리합니다."
-date: 2026-06-20
+title: NET 메뉴 1차 구현 기록 — 이름카드 탐색과 TEXT/STORY 연동
+description: NET 메뉴 신설부터 이름카드 목록·상세 패널 구체화, 그리고 TEXT/STORY 상세 페이지 우측 이름카드 호출 구조까지 이번 1차 개발 범위를 정리합니다.
+date: 2026-06-20T00:00:00.000Z
 category: OL
 readingTime: 8
 tags:
-  - "NET"
-  - "개발"
-  - "ENTITY"
-  - "TEXT"
-  - "STORY"
-prefixTags:
-  - "kind:blog"
-  - "project:ol-home"
-  - "topic:development"
-  - "feature:net"
-  - "feature:entity"
+  - project/net
+  - topic/개발
+  - project/entity
+  - project/text
+  - project/story
+  - kind/blog
+  - project/ol-home
+  - topic/development
+  - feature/net
+  - feature/entity
 published: true
 ---
 

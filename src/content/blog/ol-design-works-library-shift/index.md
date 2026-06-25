@@ -1,16 +1,17 @@
 ---
-title: "DESIGN은 인포그래픽으로, WORKS는 문서 라이브러리로"
-description: "OL DESIGN을 인포그래픽 중심 라이브러리로 재정의하고, OL WORKS를 BOOK의 전 단계가 아닌 살아 있는 문서 라이브러리로 정리한 작업 기록."
-date: 2026-06-04
+title: DESIGN은 인포그래픽으로, WORKS는 문서 라이브러리로
+description: OL DESIGN을 인포그래픽 중심 라이브러리로 재정의하고, OL WORKS를 BOOK의 전 단계가 아닌 살아 있는 문서 라이브러리로 정리한 작업 기록.
+date: 2026-06-04T00:00:00.000Z
 category: OL
 readingTime: 6
-tags: ["DESIGN", "WORKS", "인포그래픽", "문서라이브러리"]
-prefixTags:
-  - "kind:blog"
-  - "project:design"
-  - "project:works"
-  - "topic:infographic-library"
-  - "topic:document-library"
+tags:
+  - project/design
+  - project/works
+  - topic/인포그래픽
+  - topic/문서라이브러리
+  - kind/blog
+  - topic/infographic-library
+  - topic/document-library
 published: true
 ---
 
@@ -47,31 +48,36 @@ DESIGN의 중심을 인포그래픽으로 옮겼다.
 ```yaml
 primaryKind: infographic
 format: mixed
-thumbnailPath: ""
-imagePath: ""
-previewPaths: []
-htmlPath: ""
-pdfPath: ""
-prefixTags: []
+thumbnailAsset: ""
+imageAsset: ""
+previewAssets: []
+htmlAsset: ""
+pdfAsset: ""
+tags: []
 version: ""
 status: published
 ```
 
-`thumbnailPath`는 목록 카드용이다. `imagePath`는 대표 미리보기 이미지다. preview 이미지가 여러 장이면 `previewPaths`에 순서대로 넣는다.
+`thumbnailAsset`는 목록 카드용이다. `imageAsset`는 대표 미리보기 이미지다. preview 이미지가 여러 장이면 `previewAssets`에 순서대로 넣는다.
 
 예를 들어 A4 두 페이지짜리 인포그래픽은 이렇게 등록한다.
 
 ```yaml
-thumbnailPath: "lamrim-Infographic/thumb.jpeg"
-imagePath: "lamrim-Infographic/preview1.jpg"
-previewPaths:
-  - "lamrim-Infographic/preview1.jpg"
-  - "lamrim-Infographic/preview2.jpg"
-htmlPath: "lamrim-Infographic/lamrim-Infographic.html"
-pdfPath: "lamrim-Infographic/lamrim-Infographic.pdf"
+thumbnailAsset: "thumb.jpeg"
+imageAsset: "preview1.jpg"
+previewAssets:
+  - "preview1.jpg"
+  - "preview2.jpg"
+htmlAsset: "lamrim-infographic.html"
+pdfAsset: "lamrim-infographic.pdf"
+tags:
+  - "종류/인포그래픽"
+  - "주제/람림"
+  - "형식/PDF"
+  - "kind/infographic"
 ```
 
-Astro가 `public/`의 JPG를 자동으로 WebP로 바꿔주지는 않는다. 그래서 메타데이터에는 실제 파일 확장자를 그대로 적는 것이 원칙이다. 지금 단계에서는 JPG/JPEG 산출물을 그대로 쓰고, 나중에 자료가 많아지면 별도 최적화 파이프라인을 검토하면 된다.
+현재 자산은 `src/content/design/{slug}/assets/` 아래에 두고, 빌드 전에 `public/generated/`로 동기화한다. 메타데이터에는 실제 파일 확장자를 그대로 적는다.
 
 ## 새 인포그래픽 등록
 
@@ -96,9 +102,9 @@ DESIGN 관련 공식 문서도 함께 고쳤다.
 
 첫째, DESIGN은 인포그래픽 중심이다.  
 둘째, HTML/PDF가 주 산출물이고 preview 이미지는 보조 자산이다.  
-셋째, ENTITY 연결은 장기 확장 가능성으로 남기되 현재 운영은 prefix tag 중심으로 한다.
+셋째, ENTITY 연결은 장기 확장 가능성으로 남기되 현재 운영은 slash-form `tags` 중심으로 한다.
 
-지금은 지식그래프보다 prefix tag가 더 현실적이다. `kind:infographic`, `topic:람림`, `format:pdf` 같은 태그는 바로 필터와 검색에 쓸 수 있다. 나중에 ENTITY가 실제 기능으로 안정화되면 이 태그들을 지식그래프와 연결하면 된다.
+지금은 지식그래프보다 prefix tag가 더 현실적이다. `kind/infographic`, `topic/람림`, `format/pdf` 같은 태그는 바로 필터와 검색에 쓸 수 있다. 나중에 ENTITY가 실제 기능으로 안정화되면 이 태그들을 지식그래프와 연결하면 된다.
 
 ## WORKS — BOOK 이전 단계가 아니라 살아 있는 문서 라이브러리
 

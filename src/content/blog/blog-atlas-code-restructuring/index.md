@@ -1,16 +1,18 @@
 ---
-title: "OL ATLAS 코드 구조 리팩토링 — 3,000줄 파일을 해체하다"
-description: "modal.css 3,011줄을 6개 파일로 분리하고, JS 순환 의존성을 해소하고, 기능 단위로 코드를 재배치한 과정을 정리합니다."
-date: 2026-06-01
+title: OL ATLAS 코드 구조 리팩토링 — 3,000줄 파일을 해체하다
+description: modal.css 3,011줄을 6개 파일로 분리하고, JS 순환 의존성을 해소하고, 기능 단위로 코드를 재배치한 과정을 정리합니다.
+date: 2026-06-01T00:00:00.000Z
 category: ATLAS
 readingTime: 7
-tags: ["개발", "리팩토링", "유지보수"]
-prefixTags:
-  - "kind:blog"
-  - "project:atlas"
-  - "topic:development"
-  - "topic:refactoring"
-  - "topic:maintenance"
+tags:
+  - topic/개발
+  - topic/리팩토링
+  - topic/유지보수
+  - kind/blog
+  - project/atlas
+  - topic/development
+  - topic/refactoring
+  - topic/maintenance
 published: true
 ---
 

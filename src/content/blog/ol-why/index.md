@@ -1,15 +1,16 @@
 ---
-title: "OL은 왜 시작되었는가 — 존재 선언문과 브랜드 체계"
-description: "불교 콘텐츠 스튜디오 OL의 출발점, 설계 원칙, 그리고 ATLAS·BOOK·WORKS·DESIGN으로 구성된 브랜드 체계를 정리합니다."
-date: 2026-05-23
+title: OL은 왜 시작되었는가 — 존재 선언문과 브랜드 체계
+description: 불교 콘텐츠 스튜디오 OL의 출발점, 설계 원칙, 그리고 ATLAS·BOOK·WORKS·DESIGN으로 구성된 브랜드 체계를 정리합니다.
+date: 2026-05-23T00:00:00.000Z
 category: OL
 readingTime: 8
-tags: ["선언문", "브랜드"]
-prefixTags:
-  - "kind:blog"
-  - "project:ol-home"
-  - "topic:manifesto"
-  - "topic:brand"
+tags:
+  - topic/선언문
+  - topic/브랜드
+  - kind/blog
+  - project/ol-home
+  - topic/manifesto
+  - topic/brand
 published: true
 ---
 

@@ -6,9 +6,12 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "check:content": "node scripts/check-content.mjs",
+    "check": "npm run check:content",
     "sync:assets": "node scripts/sync-content-assets.mjs",
     "dev": "npm run sync:assets && astro dev",
-    "build": "npm run sync:assets && astro build && npx pagefind --site dist",
+    "build:site": "npm run sync:assets && astro build && npx pagefind --site dist",
+    "build": "npm run check:content && npm run build:site",
     "preview": "astro preview",
     "astro": "astro"
   },

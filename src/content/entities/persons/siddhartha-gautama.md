@@ -24,10 +24,10 @@ relations:
     predicate: is_related_to
     object: sunyata
 tags:
-  - 인물
-  - 붓다
-  - 불교창시자
-  - 기원전5세기
+  - 종류/인물
+  - 인물/붓다
+  - 주제/불교창시자
+  - 시대/기원전5세기
 sources:
   - "Gethin, Rupert. *The Foundations of Buddhism*. Oxford University Press, 1998."
 published: true

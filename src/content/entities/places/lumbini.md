@@ -16,11 +16,11 @@ relations:
     predicate: is_related_to
     object: siddhartha-gautama
 tags:
-  - 장소
-  - 성지
-  - 붓다탄생지
-  - 네팔
-  - 유네스코
+  - 종류/장소
+  - 주제/성지
+  - 주제/붓다탄생지
+  - 지역/네팔
+  - 주제/유네스코
 sources:
   - "UNESCO World Heritage Centre. 'Lumbini, the Birthplace of the Lord Buddha.'"
 published: true

@@ -1,16 +1,17 @@
 ---
 title: "OL ATLAS — 마크다운 각주 구현기: 자체 파서 확장과 해시 라우터 충돌 해결"
-description: "자체 마크다운 파서에 각주 기능을 추가하면서 만난 세 가지 문제 — 해시 라우터 충돌, 뷰 간 ID 중복, 고정 헤더 가림 — 을 해결한 과정을 기록합니다."
-date: 2026-05-31
+description: 자체 마크다운 파서에 각주 기능을 추가하면서 만난 세 가지 문제 — 해시 라우터 충돌, 뷰 간 ID 중복, 고정 헤더 가림 — 을 해결한 과정을 기록합니다.
+date: 2026-05-31T00:00:00.000Z
 category: ATLAS
 readingTime: 7
-tags: ["ATLAS", "개발", "마크다운"]
-prefixTags:
-  - "kind:blog"
-  - "project:atlas"
-  - "topic:development"
-  - "topic:markdown"
-  - "feature:footnotes"
+tags:
+  - project/atlas
+  - topic/개발
+  - topic/마크다운
+  - kind/blog
+  - topic/development
+  - topic/markdown
+  - feature/footnotes
 published: true
 ---
 

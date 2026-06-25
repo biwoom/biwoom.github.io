@@ -42,7 +42,7 @@ code,
 pre,
 kbd,
 samp {
-  font-family: inherit;
+  font-family: var(--ol-font-mono);
 }
 
 h1, h2, h3, h4 {
@@ -98,10 +98,39 @@ a { color: inherit; }
   margin: 0 auto;
   padding: 0 32px;
 }
+.ol-container--readable {
+  max-width: 720px;
+}
 .ol-row { display: flex; align-items: center; gap: 12px; }
 .ol-col { display: flex; flex-direction: column; gap: 12px; }
 .ol-spacer { flex: 1; }
 .ol-divider { height: 1px; background: var(--ol-border); margin: 24px 0; }
+.ol-section-divider {
+  width: min(80%, 960px);
+  margin: 0 auto;
+}
+.ol-page-index-head {
+  margin-bottom: 48px;
+}
+.ol-page-index-title {
+  margin: 10px 0 20px;
+  font-size: 32px;
+}
+.ol-empty-state {
+  padding: 48px 0;
+  color: var(--ol-muted);
+  font-size: 13px;
+}
+.ol-empty-state--center {
+  text-align: center;
+}
+.ol-empty-state--roomy {
+  padding: 80px 0;
+}
+.ol-prose-sm {
+  font-size: 14px;
+  line-height: 1.75;
+}
 
 /* ===== Header ===== */
 .ol-header {
@@ -283,6 +312,9 @@ a { color: inherit; }
 .ol-hero {
   padding: 96px 0 64px;
   text-align: center;
+}
+.ol-hero--compact {
+  padding-bottom: 32px;
 }
 .ol-hero .ol-container {
   max-width: 920px;

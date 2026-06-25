@@ -1,25 +1,23 @@
 ---
-title: "실상사 생명평화문양에서 인드라망 디자인까지"
-description: "실상사 생명평화 운동에서 안상수 작가가 만든 생명평화문양을 바탕으로, 보리수와 인드라망, 다양성, 픽토그래프로 확장된 다섯 DESIGN 이미지를 정리한다."
-date: 2026-06-21
+title: 실상사 생명평화문양에서 인드라망 디자인까지
+description: 실상사 생명평화 운동에서 안상수 작가가 만든 생명평화문양을 바탕으로, 보리수와 인드라망, 다양성, 픽토그래프로 확장된 다섯 DESIGN 이미지를 정리한다.
+date: 2026-06-21T00:00:00.000Z
 category: DESIGN
 readingTime: 6
-thumbnailAsset: "thumb.jpg"
+thumbnailAsset: thumb.jpg
 tags:
-  - "DESIGN"
-  - "인드라망"
-  - "생명평화문양"
-  - "보리수"
-  - "갑골문자"
-  - "다양성"
-  - "픽토그래프"
-prefixTags:
-  - "kind:blog"
-  - "project:design"
-  - "topic:indramang"
-  - "topic:life-peace"
-  - "topic:diversity"
-  - "topic:oracle-bone-script"
+  - project/design
+  - topic/인드라망
+  - topic/생명평화문양
+  - topic/보리수
+  - topic/갑골문자
+  - topic/다양성
+  - topic/픽토그래프
+  - kind/blog
+  - topic/indramang
+  - topic/life-peace
+  - topic/diversity
+  - topic/oracle-bone-script
 published: true
 ---
 # 생명평화무늬와 인드라망 문양 작업 기록

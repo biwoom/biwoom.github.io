@@ -119,3 +119,32 @@ This file records durable project decisions that future Codex sessions should pr
 
 - BLOG entries may define an optional `thumbnailAsset` frontmatter field for list-card thumbnails.
 - The blog list should prefer `thumbnailAsset` and continue to fall back to the first relative Markdown image for older entries.
+
+## 2026-06-25
+
+### Unified Tag Storage
+
+- Active content collections should store all tags in `tags: string[]`.
+- `blog`, `text`, and `story` no longer use a separate `prefixTags` field.
+- Slash-form `prefix/value` strings are the repository-wide tag syntax.
+- Internal management tags such as `kind/...`, `project/...`, `feature/...`, `tool/...`, and `framework/...` may live in `tags`, but TEXT/STORY user filter UIs should not expose those prefixes.
+
+### Content Validation Gate
+
+- `scripts/check-content.mjs` is the required pre-build validator.
+- The validator must fail on deprecated frontmatter fields, non-slash tags, missing referenced assets, missing minimum published metadata, and forbidden junk files such as `.DS_Store`.
+- `npm run build` must run the validator before the Astro build.
+- GitHub Actions deployment must run the same validator before site build output is produced.
+
+### Shared Content Helper Layers
+
+- Shared TEXT/STORY slug, grouping, and ordering helpers should live in `src/lib/content-structure.ts`.
+- Shared generated-asset URL and download-filename helpers should live in `src/lib/assets.ts`.
+- Shared client filtering behavior should live in `src/lib/client/content-filters.ts`.
+- New TEXT/STORY/DESIGN filtering work should extend these shared modules before adding new page-local inline scripts.
+
+### Font Loading Policy
+
+- The default external font load should be limited to Pretendard in `BaseLayout.astro`.
+- `Noto Sans KR`, `Inter`, and `JetBrains Mono` may remain in CSS fallback stacks, but the site should not depend on separate Google Fonts requests unless a later change proves they are necessary.
+- Code-like surfaces should use the mono font stack token `--ol-font-mono`; general UI and content should stay on `--ol-font-ui`.

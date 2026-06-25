@@ -21,7 +21,8 @@ description: Create or update OL HOME content entries under src/content. Use whe
    - `src/content/ontology/` for ontology reference docs.
 6. Use ASCII slugs and route-bearing filenames. Put Korean titles in frontmatter.
 7. Set `published: true` only when the content should be public.
-8. Run `npm run build` after edits and confirm the expected route is generated.
+8. Run `npm run check` after frontmatter or asset edits.
+9. Run `npm run build` after edits and confirm the expected route is generated.
 
 ## Frontmatter Rules
 
@@ -31,21 +32,18 @@ description: Create or update OL HOME content entries under src/content. Use whe
 - Internal operating manuals belong under `.agents/references/`, not `src/content/pages/`.
 - For BuddhaStory part names and candidate chapter titles, consult `docs/toc/붓다스토리(Buddha Story) 목차 v0.1.md` first. Treat it as a planning reference, not as a final route source; actual URLs follow `src/content/story/buddha-story`.
 - For TEXT and STORY tags, prefer `prefix/name` form:
+- All collections now store tags only in `tags`.
+- Do not use `prefixTags`.
 
 ```yaml
 tags:
   - "인물/붓다"
   - "장소/룸비니"
   - "개념/연기"
+  - "kind/story"
 ```
 
-- For BLOG and DESIGN management tags, `prefixTags` may use `key:value` form:
-
-```yaml
-prefixTags:
-  - "kind:blog"
-  - "project:ol-home"
-```
+- For BLOG and DESIGN management tags, keep using slash-form strings inside `tags`, for example `kind/blog`, `project/design`, `topic/indramang`.
 
 ## Entity Rules
 
@@ -96,6 +94,7 @@ primaryPlaces:
 
 ## Validation
 
+- Run `npm run check`.
 - Run `npm run build`.
 - Check the build output for the expected route.
 - Treat the empty `src/content/ai` warning as acceptable unless the task is about AI content.

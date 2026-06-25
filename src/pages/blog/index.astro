@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getBlogThumbnailCandidates } from '../../lib/assets';
 import { url } from '../../lib/url';
 
 const posts = await getCollection('blog', e => e.data.published);
@@ -12,16 +13,9 @@ const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true }
 );
 
-const normalizeAssetPath = (value: string) => value.replace(/^\.\//, '').replace(/^\/+/, '');
-
 const thumbnails: Record<string, ImageMetadata> = {};
 for (const post of posts) {
-  const thumbnailAsset = post.data.thumbnailAsset?.trim();
-  const candidatePaths = thumbnailAsset
-    ? [normalizeAssetPath(thumbnailAsset)]
-    : Array.from((post.body ?? '').matchAll(/!\[.*?\]\((\.\/[^)]+)\)/g)).map(match => match[1].replace('./', ''));
-
-  for (const filename of candidatePaths) {
+  for (const filename of getBlogThumbnailCandidates(post)) {
     const key = `/src/content/blog/${post.id}/${filename}`;
     const mod = imageModules[key];
     if (mod) {
@@ -45,7 +39,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
 >
   <main>
     <!-- Hero -->
-    <section class="ol-hero ol-grid-bg ol-grid-bg--blog" style="padding-bottom: 32px;">
+    <section class="ol-hero ol-grid-bg ol-grid-bg--blog ol-hero--compact">
       <div class="ol-container">
         <span class="ol-section-label">JOURNAL · 작업 일지</span>
         <h1 class="ol-kr">
@@ -61,7 +55,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     <!-- Filter + posts -->
     <section class="ol-section-tight">
       <div class="ol-container">
-        <div class="ol-row" style="margin-bottom: 16px;">
+        <div class="ol-row ol-blog-chip-row">
           <div class="ol-chips" id="blog-chips">
             <button class="ol-chip active" data-category="all">전체 <span class="count">{posts.length}</span></button>
             {categories.map(cat => {
@@ -79,7 +73,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
           <div>
             <div id="blog-posts">
               {posts.length === 0 ? (
-                <div style="padding: 48px 0; color: var(--ol-muted); font-size: 13px;">
+                <div class="ol-blog-empty">
                   아직 발행된 글이 없습니다.
                 </div>
               ) : posts.map((post, i) => {
@@ -90,18 +84,18 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
                   data-category={post.data.category ?? ''}
                   data-year={post.data.date.getFullYear()}
                   data-index={i}
-                  style={i >= PAGE_SIZE ? 'display:none;' : ''}
+                  hidden={i >= PAGE_SIZE}
                 >
                   {hasThumbnail && (
                     <div>
                       <div class="when">{post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, ' · ').replace('.', '')}</div>
                       {post.data.category && (
-                        <span class="ol-badge" style="margin-top: 8px;">{post.data.category}</span>
+                        <span class="ol-badge ol-blog-card-badge">{post.data.category}</span>
                       )}
-                      <div style="margin-top: 14px;">
-                        <a href={url(`/blog/${post.id}`)} style="display: block;">
-                          <div style="aspect-ratio: 4/3; overflow: hidden; border-radius: var(--ol-r-md, 6px);">
-                            <Image src={thumbnails[post.id]} alt={post.data.title} style="width: 100%; height: 100%; object-fit: cover;" />
+                      <div class="ol-blog-card-media">
+                        <a href={url(`/blog/${post.id}`)} class="ol-blog-card-media-link">
+                          <div class="ol-blog-card-thumb-frame">
+                            <Image src={thumbnails[post.id]} alt={post.data.title} class="ol-blog-card-thumb-image" />
                           </div>
                         </a>
                       </div>
@@ -109,7 +103,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
                   )}
                   <div>
                     {!hasThumbnail && (
-                      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                      <div class="ol-blog-card-meta-row">
                         <div class="when">{post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, ' · ').replace('.', '')}</div>
                         {post.data.category && (
                           <span class="ol-badge">{post.data.category}</span>
@@ -130,12 +124,12 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
               })}
             </div>
 
-            <div id="blog-no-results" style="display:none; padding: 48px 0; color: var(--ol-muted); font-size: 13px;" class="ol-kr">
+            <div id="blog-no-results" class="ol-kr ol-blog-empty" hidden>
               선택한 필터에 해당하는 글이 없습니다.
             </div>
 
             {posts.length > PAGE_SIZE && (
-              <div class="ol-blog-loadmore" id="blog-loadmore-wrap" style="display: flex; justify-content: center; margin-top: 32px;">
+              <div class="ol-blog-loadmore" id="blog-loadmore-wrap" hidden>
                 <button id="blog-loadmore-btn" class="ol-btn ol-btn-outline">
                   더 보기
                   <span id="blog-loadmore-remaining">({posts.length - PAGE_SIZE})</span>
@@ -145,8 +139,8 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
           </div>
 
           <!-- Sidebar -->
-          <aside style="position: sticky; top: 80px;">
-            <div class="ol-card" style="padding: 24px;">
+          <aside class="ol-blog-sidebar">
+            <div class="ol-card ol-blog-archive-card">
               <div class="ol-meta-label">ARCHIVE</div>
               <div class="ol-blog-archive-list" id="blog-archive">
                 <button class="ol-blog-archive-btn active" data-year="all">
@@ -194,18 +188,18 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     const matched = posts.filter(matchPost);
     const unmatched = posts.filter(p => !matchPost(p));
 
-    matched.forEach((el, i) => { el.style.display = i < visibleCount ? '' : 'none'; });
-    unmatched.forEach(el => { el.style.display = 'none'; });
+    matched.forEach((el, i) => { el.hidden = i >= visibleCount; });
+    unmatched.forEach(el => { el.hidden = true; });
 
-    noResults.style.display = matched.length === 0 ? '' : 'none';
+    noResults.hidden = matched.length !== 0;
 
     if (loadmoreWrap && loadmoreRemaining) {
       const remaining = matched.length - visibleCount;
       if (remaining > 0) {
-        loadmoreWrap.style.display = '';
+        loadmoreWrap.hidden = false;
         loadmoreRemaining.textContent = `(${remaining})`;
       } else {
-        loadmoreWrap.style.display = 'none';
+        loadmoreWrap.hidden = true;
       }
     }
   }
@@ -230,15 +224,15 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     });
   });
 
-  loadmoreBtn?.addEventListener('click', () => {
+    loadmoreBtn?.addEventListener('click', () => {
     const matched = posts.filter(matchPost);
     visibleCount += PAGE_SIZE;
-    matched.forEach((el, i) => { el.style.display = i < visibleCount ? '' : 'none'; });
+    matched.forEach((el, i) => { el.hidden = i >= visibleCount; });
     const remaining = matched.length - visibleCount;
     if (remaining > 0 && loadmoreRemaining) {
       loadmoreRemaining.textContent = `(${remaining})`;
     } else if (loadmoreWrap) {
-      loadmoreWrap.style.display = 'none';
+      loadmoreWrap.hidden = true;
     }
   });
 </script>

@@ -8,6 +8,7 @@ import {
   getStoryEntryUrl,
   isStorySeriesIndex,
 } from '../../../lib/story';
+import { getPublicTags } from '../../../lib/tags';
 
 export async function getStaticPaths() {
   const stories = await getCollection('story', e => e.data.published);
@@ -34,11 +35,10 @@ const documentParts = series.parts
   .filter(part => part.entries.length > 0);
 
 const allDocuments = documentParts.flatMap(part => part.entries);
-const allTags = [...new Set(allDocuments.flatMap(entry => entry.data.tags))];
 const tagIndex = new Map<string, typeof allDocuments>();
 
 for (const entry of allDocuments) {
-  for (const tag of entry.data.tags) {
+  for (const tag of getPublicTags(entry.data.tags)) {
     const items = tagIndex.get(tag) ?? [];
     items.push(entry);
     tagIndex.set(tag, items);
@@ -76,17 +76,24 @@ const statusKey = cover.data.status ?? 'draft';
       {cover.data.description && <p class="ol-kr">{cover.data.description}</p>}
 
       {tagGroups.length > 0 && (
-        <div class="ol-story-tag-area" data-story-tag-index>
+        <div class="ol-story-tag-area" data-story-tag-index data-tag-results-index>
           <div class="ol-story-tag-row">
             {tagGroups.map(group => (
               <div class="ol-story-tag-menu">
-                <button class="ol-story-tag-menu-trigger" type="button" aria-expanded="false" data-story-tag-menu-trigger>
+                <button class="ol-story-tag-menu-trigger" type="button" aria-expanded="false" data-story-tag-menu-trigger data-tag-menu-trigger>
                   <span>{group.prefix}</span>
                   <strong>{group.tags.length}</strong>
                 </button>
                 <div class="ol-story-tag-menu-panel">
                   {group.tags.map(tag => (
-                    <button type="button" data-story-tag-select={tag.tag} data-story-tag-label={tag.label}>
+                    <button
+                      type="button"
+                      data-story-tag-select={tag.tag}
+                      data-story-tag-label={tag.label}
+                      data-tag-select
+                      data-tag-value={tag.tag}
+                      data-tag-label={tag.label}
+                    >
                       <span>{tag.label}</span>
                       <strong>{tag.items.length}</strong>
                     </button>
@@ -95,37 +102,36 @@ const statusKey = cover.data.status ?? 'draft';
               </div>
             ))}
           </div>
-
-          <section class="ol-story-tag-results" data-story-tag-results hidden>
+          <section class="ol-story-tag-results" data-story-tag-results data-tag-results hidden>
             <div class="ol-story-tag-results-head">
               <div>
                 <span class="ol-section-label">Tag index</span>
-                <h2 class="ol-kr" data-story-tag-results-title>태그 문서</h2>
+                <h2 class="ol-kr" data-story-tag-results-title data-tag-results-title>태그 문서</h2>
                 <p class="ol-story-tag-result-summary" data-story-tag-results-summary>
                   <em>선택한 태그를 모두 포함한 문서를 표시합니다.</em>
-                  <strong data-story-tag-results-count>0개 문서</strong>
+                  <strong data-story-tag-results-count data-tag-results-count>0개 문서</strong>
                 </p>
               </div>
               <div class="ol-story-tag-results-actions">
-                <button type="button" data-story-tag-results-clear>초기화</button>
-                <button type="button" data-story-tag-results-close>닫기</button>
+                <button type="button" data-story-tag-results-clear data-tag-results-clear>초기화</button>
+                <button type="button" data-story-tag-results-close data-tag-results-close>닫기</button>
               </div>
             </div>
-            <div class="ol-story-tag-selected" data-story-selected-tags></div>
-            <p class="ol-story-tag-result-empty ol-kr" data-story-tag-results-empty hidden>
+            <div class="ol-story-tag-selected" data-story-selected-tags data-selected-tags></div>
+            <p class="ol-story-tag-result-empty ol-kr" data-story-tag-results-empty data-tag-results-empty hidden>
               선택한 태그 조합에 해당하는 문서가 없습니다.
             </p>
             <div class="ol-story-tag-result-panel" data-story-tag-result-panel>
               <div class="ol-story-tag-result-list">
                 {documentParts.map((part, partIndex) => (
-                  <section data-story-result-part>
+                  <section data-story-result-part data-tag-result-part>
                     <h3>PART {partIndex + 1} · {part.label}</h3>
                     {part.groups.map(group => (
-                      <div class="ol-story-full-toc-group" data-story-result-group>
+                      <div class="ol-story-full-toc-group" data-story-result-group data-tag-result-group>
                         <p>{group.label}</p>
                         <ol>
                           {group.entries.map((entry, entryIndex) => (
-                            <li data-story-result-entry data-tags={JSON.stringify(entry.data.tags)}>
+                            <li data-story-result-entry data-tag-result-entry data-tags={JSON.stringify(getPublicTags(entry.data.tags))}>
                               <a href={url(getStoryEntryUrl(entry))}>
                                 <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
                                 <strong class="ol-kr">{entry.data.title}</strong>
@@ -266,98 +272,9 @@ const statusKey = cover.data.status ?? 'draft';
 </BaseLayout>
 
 <script>
-  const tagIndex = document.querySelector<HTMLElement>('[data-story-tag-index]');
-  const tagResults = document.querySelector<HTMLElement>('[data-story-tag-results]');
-  const tagResultsTitle = tagResults?.querySelector<HTMLElement>('[data-story-tag-results-title]');
-  const tagResultsCount = tagResults?.querySelector<HTMLElement>('[data-story-tag-results-count]');
-  const selectedStoryTags = tagResults?.querySelector<HTMLElement>('[data-story-selected-tags]');
-  const tagResultsEmpty = tagResults?.querySelector<HTMLElement>('[data-story-tag-results-empty]');
-  const tagResultsClose = tagResults?.querySelector<HTMLButtonElement>('[data-story-tag-results-close]');
-  const selectedTags = new Map<string, string>();
+  import { initTagResultIndexes } from '../../../lib/client/content-filters';
 
-  const closeTagMenus = () => {
-    document.querySelectorAll<HTMLButtonElement>('[data-story-tag-menu-trigger]').forEach(button => {
-      button.setAttribute('aria-expanded', 'false');
-    });
-  };
-
-  const updateStoryTagResults = () => {
-    if (!tagResults) return;
-    const selected = Array.from(selectedTags.keys());
-    tagResults.hidden = selected.length === 0;
-    if (tagResultsTitle) tagResultsTitle.textContent = selected.length > 0 ? `선택 태그 ${selected.length}개` : '태그 문서';
-
-    if (selectedStoryTags) {
-      selectedStoryTags.innerHTML = '';
-      selectedTags.forEach((label, tag) => {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.dataset.storyTagRemove = tag;
-        chip.textContent = `${label} ×`;
-        selectedStoryTags.appendChild(chip);
-      });
-    }
-
-    let visibleCount = 0;
-    tagResults.querySelectorAll<HTMLElement>('[data-story-result-entry]').forEach(entry => {
-      const tags = JSON.parse(entry.dataset.tags ?? '[]') as string[];
-      const visible = selected.every(tag => tags.includes(tag));
-      entry.hidden = !visible;
-      if (visible) visibleCount += 1;
-    });
-
-    tagResults.querySelectorAll<HTMLElement>('[data-story-result-group]').forEach(group => {
-      group.hidden = !group.querySelector('[data-story-result-entry]:not([hidden])');
-    });
-
-    tagResults.querySelectorAll<HTMLElement>('[data-story-result-part]').forEach(part => {
-      part.hidden = !part.querySelector('[data-story-result-group]:not([hidden])');
-    });
-
-    if (tagResultsCount) tagResultsCount.textContent = `${visibleCount}개 문서`;
-    if (tagResultsEmpty) tagResultsEmpty.hidden = visibleCount > 0;
-
-    document.querySelectorAll<HTMLButtonElement>('[data-story-tag-select]').forEach(button => {
-      button.classList.toggle('active', selectedTags.has(button.dataset.storyTagSelect ?? ''));
-    });
-    closeTagMenus();
-  };
-
-  tagIndex?.addEventListener('click', event => {
-    event.stopPropagation();
-    const trigger = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-story-tag-menu-trigger]');
-    if (trigger) {
-      const open = trigger.getAttribute('aria-expanded') === 'true';
-      closeTagMenus();
-      trigger.setAttribute('aria-expanded', String(!open));
-      return;
-    }
-
-    const tagButton = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-story-tag-select]');
-    if (!tagButton) return;
-    const tag = tagButton.dataset.storyTagSelect;
-    if (!tag) return;
-    if (selectedTags.has(tag)) selectedTags.delete(tag);
-    else selectedTags.set(tag, tagButton.dataset.storyTagLabel ?? tag);
-    updateStoryTagResults();
-  });
-
-  selectedStoryTags?.addEventListener('click', event => {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-story-tag-remove]');
-    if (!button?.dataset.storyTagRemove) return;
-    selectedTags.delete(button.dataset.storyTagRemove);
-    updateStoryTagResults();
-  });
-
-  tagResults?.querySelector<HTMLElement>('[data-story-tag-results-clear]')?.addEventListener('click', () => {
-    selectedTags.clear();
-    updateStoryTagResults();
-  });
-
-  tagResultsClose?.addEventListener('click', () => {
-    if (tagResults) tagResults.hidden = true;
-    closeTagMenus();
-  });
+  initTagResultIndexes();
 
   document.querySelectorAll<HTMLElement>('[data-story-mobile-collapsible]').forEach(card => {
     const button = card.querySelector<HTMLButtonElement>('[data-story-biblio-toggle]');
@@ -378,6 +295,4 @@ const statusKey = cover.data.status ?? 'draft';
       toggleCard();
     });
   });
-
-  document.addEventListener('click', closeTagMenus);
 </script>

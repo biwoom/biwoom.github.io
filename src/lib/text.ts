@@ -1,4 +1,12 @@
 import type { CollectionEntry } from 'astro:content';
+import {
+  compareKo,
+  compareOptionalNumber,
+  compareOrderAndLabel,
+  pushGroupedValue,
+  slugifyContentSegment,
+} from './content-structure';
+import { parsePrefixTag } from './tags';
 
 type TextEntry = CollectionEntry<'text'>;
 
@@ -33,11 +41,7 @@ export interface TextSeries {
 }
 
 export function slugifyTextSegment(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
-    .replace(/^-+|-+$/g, '');
+  return slugifyContentSegment(value);
 }
 
 export function getTextSeriesSlug(entry: TextEntry): string {
@@ -84,14 +88,13 @@ export function formatPart(key: string): string {
 
 export function sortTextEntries(entries: TextEntry[]): TextEntry[] {
   return [...entries].sort((a, b) => {
-    const orderDiff = (a.data.order ?? 0) - (b.data.order ?? 0);
+    const orderDiff = compareOptionalNumber(a.data.order, b.data.order, 0);
     if (orderDiff !== 0) return orderDiff;
 
-    const chapterA = a.data.chapter ?? Number.MAX_SAFE_INTEGER;
-    const chapterB = b.data.chapter ?? Number.MAX_SAFE_INTEGER;
-    if (chapterA !== chapterB) return chapterA - chapterB;
+    const chapterDiff = compareOptionalNumber(a.data.chapter, b.data.chapter);
+    if (chapterDiff !== 0) return chapterDiff;
 
-    return a.data.title.localeCompare(b.data.title, 'ko');
+    return compareKo(a.data.title, b.data.title);
   });
 }
 
@@ -100,9 +103,7 @@ export function buildTextHierarchy(entries: TextEntry[]): TextSeries[] {
 
   for (const entry of entries) {
     const seriesKey = getTextSeriesSlug(entry);
-    const seriesEntries = seriesMap.get(seriesKey) ?? [];
-    seriesEntries.push(entry);
-    seriesMap.set(seriesKey, seriesEntries);
+    pushGroupedValue(seriesMap, seriesKey, entry);
   }
 
   return Array.from(seriesMap.entries())
@@ -113,9 +114,7 @@ export function buildTextHierarchy(entries: TextEntry[]): TextSeries[] {
 
       for (const entry of documentEntries) {
         const partKey = entry.data.part ?? UNPARTED_TEXT;
-        const partEntries = partMap.get(partKey) ?? [];
-        partEntries.push(entry);
-        partMap.set(partKey, partEntries);
+        pushGroupedValue(partMap, partKey, entry);
       }
 
       const parts = Array.from(partMap.entries())
@@ -124,9 +123,7 @@ export function buildTextHierarchy(entries: TextEntry[]): TextSeries[] {
 
           for (const entry of partEntries) {
             const groupKey = entry.data.group ?? UNGROUPED_TEXT;
-            const groupEntries = groupMap.get(groupKey) ?? [];
-            groupEntries.push(entry);
-            groupMap.set(groupKey, groupEntries);
+            pushGroupedValue(groupMap, groupKey, entry);
           }
 
           const groups = Array.from(groupMap.entries())
@@ -136,11 +133,7 @@ export function buildTextHierarchy(entries: TextEntry[]): TextSeries[] {
               order: groupEntries[0]?.data.groupOrder ?? 0,
               entries: sortTextEntries(groupEntries),
             }))
-            .sort((a, b) => {
-              const orderDiff = a.order - b.order;
-              if (orderDiff !== 0) return orderDiff;
-              return a.label.localeCompare(b.label, 'ko');
-            });
+            .sort(compareOrderAndLabel);
 
           return {
             key: partKey,
@@ -150,11 +143,7 @@ export function buildTextHierarchy(entries: TextEntry[]): TextSeries[] {
             count: partEntries.length,
           };
         })
-        .sort((a, b) => {
-          const orderDiff = a.order - b.order;
-          if (orderDiff !== 0) return orderDiff;
-          return a.label.localeCompare(b.label, 'ko');
-        });
+        .sort(compareOrderAndLabel);
 
       return {
         key: seriesKey,
@@ -167,11 +156,7 @@ export function buildTextHierarchy(entries: TextEntry[]): TextSeries[] {
         entries: sortTextEntries(documentEntries),
       };
     })
-    .sort((a, b) => {
-      const orderDiff = a.order - b.order;
-      if (orderDiff !== 0) return orderDiff;
-      return a.label.localeCompare(b.label, 'ko');
-    });
+    .sort(compareOrderAndLabel);
 }
 
 export function getTextSeries(entries: TextEntry[], seriesSlug: string): TextSeries | undefined {
@@ -179,9 +164,5 @@ export function getTextSeries(entries: TextEntry[], seriesSlug: string): TextSer
 }
 
 export function formatTextTag(tag: string): { prefix: string; label: string } {
-  const [prefix, ...rest] = tag.split('/');
-  return {
-    prefix: rest.length > 0 ? prefix : '태그',
-    label: rest.length > 0 ? rest.join('/') : tag,
-  };
+  return parsePrefixTag(tag);
 }

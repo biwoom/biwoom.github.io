@@ -1,8 +1,14 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getGeneratedAssetUrl, getVersionedDownloadFilename } from '../../lib/assets';
 import { url } from '../../lib/url';
-import { formatLabel, primaryKindLabel, typeLabel } from '../../lib/design';
+import {
+  formatLabel,
+  getDesignPreviewAssets,
+  primaryKindLabel,
+  typeLabel,
+} from '../../lib/design';
 import { getStoryEntryUrl, isStoryDocumentEntry, sortStoryEntries } from '../../lib/story';
 import { getTextEntryUrl, isTextDocumentEntry, sortTextEntries } from '../../lib/text';
 
@@ -17,9 +23,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const previewAssets = entry.data.previewAssets.length > 0
-  ? entry.data.previewAssets
-  : [entry.data.imageAsset ?? entry.data.thumbnailAsset].filter(Boolean);
+const previewAssets = getDesignPreviewAssets(entry.data);
 const previewAsset = previewAssets[0];
 const description = entry.data.description ?? entry.data.summary ?? entry.data.imageAlt ?? entry.data.title;
 const allTags = entry.data.tags;
@@ -50,22 +54,11 @@ type RelatedReference = {
 };
 
 function designAsset(asset?: string) {
-  return asset ? url(`/generated/design/${entry.id}/${asset}`) : '';
-}
-
-function getAssetExtension(asset?: string) {
-  if (!asset) return '';
-  const cleanAsset = asset.split('?')[0]?.split('#')[0] ?? asset;
-  const ext = cleanAsset.match(/\.([A-Za-z0-9]+)$/)?.[1];
-  return ext ? `.${ext.toLowerCase()}` : '';
+  return getGeneratedAssetUrl('design', entry.id, asset);
 }
 
 function getDownloadFilename(asset?: string) {
-  const baseName = `${entry.data.title}-v${entry.data.version}`
-    .replace(/[\\/:"*?<>|]+/g, '-')
-    .replace(/\s+/g, ' ')
-    .trim();
-  return `${baseName}${getAssetExtension(asset)}`;
+  return getVersionedDownloadFilename(entry.data.title, entry.data.version, asset);
 }
 
 function normalizeReferenceKey(value: string) {
@@ -181,7 +174,7 @@ const typeLabels: Record<string, string> = {
                 ))}
               </div>
             ) : (
-              <div class="ol-ph ol-design-detail-img-frame" style="aspect-ratio: 4/3;">
+              <div class="ol-ph ol-design-detail-img-frame ol-design-detail-img-frame--placeholder">
                 {primaryKindLabel[entry.data.primaryKind] ?? 'DESIGN'}
               </div>
             )}
@@ -403,7 +396,7 @@ const typeLabels: Record<string, string> = {
 
             <div class="ol-divider"></div>
 
-            <div class="ol-prose ol-kr" style="font-size: 14px; line-height: 1.75;">
+            <div class="ol-prose ol-kr ol-design-detail-prose">
               <Content />
             </div>
 

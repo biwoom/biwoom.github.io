@@ -1,4 +1,12 @@
 import type { CollectionEntry } from 'astro:content';
+import {
+  compareKo,
+  compareOptionalNumber,
+  compareOrderAndLabel,
+  pushGroupedValue,
+  slugifyContentSegment,
+} from './content-structure';
+import { parsePrefixTag } from './tags';
 
 type StoryEntry = CollectionEntry<'story'>;
 
@@ -37,11 +45,7 @@ export interface StorySeries {
 }
 
 export function slugifyStorySegment(value: string): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
-    .replace(/^-+|-+$/g, '');
+  return slugifyContentSegment(value);
 }
 
 export function getStorySeriesSlug(entry: StoryEntry): string {
@@ -77,20 +81,19 @@ export function getStoryEntryUrl(entry: StoryEntry): string {
 
 export function sortStoryEntries(entries: StoryEntry[]): StoryEntry[] {
   return [...entries].sort((a, b) => {
-    const partDiff = (a.data.partOrder ?? 0) - (b.data.partOrder ?? 0);
+    const partDiff = compareOptionalNumber(a.data.partOrder, b.data.partOrder, 0);
     if (partDiff !== 0) return partDiff;
 
-    const groupDiff = (a.data.groupOrder ?? 0) - (b.data.groupOrder ?? 0);
+    const groupDiff = compareOptionalNumber(a.data.groupOrder, b.data.groupOrder, 0);
     if (groupDiff !== 0) return groupDiff;
 
-    const orderDiff = (a.data.order ?? 0) - (b.data.order ?? 0);
+    const orderDiff = compareOptionalNumber(a.data.order, b.data.order, 0);
     if (orderDiff !== 0) return orderDiff;
 
-    const chapterA = a.data.chapter ?? Number.MAX_SAFE_INTEGER;
-    const chapterB = b.data.chapter ?? Number.MAX_SAFE_INTEGER;
-    if (chapterA !== chapterB) return chapterA - chapterB;
+    const chapterDiff = compareOptionalNumber(a.data.chapter, b.data.chapter);
+    if (chapterDiff !== 0) return chapterDiff;
 
-    return a.data.title.localeCompare(b.data.title, 'ko');
+    return compareKo(a.data.title, b.data.title);
   });
 }
 
@@ -99,9 +102,7 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
 
   for (const entry of entries) {
     const seriesSlug = getStorySeriesSlug(entry);
-    const seriesEntries = seriesMap.get(seriesSlug) ?? [];
-    seriesEntries.push(entry);
-    seriesMap.set(seriesSlug, seriesEntries);
+    pushGroupedValue(seriesMap, seriesSlug, entry);
   }
 
   return Array.from(seriesMap.entries())
@@ -112,9 +113,7 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
 
       for (const entry of documentEntries) {
         const partSlug = getStoryPartSlug(entry);
-        const partEntries = partMap.get(partSlug) ?? [];
-        partEntries.push(entry);
-        partMap.set(partSlug, partEntries);
+        pushGroupedValue(partMap, partSlug, entry);
       }
 
       const parts = Array.from(partMap.entries())
@@ -123,9 +122,7 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
 
           for (const entry of partEntries) {
             const groupSlug = getStoryGroupSlug(entry);
-            const groupEntries = groupMap.get(groupSlug) ?? [];
-            groupEntries.push(entry);
-            groupMap.set(groupSlug, groupEntries);
+            pushGroupedValue(groupMap, groupSlug, entry);
           }
 
           const groups = Array.from(groupMap.entries())
@@ -137,11 +134,7 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
               entries: sortStoryEntries(groupEntries),
               count: groupEntries.length,
             }))
-            .sort((a, b) => {
-              const orderDiff = a.order - b.order;
-              if (orderDiff !== 0) return orderDiff;
-              return a.label.localeCompare(b.label, 'ko');
-            });
+            .sort(compareOrderAndLabel);
 
           return {
             key: partSlug,
@@ -153,11 +146,7 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
             count: partEntries.length,
           };
         })
-        .sort((a, b) => {
-          const orderDiff = a.order - b.order;
-          if (orderDiff !== 0) return orderDiff;
-          return a.label.localeCompare(b.label, 'ko');
-        });
+        .sort(compareOrderAndLabel);
 
       return {
         key: seriesSlug,
@@ -170,17 +159,9 @@ export function buildStoryHierarchy(entries: StoryEntry[]): StorySeries[] {
         count: documentEntries.length,
       };
     })
-    .sort((a, b) => {
-      const orderDiff = a.order - b.order;
-      if (orderDiff !== 0) return orderDiff;
-      return a.label.localeCompare(b.label, 'ko');
-    });
+    .sort(compareOrderAndLabel);
 }
 
 export function formatStoryTag(tag: string): { prefix: string; label: string } {
-  const [prefix, ...rest] = tag.split('/');
-  return {
-    prefix: rest.length > 0 ? prefix : '태그',
-    label: rest.length > 0 ? rest.join('/') : tag,
-  };
+  return parsePrefixTag(tag);
 }

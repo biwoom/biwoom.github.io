@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-06-20
+Last updated: 2026-06-25
 
 ## Project
 
@@ -20,14 +20,25 @@ Last updated: 2026-06-20
 - `src/content/pages/` holds public permanent project documents such as the brand definition.
 - `src/content/text/` holds TEXT series and documents.
 - `src/content/story/` holds STORY series and chapters.
+- `blog`, `text`, and `story` now store all tags in `tags: string[]`; `prefixTags` is no longer part of the active schema.
+- Slash-form `prefix/value` tags are now the repository-wide rule across active content collections.
 - `src/content/design/` holds DESIGN metadata and source assets.
 - DESIGN tag filtering now uses prefix-form strings in `tags` instead of a separate `prefixTags` field.
 - DESIGN prefix labels now use Korean names in the sidebar and content tags.
+- DESIGN index filtering now uses the shared client filter module instead of a page-local inline implementation.
 - `src/content/blog/` holds dated work logs.
 - Blog list thumbnails now prefer a `thumbnailAsset` frontmatter field and fall back to the first relative Markdown image in the body.
 - `src/content/entities/` and `src/content/ontology/` hold knowledge graph material.
 - `public/atlas/` holds static ATLAS HTML archives.
 - `public/generated/` is generated from content assets and should not be committed.
+- `scripts/check-content.mjs` validates content metadata, tag syntax, asset existence, and forbidden junk files.
+- `src/lib/content-structure.ts` centralizes shared TEXT/STORY slug, grouping, and ordering helpers.
+- `src/lib/assets.ts` centralizes generated-asset URLs, versioned download filenames, and blog thumbnail candidate discovery.
+- `src/lib/client/content-filters.ts` centralizes shared prefix-filter, DESIGN library filter, and TEXT/STORY tag-index client behavior.
+- `npm run check` runs the content validator.
+- `npm run build` now requires the validator to pass before the Astro build starts.
+- Phase 3 styling work is underway: repeated page-level presentation is being moved into `src/styles/base.css` and the page-specific CSS layers.
+- `BaseLayout.astro` now loads only Pretendard externally; Google Fonts requests were removed and the existing fallback stacks carry `Inter`, `Noto Sans KR`, and `JetBrains Mono`.
 - TEXT and STORY document-level Entity links use a shared `entities: string[]` frontmatter field.
 - TEXT and STORY detail pages can render a right-side Entity name-card panel from the document `entities` list.
 - `NET` is now a first-class public menu with:
@@ -38,6 +49,7 @@ Last updated: 2026-06-20
 - Mono typography is reserved for code-like surfaces such as `code`, `pre`, `kbd`, `samp`, and explicit code-chip style elements.
 - Shared semantic typography classes now use `ol-meta-label` and `ol-section-label` instead of the older mono-named labels.
 - TEXT and STORY use the shared Entity side-panel component with explicit `variant` props so each menu can carry its own styling without a single universal panel skin.
+- TEXT and STORY series pages now share one tag-index interaction layer instead of duplicating near-identical client scripts.
 
 ## Deployment State
 
@@ -46,6 +58,7 @@ Last updated: 2026-06-20
 - Astro `base` should not be set.
 - `public/robots.txt` and `src/pages/rss.xml.ts` should remain root-URL aware.
 - `.github/workflows/deploy.yml` builds and deploys on pushes to `main`.
+- The deploy workflow now runs `npm run check` before the site build step.
 - GitHub upload workflow performs only the requested push. Work-log updates and deployment checks are separate actions that require an explicit request.
 - `git push origin main` is allowed as the default OL HOME upload command; non-default push targets still require confirmation.
 
@@ -74,6 +87,7 @@ Last updated: 2026-06-20
   - shared name-card behavior across NET, TEXT, STORY, and ENTITY
 - Unified the default site typography so UI labels and metadata use the shared `--ol-font-ui` stack by default.
 - Menu/main/detail pages now use `.ol-meta-badge` and inherited sans typography for badges, tags, and helper text.
+- Began Phase 2 refactoring by extracting shared content structure, asset, and client-filter modules and wiring active pages to them.
 
 ## Open Follow-ups
 
@@ -81,6 +95,7 @@ Last updated: 2026-06-20
 - Consider adding examples to OL content skills if future content tasks reveal repeated patterns.
 - Keep deployment docs aligned if GitHub Pages settings or repository naming changes again.
 - If older planning docs mention STORY `primaryEntities` or `primaryPlaces`, treat them as historical notes; current TEXT/STORY document linking uses `entities`.
+- Keep entity tags in slash-form when older flat tags are touched.
 
 ## Known Acceptable Warnings
 

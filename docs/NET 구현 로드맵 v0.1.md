@@ -88,7 +88,7 @@ OLPrefixTagFilters 재사용 가능성 확인
 Entity 카드 목록을 이미 만들 수 있는가?
 Entity 상세 페이지로 이동할 수 있는가?
 concepts 폴더가 실제로 존재하는가?
-prefixTags 또는 tags 기반 필터를 붙일 수 있는가?
+slash-form `tags` 기반 prefix 필터를 붙일 수 있는가?
 ```
 
 ### 판단

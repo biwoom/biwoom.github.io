@@ -615,3 +615,51 @@ This file records concise date-based work summaries for continuity across Codex 
 - Removed automatic `.agents/context/work-log.md` updates, follow-up log commits, follow-up pushes, and deployment checks from the default upload path.
 - Kept work-log maintenance as a separate documentation/repository-management action when explicitly useful or requested.
 - Local validation: not run; this was an internal workflow documentation update.
+
+## 2026-06-25
+
+### Tag And Validation Consistency Refactor
+
+- Removed `prefixTags` from the active `blog`, `text`, and `story` schemas in `src/content.config.ts`.
+- Migrated active BLOG frontmatter and the Buddha Story series metadata so management tags now live inside slash-form `tags`.
+- Updated older flat entity tags that were still live content to slash-form tags.
+- Added `scripts/check-content.mjs` to block deprecated fields, non-slash tags, missing asset files, missing minimum published metadata, and `.DS_Store`.
+- Added `npm run check`, made `npm run build` depend on the validator, and updated `.github/workflows/deploy.yml` so CI runs the same check before build.
+- Updated README, the internal content management manual, the OL content-authoring skill, selected planning docs, and older operational blog posts to match the current tag and asset rules.
+- Removed repository `.DS_Store` files from the working tree.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed.
+  - Generated route verification confirmed representative outputs for:
+    - `/blog/net-menu-name-card-phase1/`
+  - `/text/body-mind-transformation/01-six-steps/`
+  - `/story/buddha-story/part-1/01-sumedha-begins-to-ask/`
+  - `/design/two-perspectives/`
+
+### Phase 2 Shared Helper Extraction
+
+- Added `src/lib/content-structure.ts` so TEXT/STORY slug generation, grouped-map assembly, and Korean-aware ordering no longer duplicate the same helper logic.
+- Added `src/lib/assets.ts` so generated-asset URLs, versioned download filenames, and BLOG thumbnail discovery now use one shared implementation.
+- Added `src/lib/client/content-filters.ts` so:
+  - the shared prefix-filter component
+  - the DESIGN library filter
+  - the TEXT/STORY series tag-index interactions
+  all reuse one client-side behavior layer instead of separate inline scripts.
+- Refactored `src/pages/design/index.astro`, `src/pages/design/[slug].astro`, `src/pages/blog/index.astro`, `src/lib/text.ts`, `src/lib/story.ts`, `src/components/common/OLPrefixTagFilters.astro`, `src/pages/text/[series]/index.astro`, and `src/pages/story/[series]/index.astro` to consume the shared helpers.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed.
+
+### Phase 3 Style Layer And Font Loading Start
+
+- Moved repeated static inline presentation from the active TEXT/STORY/DESIGN/BLOG pages into the existing CSS layer:
+  - shared layout helpers in `src/styles/base.css`
+  - BLOG detail/list styling in `src/styles/pages/blog.css`
+  - DESIGN empty-state/detail helpers in `src/styles/pages/design.css`
+  - STORY library card and empty-state helpers in `src/styles/pages/story-base.css`
+- Updated the affected Astro pages so repeated hero padding, section dividers, page headings, card metadata, empty states, and detail-page framing now resolve through CSS classes instead of page-local inline style blocks.
+- Added `--ol-font-mono` and switched code-like elements to that token.
+- Simplified external font loading in `src/layouts/BaseLayout.astro` by removing Google Fonts requests and keeping only the Pretendard stylesheet plus fallback font stacks.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed.

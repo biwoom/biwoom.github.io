@@ -46,3 +46,33 @@ export const formatLabel: Record<string, string> = {
   image: 'IMAGE',
   mixed: 'HTML/PDF',
 };
+
+type DesignFormatData = {
+  format: string;
+  htmlAsset?: string;
+  pdfAsset?: string;
+  imageAsset?: string;
+};
+
+type DesignPreviewData = {
+  previewAssets?: string[];
+  thumbnailAsset?: string;
+  imageAsset?: string;
+};
+
+export function getDesignFormats(data: DesignFormatData): string[] {
+  const formats = [];
+  if (data.htmlAsset) formats.push('HTML');
+  if (data.pdfAsset) formats.push('PDF');
+  if (data.imageAsset && formats.length === 0) formats.push(formatLabel[data.format] ?? 'IMAGE');
+  return formats.length > 0 ? formats : [formatLabel[data.format] ?? 'IMAGE'];
+}
+
+export function getDesignPreviewAssets(data: DesignPreviewData): string[] {
+  if (data.previewAssets && data.previewAssets.length > 0) return data.previewAssets;
+  return [data.imageAsset ?? data.thumbnailAsset].filter(Boolean) as string[];
+}
+
+export function getDesignPrimaryPreviewAsset(data: DesignPreviewData): string | undefined {
+  return getDesignPreviewAssets(data)[0];
+}

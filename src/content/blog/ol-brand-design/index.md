@@ -1,15 +1,16 @@
 ---
 title: "\"올\"이라는 이름 — 브랜드 정의와 디자인 시스템"
-description: "한 음절에 담긴 의미 구조, shadcn/ui 기반 디자인 시스템 선택의 이유, 그리고 '눈에 띄지 않는 디자인'이 불교 콘텐츠와 맞닿는 지점."
-date: 2026-05-25
+description: 한 음절에 담긴 의미 구조, shadcn/ui 기반 디자인 시스템 선택의 이유, 그리고 '눈에 띄지 않는 디자인'이 불교 콘텐츠와 맞닿는 지점.
+date: 2026-05-25T00:00:00.000Z
 category: OL
 readingTime: 7
-tags: ["브랜드", "디자인"]
-prefixTags:
-  - "kind:blog"
-  - "project:ol-home"
-  - "topic:brand"
-  - "topic:design-system"
+tags:
+  - topic/브랜드
+  - topic/디자인
+  - kind/blog
+  - project/ol-home
+  - topic/brand
+  - topic/design-system
 published: true
 ---
 

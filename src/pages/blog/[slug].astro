@@ -31,15 +31,15 @@ const pagefindBreadcrumb = ['BLOG', entry.data.category]
 >
   <main>
     <section class="ol-section">
-      <div class="ol-container" style="max-width: 720px;">
-        <header style="margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--ol-border);">
+      <div class="ol-container ol-container--readable">
+        <header class="ol-blog-detail-header">
           {entry.data.category && (
             <span class="ol-badge">{entry.data.category}</span>
           )}
-          <h1 style="font-size: 36px; margin-top: 12px; letter-spacing: -0.03em;" class="ol-kr">
+          <h1 class="ol-kr ol-blog-detail-title">
             {entry.data.title}
           </h1>
-          <div style="margin-top: 12px; font-size: 12px; color: var(--ol-muted); display: flex; gap: 12px;">
+          <div class="ol-blog-detail-meta">
             <span>{entry.data.date.toLocaleDateString('ko-KR')}</span>
             {entry.data.readingTime && <span>· {entry.data.readingTime}분 읽기</span>}
           </div>
@@ -47,8 +47,8 @@ const pagefindBreadcrumb = ['BLOG', entry.data.category]
         <div class="ol-prose">
           <Content />
         </div>
-        <footer style="margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--ol-border);">
-          <a href={url('/blog')} style="font-size: 12.5px; color: var(--ol-muted); text-decoration: none;">← 목록으로</a>
+        <footer class="ol-blog-detail-footer">
+          <a href={url('/blog')} class="ol-blog-detail-back">← 목록으로</a>
         </footer>
       </div>
     </section>

@@ -1,18 +1,18 @@
 ---
-title: "불교의 세계관 — 두 가지 관점으로 보기"
-description: "불교공부모임에서 나온 질문들에 답하며 제작한 인포그래픽. 불교적 관찰이 무엇을 설명하려는지, 그 목적이 어디에 있는지 정리했다."
-date: 2026-06-11
+title: 불교의 세계관 — 두 가지 관점으로 보기
+description: 불교공부모임에서 나온 질문들에 답하며 제작한 인포그래픽. 불교적 관찰이 무엇을 설명하려는지, 그 목적이 어디에 있는지 정리했다.
+date: 2026-06-11T00:00:00.000Z
 category: DESIGN
 readingTime: 3
-tags: ["DESIGN", "불교세계관", "무아", "연기", "사성제", "인포그래픽"]
-prefixTags:
-  - "kind:blog"
-  - "project:design"
-  - "topic:불교세계관"
-  - "topic:무아"
-  - "topic:연기"
-  - "topic:사성제"
-  - "kind:infographic"
+tags:
+  - project/design
+  - topic/불교세계관
+  - topic/무아
+  - topic/연기
+  - topic/사성제
+  - topic/인포그래픽
+  - kind/blog
+  - kind/infographic
 published: true
 ---
 

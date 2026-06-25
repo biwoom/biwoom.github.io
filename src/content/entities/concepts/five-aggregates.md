@@ -25,10 +25,10 @@ relatedText:
     path: "/text/body-mind-transformation/02-buddhist-worldview-two-perspectives/"
     role: "주관적 관찰의 핵심 분석 체계"
 tags:
-  - 개념
-  - 무아
-  - 수행관찰
-  - 불교세계관
+  - 종류/개념
+  - 주제/무아
+  - 주제/수행관찰
+  - 주제/불교세계관
 sources:
   - "Bhikkhu Bodhi. *In the Buddha's Words*. Wisdom Publications, 2005."
 published: true
@@ -37,4 +37,3 @@ published: true
 오온(五蘊)은 인간 존재와 경험을 색(色), 수(受), 상(想), 행(行), 식(識)의 다섯 무더기로 관찰하는 분류이다.
 
 이 분류는 "나"라고 집착하는 대상이 하나의 고정된 실체가 아니라 조건에 따라 결합하고 흩어지는 몸과 마음의 흐름임을 살피게 한다.
-

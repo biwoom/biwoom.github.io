@@ -20,6 +20,8 @@
   --ol-font-sans:    "Pretendard", "Noto Sans KR", "Inter",
                      -apple-system, BlinkMacSystemFont, sans-serif;
   --ol-font-ui:      var(--ol-font-sans);
+  --ol-font-mono:    "JetBrains Mono", "SFMono-Regular", "SF Mono",
+                     ui-monospace, Menlo, Consolas, monospace;
 
   /* ── Radius ── */
   --ol-r-sm:  6px;

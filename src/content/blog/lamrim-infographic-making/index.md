@@ -1,17 +1,18 @@
 ---
-title: "보리도차제론을 람림 삼사도 인포그래픽으로 만들기"
-description: "보리도차제론의 수행체계를 신해도·귀의도·출리도·보리도 구조로 다시 정리하고 인포그래픽으로 제작한 과정."
-date: 2026-06-04
+title: 보리도차제론을 람림 삼사도 인포그래픽으로 만들기
+description: 보리도차제론의 수행체계를 신해도·귀의도·출리도·보리도 구조로 다시 정리하고 인포그래픽으로 제작한 과정.
+date: 2026-06-04T00:00:00.000Z
 category: DESIGN
 readingTime: 6
-tags: ["DESIGN", "람림", "보리도차제론", "인포그래픽", "Claude Design"]
-prefixTags:
-  - "kind:blog"
-  - "project:design"
-  - "topic:람림"
-  - "text:보리도차제론"
-  - "kind:infographic"
-  - "tool:claude-design"
+tags:
+  - project/design
+  - topic/람림
+  - topic/보리도차제론
+  - topic/인포그래픽
+  - tool/claude-design
+  - kind/blog
+  - text/보리도차제론
+  - kind/infographic
 published: true
 ---
 

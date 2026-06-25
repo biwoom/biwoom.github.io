@@ -20,9 +20,9 @@ relations:
     predicate: is_related_to
     object: sunyata
 tags:
-  - 개념
-  - 핵심교리
-  - 붓다가르침
+  - 종류/개념
+  - 주제/핵심교리
+  - 주제/붓다가르침
 sources:
   - "Bodhi, Bhikkhu. *The Connected Discourses of the Buddha*. Wisdom Publications, 2000."
 published: true

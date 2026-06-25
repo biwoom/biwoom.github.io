@@ -200,11 +200,14 @@ Current collection groups:
 
 Design and story source assets are stored next to their content source under `assets/`. During development and build, `scripts/sync-content-assets.mjs` syncs those assets into `public/generated/` by copying changed files and removing stale generated files.
 
+All collections use `tags: string[]` as the single tag field. Tags must use slash-form `prefix/value`, for example `개념/연기`, `종류/인포그래픽`, or `kind/blog`.
+
 ## Commands
 
 ```sh
 npm install
 npm run dev
+npm run check
 npm run build
 npm run preview
 ```
@@ -212,7 +215,8 @@ npm run preview
 Command behavior:
 
 - `npm run dev`: syncs content assets, then starts Astro dev server
-- `npm run build`: syncs assets, builds the static site, then creates the Pagefind index
+- `npm run check`: validates content frontmatter, tag syntax, asset existence, and forbidden junk files
+- `npm run build`: runs the content check, syncs assets, builds the static site, then creates the Pagefind index
 - `npm run preview`: previews the built site locally
 
 The project requires Node.js `>=22.12.0`.
