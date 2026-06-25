@@ -175,3 +175,12 @@ This file records durable project decisions that future Codex sessions should pr
 - Active Astro pages and shared site components should avoid inline `style` attributes.
 - Standalone DESIGN HTML assets may retain internal inline styles when those styles are part of the authored visual artifact.
 - DESIGN HTML assets should not load Google Fonts directly; use local/fallback font stacks unless a future asset has an explicit exception.
+
+### TEXT And STORY Desktop TOC Pattern
+
+- TEXT and STORY document pages should use the same desktop information architecture for document TOC behavior.
+- The desktop `On this page` TOC belongs in the right-side sticky utility stack above the Entity side-panel, not in the top content toolbar.
+- The desktop TOC should default to collapsed state and expand from a visible trigger that shows the heading count.
+- Mobile TOC interactions should remain separate from the desktop sticky TOC pattern unless a later redesign intentionally unifies them.
+- Desktop TOC links should use scroll-spy highlighting so the active `h2` or `h3` section stays visible during reading.
+- On STORY document pages, the right-side sticky utility stack should offset below the sticky part navigation so it is not visually covered while scrolling.

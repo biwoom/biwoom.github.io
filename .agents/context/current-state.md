@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-06-25
+Last updated: 2026-06-26
 
 ## Project
 
@@ -58,6 +58,10 @@ Last updated: 2026-06-25
 - Shared semantic typography classes now use `ol-meta-label` and `ol-section-label` instead of the older mono-named labels.
 - TEXT and STORY use the shared Entity side-panel component with explicit `variant` props so each menu can carry its own styling without a single universal panel skin.
 - TEXT and STORY series pages now share one tag-index interaction layer instead of duplicating near-identical client scripts.
+- TEXT and STORY document pages now use a shared right-side desktop utility stack for `On this page` TOC and Entity name cards instead of keeping the desktop TOC inside the top content toolbar.
+- Desktop `On this page` TOC cards now default to collapsed state, show the heading count in the trigger, and use scroll-spy highlighting for the active `h2`/`h3` section.
+- Mobile TOC behavior remains the existing dropdown/panel pattern; the desktop sticky TOC changes do not alter the mobile controls.
+- STORY desktop sticky TOC and Entity stack now offset below the sticky part navigation so the right-side utility stack is not covered while scrolling.
 
 ## Deployment State
 

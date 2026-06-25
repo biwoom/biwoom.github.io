@@ -721,3 +721,16 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated `AGENTS.md` so repo-wide instructions now include the centralized config rule, tags-only policy, provider-neutral DESIGN asset authoring, and shared TEXT/STORY tag-results behavior.
 - Local validation:
   - `npm run build` passed.
+
+### TEXT And STORY Desktop TOC Consolidation
+
+- Moved the desktop `On this page` TOC for TEXT documents out of the top document toolbar and into a right-side sticky utility stack above the Entity side-panel.
+- Applied the same desktop TOC structure to STORY documents so TEXT and STORY now share the same right-side utility layout pattern.
+- Kept the existing mobile TOC dropdown behavior for both TEXT and STORY; the TOC relocation is desktop-only.
+- Updated the TEXT and STORY TOC rendering scripts so desktop and mobile TOC lists are populated from the same heading scan.
+- Added collapsed-by-default desktop TOC triggers with visible heading counts.
+- Added scroll-spy behavior for desktop and mobile TOC links so the active `h2`/`h3` section is highlighted while scrolling.
+- Removed leftover STORY-specific TOC card overrides so STORY now follows the same shared TOC card spacing and padding pattern as TEXT.
+- Adjusted the STORY right-side sticky utility stack to offset below the sticky part navigation, preventing the desktop TOC from being covered while scrolling.
+- Local validation:
+  - `npm run build` passed.
