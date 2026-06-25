@@ -1,0 +1,55 @@
+---
+interface Props {
+  emptyText: string;
+  summary?: string;
+  title?: string;
+  variant?: 'text' | 'story';
+}
+
+const {
+  emptyText,
+  summary = '선택한 태그를 모두 포함한 문서를 표시합니다.',
+  title = '태그 문서',
+  variant = 'text',
+} = Astro.props;
+const titleId = `tag-results-title-${variant}`;
+---
+
+<div class:list={['ol-tag-results-modal', `ol-tag-results-modal--${variant}`]} data-tag-results hidden>
+  <button
+    type="button"
+    class="ol-tag-results-backdrop"
+    data-tag-results-close
+    aria-label="태그 결과 닫기"
+  ></button>
+  <section
+    class="ol-tag-results-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby={titleId}
+  >
+    <div class="ol-tag-results-head">
+      <div>
+        <span class="ol-section-label">Tag index</span>
+        <h2 id={titleId} class="ol-kr" data-tag-results-title>{title}</h2>
+        <p class="ol-tag-results-summary">
+          <em>{summary}</em>
+          <strong data-tag-results-count>0개 문서</strong>
+        </p>
+      </div>
+      <div class="ol-tag-results-actions">
+        <button type="button" data-tag-results-clear>초기화</button>
+        <button type="button" data-tag-results-close>닫기</button>
+      </div>
+    </div>
+    <div class="ol-tag-results-selected" data-selected-tags></div>
+    <p class="ol-tag-results-empty ol-kr" data-tag-results-empty hidden>
+      {emptyText}
+    </p>
+    <div class="ol-tag-results-panel">
+      <div class="ol-tag-results-list">
+        <slot />
+      </div>
+    </div>
+  </section>
+</div>

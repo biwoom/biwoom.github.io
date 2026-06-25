@@ -870,7 +870,7 @@ relatedText:
 
 design:
   styleSheet: "/design/buddha-story-person-sumedha-style/"
-  profileImage: "/generated/design/buddha-story/assets/persons/sumedha/profile.webp"
+  imageAsset: "sumedha-profile/profile.webp"
 
 tags:
   - "인물/수메다"
@@ -1468,7 +1468,7 @@ DESIGN은 Entity의 시각 자산을 담당한다.
 ```yaml
 design:
   styleSheet: "/design/buddha-story-person-sumedha-style/"
-  profileImage: "/generated/design/buddha-story/assets/persons/sumedha/profile.webp"
+  imageAsset: "sumedha-profile/profile.webp"
 ```
 
 장소 Entity:

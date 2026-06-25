@@ -10,6 +10,25 @@
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 32px;
 }
+.ol-footer-brand {
+  margin-bottom: 10px;
+}
+.ol-footer-tagline {
+  color: var(--ol-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+.ol-footer-copy {
+  max-width: 32ch;
+  color: var(--ol-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.ol-footer-social {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
 .ol-footer h4 {
   font-size: 12px;
   font-family: inherit;

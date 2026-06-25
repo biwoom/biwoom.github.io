@@ -88,26 +88,6 @@
     transform: translateX(-50%);
   }
 
-  .ol-story-tag-results {
-    top: calc(100% + 14px);
-    width: min(100vw - 24px, 860px);
-    max-height: min(70vh, 620px);
-    padding: 16px;
-  }
-
-  .ol-story-tag-results-head {
-    flex-direction: row;
-  }
-
-  .ol-story-tag-results-actions {
-    width: auto;
-    justify-content: flex-end;
-  }
-
-  .ol-story-tag-result-list {
-    grid-template-columns: 1fr;
-  }
-
   .ol-story-biblio-grid,
   .ol-story-part-layout {
     grid-template-columns: 1fr;

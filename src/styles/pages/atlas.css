@@ -1,6 +1,90 @@
 /* ============================================================
    OL ATLAS — iframe 미리보기
    ============================================================ */
+.atlas-preview-card {
+  border-color: var(--ol-border-strong);
+}
+.atlas-dot-red {
+  background: #ff5f57;
+}
+.atlas-dot-yellow {
+  background: #febc2e;
+}
+.atlas-dot-green {
+  background: #28c840;
+}
+.atlas-section-title {
+  margin-top: 12px;
+  font-size: 32px;
+  letter-spacing: -0.025em;
+}
+.atlas-section-copy {
+  max-width: 50ch;
+  margin-top: 12px;
+  color: var(--ol-muted);
+}
+.atlas-feature-list {
+  margin-top: 32px;
+}
+.atlas-download-card {
+  position: sticky;
+  top: 88px;
+}
+.atlas-download-title {
+  margin-top: 8px;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.atlas-download-copy {
+  margin-top: 6px;
+  color: var(--ol-muted);
+  font-size: 13.5px;
+}
+.atlas-download-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+.atlas-download-link {
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+}
+.atlas-download-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.atlas-download-type {
+  border-color: transparent;
+  background: var(--ol-ink);
+  color: var(--ol-bg);
+}
+.atlas-download-meta {
+  color: var(--ol-muted);
+  font-size: 11px;
+}
+.atlas-side-label {
+  margin-bottom: 10px;
+}
+.atlas-requirements {
+  color: var(--ol-ink-2);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.atlas-muted {
+  color: var(--ol-muted);
+}
+.atlas-changelog {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ol-ink-2);
+  font-size: 13px;
+}
+.atlas-changelog li {
+  padding: 4px 0;
+}
 
 /* ── 브라우저 크롬 바 ── */
 .atlas-chrome {
@@ -443,6 +527,9 @@
   color: var(--ol-muted);
 }
 .ol-mobile-sheet-link--sub:hover { color: var(--ol-ink); }
+.ol-mobile-sheet-link-icon {
+  margin-left: 4px;
+}
 
 /* 구분선 */
 .ol-mobile-sheet-divider {

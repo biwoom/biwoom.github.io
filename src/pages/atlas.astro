@@ -52,15 +52,15 @@ const {
     <!-- ATLAS 실제 툴 미리보기 (iframe + 탭 전환) -->
     <section class="ol-section-tight">
       <div class="ol-container">
-        <div class="ol-card ol-card-flush" style="border-color: var(--ol-border-strong);" id="atlas-preview-card">
+        <div class="ol-card ol-card-flush atlas-preview-card" id="atlas-preview-card">
 
           <!-- 브라우저 크롬: 신호등 + 탭 + 열기 버튼 -->
           <div class="atlas-chrome">
             <!-- 신호등 -->
             <div class="atlas-chrome-dots">
-              <span style="background: #ff5f57;"></span>
-              <span style="background: #febc2e;"></span>
-              <span style="background: #28c840;"></span>
+              <span class="atlas-dot-red"></span>
+              <span class="atlas-dot-yellow"></span>
+              <span class="atlas-dot-green"></span>
             </div>
 
             <!-- 탭 -->
@@ -160,10 +160,10 @@ const {
         <div class="ol-section-grid-2">
           <div>
             <span class="ol-section-label">FEATURES · 설계 원칙</span>
-            <h2 style="font-size: 32px; margin-top: 12px; letter-spacing: -0.025em;" class="ol-kr">설치 없음, 서버 없음, 잠금 없음.</h2>
-            <p style="color: var(--ol-muted); margin-top: 12px; max-width: 50ch;" class="ol-kr">ATLAS는 모든 콘텐츠를 단일 HTML 파일로 보관합니다. 그 파일을 누구에게 보내든, 그 사람도 똑같이 열고 — 자유롭게 — 수정할 수 있습니다.</p>
+            <h2 class="atlas-section-title ol-kr">설치 없음, 서버 없음, 잠금 없음.</h2>
+            <p class="atlas-section-copy ol-kr">ATLAS는 모든 콘텐츠를 단일 HTML 파일로 보관합니다. 그 파일을 누구에게 보내든, 그 사람도 똑같이 열고 — 자유롭게 — 수정할 수 있습니다.</p>
 
-            <div style="margin-top: 32px;">
+            <div class="atlas-feature-list">
               <div class="ol-feature">
                 <div class="ic">01</div>
                 <div>
@@ -203,46 +203,46 @@ const {
           </div>
 
           <aside>
-            <div class="ol-card" style="position: sticky; top: 88px;">
+            <div class="ol-card atlas-download-card">
               <span class="ol-meta-label">DOWNLOAD · v{version}</span>
-              <h3 style="font-size: 22px; margin-top: 8px; letter-spacing: -0.02em;" class="ol-kr">지금 받기</h3>
-              <p style="color: var(--ol-muted); font-size: 13.5px; margin-top: 6px;" class="ol-kr">한 파일을 받아 더블클릭하면 끝입니다.</p>
+              <h3 class="atlas-download-title ol-kr">지금 받기</h3>
+              <p class="atlas-download-copy ol-kr">한 파일을 받아 더블클릭하면 끝입니다.</p>
 
-              <div style="display: grid; gap: 8px; margin-top: 20px;">
-                <a class="ol-btn ol-btn-outline" style="justify-content: space-between; height: 48px; padding: 0 16px;" href={url(latestPath)} download={fileName}>
-                  <span style="display: flex; align-items: center; gap: 10px;">
-                    <span class="ol-meta-badge" style="background: var(--ol-ink); color: var(--ol-bg); border-color: transparent;">HTML</span>
+              <div class="atlas-download-actions">
+                <a class="ol-btn ol-btn-outline atlas-download-link" href={url(latestPath)} download={fileName}>
+                  <span class="atlas-download-main">
+                    <span class="ol-meta-badge atlas-download-type">HTML</span>
                     {fileName}
                   </span>
-                  <span style="font-size: 11px; color: var(--ol-muted);">{fileSize}</span>
+                  <span class="atlas-download-meta">{fileSize}</span>
                 </a>
-                <a class="ol-btn ol-btn-outline" style="justify-content: space-between; height: 48px; padding: 0 16px;" href="https://github.com/biwoom/ol-atlas" target="_blank" rel="noopener">
-                  <span style="display: flex; align-items: center; gap: 10px;">
+                <a class="ol-btn ol-btn-outline atlas-download-link" href="https://github.com/biwoom/ol-atlas" target="_blank" rel="noopener">
+                  <span class="atlas-download-main">
                     <span class="ol-meta-badge">SRC</span>github.com/biwoom/ol-atlas
                   </span>
-                  <span style="font-size: 11px; color: var(--ol-muted);">main</span>
+                  <span class="atlas-download-meta">main</span>
                 </a>
               </div>
 
               <div class="ol-divider"></div>
 
-              <div class="ol-meta-label" style="margin-bottom: 10px;">REQUIREMENTS</div>
-              <div style="font-size: 13px; color: var(--ol-ink-2); line-height: 1.75;">
+              <div class="ol-meta-label atlas-side-label">REQUIREMENTS</div>
+              <div class="atlas-requirements">
                 하나의 모던 브라우저<br>
                 Chrome · Firefox · Safari · Edge 등<br>
-                <span style="color: var(--ol-muted);">(인터넷 연결도 필요 없음)</span>
+                <span class="atlas-muted">(인터넷 연결도 필요 없음)</span>
               </div>
 
               <div class="ol-divider"></div>
 
-              <div class="ol-meta-label" style="margin-bottom: 10px;">CHANGELOG</div>
-              <ul style="margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--ol-ink-2);">
-                <li style="padding: 4px 0;"><span class="ol-meta-badge">0.0.7</span> &nbsp; 코드 구조 리팩토링</li>
-                <li style="padding: 4px 0;"><span class="ol-meta-badge">0.0.6</span> &nbsp; 마크다운 각주 기능 추가</li>
-                <li style="padding: 4px 0;"><span class="ol-meta-badge">0.0.5</span> &nbsp; 마크다운 렌더링 스타일 개선</li>
-                <li style="padding: 4px 0;"><span class="ol-meta-badge">0.0.4</span> &nbsp; dev모드 추가</li>
-                <li style="padding: 4px 0;"><span class="ol-meta-badge">0.0.3</span> &nbsp; 편집기록관리 추가</li>
-                <li style="padding: 4px 0;"><span class="ol-meta-badge">0.0.2</span> &nbsp; 문서 view모드 추가</li>
+              <div class="ol-meta-label atlas-side-label">CHANGELOG</div>
+              <ul class="atlas-changelog">
+                <li><span class="ol-meta-badge">0.0.7</span> &nbsp; 코드 구조 리팩토링</li>
+                <li><span class="ol-meta-badge">0.0.6</span> &nbsp; 마크다운 각주 기능 추가</li>
+                <li><span class="ol-meta-badge">0.0.5</span> &nbsp; 마크다운 렌더링 스타일 개선</li>
+                <li><span class="ol-meta-badge">0.0.4</span> &nbsp; dev모드 추가</li>
+                <li><span class="ol-meta-badge">0.0.3</span> &nbsp; 편집기록관리 추가</li>
+                <li><span class="ol-meta-badge">0.0.2</span> &nbsp; 문서 view모드 추가</li>
               </ul>
             </div>
           </aside>

@@ -74,6 +74,12 @@ src/content/story/buddha-story/assets/index.html
 `public/generated/`는 빌드 산출물입니다. 원본처럼 직접 관리하지 않습니다.
 GitHub Actions에서는 `public/generated/` 캐시를 복원한 뒤 증분 동기화를 수행하므로, DESIGN/STORY 자산이 많아져도 변경되지 않은 파일의 반복 복사를 줄일 수 있습니다.
 
+DESIGN 공개 URL은 페이지 템플릿에서 `getDesignAssetUrl()`/`getDesignAssetKeyUrl()` resolver로 생성합니다.
+문서와 frontmatter에는 `/generated/design/...` 직접 URL을 저장하지 않습니다.
+외부 저장소로 전환할 때는 `PUBLIC_DESIGN_ASSET_BASE_URL`과 선택적 `DESIGN_ASSET_MANIFEST`를 사용합니다.
+기존 Markdown 본문에 남은 `/generated/design/{slug}/{asset}` 이미지/링크는 `PUBLIC_DESIGN_ASSET_BASE_URL`이 설정된 빌드에서 외부 URL로 자동 재작성됩니다.
+새 Markdown 본문에서는 DESIGN 자산 이미지를 `![설명](design-asset:{slug}/{asset})` 형식으로 적는 것을 우선 규칙으로 사용합니다.
+
 현재 자동 동기화 대상은 다음 두 컬렉션입니다.
 
 - `design`
@@ -93,6 +99,13 @@ npm run preview
 - `npm run check`는 콘텐츠 validator를 실행합니다.
 - `npm run build`는 validator를 먼저 통과해야 실행됩니다.
 - validator는 deprecated frontmatter, slash-form이 아닌 태그, 자산 누락, 최소 메타 누락, `.DS_Store`를 검사합니다.
+
+### 0.3.1 설정 관리
+
+- 고정 사이트 설정과 env fallback은 루트 `site-config.mjs`에서 관리합니다.
+- 앱 코드에서는 `src/lib/site-config.ts`를 통해 설정을 읽습니다.
+- `PUBLIC_DESIGN_ASSET_BASE_URL`, `DESIGN_ASSET_PROVIDER`, `DESIGN_ASSET_MANIFEST` 예시는 `.env.example`에 둡니다.
+- `.env`는 환경별 실제 값만 넣고, 고정 배포 URL 같은 값은 env로 분산하지 않습니다.
 
 ### 0.4 태그 원칙
 
@@ -414,13 +427,15 @@ src/content/design/
         └── thumb.jpg
 ```
 
-빌드 후:
+로컬 빌드 후 기본 provider:
 
 ```txt
 public/generated/design/two-perspectives/index.html
 public/generated/design/two-perspectives/preview1.png
 public/generated/design/two-perspectives/thumb.jpg
 ```
+
+공개 페이지는 이 경로를 직접 조합하지 않고 DESIGN asset resolver를 통해 URL을 생성합니다.
 
 상세 페이지 URL:
 
@@ -657,7 +672,8 @@ tags:
 - [ ] `type`, `format`, `tags` 작성
 - [ ] `published: true` 설정
 - [ ] `npm run check` 확인
-- [ ] `npm run build` 후 `public/generated/design/{slug}/` 확인
+- [ ] 로컬 provider에서는 `npm run build` 후 `public/generated/design/{slug}/` 확인
+- [ ] 외부 provider에서는 `DESIGN_ASSET_MANIFEST`에 `{slug}/{asset}` key가 있는지 확인
 
 ### BLOG
 
@@ -699,6 +715,12 @@ tags:
 - 자산 표준 필드를 `thumbnailAsset`, `imageAsset`, `previewAssets`, `htmlAsset`, `pdfAsset`, `coverAsset`로 고정했습니다.
 - `npm run check`와 콘텐츠 validator 운영 규칙을 추가했습니다.
 - `npm run build`가 validator를 먼저 통과해야 실행된다는 점을 문서에 반영했습니다.
+
+### 2026-06-26 · v1.9
+
+- DESIGN 자산 URL은 `getDesignAssetUrl()`/`getDesignAssetKeyUrl()` resolver를 통해 생성하도록 운영 원칙을 보강했습니다.
+- 외부 DESIGN 자산 저장소 전환 시 `PUBLIC_DESIGN_ASSET_BASE_URL`, `DESIGN_ASSET_PROVIDER=external`, `DESIGN_ASSET_MANIFEST`를 사용할 수 있음을 문서화했습니다.
+- `/generated/design/...` 직접 URL은 빌드 산출물 확인용으로만 설명하고, 콘텐츠 저장값으로 쓰지 않는 원칙을 추가했습니다.
 
 ### 2026-06-16 · v1.6
 

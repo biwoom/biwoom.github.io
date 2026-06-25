@@ -1,10 +1,37 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
+import { DESIGN_ASSET_MANIFEST } from '../site-config.mjs';
 
 const { load } = yaml;
 
-const repoRoot = process.cwd();
+function readArgs(argv) {
+  const options = {
+    repoRoot: process.cwd(),
+    quiet: false,
+  };
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === '--root') {
+      const root = argv[index + 1];
+      if (!root) throw new Error('--root requires a path');
+      options.repoRoot = path.resolve(root);
+      index += 1;
+      continue;
+    }
+    if (arg === '--quiet') {
+      options.quiet = true;
+      continue;
+    }
+    throw new Error(`unknown option: ${arg}`);
+  }
+
+  return options;
+}
+
+const options = readArgs(process.argv.slice(2));
+const repoRoot = options.repoRoot;
 const contentRoot = path.join(repoRoot, 'src', 'content');
 const deprecatedFields = [
   'coverPath',
@@ -34,6 +61,27 @@ const internalTagPrefixes = new Set([
   'tool',
   'topic',
 ]);
+const designAssetManifestPath = DESIGN_ASSET_MANIFEST
+  ? path.resolve(repoRoot, DESIGN_ASSET_MANIFEST)
+  : '';
+
+function readAssetManifest(filePath) {
+  if (!filePath) return null;
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`DESIGN_ASSET_MANIFEST not found: ${path.relative(repoRoot, filePath)}`);
+  }
+
+  const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const values = Array.isArray(parsed)
+    ? parsed
+    : Array.isArray(parsed?.assets)
+      ? parsed.assets
+      : Object.keys(parsed ?? {});
+
+  return new Set(values.map(value => String(value).replace(/^\/+/, '')));
+}
+
+const designAssetManifest = readAssetManifest(designAssetManifestPath);
 
 function toPosix(value) {
   return value.split(path.sep).join('/');
@@ -108,6 +156,25 @@ function resolveAssetPaths(filePath, assetValue) {
     path.resolve(baseDir, normalized),
     path.resolve(baseDir, 'assets', normalized),
   ];
+}
+
+function getContentEntryId(collection, filePath) {
+  const relativePath = toPosix(path.relative(path.join(contentRoot, collection), filePath));
+  if (path.posix.basename(relativePath).match(/^index\.mdx?$/i)) {
+    return path.posix.dirname(relativePath);
+  }
+  return relativePath.replace(/\.mdx?$/i, '');
+}
+
+function assetExists(collection, filePath, assetValue) {
+  const normalized = assetValue.trim().replace(/^\.\//, '').replace(/^\/+/, '');
+
+  if (collection === 'design' && designAssetManifest) {
+    const entryId = getContentEntryId(collection, filePath);
+    return designAssetManifest.has(`${entryId}/${normalized}`);
+  }
+
+  return resolveAssetPaths(filePath, assetValue).some(candidate => fs.existsSync(candidate));
 }
 
 function checkRequiredMeta(collection, filePath, data, errors) {
@@ -187,7 +254,7 @@ function checkDeprecatedFields(filePath, data, errors) {
   }
 }
 
-function checkAssetFields(filePath, data, errors) {
+function checkAssetFields(collection, filePath, data, errors) {
   const relativePath = toPosix(path.relative(repoRoot, filePath));
   for (const field of assetFields) {
     if (!Object.prototype.hasOwnProperty.call(data, field)) continue;
@@ -195,7 +262,7 @@ function checkAssetFields(filePath, data, errors) {
 
     if (typeof value === 'string') {
       if (!isNonEmptyString(value)) continue;
-      const exists = resolveAssetPaths(filePath, value).some(candidate => fs.existsSync(candidate));
+      const exists = assetExists(collection, filePath, value);
       if (!exists) {
         errors.push(`${relativePath}: ${field} not found: ${value}`);
       }
@@ -208,7 +275,7 @@ function checkAssetFields(filePath, data, errors) {
           errors.push(`${relativePath}: ${field} contains an empty value`);
           continue;
         }
-        const exists = resolveAssetPaths(filePath, item).some(candidate => fs.existsSync(candidate));
+        const exists = assetExists(collection, filePath, item);
         if (!exists) {
           errors.push(`${relativePath}: ${field} not found: ${item}`);
         }
@@ -243,7 +310,7 @@ for (const filePath of walkMarkdownFiles(contentRoot)) {
 
   checkDeprecatedFields(filePath, parsed.data, errors);
   checkTags(collection, filePath, parsed.data, errors);
-  checkAssetFields(filePath, parsed.data, errors);
+  checkAssetFields(collection, filePath, parsed.data, errors);
   checkRequiredMeta(collection, filePath, parsed.data, errors);
 }
 
@@ -257,4 +324,6 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('content check passed');
+if (!options.quiet) {
+  console.log('content check passed');
+}

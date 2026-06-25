@@ -148,3 +148,30 @@ This file records durable project decisions that future Codex sessions should pr
 - The default external font load should be limited to Pretendard in `BaseLayout.astro`.
 - `Noto Sans KR`, `Inter`, and `JetBrains Mono` may remain in CSS fallback stacks, but the site should not depend on separate Google Fonts requests unless a later change proves they are necessary.
 - Code-like surfaces should use the mono font stack token `--ol-font-mono`; general UI and content should stay on `--ol-font-ui`.
+
+## 2026-06-26
+
+### DESIGN Asset Provider Policy
+
+- DESIGN frontmatter should keep provider-neutral asset values instead of storing absolute generated URLs.
+- Fixed site settings and env-backed asset settings should be centralized in `site-config.mjs`, with `src/lib/site-config.ts` as the app-side adapter.
+- DESIGN page assets should resolve through `getDesignAssetUrl(entryId, asset)`.
+- Cross-collection references to DESIGN assets should use `design.imageAsset` keys in the form `{designEntryId}/{assetPath}` and resolve through `getDesignAssetKeyUrl()`.
+- Local builds default to `/generated/design/{entryId}/{assetPath}`.
+- External DESIGN storage should be enabled by setting `PUBLIC_DESIGN_ASSET_BASE_URL`; the same content metadata should work without rewriting frontmatter.
+- `DESIGN_ASSET_PROVIDER=external` may skip local DESIGN asset copying during `sync:assets`.
+- `DESIGN_ASSET_MANIFEST` may point to a JSON manifest of `{entryId}/{assetPath}` keys so the content validator can check external asset references without issuing network requests.
+- `.env` should be reserved for environment-dependent values; the fixed production site URL remains code-managed rather than env-managed.
+
+### Markdown DESIGN Asset Links
+
+- Existing Markdown links that start with `/generated/design/` are tolerated as legacy content links.
+- New Markdown DESIGN image and link references should use the `design-asset:{entryId}/{assetPath}` form.
+- When `PUBLIC_DESIGN_ASSET_BASE_URL` is set, the Astro Markdown pipeline rewrites those links to the external DESIGN asset base URL.
+- New durable content should prefer DESIGN entries, structured references, or provider-neutral asset keys over hand-written `/generated/design/...` URLs.
+
+### Style Cleanup Scope
+
+- Active Astro pages and shared site components should avoid inline `style` attributes.
+- Standalone DESIGN HTML assets may retain internal inline styles when those styles are part of the authored visual artifact.
+- DESIGN HTML assets should not load Google Fonts directly; use local/fallback font stacks unless a future asset has an explicit exception.

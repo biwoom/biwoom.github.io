@@ -104,13 +104,13 @@ src/content/design/two-perspectives/
     thumb.jpg
 ```
 
-빌드 후에는 다음 경로에 산출물이 생성된다.
+빌드 후 로컬 provider에서는 다음 경로에 산출물이 생성된다.
 
 ```
 public/generated/design/two-perspectives/
 ```
 
-이 구조는 원본과 배포 산출물을 분리한다. 사람이 관리하는 파일은 `src/content`에 있고, 웹에서 직접 접근하는 파일은 빌드 결과로 생성된다.
+이 구조는 원본과 배포 산출물을 분리한다. 사람이 관리하는 파일은 `src/content`에 있고, 공개 페이지와 Markdown 본문은 DESIGN asset resolver를 통해 현재 provider에 맞는 URL을 사용한다.
 
 ## 보류한 실험 — STORY reader sticky
 

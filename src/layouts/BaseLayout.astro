@@ -3,6 +3,7 @@ import '../styles/global.css';
 import OLHeader from '../components/layout/OLHeader.astro';
 import OLFooter from '../components/layout/OLFooter.astro';
 import OLSearchModal from '../components/layout/OLSearchModal.astro';
+import { SITE_URL_ORIGIN } from '../lib/site-config';
 import { url } from '../lib/url';
 
 interface Props {
@@ -23,7 +24,7 @@ const {
   pagefindBody = true,
 } = Astro.props;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://biwoom.github.io';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? SITE_URL_ORIGIN;
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 const ogImageUrl = ogImage
   ? new URL(ogImage, siteUrl).toString()

@@ -1,4 +1,27 @@
 /* ===== Entity page styles ===== */
+.ol-entity-hero {
+  padding-bottom: 32px;
+}
+.ol-entity-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.ol-entity-group-title {
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+.ol-entity-group-count {
+  color: var(--ol-muted);
+  font-size: 11px;
+}
+.ol-entity-empty {
+  padding: 80px 0;
+  color: var(--ol-muted);
+  font-size: 13px;
+  text-align: center;
+}
 .ol-entity-header {
   margin-bottom: 32px;
   padding-bottom: 24px;
@@ -129,6 +152,15 @@
 .ol-entity-card:hover { border-color: var(--ol-ink); transform: translateY(-1px); }
 .ol-entity-card h4 { font-size: 15px; font-weight: 600; margin-top: 6px; }
 .ol-entity-card p { color: var(--ol-muted); font-size: 13px; margin-top: 4px; line-height: 1.5; }
+.ol-entity-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+.ol-entity-card-tag {
+  font-size: 11px;
+}
 
 .ol-entity-detail-shell {
   display: grid;
@@ -180,6 +212,45 @@
   height: 100%;
   object-fit: cover;
   object-position: center 35%;
+}
+.ol-entity-panel-title {
+  margin-top: 8px;
+  font-size: 22px;
+}
+.ol-entity-panel-names {
+  margin-top: 4px;
+  color: var(--ol-muted);
+  font-size: 13px;
+}
+.ol-entity-panel-block {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ol-border);
+}
+.ol-entity-panel-block--aliases {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: none;
+}
+.ol-entity-panel-label {
+  margin-bottom: 4px;
+}
+.ol-entity-panel-label--tags {
+  margin-bottom: 8px;
+}
+.ol-entity-panel-aliases {
+  color: var(--ol-ink-2);
+  font-size: 13px;
+}
+.ol-entity-panel-description {
+  color: var(--ol-ink-2);
+  font-size: 14px;
+  line-height: 1.65;
+}
+.ol-entity-panel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .ol-entity-side-panel {

@@ -1,4 +1,5 @@
 ---
+import { getDesignAssetKeyUrl } from '../../lib/assets';
 import { url } from '../../lib/url';
 
 interface EntityReference {
@@ -25,6 +26,7 @@ interface EntityData {
   appearsIn?: EntityReference[];
   sources?: string[];
   design?: {
+    imageAsset?: string;
     profileImage?: string;
   };
 }
@@ -65,7 +67,11 @@ const prepared = entities.map(entity => ({
     aliases: entity.aliases ?? [],
     description: entity.description ?? '',
     tags: entity.tags ?? [],
-    profileImage: entity.design?.profileImage ? url(entity.design.profileImage) : '',
+    profileImage: entity.design?.imageAsset
+      ? getDesignAssetKeyUrl(entity.design.imageAsset)
+      : entity.design?.profileImage
+        ? url(entity.design.profileImage)
+        : '',
     href: entityHref(entity),
     relatedText: entity.relatedText ?? [],
     relatedDesign: entity.relatedDesign ?? [],

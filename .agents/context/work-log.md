@@ -663,3 +663,61 @@ This file records concise date-based work summaries for continuity across Codex 
 - Local validation:
   - `npm run check` passed.
   - `npm run build` passed.
+
+### Post-Phase Refactor Audit And Hardening
+
+- Reviewed the completed refactor against `docs/프로젝트 코드 리팩터링 로드맵 v0.1.md` and implemented the six recommended hardening items.
+- Added provider-aware DESIGN asset resolution:
+  - `getDesignAssetUrl(entryId, asset)` for DESIGN pages
+  - `getDesignAssetKeyUrl(assetKey)` for cross-collection references such as Entity profile images
+  - `PUBLIC_DESIGN_ASSET_BASE_URL` support for external DESIGN storage
+- Added `DESIGN_ASSET_PROVIDER=external` support to skip local DESIGN asset sync when assets are served externally.
+- Added optional `DESIGN_ASSET_MANIFEST` support to `scripts/check-content.mjs` so external DESIGN asset keys can be validated from a manifest.
+- Added `scripts/check-content-fixtures.mjs` and wired it into `npm run check` to lock validator success and failure scenarios.
+- Added a Markdown remark plugin that rewrites legacy `/generated/design/...` image/link URLs to `PUBLIC_DESIGN_ASSET_BASE_URL` when external DESIGN storage is configured.
+- Removed Google Fonts requests from current DESIGN HTML assets and kept local/fallback font stacks.
+- Moved active Astro page and shared component inline styles into CSS classes; remaining inline style search results are standalone DESIGN HTML artifact internals.
+- Updated the content management manual, roadmap completion audit, selected planning docs, and context decisions to reflect the current asset and style policies.
+- Migrated the live `sumitta` Entity profile image reference from a generated URL to `design.imageAsset: "sumitta-profile/profile.jpg"`.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed.
+
+### Markdown DESIGN Link Migration
+
+- Added provider-neutral Markdown DESIGN asset support in `scripts/remark-design-asset-urls.mjs` using the `design-asset:{slug}/{asset}` form.
+- Migrated the live BLOG entry `indramang-life-peace-patterns` away from hard-coded `/generated/design/...` image URLs to `design-asset:` links.
+- Updated the related BLOG note about DESIGN asset generation so it explains provider-aware resolver behavior instead of implying public paths are hard-coded.
+- Updated the internal content manual and context decisions so new Markdown DESIGN images use `design-asset:` by default.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed.
+
+### Central Site Config Layer
+
+- Added root `site-config.mjs` to centralize the fixed site URL and env-backed DESIGN asset settings.
+- Added `src/lib/site-config.ts` as the app-facing config module so Astro code no longer reads DESIGN asset env vars ad hoc.
+- Updated `astro.config.mjs`, `src/lib/assets.ts`, `src/layouts/BaseLayout.astro`, `scripts/remark-design-asset-urls.mjs`, `scripts/sync-content-assets.mjs`, and `scripts/check-content.mjs` to consume the shared config layer.
+- Added `.env.example` to document supported DESIGN asset env vars while keeping the production site URL code-managed.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed.
+
+## 2026-06-26
+
+### Documentation And Skill Sync Follow-up
+
+- Updated `.agents/skills/ol-content-authoring/SKILL.md` so content tasks now explicitly follow the current DESIGN asset rules:
+  - provider-neutral frontmatter asset values
+  - `design-asset:{slug}/{asset}` for new Markdown references
+  - centralized config through `site-config.mjs` and `src/lib/site-config.ts`
+  - external provider validation through `DESIGN_ASSET_MANIFEST`
+- Updated `.agents/skills/ol-doc-maintenance/SKILL.md` so documentation tasks now reflect the centralized config layer, `.env.example` policy, and provider-neutral DESIGN asset documentation rules.
+- Updated `README.md` to match the live repository structure and operating model:
+  - new top-level config and script files
+  - centralized configuration and env policy
+  - provider-aware DESIGN asset handling
+  - shared TEXT/STORY tag-results modal layer
+- Updated `AGENTS.md` so repo-wide instructions now include the centralized config rule, tags-only policy, provider-neutral DESIGN asset authoring, and shared TEXT/STORY tag-results behavior.
+- Local validation:
+  - `npm run build` passed.

@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getGeneratedAssetUrl, getVersionedDownloadFilename } from '../../lib/assets';
+import { getDesignAssetUrl, getVersionedDownloadFilename } from '../../lib/assets';
 import { url } from '../../lib/url';
 import {
   formatLabel,
@@ -54,7 +54,7 @@ type RelatedReference = {
 };
 
 function designAsset(asset?: string) {
-  return getGeneratedAssetUrl('design', entry.id, asset);
+  return getDesignAssetUrl(entry.id, asset);
 }
 
 function getDownloadFilename(asset?: string) {

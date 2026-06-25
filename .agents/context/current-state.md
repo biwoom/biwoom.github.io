@@ -33,12 +33,20 @@ Last updated: 2026-06-25
 - `public/generated/` is generated from content assets and should not be committed.
 - `scripts/check-content.mjs` validates content metadata, tag syntax, asset existence, and forbidden junk files.
 - `src/lib/content-structure.ts` centralizes shared TEXT/STORY slug, grouping, and ordering helpers.
-- `src/lib/assets.ts` centralizes generated-asset URLs, versioned download filenames, and blog thumbnail candidate discovery.
+- `src/lib/assets.ts` centralizes asset URLs, including provider-aware DESIGN asset URLs, versioned download filenames, and blog thumbnail candidate discovery.
+- `site-config.mjs` is the root source of truth for fixed site settings and env-backed DESIGN asset settings.
+- `src/lib/site-config.ts` is the app-facing config entry point for Astro components and utility modules.
 - `src/lib/client/content-filters.ts` centralizes shared prefix-filter, DESIGN library filter, and TEXT/STORY tag-index client behavior.
-- `npm run check` runs the content validator.
+- `npm run check` runs the content validator and validator fixture tests.
 - `npm run build` now requires the validator to pass before the Astro build starts.
-- Phase 3 styling work is underway: repeated page-level presentation is being moved into `src/styles/base.css` and the page-specific CSS layers.
+- Phase 3 styling work is complete for active Astro pages and shared components; remaining inline style search results are isolated DESIGN HTML asset internals.
 - `BaseLayout.astro` now loads only Pretendard externally; Google Fonts requests were removed and the existing fallback stacks carry `Inter`, `Noto Sans KR`, and `JetBrains Mono`.
+- DESIGN HTML assets should not add Google Fonts requests. Current published DESIGN HTML assets use local/fallback font stacks.
+- DESIGN asset URLs default to `/generated/design/{slug}/{asset}` locally and can switch to `PUBLIC_DESIGN_ASSET_BASE_URL` for external storage.
+- `DESIGN_ASSET_PROVIDER=external` skips local DESIGN sync, and `DESIGN_ASSET_MANIFEST` lets the validator check external DESIGN asset keys.
+- `.env.example` documents the supported DESIGN asset env vars without moving the fixed production site URL into per-environment config.
+- Markdown links that still point at `/generated/design/{slug}/{asset}` are rewritten to the external DESIGN base URL when `PUBLIC_DESIGN_ASSET_BASE_URL` is set.
+- New Markdown DESIGN images should use `design-asset:{slug}/{asset}` so content stays provider-neutral without hard-coded generated URLs.
 - TEXT and STORY document-level Entity links use a shared `entities: string[]` frontmatter field.
 - TEXT and STORY detail pages can render a right-side Entity name-card panel from the document `entities` list.
 - `NET` is now a first-class public menu with:
@@ -87,7 +95,7 @@ Last updated: 2026-06-25
   - shared name-card behavior across NET, TEXT, STORY, and ENTITY
 - Unified the default site typography so UI labels and metadata use the shared `--ol-font-ui` stack by default.
 - Menu/main/detail pages now use `.ol-meta-badge` and inherited sans typography for badges, tags, and helper text.
-- Began Phase 2 refactoring by extracting shared content structure, asset, and client-filter modules and wiring active pages to them.
+- Completed Phase 1, Phase 2, and Phase 3 refactoring, then added external DESIGN asset readiness, validator fixtures, and broader active-page/component style cleanup.
 
 ## Open Follow-ups
 

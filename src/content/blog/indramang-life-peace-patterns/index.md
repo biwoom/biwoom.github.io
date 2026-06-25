@@ -30,7 +30,7 @@ published: true
 
 참조: [실상사 생명평화무늬](https://silsangsa.or.kr/Lifepeace-Symbo)
 
-![생명평화문양](/generated/design/life-peace-indramang/Life-Peace-Indramang.PNG)
+![생명평화문양](design-asset:life-peace-indramang/Life-Peace-Indramang.PNG)
 
 ## 생명평화무늬
 
@@ -42,7 +42,7 @@ published: true
 
 그래서 이 이미지는 OL DESIGN에서 하나의 참고 이미지로만 남지 않는다. 불교적 세계관을 어떻게 문양으로 옮길 수 있는지 보여주는 중요한 출발점이 된다.
 
-![보리수 인드라망 문양](/generated/design/bodhi-tree-indramang/Bodhi-Tree-Indramang.PNG)
+![보리수 인드라망 문양](design-asset:bodhi-tree-indramang/Bodhi-Tree-Indramang.PNG)
 
 ## 보리수 인드라망
 
@@ -54,7 +54,7 @@ published: true
 
 이 문양은 생명평화무늬의 직접 변형은 아니다. 다만 그 안에 흐르는 불교적 통찰은 같다.
 
-![다양성 인드라망 문양](/generated/design/diversity-indramang/Diversity-Indramang-1.PNG)
+![다양성 인드라망 문양](design-asset:diversity-indramang/Diversity-Indramang-1.PNG)
 
 ## 다양성 인드라망
 
@@ -66,7 +66,7 @@ published: true
 
 그래서 이 문양은 질서보다 공존에 가깝다. 하나의 중심을 유지하면서도, 그 안에 여러 색과 결이 함께 머물 수 있는지를 시각적으로 확인해 본 작업이다.
 
-![인드라망 픽토그래프 1](/generated/design/pictograph-indramang-1/Pictograph-Indramang-1.PNG)
+![인드라망 픽토그래프 1](design-asset:pictograph-indramang-1/Pictograph-Indramang-1.PNG)
 
 ## 인드라망 픽토그래프
 

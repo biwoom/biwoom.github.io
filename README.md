@@ -151,6 +151,7 @@ OL은 사용자를 오래 붙잡아 두는 기능보다, 사용자가 읽고 사
 
 ```txt
 .
+├── .env.example
 ├── .agents/
 │   ├── context/
 │   ├── references/
@@ -162,7 +163,11 @@ OL은 사용자를 오래 붙잡아 두는 기능보다, 사용자가 읽고 사
 │   ├── og-image.png
 │   └── robots.txt
 ├── scripts/
+│   ├── check-content-fixtures.mjs
+│   ├── check-content.mjs
+│   ├── remark-design-asset-urls.mjs
 │   └── sync-content-assets.mjs
+├── site-config.mjs
 ├── src/
 │   ├── components/
 │   ├── content/
@@ -175,6 +180,9 @@ OL은 사용자를 오래 붙잡아 두는 기능보다, 사용자가 읽고 사
 │   │   └── text/
 │   ├── layouts/
 │   ├── lib/
+│   │   ├── assets.ts
+│   │   ├── content-structure.ts
+│   │   └── site-config.ts
 │   ├── pages/
 │   └── styles/
 ├── AGENTS.md
@@ -202,6 +210,28 @@ Design and story source assets are stored next to their content source under `as
 
 All collections use `tags: string[]` as the single tag field. Tags must use slash-form `prefix/value`, for example `개념/연기`, `종류/인포그래픽`, or `kind/blog`.
 
+DESIGN asset metadata is provider-neutral. Public URLs are resolved by shared helpers instead of being hard-coded into frontmatter or Markdown.
+
+## Configuration
+
+- `site-config.mjs` is the root source of truth for the canonical site URL and env-backed DESIGN asset settings.
+- `src/lib/site-config.ts` is the app-facing adapter used by Astro code and shared utilities.
+- `.env.example` documents optional environment values for DESIGN asset hosting.
+- Keep fixed production settings such as `https://biwoom.github.io/` in code, not in `.env`.
+
+Supported DESIGN asset environment variables:
+
+- `PUBLIC_DESIGN_ASSET_BASE_URL`: external public base URL for DESIGN assets
+- `DESIGN_ASSET_PROVIDER=external`: optional flag to skip local DESIGN asset sync
+- `DESIGN_ASSET_MANIFEST`: optional manifest path for validator checks of external DESIGN asset keys
+
+Authoring rules for DESIGN asset references:
+
+- Use relative asset fields such as `thumbnailAsset`, `imageAsset`, `previewAssets`, `htmlAsset`, `pdfAsset`, and `coverAsset`.
+- Use cross-entry asset keys such as `design.imageAsset: "sumitta-profile/profile.jpg"` when another collection points to a DESIGN asset.
+- New Markdown links or images should use `design-asset:{slug}/{asset}`.
+- Do not add new hard-coded `/generated/design/...` links to content.
+
 ## Commands
 
 ```sh
@@ -218,6 +248,10 @@ Command behavior:
 - `npm run check`: validates content frontmatter, tag syntax, asset existence, and forbidden junk files
 - `npm run build`: runs the content check, syncs assets, builds the static site, then creates the Pagefind index
 - `npm run preview`: previews the built site locally
+
+When `PUBLIC_DESIGN_ASSET_BASE_URL` is set, Markdown `design-asset:` links and legacy `/generated/design/...` references are rewritten to the external DESIGN asset base URL during build.
+
+`npm run check` also runs validator fixture tests and can validate external DESIGN asset keys through `DESIGN_ASSET_MANIFEST` without network requests.
 
 The project requires Node.js `>=22.12.0`.
 
@@ -279,6 +313,11 @@ The internal content management manual is maintained at:
 ```txt
 .agents/references/ol-home-content-management-manual.md
 ```
+
+Current shared implementation notes:
+
+- TEXT and STORY series tag-result interactions use one shared modal-based client layer and one shared presentation component.
+- DESIGN asset URL resolution uses shared helpers rather than page-local string concatenation.
 
 ## License
 

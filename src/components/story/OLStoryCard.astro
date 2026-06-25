@@ -19,8 +19,8 @@ const { title, subtitle, series, version, date, size, variant = 'default', href,
   <div class={`ol-story-cover${variant === 'alt' ? ' alt' : variant === 'muted' ? ' muted' : ''}`}>
     <div>
       {series && <div class="sub">{series}</div>}
-      <div class="title ol-kr" style="margin-top: 10px;">{title}</div>
-      {subtitle && <div class="sub" style="margin-top: 8px;">{subtitle}</div>}
+      <div class="title ol-story-cover-title ol-kr">{title}</div>
+      {subtitle && <div class="sub ol-story-cover-subtitle">{subtitle}</div>}
     </div>
   </div>
   <div class="ol-story-meta">

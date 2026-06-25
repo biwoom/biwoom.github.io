@@ -21,13 +21,13 @@ const { Content } = await render(entry);
 >
   <main>
     <section class="ol-section">
-      <div class="ol-container" style="max-width: 720px;">
-        <header style="margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--ol-border);">
-          <h1 style="font-size: 36px; letter-spacing: -0.03em;" class="ol-kr">
+      <div class="ol-container ol-container--readable">
+        <header class="ol-page-header">
+          <h1 class="ol-page-heading ol-kr">
             {entry.data.title}
           </h1>
           {entry.data.description && (
-            <p style="margin-top: 12px; color: var(--ol-muted); font-size: 14px; line-height: 1.6;" class="ol-kr">
+            <p class="ol-page-description ol-kr">
               {entry.data.description}
             </p>
           )}
@@ -35,8 +35,8 @@ const { Content } = await render(entry);
         <div class="ol-prose">
           <Content />
         </div>
-        <footer style="margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--ol-border);">
-          <a href={url('/')} style="font-size: 12.5px; color: var(--ol-muted); text-decoration: none;">← 홈으로</a>
+        <footer class="ol-page-return">
+          <a href={url('/')} class="ol-page-return-link">← 홈으로</a>
         </footer>
       </div>
     </section>

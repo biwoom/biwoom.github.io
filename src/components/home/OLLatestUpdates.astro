@@ -16,10 +16,10 @@ function formatDate(date: Date): string {
 ---
 <section class="ol-section">
   <div class="ol-container">
-    <div class="ol-row" style="margin-bottom: 24px;">
+    <div class="ol-row ol-latest-head">
       <div>
             <span class="ol-section-label">LATEST · 최근 소식</span>
-        <h2 style="font-size: 28px; margin-top: 8px;" class="ol-kr">최근 업데이트</h2>
+        <h2 class="ol-latest-title ol-kr">최근 업데이트</h2>
       </div>
       <div class="ol-spacer"></div>
       <a href={url('/blog')} class="ol-btn ol-btn-ghost ol-btn-sm">전체 보기 →</a>
@@ -30,17 +30,16 @@ function formatDate(date: Date): string {
         {recentPosts.map(post => (
           <a
             href={url(`/blog/${post.id}`)}
-            class="ol-card ol-card-tight"
-            style="display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;"
+            class="ol-card ol-card-tight ol-latest-card"
           >
             <span class="ol-meta-label">
               {formatDate(post.data.date)}{post.data.category ? ` · ${post.data.category}` : ''}
             </span>
-            <h4 style="font-size:19px;margin:0;letter-spacing:-0.015em;line-height:1.35;" class="ol-kr">
+            <h4 class="ol-latest-card-title ol-kr">
               {post.data.title}
             </h4>
             {post.data.description && (
-              <p style="color:var(--ol-muted);font-size:13.5px;margin:0;line-height:1.6;flex:1;" class="ol-kr">
+              <p class="ol-latest-card-copy ol-kr">
                 {post.data.description}
               </p>
             )}
@@ -51,18 +50,18 @@ function formatDate(date: Date): string {
       <div class="ol-grid-3">
         <article class="ol-card ol-card-tight">
           <span class="ol-meta-label">2026.05.21 · ATLAS</span>
-          <h4 style="font-size:19px;margin-top:8px;letter-spacing:-0.015em;" class="ol-kr">v0.4.2 — 단일 파일 내보내기 개선</h4>
-          <p style="color:var(--ol-muted);font-size:13.5px;margin-top:8px;line-height:1.6;" class="ol-kr">에디터에서 작성한 콘텐츠를 5MB 이하 단일 HTML 파일로 압축하는 흐름을 정비했습니다.</p>
+          <h4 class="ol-latest-card-title ol-latest-card-title--fallback ol-kr">v0.4.2 — 단일 파일 내보내기 개선</h4>
+          <p class="ol-latest-card-copy ol-latest-card-copy--fallback ol-kr">에디터에서 작성한 콘텐츠를 5MB 이하 단일 HTML 파일로 압축하는 흐름을 정비했습니다.</p>
         </article>
         <article class="ol-card ol-card-tight">
           <span class="ol-meta-label">2026.05.14 · STORY</span>
-          <h4 style="font-size:19px;margin-top:8px;letter-spacing:-0.015em;" class="ol-kr">담마빠다 7장 공개</h4>
-          <p style="color:var(--ol-muted);font-size:13.5px;margin-top:8px;line-height:1.6;" class="ol-kr">아라한품 26게송과 주석 5편. 빨리어 원문 대조 포함, ATLAS 뷰어로 바로 열립니다.</p>
+          <h4 class="ol-latest-card-title ol-latest-card-title--fallback ol-kr">담마빠다 7장 공개</h4>
+          <p class="ol-latest-card-copy ol-latest-card-copy--fallback ol-kr">아라한품 26게송과 주석 5편. 빨리어 원문 대조 포함, ATLAS 뷰어로 바로 열립니다.</p>
         </article>
         <article class="ol-card ol-card-tight">
           <span class="ol-meta-label">2026.05.07 · DESIGN</span>
-          <h4 style="font-size:19px;margin-top:8px;letter-spacing:-0.015em;" class="ol-kr">고려 후기 승복 레퍼런스 38점</h4>
-          <p style="color:var(--ol-muted);font-size:13.5px;margin-top:8px;line-height:1.6;" class="ol-kr">박물관 자료와 회화에서 추출한 색상·재질 팔레트와 도식. 모두 CC0로 배포됩니다.</p>
+          <h4 class="ol-latest-card-title ol-latest-card-title--fallback ol-kr">고려 후기 승복 레퍼런스 38점</h4>
+          <p class="ol-latest-card-copy ol-latest-card-copy--fallback ol-kr">박물관 자료와 회화에서 추출한 색상·재질 팔레트와 도식. 모두 CC0로 배포됩니다.</p>
         </article>
       </div>
     )}

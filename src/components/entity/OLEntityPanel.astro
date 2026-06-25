@@ -1,4 +1,5 @@
 ---
+import { getDesignAssetKeyUrl } from '../../lib/assets';
 import { url } from '../../lib/url';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
     description?: string;
     tags?: string[];
     design?: {
+      imageAsset?: string;
       profileImage?: string;
     };
   };
@@ -17,7 +19,11 @@ interface Props {
 
 const { entity } = Astro.props;
 const names = [entity.name.en, entity.name.sanskrit, entity.name.pali, entity.name.chinese].filter(Boolean);
-const profileImage = entity.design?.profileImage ? url(entity.design.profileImage) : '';
+const profileImage = entity.design?.imageAsset
+  ? getDesignAssetKeyUrl(entity.design.imageAsset)
+  : entity.design?.profileImage
+    ? url(entity.design.profileImage)
+    : '';
 ---
 
 <aside class="ol-card ol-entity-panel">
@@ -27,31 +33,31 @@ const profileImage = entity.design?.profileImage ? url(entity.design.profileImag
     </figure>
   )}
   <div class="ol-meta-label">{entity.type.toUpperCase()}</div>
-  <h2 style="font-size: 22px; margin-top: 8px;" class="ol-kr">{entity.name.ko}</h2>
+  <h2 class="ol-entity-panel-title ol-kr">{entity.name.ko}</h2>
 
   {names.length > 0 && (
-    <p style="color: var(--ol-muted); font-size: 13px; margin-top: 4px;">
+    <p class="ol-entity-panel-names">
       {names.join(' · ')}
     </p>
   )}
 
   {entity.aliases && entity.aliases.length > 0 && (
-    <div style="margin-top: 12px;">
-      <div class="ol-meta-label" style="margin-bottom: 4px;">별칭</div>
-      <p style="font-size: 13px; color: var(--ol-ink-2);">{entity.aliases.join(', ')}</p>
+    <div class="ol-entity-panel-block ol-entity-panel-block--aliases">
+      <div class="ol-meta-label ol-entity-panel-label">별칭</div>
+      <p class="ol-entity-panel-aliases">{entity.aliases.join(', ')}</p>
     </div>
   )}
 
   {entity.description && (
-    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--ol-border);">
-      <p style="font-size: 14px; color: var(--ol-ink-2); line-height: 1.65;" class="ol-kr">{entity.description}</p>
+    <div class="ol-entity-panel-block">
+      <p class="ol-entity-panel-description ol-kr">{entity.description}</p>
     </div>
   )}
 
   {entity.tags && entity.tags.length > 0 && (
-    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--ol-border);">
-      <div class="ol-meta-label" style="margin-bottom: 8px;">태그</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+    <div class="ol-entity-panel-block">
+      <div class="ol-meta-label ol-entity-panel-label--tags">태그</div>
+      <div class="ol-entity-panel-tags">
         {entity.tags.map(tag => (
           <span class="ol-meta-badge">{tag}</span>
         ))}

@@ -1,6 +1,7 @@
 @import "./base.css";
 @import "./components/status.css";
 @import "./components/tags.css";
+@import "./components/tag-results.css";
 @import "./components/copy.css";
 @import "./components/doc-nav.css";
 @import "./components/widgets.css";

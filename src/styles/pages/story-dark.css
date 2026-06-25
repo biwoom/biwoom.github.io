@@ -18,15 +18,12 @@
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
 }
 
-.dark .ol-story-tag-menu-panel,
-.dark .ol-story-tag-results {
+.dark .ol-story-tag-menu-panel {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
 }
 
 .dark .ol-story-tag-menu-panel button:hover,
-.dark .ol-story-tag-menu-panel button.active,
-.dark .ol-story-tag-result-list a:hover,
-.dark .ol-story-tag-result-list button:hover {
+.dark .ol-story-tag-menu-panel button.active {
   background: var(--ol-ink);
   color: var(--ol-surface);
 }

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import OLTagResultsModal from '../../../components/common/OLTagResultsModal.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { url } from '../../../lib/url';
 import {
@@ -102,50 +103,31 @@ const statusKey = cover.data.status ?? 'draft';
               </div>
             ))}
           </div>
-          <section class="ol-story-tag-results" data-story-tag-results data-tag-results hidden>
-            <div class="ol-story-tag-results-head">
-              <div>
-                <span class="ol-section-label">Tag index</span>
-                <h2 class="ol-kr" data-story-tag-results-title data-tag-results-title>태그 문서</h2>
-                <p class="ol-story-tag-result-summary" data-story-tag-results-summary>
-                  <em>선택한 태그를 모두 포함한 문서를 표시합니다.</em>
-                  <strong data-story-tag-results-count data-tag-results-count>0개 문서</strong>
-                </p>
-              </div>
-              <div class="ol-story-tag-results-actions">
-                <button type="button" data-story-tag-results-clear data-tag-results-clear>초기화</button>
-                <button type="button" data-story-tag-results-close data-tag-results-close>닫기</button>
-              </div>
-            </div>
-            <div class="ol-story-tag-selected" data-story-selected-tags data-selected-tags></div>
-            <p class="ol-story-tag-result-empty ol-kr" data-story-tag-results-empty data-tag-results-empty hidden>
-              선택한 태그 조합에 해당하는 문서가 없습니다.
-            </p>
-            <div class="ol-story-tag-result-panel" data-story-tag-result-panel>
-              <div class="ol-story-tag-result-list">
-                {documentParts.map((part, partIndex) => (
-                  <section data-story-result-part data-tag-result-part>
-                    <h3>PART {partIndex + 1} · {part.label}</h3>
-                    {part.groups.map(group => (
-                      <div class="ol-story-full-toc-group" data-story-result-group data-tag-result-group>
-                        <p>{group.label}</p>
-                        <ol>
-                          {group.entries.map((entry, entryIndex) => (
-                            <li data-story-result-entry data-tag-result-entry data-tags={JSON.stringify(getPublicTags(entry.data.tags))}>
-                              <a href={url(getStoryEntryUrl(entry))}>
-                                <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
-                                <strong class="ol-kr">{entry.data.title}</strong>
-                              </a>
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                    ))}
-                  </section>
+          <OLTagResultsModal
+            variant="story"
+            emptyText="선택한 태그 조합에 해당하는 문서가 없습니다."
+          >
+            {documentParts.map((part, partIndex) => (
+              <section class="ol-tag-results-section" data-story-result-part data-tag-result-part>
+                <h3>PART {partIndex + 1} · {part.label}</h3>
+                {part.groups.map(group => (
+                  <div class="ol-tag-results-group" data-story-result-group data-tag-result-group>
+                    <p>{group.label}</p>
+                    <ol>
+                      {group.entries.map((entry, entryIndex) => (
+                        <li data-story-result-entry data-tag-result-entry data-tags={JSON.stringify(getPublicTags(entry.data.tags))}>
+                          <a href={url(getStoryEntryUrl(entry))}>
+                            <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
+                            <strong class="ol-kr">{entry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
                 ))}
-              </div>
-            </div>
-          </section>
+              </section>
+            ))}
+          </OLTagResultsModal>
         </div>
       )}
     </section>

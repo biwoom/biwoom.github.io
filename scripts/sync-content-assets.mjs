@@ -1,11 +1,12 @@
 import { createHash } from 'node:crypto';
 import { cp, mkdir, readdir, readFile, rmdir, stat, unlink } from 'node:fs/promises';
 import path from 'node:path';
+import { DESIGN_ASSET_PROVIDER } from '../site-config.mjs';
 
 const root = new URL('..', import.meta.url).pathname;
 
 const assetCollections = [
-  { name: 'design', source: 'src/content/design', target: 'public/generated/design' },
+  { name: 'design', source: 'src/content/design', target: 'public/generated/design', providerEnv: 'DESIGN_ASSET_PROVIDER' },
   { name: 'story', source: 'src/content/story', target: 'public/generated/story' },
 ];
 
@@ -122,6 +123,11 @@ async function pruneEmptyDirs(baseDir) {
 }
 
 for (const collection of assetCollections) {
+  if (collection.providerEnv && DESIGN_ASSET_PROVIDER === 'external') {
+    console.log(`[sync:assets] ${collection.name}: skipped (${collection.providerEnv}=external)`);
+    continue;
+  }
+
   const sourceBase = path.join(root, collection.source);
   const targetBase = path.join(root, collection.target);
   const desiredFiles = new Set();

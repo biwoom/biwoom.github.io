@@ -38,6 +38,9 @@ published: true
 - Astro `base` should not be set.
 - Content source root: `src/content/`
 - Generated asset output: `public/generated/`
+- Fixed site settings and env-backed DESIGN asset settings are centralized in `site-config.mjs`.
+- App code should read shared site and DESIGN asset settings through `src/lib/site-config.ts`.
+- Supported environment examples live in `.env.example`; fixed production values such as the canonical site URL stay code-managed.
 - Deploy workflow: `.github/workflows/deploy.yml`
 - Public primary navigation currently includes `HOME`, `TEXT`, `STORY`, `DESIGN`, `NET`, with `BLOG` as a separate action link.
 
@@ -56,6 +59,9 @@ published: true
 - Keep operational instructions concrete: paths, commands, expected routes.
 - Avoid stale references to project-page URLs such as `/ol-home` or `/biwoom` unless documenting history.
 - When describing generated files, say not to commit `dist/`, `.astro/`, `node_modules/`, or `public/generated/`.
+- Do not describe `/generated/design/...` as the authoring rule for new content; document provider-neutral rules such as `design-asset:{slug}/{asset}` or resolver-based asset fields.
+- When documentation mentions DESIGN asset migration or external storage, include `PUBLIC_DESIGN_ASSET_BASE_URL`, optional `DESIGN_ASSET_PROVIDER=external`, and optional `DESIGN_ASSET_MANIFEST` only where operationally relevant.
+- Shared UI behavior should be documented at the component/system level when it has been unified, for example the shared TEXT/STORY tag-results modal layer.
 
 ## Validation
 

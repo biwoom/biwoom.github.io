@@ -28,7 +28,7 @@ relatedDesign:
     path: "/design/sumitta-profile/"
     role: "프로필 이미지"
 design:
-  profileImage: "/generated/design/sumitta-profile/profile.jpg"
+  imageAsset: "sumitta-profile/profile.jpg"
 tags:
   - "인물/수밋타"
   - "인물/미래의 야소다라"

@@ -21,9 +21,9 @@ const { entity, href = url(`/entity/${entity.type}s/${entity.id}`), compact = fa
   <h4 class="ol-kr">{entity.name.ko}</h4>
   {entity.description && <p class="ol-kr">{entity.description}</p>}
   {entity.tags && entity.tags.length > 0 && (
-    <div style="margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap;">
+    <div class="ol-entity-card-tags">
       {entity.tags.slice(0, 3).map(tag => (
-        <span class="ol-meta-badge" style="font-size: 11px;">{tag}</span>
+        <span class="ol-meta-badge ol-entity-card-tag">{tag}</span>
       ))}
     </div>
   )}

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getGeneratedAssetUrl } from '../../lib/assets';
+import { getDesignAssetUrl } from '../../lib/assets';
 import { url } from '../../lib/url';
 import { groupTagsByPrefix } from '../../lib/tags';
 import {
@@ -157,7 +157,7 @@ const prefixTagGroups = groupTagsByPrefix(allItems.flatMap(i => i.data.tags ?? [
                     <div class="ol-design-card-img">
                       {previewAsset ? (
                         <img
-                          src={getGeneratedAssetUrl('design', item.id, previewAsset)}
+                          src={getDesignAssetUrl(item.id, previewAsset)}
                           alt={item.data.imageAlt ?? item.data.title}
                           loading={i < 6 ? 'eager' : 'lazy'}
                           decoding="async"

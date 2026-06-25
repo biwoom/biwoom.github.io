@@ -1,3 +1,4 @@
+import { DESIGN_ASSET_BASE_URL } from './site-config';
 import { url } from './url';
 
 export function normalizeAssetPath(value: string): string {
@@ -6,6 +7,31 @@ export function normalizeAssetPath(value: string): string {
 
 export function getGeneratedAssetUrl(collection: string, entryId: string, asset?: string): string {
   return asset ? url(`/generated/${collection}/${entryId}/${normalizeAssetPath(asset)}`) : '';
+}
+
+export function getCollectionAssetUrl(collection: string, entryId: string, asset?: string): string {
+  if (!asset) return '';
+
+  const normalizedCollection = normalizeAssetPath(collection);
+  const normalizedEntryId = normalizeAssetPath(entryId);
+  const normalizedAsset = normalizeAssetPath(asset);
+  const externalBaseUrl = normalizedCollection === 'design' ? DESIGN_ASSET_BASE_URL : '';
+
+  if (externalBaseUrl) {
+    return `${externalBaseUrl}/${normalizedEntryId}/${normalizedAsset}`;
+  }
+
+  return getGeneratedAssetUrl(normalizedCollection, normalizedEntryId, normalizedAsset);
+}
+
+export function getDesignAssetUrl(entryId: string, asset?: string): string {
+  return getCollectionAssetUrl('design', entryId, asset);
+}
+
+export function getDesignAssetKeyUrl(assetKey?: string): string {
+  if (!assetKey) return '';
+  const [entryId, ...assetParts] = normalizeAssetPath(assetKey).split('/');
+  return entryId && assetParts.length > 0 ? getDesignAssetUrl(entryId, assetParts.join('/')) : '';
 }
 
 export function getAssetExtension(asset?: string): string {

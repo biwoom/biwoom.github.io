@@ -7,7 +7,8 @@
   },
   "scripts": {
     "check:content": "node scripts/check-content.mjs",
-    "check": "npm run check:content",
+    "check:content:fixtures": "node scripts/check-content-fixtures.mjs",
+    "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node scripts/sync-content-assets.mjs",
     "dev": "npm run sync:assets && astro dev",
     "build:site": "npm run sync:assets && astro build && npx pagefind --site dist",

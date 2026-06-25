@@ -13,6 +13,8 @@ This repository is OL HOME, the public Astro site for the OL project.
 
 - Keep Astro configured for GitHub Pages root deployment. Do not add `base` to `astro.config.mjs`.
 - Treat `src/content.config.ts` as the source of truth for content frontmatter schemas.
+- Keep fixed site settings and env-backed DESIGN asset settings centralized in `site-config.mjs`.
+- Use `src/lib/site-config.ts` as the app-facing config entry point instead of reading DESIGN env vars ad hoc inside Astro pages or helpers.
 - Keep generated output out of commits: `dist/`, `.astro/`, `node_modules/`, and `public/generated/`.
 - Keep root-level temporary source documents out of commits after they are moved into the correct content collection.
 - Prefer ASCII filenames for code and route-bearing files. Korean document titles belong in frontmatter and body text.
@@ -42,8 +44,14 @@ This repository is OL HOME, the public Astro site for the OL project.
 
 - Use `published: true` for content that should appear on the site.
 - For TEXT and STORY user-facing tags, prefer `prefix/name` form such as `개념/연기`.
+- Active collections store tags in `tags: string[]`; do not introduce `prefixTags`.
 - For manuals and rule documents, include the latest update date in the body and maintain a `수정 변경사항` section at the bottom.
 - For DESIGN and STORY assets, keep source assets under `src/content/**/assets/`; `public/generated/` is derived by `npm run sync:assets`, which incrementally syncs changed files and removes stale generated files.
+- DESIGN frontmatter asset values should remain provider-neutral. Do not store absolute generated URLs in content metadata.
+- New Markdown references to DESIGN assets should use `design-asset:{slug}/{asset}` rather than hard-coded `/generated/design/...` paths.
+- `.env.example` documents optional DESIGN asset env vars. `.env` should hold environment-specific values only; the canonical production site URL stays code-managed.
+- When `DESIGN_ASSET_PROVIDER=external` is set, local DESIGN asset sync may be skipped; validator checks can use `DESIGN_ASSET_MANIFEST` to verify external asset keys.
+- TEXT and STORY tag-result behavior is shared. Extend the common modal-based implementation instead of reintroducing page-local duplicate scripts.
 
 ## Verification
 

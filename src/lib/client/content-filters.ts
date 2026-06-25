@@ -353,10 +353,16 @@ function setupTagResultIndex(root: HTMLElement): void {
   const selectedTagsRow = root.querySelector<HTMLElement>('[data-selected-tags]');
   const resultsEmpty = root.querySelector<HTMLElement>('[data-tag-results-empty]');
   const resultsClear = root.querySelector<HTMLButtonElement>('[data-tag-results-clear]');
-  const resultsClose = root.querySelector<HTMLButtonElement>('[data-tag-results-close]');
+  const resultsCloseButtons = Array.from(
+    root.querySelectorAll<HTMLButtonElement>('[data-tag-results-close]'),
+  );
   const selectedTags = new Map<string, string>();
 
   if (!results) return;
+
+  const syncModalState = (open: boolean) => {
+    document.documentElement.classList.toggle('ol-tag-results-open', open);
+  };
 
   const closeMenus = () => {
     root.querySelectorAll<HTMLButtonElement>('[data-tag-menu-trigger]').forEach(button => {
@@ -366,7 +372,9 @@ function setupTagResultIndex(root: HTMLElement): void {
 
   const update = () => {
     const selected = Array.from(selectedTags.keys());
-    results.hidden = selected.length === 0;
+    const open = selected.length > 0;
+    results.hidden = !open;
+    syncModalState(open);
 
     if (resultsTitle) {
       resultsTitle.textContent = selected.length > 0 ? `선택 태그 ${selected.length}개` : '태그 문서';
@@ -429,10 +437,6 @@ function setupTagResultIndex(root: HTMLElement): void {
     else selectedTags.set(tag, tagButton.dataset.tagLabel ?? tag);
 
     update();
-
-    if (root.dataset.scrollResults === 'true') {
-      results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
   });
 
   selectedTagsRow?.addEventListener('click', event => {
@@ -447,9 +451,20 @@ function setupTagResultIndex(root: HTMLElement): void {
     update();
   });
 
-  resultsClose?.addEventListener('click', () => {
-    results.hidden = true;
-    closeMenus();
+  resultsCloseButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      results.hidden = true;
+      syncModalState(false);
+      closeMenus();
+    });
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !results.hidden) {
+      results.hidden = true;
+      syncModalState(false);
+      closeMenus();
+    }
   });
 
   document.addEventListener('click', closeMenus);

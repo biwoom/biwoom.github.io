@@ -1,4 +1,21 @@
 /* ===== Partners page ===== */
+.ol-partners-container {
+  max-width: 800px;
+}
+.ol-partners-header {
+  margin-bottom: 48px;
+}
+.ol-partners-title {
+  margin-top: 12px;
+  font-size: 32px;
+  letter-spacing: -0.025em;
+}
+.ol-partners-lead {
+  max-width: 52ch;
+  margin-top: 12px;
+  color: var(--ol-muted);
+  line-height: 1.7;
+}
 .ol-partners-grid {
   display: flex;
   flex-direction: column;
@@ -61,4 +78,3 @@
   .ol-partner-card { padding: 18px 16px; gap: 14px; }
   .ol-partner-card-body h3 { font-size: 15px; }
 }
-

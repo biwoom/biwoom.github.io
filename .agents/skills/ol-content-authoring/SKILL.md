@@ -91,6 +91,19 @@ primaryPlaces:
 - Keep STORY HTML assets under `src/content/story/{series}/assets/`.
 - Do not edit `public/generated/` as source; it is produced by `scripts/sync-content-assets.mjs`.
 - TEXT image assets may live beside the document or series and be referenced relatively, matching existing entries.
+- Fixed site settings and env-backed DESIGN asset settings are centralized in `site-config.mjs`.
+- Astro code and shared utilities should read those settings through `src/lib/site-config.ts` instead of reading env vars ad hoc.
+- DESIGN frontmatter asset fields should stay provider-neutral. Store relative asset values such as `imageAsset: "poster.jpg"` or cross-entry keys such as `design.imageAsset: "sumitta-profile/profile.jpg"`, not absolute generated URLs.
+- New Markdown references to DESIGN assets should use `design-asset:{slug}/{asset}`.
+- Legacy `/generated/design/{slug}/{asset}` links may still render, but do not add new ones in content edits.
+- When `DESIGN_ASSET_PROVIDER=external` is enabled, local DESIGN asset sync may be skipped; content rules stay the same because the resolver layer maps URLs at build time.
+- `DESIGN_ASSET_MANIFEST` may be used during validation to confirm external DESIGN asset keys without network access.
+
+```md
+![수밋타 프로필](design-asset:sumitta-profile/profile.jpg)
+```
+
+- TEXT and STORY series pages now share one modal-based tag-results interaction layer. When adjusting tag-result behavior, extend the shared implementation instead of reintroducing page-local duplicate scripts.
 
 ## Validation
 

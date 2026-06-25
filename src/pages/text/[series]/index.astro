@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import OLTagResultsModal from '../../../components/common/OLTagResultsModal.astro';
 import TextLayout from '../../../layouts/TextLayout.astro';
 import { url } from '../../../lib/url';
 import { buildTextHierarchy, getTextEntryUrl, formatTextTag } from '../../../lib/text';
@@ -77,43 +78,6 @@ const tagGroups = Array.from(tagIndex.entries())
     return groups;
   }, []);
 
-const tagResultGroups = Array.from(tagIndex.entries())
-  .map(([tag, items]) => {
-    const parsed = formatTextTag(tag);
-    const parts = Array.from(
-      items.reduce<Map<string, {
-        partLabel: string;
-        partOrder: number;
-        groups: Map<string, {
-          groupLabel: string;
-          groupOrder: number;
-          entries: typeof items;
-        }>;
-      }>>((partMap, item) => {
-        const part = partMap.get(item.partLabel) ?? {
-          partLabel: item.partLabel,
-          partOrder: item.partOrder,
-          groups: new Map(),
-        };
-        const group = part.groups.get(item.groupLabel) ?? {
-          groupLabel: item.groupLabel,
-          groupOrder: item.groupOrder,
-          entries: [],
-        };
-        group.entries.push(item);
-        part.groups.set(item.groupLabel, group);
-        partMap.set(item.partLabel, part);
-        return partMap;
-      }, new Map()).values()
-    )
-      .sort((a, b) => a.partOrder - b.partOrder)
-      .map(part => ({
-        ...part,
-        groups: Array.from(part.groups.values()).sort((a, b) => a.groupOrder - b.groupOrder),
-      }));
-    return { tag, ...parsed, count: items.length, parts };
-  })
-  .sort((a, b) => a.prefix.localeCompare(b.prefix, 'ko') || a.label.localeCompare(b.label, 'ko'));
 ---
 
 <TextLayout
@@ -121,7 +85,7 @@ const tagResultGroups = Array.from(tagIndex.entries())
   description={seriesDescription ?? `${series.label} 시리즈 문헌 콘텐츠`}
   seriesSlug={series.slug}
 >
-  <article class="ol-text-article ol-text-series-page" data-tag-results-index data-scroll-results="true">
+  <article class="ol-text-article ol-text-series-page" data-tag-results-index>
     <header class="ol-text-doc-header">
       <div class="ol-text-breadcrumb">
         <a href={url('/text')}>TEXT</a>
@@ -163,47 +127,31 @@ const tagResultGroups = Array.from(tagIndex.entries())
     </header>
 
     {series.entries.length > 0 && tagGroups.length > 0 && (
-      <section class="ol-text-tag-results" data-text-tag-results data-tag-results hidden>
-        <div class="ol-text-tag-results-head">
-          <div>
-            <span class="ol-section-label">Tag index</span>
-            <h2 class="ol-kr" data-text-tag-results-title data-tag-results-title>태그 문서</h2>
-            <p class="ol-text-tag-result-summary" data-text-tag-results-summary>
-              <em>선택한 태그를 모두 포함한 문서를 표시합니다.</em>
-              <strong data-text-tag-results-count data-tag-results-count>0개 문서</strong>
-            </p>
-          </div>
-          <button type="button" data-text-tag-results-clear data-tag-results-clear>초기화</button>
-        </div>
-        <div class="ol-text-tag-selected" data-text-selected-tags data-selected-tags></div>
-        <p class="ol-text-tag-result-empty ol-kr" data-text-tag-results-empty data-tag-results-empty hidden>
-          선택한 태그 조합에 해당하는 문서가 없습니다.
-        </p>
-        <div class="ol-text-tag-result-panel" data-text-tag-result-panel>
-          <div class="ol-text-tag-result-list">
-            {series.parts.map((part, partIndex) => (
-              <section data-text-result-part data-tag-result-part>
-                <h3>PART {partIndex + 1} · {part.label}</h3>
-                {part.groups.map(group => (
-                  <div class="ol-text-tag-result-group" data-text-result-group data-tag-result-group>
-                    <p>{group.label}</p>
-                    <ol>
-                      {group.entries.map((entry, entryIndex) => (
-                        <li data-text-result-entry data-tag-result-entry data-tags={JSON.stringify(getPublicTags(entry.data.tags))}>
-                          <a href={url(getTextEntryUrl(entry))}>
-                            <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
-                            <strong class="ol-kr">{entry.data.title}</strong>
-                          </a>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                ))}
-              </section>
+      <OLTagResultsModal
+        variant="text"
+        emptyText="선택한 태그 조합에 해당하는 문서가 없습니다."
+      >
+        {series.parts.map((part, partIndex) => (
+          <section class="ol-tag-results-section" data-text-result-part data-tag-result-part>
+            <h3>PART {partIndex + 1} · {part.label}</h3>
+            {part.groups.map(group => (
+              <div class="ol-tag-results-group" data-text-result-group data-tag-result-group>
+                <p>{group.label}</p>
+                <ol>
+                  {group.entries.map((entry, entryIndex) => (
+                    <li data-text-result-entry data-tag-result-entry data-tags={JSON.stringify(getPublicTags(entry.data.tags))}>
+                      <a href={url(getTextEntryUrl(entry))}>
+                        <span>{String(entry.data.chapter ?? entryIndex + 1).padStart(2, '0')}</span>
+                        <strong class="ol-kr">{entry.data.title}</strong>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             ))}
-          </div>
-        </div>
-      </section>
+          </section>
+        ))}
+      </OLTagResultsModal>
     )}
 
     <div class="ol-text-series-sections">

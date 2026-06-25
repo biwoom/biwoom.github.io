@@ -131,6 +131,69 @@ a { color: inherit; }
   font-size: 14px;
   line-height: 1.75;
 }
+.ol-page-header {
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--ol-border);
+}
+.ol-page-heading {
+  font-size: 36px;
+  letter-spacing: -0.03em;
+}
+.ol-page-heading--md {
+  font-size: 32px;
+}
+.ol-page-description {
+  margin-top: 12px;
+  color: var(--ol-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.ol-page-return {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ol-border);
+}
+.ol-page-return-link {
+  color: var(--ol-muted);
+  font-size: 12.5px;
+  text-decoration: none;
+}
+.ol-page-return-link:hover {
+  color: var(--ol-ink);
+}
+.ol-not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 80px 24px;
+  text-align: center;
+}
+.ol-not-found-code {
+  color: var(--ol-border);
+  font-size: 72px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+.ol-not-found-title {
+  margin-top: 16px;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.ol-not-found-copy {
+  max-width: 36ch;
+  margin: 12px auto 0;
+  color: var(--ol-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.ol-not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
 
 /* ===== Header ===== */
 .ol-header {
@@ -729,6 +792,9 @@ a { color: inherit; }
   letter-spacing: -0.025em;
   font-weight: 600;
 }
+.ol-story-cover-title {
+  margin-top: 10px;
+}
 .ol-story-cover .sub {
   font-family: inherit;
   font-size: 10.5px;
@@ -737,11 +803,23 @@ a { color: inherit; }
   margin-top: 8px;
   opacity: 0.7;
 }
+.ol-story-cover-subtitle {
+  margin-top: 8px;
+}
 .ol-story-meta { padding: 14px 16px; }
 .ol-story-meta .title-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .ol-story-meta h4 { font-size: 14px; font-weight: 600; }
 .ol-story-meta .sub { color: var(--ol-muted); font-size: 12.5px; margin-top: 2px; }
 .ol-story-meta .meta-row { display: flex; gap: 8px; margin-top: 10px; color: var(--ol-muted); font-family: inherit; font-size: 11px; letter-spacing: 0.04em; }
+
+.ol-placeholder-card {
+  padding: 48px;
+  text-align: center;
+}
+.ol-placeholder-copy {
+  margin-top: 8px;
+  color: var(--ol-muted);
+}
 
 /* Filter chips */
 .ol-chips { display: flex; gap: 6px; flex-wrap: wrap; }
