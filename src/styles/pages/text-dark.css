@@ -91,6 +91,7 @@
 .dark .ol-text-nav-link:hover,
 .dark .ol-text-series-doc:hover,
 .dark .ol-text-tool-btn:hover,
+.dark .ol-doc-side-toc-trigger:hover,
 .dark .ol-text-toc-dropdown button[aria-expanded="true"],
 .dark .ol-text-toc-panel a:hover {
   background: var(--ol-surface-2);
@@ -113,6 +114,11 @@
 .dark .ol-text-toc-panel a,
 .dark .ol-text-toc-panel a[data-level="3"] {
   color: var(--ol-ink-2);
+}
+
+.dark .ol-text-toc-panel a.active {
+  background: var(--ol-surface-2);
+  color: var(--ol-ink);
 }
 
 .dark .ol-copy-panel {

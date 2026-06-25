@@ -99,6 +99,10 @@
     min-height: auto;
   }
 
+  .ol-story-doc-page .ol-doc-side-stack {
+    display: none;
+  }
+
   .ol-story-part-sidebar {
     border-right: none;
     border-bottom: 1px solid var(--ol-border);

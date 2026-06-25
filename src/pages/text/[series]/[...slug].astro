@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 }
 
 const { entry, seriesSlug } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const textEntries = await getCollection('text', e => e.data.published !== false);
 const currentSeries = getTextSeries(textEntries, seriesSlug);
 const currentIndex = currentSeries?.entries.findIndex(item => item.id === entry.id) ?? -1;
@@ -45,6 +45,7 @@ const entityById = new Map(allEntities.map(entity => [entity.data.id, entity]));
 const documentEntities = Array.from(new Set(entry.data.entities))
   .map(id => entityById.get(id))
   .filter((entity): entity is typeof allEntities[number] => Boolean(entity));
+const hasDesktopToc = headings.some(heading => heading.depth === 2 || heading.depth === 3);
 ---
 
 <TextLayout
@@ -62,7 +63,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
     breadcrumb: pagefindBreadcrumb,
   }}
 >
-  <div class:list={['ol-text-doc-shell', documentEntities.length > 0 && 'ol-text-doc-shell--with-entities']}>
+  <div class:list={['ol-text-doc-shell', (hasDesktopToc || documentEntities.length > 0) && 'ol-text-doc-shell--with-side']}>
     <article class="ol-text-article">
       <header class="ol-text-doc-header">
       <div class="ol-text-doc-topline">
@@ -79,7 +80,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
         </div>
 
         <div class="ol-text-doc-tools">
-          <div class="ol-text-toc-dropdown" id="ol-text-toc-dropdown">
+          <div class="ol-text-toc-dropdown ol-text-toc-dropdown--mobile" data-text-mobile-toc-dropdown>
             <button class="ol-text-tool-btn" type="button" aria-expanded="false" aria-controls="ol-text-toc-panel">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <line x1="8" y1="6" x2="21" y2="6"/>
@@ -92,7 +93,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
               <span class="ol-text-tool-label">On this page</span>
             </button>
             <div class="ol-text-toc-panel" id="ol-text-toc-panel">
-              <ul id="ol-toc-list"></ul>
+              <ul data-text-mobile-toc-list></ul>
             </div>
           </div>
 
@@ -203,7 +204,36 @@ const documentEntities = Array.from(new Set(entry.data.entities))
       )}
     </article>
 
-    <OLEntitySidePanel entities={documentEntities.map(entity => entity.data)} title="TEXT 이름카드" variant="text" />
+    {(hasDesktopToc || documentEntities.length > 0) && (
+      <aside class="ol-doc-side-stack ol-doc-side-stack--text" data-pagefind-ignore>
+        {hasDesktopToc && (
+          <div class="ol-text-toc-dropdown ol-doc-side-toc ol-doc-side-toc--desktop" data-text-desktop-toc-dropdown>
+            <button
+              class="ol-doc-side-toc-trigger"
+              type="button"
+              aria-expanded="false"
+              aria-controls="ol-text-desktop-toc-panel"
+              data-text-desktop-toc-trigger
+            >
+              <span class="ol-doc-side-toc-head">
+                <span class="ol-meta-label">On this page</span>
+                <strong data-text-desktop-toc-count>0</strong>
+              </span>
+              <svg class="ol-doc-side-toc-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+            <div class="ol-text-toc-panel ol-text-toc-panel--desktop" id="ol-text-desktop-toc-panel" hidden>
+              <ul data-text-desktop-toc-list></ul>
+            </div>
+          </div>
+        )}
+
+        {documentEntities.length > 0 && (
+          <OLEntitySidePanel entities={documentEntities.map(entity => entity.data)} title="TEXT 이름카드" variant="text" />
+        )}
+      </aside>
+    )}
   </div>
 </TextLayout>
 
@@ -331,36 +361,86 @@ const documentEntities = Array.from(new Set(entry.data.entities))
       });
     });
 
-    const dropdown = document.getElementById('ol-text-toc-dropdown');
-    const trigger = dropdown?.querySelector<HTMLButtonElement>('button');
-    const panel = document.getElementById('ol-text-toc-panel');
-    const tocList = document.getElementById('ol-toc-list');
+    const desktopDropdown = document.querySelector<HTMLElement>('[data-text-desktop-toc-dropdown]');
+    const desktopTrigger = document.querySelector<HTMLButtonElement>('[data-text-desktop-toc-trigger]');
+    const desktopList = document.querySelector<HTMLElement>('[data-text-desktop-toc-list]');
+    const desktopCount = document.querySelector<HTMLElement>('[data-text-desktop-toc-count]');
+    const desktopPanel = document.getElementById('ol-text-desktop-toc-panel');
+    const mobileDropdown = document.querySelector<HTMLElement>('[data-text-mobile-toc-dropdown]');
+    const mobileTrigger = mobileDropdown?.querySelector<HTMLButtonElement>('button');
+    const mobilePanel = document.getElementById('ol-text-toc-panel');
+    const mobileList = document.querySelector<HTMLElement>('[data-text-mobile-toc-list]');
     const article = document.querySelector('.ol-prose');
-    if (!dropdown || !trigger || !panel || !tocList || !article) return;
+    if ((!desktopList && !mobileList) || !article) return;
 
     const headings = Array.from(article.querySelectorAll<HTMLHeadingElement>('h2, h3'));
     if (headings.length === 0) {
-      dropdown.style.display = 'none';
+      if (desktopDropdown) desktopDropdown.style.display = 'none';
+      if (mobileDropdown) mobileDropdown.style.display = 'none';
       return;
     }
 
+    if (desktopCount) desktopCount.textContent = String(headings.length);
+
     headings.forEach((heading, index) => {
       if (!heading.id) heading.id = `heading-${index}`;
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = `#${heading.id}`;
-      a.textContent = heading.textContent ?? '';
-      a.dataset.level = heading.tagName === 'H3' ? '3' : '2';
-      li.appendChild(a);
-      tocList.appendChild(li);
+      [desktopList, mobileList].forEach(list => {
+        if (!list) return;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${heading.id}`;
+        a.textContent = heading.textContent ?? '';
+        a.dataset.level = heading.tagName === 'H3' ? '3' : '2';
+        li.appendChild(a);
+        list.appendChild(li);
+      });
     });
 
-    trigger.addEventListener('click', event => {
-      event.stopPropagation();
-      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-      trigger.setAttribute('aria-expanded', String(!isOpen));
+    const syncActiveLinks = (activeId: string) => {
+      document.querySelectorAll<HTMLAnchorElement>('[data-text-desktop-toc-list] a, [data-text-mobile-toc-list] a').forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`;
+        link.classList.toggle('active', isActive);
+        if (isActive && desktopPanel && !desktopPanel.hidden) {
+          link.scrollIntoView({ block: 'nearest' });
+        }
+      });
+    };
+
+    const visibleHeadings = new Set<string>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(item => {
+        const id = (item.target as HTMLElement).id;
+        if (!id) return;
+        if (item.isIntersecting) visibleHeadings.add(id);
+        else visibleHeadings.delete(id);
+      });
+
+      const activeHeading = headings.find(heading => visibleHeadings.has(heading.id))
+        ?? headings.find(heading => heading.getBoundingClientRect().top >= 0)
+        ?? headings[headings.length - 1];
+
+      if (activeHeading) syncActiveLinks(activeHeading.id);
+    }, {
+      rootMargin: '-20% 0px -65% 0px',
+      threshold: [0, 1],
     });
-    panel.addEventListener('click', event => event.stopPropagation());
-    document.addEventListener('click', () => trigger.setAttribute('aria-expanded', 'false'));
+
+    headings.forEach(heading => observer.observe(heading));
+    syncActiveLinks(headings[0].id);
+
+    desktopTrigger?.addEventListener('click', () => {
+      if (!desktopPanel) return;
+      const expanded = desktopTrigger.getAttribute('aria-expanded') === 'true';
+      desktopTrigger.setAttribute('aria-expanded', String(!expanded));
+      desktopPanel.hidden = expanded;
+    });
+
+    mobileTrigger?.addEventListener('click', event => {
+      event.stopPropagation();
+      const isOpen = mobileTrigger.getAttribute('aria-expanded') === 'true';
+      mobileTrigger.setAttribute('aria-expanded', String(!isOpen));
+    });
+    mobilePanel?.addEventListener('click', event => event.stopPropagation());
+    document.addEventListener('click', () => mobileTrigger?.setAttribute('aria-expanded', 'false'));
   });
 </script>

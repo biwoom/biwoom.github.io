@@ -1,7 +1,18 @@
+@media (min-width: 901px) {
+  .ol-text-toc-dropdown--mobile {
+    display: none;
+  }
+}
+
 @media (max-width: 1180px) {
   .ol-text-doc-shell,
-  .ol-text-doc-shell--with-entities {
+  .ol-text-doc-shell--with-side {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ol-doc-side-stack {
+    position: static;
+    max-height: none;
   }
 }
 
@@ -40,6 +51,14 @@
 
   .ol-text-doc-tools {
     margin-left: auto;
+  }
+
+  .ol-doc-side-stack {
+    display: none;
+  }
+
+  .ol-text-toc-dropdown--mobile {
+    display: block;
   }
 
   .ol-text-doc-tools .ol-copy-dropdown,

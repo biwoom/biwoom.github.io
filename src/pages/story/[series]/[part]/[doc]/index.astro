@@ -32,7 +32,7 @@ export async function getStaticPaths() {
 }
 
 const { entry, series } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const cover = series?.meta ?? series?.entries.find(isStorySeriesIndex) ?? series?.entries[0] ?? entry;
 const documentParts = (series?.parts ?? [])
   .map(part => ({
@@ -71,6 +71,7 @@ const entityById = new Map(allEntities.map(entity => [entity.data.id, entity]));
 const documentEntities = Array.from(new Set(entry.data.entities))
   .map(id => entityById.get(id))
   .filter((entity): entity is typeof allEntities[number] => Boolean(entity));
+const hasDesktopToc = headings.some(heading => heading.depth === 2 || heading.depth === 3);
 ---
 
 <BaseLayout
@@ -120,7 +121,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
     )}
 
     <section class="ol-story-reader-shell">
-      <div class="ol-story-part-layout">
+      <div class:list={['ol-story-part-layout', (hasDesktopToc || documentEntities.length > 0) && 'ol-story-part-layout--with-side']}>
         <aside class="ol-story-part-sidebar" data-pagefind-ignore>
           <div class="ol-story-part-sidebar-head">
             <span>PART</span>
@@ -148,23 +149,6 @@ const documentEntities = Array.from(new Set(entry.data.entities))
               <h2 class="ol-kr">{entry.data.title}</h2>
             </div>
             <div class="ol-story-part-tools">
-              <div class="ol-text-toc-dropdown" data-story-toc-dropdown>
-                <button class="ol-text-tool-btn" type="button" aria-expanded="false">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <line x1="8" y1="6" x2="21" y2="6"/>
-                    <line x1="8" y1="12" x2="21" y2="12"/>
-                    <line x1="8" y1="18" x2="21" y2="18"/>
-                    <circle cx="4" cy="6" r="1"/>
-                    <circle cx="4" cy="12" r="1"/>
-                    <circle cx="4" cy="18" r="1"/>
-                  </svg>
-                  <span class="ol-text-tool-label">On this page</span>
-                </button>
-                <div class="ol-text-toc-panel">
-                  <ul data-story-toc-list></ul>
-                </div>
-              </div>
-
               <div class="ol-copy-dropdown" data-copy-dropdown data-copy-url={currentUrl} data-copy-title={entry.data.title}>
                 <button class="ol-text-tool-btn" type="button" aria-expanded="false">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -294,7 +278,36 @@ const documentEntities = Array.from(new Set(entry.data.entities))
           )}
         </article>
 
-        <OLEntitySidePanel entities={documentEntities.map(entity => entity.data)} title="STORY 이름카드" variant="story" />
+        {(hasDesktopToc || documentEntities.length > 0) && (
+          <aside class="ol-doc-side-stack ol-doc-side-stack--story" data-pagefind-ignore>
+            {hasDesktopToc && (
+              <div class="ol-text-toc-dropdown ol-doc-side-toc ol-doc-side-toc--desktop" data-story-toc-dropdown>
+                <button
+                  class="ol-doc-side-toc-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="ol-story-desktop-toc-panel"
+                  data-story-desktop-toc-trigger
+                >
+                  <span class="ol-doc-side-toc-head">
+                    <span class="ol-meta-label">On this page</span>
+                    <strong data-story-desktop-toc-count>0</strong>
+                  </span>
+                  <svg class="ol-doc-side-toc-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </button>
+                <div class="ol-text-toc-panel ol-text-toc-panel--desktop" id="ol-story-desktop-toc-panel" hidden>
+                  <ul data-story-toc-list></ul>
+                </div>
+              </div>
+            )}
+
+            {documentEntities.length > 0 && (
+              <OLEntitySidePanel entities={documentEntities.map(entity => entity.data)} title="STORY 이름카드" variant="story" />
+            )}
+          </aside>
+        )}
       </div>
     </section>
   </main>
@@ -315,6 +328,9 @@ const documentEntities = Array.from(new Set(entry.data.entities))
   const renderToc = () => {
     const headings = Array.from(document.querySelectorAll<HTMLHeadingElement>('.ol-prose h2, .ol-prose h3'));
     const desktopList = document.querySelector<HTMLElement>('[data-story-toc-list]');
+    const desktopTrigger = document.querySelector<HTMLButtonElement>('[data-story-desktop-toc-trigger]');
+    const desktopCount = document.querySelector<HTMLElement>('[data-story-desktop-toc-count]');
+    const desktopPanel = document.getElementById('ol-story-desktop-toc-panel');
     const mobileList = document.querySelector<HTMLElement>('[data-mobile-story-toc]');
     const desktopDropdown = document.querySelector<HTMLElement>('[data-story-toc-dropdown]');
     const mobileToc = document.querySelector<HTMLElement>('[data-story-mobile-toc]');
@@ -327,6 +343,8 @@ const documentEntities = Array.from(new Set(entry.data.entities))
       if (mobileToc) mobileToc.hidden = true;
       return;
     }
+
+    if (desktopCount) desktopCount.textContent = String(headings.length);
 
     headings.forEach((heading, index) => {
       if (!heading.id) heading.id = `story-heading-${index}`;
@@ -347,6 +365,45 @@ const documentEntities = Array.from(new Set(entry.data.entities))
       label.textContent = heading.textContent ?? '';
       mobileLink.append(meta, label);
       mobileList.appendChild(mobileLink);
+    });
+
+    const syncActiveLinks = (activeId: string) => {
+      document.querySelectorAll<HTMLAnchorElement>('[data-story-toc-list] a, [data-mobile-story-toc] a').forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`;
+        link.classList.toggle('active', isActive);
+        if (isActive && desktopPanel && !desktopPanel.hidden) {
+          link.scrollIntoView({ block: 'nearest' });
+        }
+      });
+    };
+
+    const visibleHeadings = new Set<string>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(item => {
+        const id = (item.target as HTMLElement).id;
+        if (!id) return;
+        if (item.isIntersecting) visibleHeadings.add(id);
+        else visibleHeadings.delete(id);
+      });
+
+      const activeHeading = headings.find(heading => visibleHeadings.has(heading.id))
+        ?? headings.find(heading => heading.getBoundingClientRect().top >= 0)
+        ?? headings[headings.length - 1];
+
+      if (activeHeading) syncActiveLinks(activeHeading.id);
+    }, {
+      rootMargin: '-20% 0px -65% 0px',
+      threshold: [0, 1],
+    });
+
+    headings.forEach(heading => observer.observe(heading));
+    syncActiveLinks(headings[0].id);
+
+    desktopTrigger?.addEventListener('click', () => {
+      if (!desktopPanel) return;
+      const expanded = desktopTrigger.getAttribute('aria-expanded') === 'true';
+      desktopTrigger.setAttribute('aria-expanded', String(!expanded));
+      desktopPanel.hidden = expanded;
     });
   };
 
@@ -372,7 +429,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
     });
   });
 
-  document.querySelectorAll<HTMLElement>('[data-story-toc-dropdown], [data-copy-dropdown]').forEach(dropdown => {
+  document.querySelectorAll<HTMLElement>('[data-copy-dropdown]').forEach(dropdown => {
     const trigger = dropdown.querySelector<HTMLButtonElement>('button');
     if (!trigger) return;
     trigger.addEventListener('click', event => {
@@ -398,7 +455,7 @@ const documentEntities = Array.from(new Set(entry.data.entities))
       return;
     }
 
-    document.querySelectorAll<HTMLButtonElement>('[data-story-toc-dropdown] button, [data-copy-dropdown] > button').forEach(button => {
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-dropdown] > button').forEach(button => {
       button.setAttribute('aria-expanded', 'false');
     });
     closeMobilePanels();

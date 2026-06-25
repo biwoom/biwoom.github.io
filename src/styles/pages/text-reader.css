@@ -254,8 +254,98 @@
   align-items: start;
 }
 
-.ol-text-doc-shell--with-entities {
+.ol-text-doc-shell--with-side {
   grid-template-columns: minmax(0, 780px) 280px;
+}
+
+.ol-doc-side-stack {
+  position: sticky;
+  top: 88px;
+  align-self: start;
+  display: flex;
+  min-width: 0;
+  max-height: calc(100vh - 112px);
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ol-doc-side-stack .ol-entity-side-panel {
+  position: static;
+  top: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+.ol-doc-side-toc {
+  min-width: 0;
+  border: 1px solid var(--ol-border);
+  border-radius: var(--ol-r);
+  background: var(--ol-surface);
+}
+
+.ol-doc-side-toc-trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ol-doc-side-toc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 1;
+}
+
+.ol-doc-side-toc-head strong {
+  display: inline-flex;
+  min-width: 24px;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  border: 1px solid var(--ol-border);
+  border-radius: 999px;
+  color: var(--ol-muted);
+  font-size: 11px;
+}
+
+.ol-doc-side-toc-chevron {
+  flex-shrink: 0;
+  transition: transform 160ms ease;
+}
+
+.ol-doc-side-toc-trigger[aria-expanded="true"] .ol-doc-side-toc-chevron {
+  transform: rotate(180deg);
+}
+
+.ol-doc-side-toc-trigger:hover {
+  background: var(--ol-surface-2);
+}
+
+.ol-doc-side-toc .ol-text-toc-panel {
+  display: block;
+  position: static;
+  width: 100%;
+  max-height: min(42vh, 360px);
+  margin-top: 0;
+  padding: 0 14px 14px;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.ol-doc-side-toc .ol-text-toc-panel[hidden] {
+  display: none;
 }
 
 .ol-text-article {
@@ -371,6 +461,12 @@
 .ol-text-toc-panel a:hover {
   background: #f4f0eb;
   color: #211e1a;
+}
+
+.ol-text-toc-panel a.active {
+  background: #eee9e2;
+  color: #211e1a;
+  font-weight: 650;
 }
 
 .ol-text-toc-panel a[data-level="3"] {
