@@ -7,9 +7,12 @@
 html.dark .ol-icon-sun { display: none; }
 html:not(.dark) .ol-icon-moon { display: none; }
 
-/* Smooth theme transition */
-body {
-  transition: background-color 200ms ease, color 200ms ease;
+/* Disable color transitions during theme flips to avoid full-page flicker. */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+  animation: none !important;
 }
 
 /* ===== Korean text optimization ===== */
@@ -32,4 +35,3 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .ol-mobile-menu-trigger:hover { background: var(--ol-surface-2); }
-

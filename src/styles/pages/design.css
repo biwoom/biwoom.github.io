@@ -31,18 +31,31 @@
   position: sticky;
   top: 80px;
 }
+.ol-design-sidebar-disclosure {
+  display: block;
+}
+.ol-design-sidebar-disclosure > summary,
+.ol-design-filter-disclosure > summary {
+  list-style: none;
+}
+.ol-design-sidebar-disclosure > summary::-webkit-details-marker,
+.ol-design-filter-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
 .ol-design-sidebar-inner {
   display: flex;
   flex-direction: column;
   gap: 28px;
 }
 .ol-design-filter-group {}
+.ol-design-filter-content {
+  margin-top: 10px;
+}
 .ol-design-filter-label {
   font-family: inherit;
   font-size: 10.5px;
   letter-spacing: 0.1em;
   color: var(--ol-muted);
-  margin-bottom: 10px;
 }
 .ol-design-filter-group + .ol-design-filter-group {
   padding-top: 20px;
@@ -595,11 +608,52 @@
 @media (max-width: 900px) {
   .ol-design-layout { grid-template-columns: 1fr; gap: 24px; }
   .ol-design-sidebar { position: static; }
+  .ol-design-sidebar-disclosure {
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    background: var(--ol-surface);
+    overflow: hidden;
+  }
+  .ol-design-sidebar-disclosure > summary,
+  .ol-design-filter-disclosure > summary {
+    display: flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 14px;
+    cursor: pointer;
+  }
+  .ol-design-sidebar-disclosure > summary span,
+  .ol-design-filter-disclosure > summary span {
+    margin-right: auto;
+  }
+  .ol-design-sidebar-disclosure > summary::after,
+  .ol-design-filter-disclosure > summary::after {
+    content: "펼치기";
+    color: var(--ol-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .ol-design-sidebar-disclosure[open] > summary::after,
+  .ol-design-filter-disclosure[open] > summary::after {
+    content: "접기";
+  }
   .ol-design-sidebar-inner { flex-direction: column; gap: 16px; }
+  .ol-design-sidebar-inner {
+    padding: 14px;
+    border-top: 1px solid var(--ol-border);
+  }
   .ol-design-filter-group { min-width: 0; }
+  .ol-design-filter-content { margin-top: 12px; }
   .ol-design-grid { grid-template-columns: repeat(2, 1fr); }
   .ol-design-detail { grid-template-columns: 1fr; gap: 24px; }
   .ol-design-preview-stack { position: static; }
+}
+@media (min-width: 901px) {
+  .ol-design-sidebar-disclosure > summary,
+  .ol-design-filter-disclosure > summary {
+    display: none;
+  }
 }
 @media (max-width: 600px) {
   .ol-design-grid { grid-template-columns: 1fr; }

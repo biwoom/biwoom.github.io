@@ -15,12 +15,25 @@
 
 /* ===== Manifest box ===== */
 .ol-manifest {
-  background: var(--ol-ink);
-  color: var(--ol-bg);
+  --ol-manifest-bg: var(--ol-ink);
+  --ol-manifest-fg: var(--ol-bg);
+  --ol-manifest-subtle: rgba(255,255,255,0.5);
+  --ol-manifest-muted: rgba(255,255,255,0.65);
+  --ol-manifest-mark: rgba(255,255,255,0.04);
+  background: var(--ol-manifest-bg);
+  color: var(--ol-manifest-fg);
   border-radius: var(--ol-r-lg);
   padding: 48px;
   position: relative;
   overflow: hidden;
+}
+html.dark .ol-manifest {
+  --ol-manifest-bg: #121212;
+  --ol-manifest-fg: var(--ol-ink);
+  --ol-manifest-subtle: rgba(250,250,250,0.56);
+  --ol-manifest-muted: rgba(250,250,250,0.74);
+  --ol-manifest-mark: rgba(255,255,255,0.03);
+  border: 1px solid var(--ol-border);
 }
 .ol-manifest::before {
   content: "OL";
@@ -29,18 +42,18 @@
   font-weight: 800;
   right: -60px;
   bottom: -180px;
-  color: rgba(255,255,255,0.04);
+  color: var(--ol-manifest-mark);
   line-height: 0.8;
   pointer-events: none;
   letter-spacing: -0.05em;
 }
-.ol-manifest .ol-section-label { color: rgba(255,255,255,0.5); }
-.ol-manifest h3 { color: var(--ol-bg); font-size: 25px; line-height: 1.3; max-width: 29ch; margin-top: 14px; font-weight: 700; letter-spacing: -0.025em; }
-.ol-manifest p { color: rgba(255,255,255,0.65); margin-top: 16px; max-width: 58ch; font-size: 14.5px; line-height: 1.75; }
+.ol-manifest .ol-section-label { color: var(--ol-manifest-subtle); }
+.ol-manifest h3 { color: var(--ol-manifest-fg); font-size: 25px; line-height: 1.3; max-width: 29ch; margin-top: 14px; font-weight: 700; letter-spacing: -0.025em; }
+.ol-manifest p { color: var(--ol-manifest-muted); margin-top: 16px; max-width: 58ch; font-size: 14.5px; line-height: 1.75; }
 .ol-manifest > .ol-kr {
   max-width: 58ch;
   margin-top: 16px;
-  color: rgba(255,255,255,0.65);
+  color: var(--ol-manifest-muted);
   line-height: 1.75;
 }
 .ol-manifest-quote {

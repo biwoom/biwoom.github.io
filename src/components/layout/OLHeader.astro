@@ -193,7 +193,14 @@ function isActive(href: string): boolean {
 <script>
   const btn = document.getElementById('ol-theme-toggle');
   btn?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
+    const root = document.documentElement;
+    root.classList.add('theme-switching');
+    const isDark = root.classList.toggle('dark');
     localStorage.setItem('ol-theme', isDark ? 'dark' : 'light');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        root.classList.remove('theme-switching');
+      });
+    });
   });
 </script>

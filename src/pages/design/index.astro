@@ -56,74 +56,87 @@ const prefixTagGroups = groupTagsByPrefix(allItems.flatMap(i => i.data.tags ?? [
         <div class="ol-design-layout" data-design-filter-root data-page-size={PAGE_SIZE}>
 
           <aside class="ol-design-sidebar">
-            <div class="ol-design-sidebar-inner">
+            <details class="ol-design-sidebar-disclosure" open>
+              <summary>
+                <span>필터</span>
+              </summary>
+              <div class="ol-design-sidebar-inner">
 
-              <div class="ol-design-filter-group">
-                <div class="ol-design-filter-label">종류</div>
-                <ul class="ol-design-cat-list">
-                  <li>
-                    <button
-                      class="ol-design-cat-btn active"
-                      data-filter-kind="all"
-                      data-count={allItems.length}
-                    >
-                      <span class="cat-name ol-kr">전체</span>
-                      <span class="cat-count">{allItems.length}</span>
-                    </button>
-                  </li>
-                  {primaryKindOrder.map(kind => {
-                    const count = kindCounts[kind] ?? 0;
-                    return (
+                <details class="ol-design-filter-group ol-design-filter-disclosure" open>
+                  <summary>
+                    <span class="ol-design-filter-label">종류</span>
+                  </summary>
+                  <div class="ol-design-filter-content">
+                    <ul class="ol-design-cat-list">
                       <li>
                         <button
-                          class="ol-design-cat-btn"
-                          data-filter-kind={kind}
-                          data-count={count}
-                          disabled={count === 0}
+                          class="ol-design-cat-btn active"
+                          data-filter-kind="all"
+                          data-count={allItems.length}
                         >
-                          <span class="cat-name ol-kr">{primaryKindLabel[kind]}</span>
-                          <span class="cat-count">{count}</span>
+                          <span class="cat-name ol-kr">전체</span>
+                          <span class="cat-count">{allItems.length}</span>
                         </button>
                       </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              {prefixTagGroups.length > 0 && (
-                <div class="ol-design-filter-group">
-                  <div class="ol-design-filter-label">태그 분류</div>
-                  <div class="ol-design-prefix-filter" data-design-prefix-filter>
-                    {prefixTagGroups.map(group => (
-                      <details class="ol-design-prefix-group" data-design-prefix={group.prefix}>
-                        <summary>
-                          <span>{group.prefix}</span>
-                          <em>{group.tags.length}</em>
-                        </summary>
-                        <div class="ol-design-prefix-options">
-                          {group.tags.map(item => (
+                      {primaryKindOrder.map(kind => {
+                        const count = kindCounts[kind] ?? 0;
+                        return (
+                          <li>
                             <button
-                              type="button"
-                              data-filter-prefix={group.prefix}
-                              data-filter-tag={item.tag}
-                              data-filter-label={item.label}
+                              class="ol-design-cat-btn"
+                              data-filter-kind={kind}
+                              data-count={count}
+                              disabled={count === 0}
                             >
-                              <span>{item.label}</span>
-                              <em>{item.count}</em>
+                              <span class="cat-name ol-kr">{primaryKindLabel[kind]}</span>
+                              <span class="cat-count">{count}</span>
                             </button>
-                          ))}
-                        </div>
-                      </details>
-                    ))}
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
-                </div>
-              )}
+                </details>
 
-              <button type="button" class="ol-design-reset-button ol-design-reset-button--sidebar" data-design-reset>
-                필터 초기화
-              </button>
+                {prefixTagGroups.length > 0 && (
+                  <details class="ol-design-filter-group ol-design-filter-disclosure" open>
+                    <summary>
+                      <span class="ol-design-filter-label">태그 분류</span>
+                    </summary>
+                    <div class="ol-design-filter-content">
+                      <div class="ol-design-prefix-filter" data-design-prefix-filter>
+                        {prefixTagGroups.map(group => (
+                          <details class="ol-design-prefix-group" data-design-prefix={group.prefix}>
+                            <summary>
+                              <span>{group.prefix}</span>
+                              <em>{group.tags.length}</em>
+                            </summary>
+                            <div class="ol-design-prefix-options">
+                              {group.tags.map(item => (
+                                <button
+                                  type="button"
+                                  data-filter-prefix={group.prefix}
+                                  data-filter-tag={item.tag}
+                                  data-filter-label={item.label}
+                                >
+                                  <span>{item.label}</span>
+                                  <em>{item.count}</em>
+                                </button>
+                              ))}
+                            </div>
+                          </details>
+                        ))}
+                      </div>
+                    </div>
+                  </details>
+                )}
 
-            </div>
+                <button type="button" class="ol-design-reset-button ol-design-reset-button--sidebar" data-design-reset>
+                  필터 초기화
+                </button>
+
+              </div>
+            </details>
           </aside>
 
           <div class="ol-design-main">
@@ -217,4 +230,17 @@ const prefixTagGroups = groupTagsByPrefix(allItems.flatMap(i => i.data.tags ?? [
   import { initDesignIndexFilters } from '../../lib/client/content-filters';
 
   initDesignIndexFilters();
+
+  const designMobileDisclosure = window.matchMedia('(max-width: 900px)');
+  const syncDesignDisclosure = (matches: boolean) => {
+    document.querySelectorAll<HTMLDetailsElement>('.ol-design-sidebar-disclosure, .ol-design-filter-disclosure').forEach(details => {
+      if (matches) details.removeAttribute('open');
+      else details.setAttribute('open', '');
+    });
+  };
+
+  syncDesignDisclosure(designMobileDisclosure.matches);
+  designMobileDisclosure.addEventListener('change', event => {
+    syncDesignDisclosure(event.matches);
+  });
 </script>
