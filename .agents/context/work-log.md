@@ -221,6 +221,17 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-06-26
 
+### TEXT 수행연구 문서 추가
+
+- Added two 수행연구 TEXT documents from `docs/texts/` into `src/content/text/body-mind-transformation/part/`:
+  - `03-middle-way-attitude-beyond-scientism.md`
+  - `04-anuttara-samma-sambodhi.md`
+- Added OL TEXT frontmatter, slash-form tags, available Entity links, ordering metadata, and excerpts.
+- Removed forbidden `.DS_Store` files that blocked content validation.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed and generated both new `/text/body-mind-transformation/.../` routes.
+
 ### Refactoring And Pagination Blog Post
 
 - Added `src/content/blog/ol-home-refactoring-and-pagination/index.md`.
