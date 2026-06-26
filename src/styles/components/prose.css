@@ -21,7 +21,7 @@
   color: var(--ol-ink);
   margin: 2.2em 0 0.7em;
   padding-bottom: 0.35em;
-  border-bottom: 1px solid var(--ol-border);
+  /* border-bottom: 1px solid var(--ol-border); */
   line-height: 1.35;
 }
 .ol-prose h3 {
