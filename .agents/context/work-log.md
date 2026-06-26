@@ -221,6 +221,14 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-06-26
 
+### Refactoring And Pagination Blog Post
+
+- Added `src/content/blog/ol-home-refactoring-and-pagination/index.md`.
+- The post summarizes the June 25-26 OL HOME changes: content validation, shared helper modules, DESIGN asset config, shared tag-result UI, TEXT/STORY desktop TOC side stack, and unified load-more pagination across menu/list pages.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed and generated `/blog/ol-home-refactoring-and-pagination/index.html`.
+
 ### Unified Load-More Pagination Phase 1
 
 - Added `src/lib/client/paginated-list.ts` as the shared client paginator for card-grid style menu pages.
