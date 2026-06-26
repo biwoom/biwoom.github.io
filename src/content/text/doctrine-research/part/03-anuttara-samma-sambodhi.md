@@ -1,16 +1,16 @@
 ---
 title: "부처님의 깨달음 - 무상정등정각에 대하여"
-series: "수행연구"
-seriesSlug: "body-mind-transformation"
-seriesOrder: 40
+series: "교리연구"
+seriesSlug: "doctrine-research"
+seriesOrder: 50
 part: "불교세계관"
 partSlug: "buddhist-worldview"
-partOrder: 20
+partOrder: 10
 group: "깨달음과 사성제"
 groupOrder: 30
-category: "수행"
-chapter: 4
-order: 4
+category: "교리"
+chapter: 3
+order: 3
 date: 2026-06-23
 status: revising
 entities:
@@ -25,7 +25,7 @@ tags:
   - "개념/오온"
   - "개념/고"
   - "개념/무아"
-  - "형식/수행연구"
+  - "형식/교리연구"
 tagAliases:
   "인물/붓다": ["Buddha", "석가모니", "Siddhartha Gautama"]
   "개념/무상정등정각": ["anuttarā samyak-saṃbodhi", "anuttara sammā-sambodhi", "아뇩다라삼먁삼보리"]
@@ -35,11 +35,11 @@ tagAliases:
   "개념/오온": ["five aggregates", "五蘊", "5온"]
   "개념/고": ["dukkha", "duḥkha", "苦"]
   "개념/무아": ["anattā", "anātman", "無我"]
-  "형식/수행연구": ["practice research", "수행 연구"]
+  "형식/교리연구": ["doctrine research", "교리 연구"]
 authors: ["비움"]
 license: "CC0"
 published: true
-excerpt: "무상정등정각의 원어와 한역 의미를 풀고, 부처님의 깨달음을 사성제, 3전 12행상, 4제 16행상의 수행 구조와 연결해 설명한 수행연구 문서."
+excerpt: "무상정등정각의 원어와 한역 의미를 풀고, 부처님의 깨달음을 사성제, 3전 12행상, 4제 16행상의 수행 구조와 연결해 설명한 교리연구 문서."
 ---
 
 # 부처님의 깨달음 : 무상정등정각에 대하여

@@ -221,6 +221,29 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-06-26
 
+### 담마빠다 스토리 시리즈 추가
+
+- Added a new STORY series at `src/content/story/dhammapada-story/`.
+- Added chapter 1 from the English Dhammapada Commentary source without translation:
+  - `src/content/story/dhammapada-story/part-1/01-cakkhupala.md`
+- Added source-oriented frontmatter with `lang: "en"`, Dhammapada/Dhammapada Commentary tags, source tradition metadata, and rights-unverified external source licensing notes.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed and generated `/story/dhammapada-story/` and `/story/dhammapada-story/part-1/01-cakkhupala/`.
+
+### TEXT 교리연구 시리즈 분리
+
+- Split the three `불교세계관` TEXT documents out of `수행연구` into a new `교리연구` series at `src/content/text/doctrine-research/`.
+- Added `src/content/text/doctrine-research/index.md`.
+- Moved and renumbered the documents as:
+  - `01-buddhist-worldview-two-perspectives.md`
+  - `02-middle-way-attitude-beyond-scientism.md`
+  - `03-anuttara-samma-sambodhi.md`
+- Updated related Concept Entity text paths and the `two-perspectives` DESIGN related work reference to the new `doctrine-research` routes.
+- Local validation:
+  - `npm run check` passed.
+  - `npm run build` passed and generated `/text/doctrine-research/` plus all three document routes.
+
 ### TEXT 수행연구 문서 추가
 
 - Added two 수행연구 TEXT documents from `docs/texts/` into `src/content/text/body-mind-transformation/part/`:

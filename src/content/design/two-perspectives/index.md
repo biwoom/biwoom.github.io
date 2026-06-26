@@ -29,7 +29,7 @@ entities:
   - "twelve-sense-bases"
   - "dependent-origination"
 relatedWorks:
-  - "body-mind-transformation/02-buddhist-worldview-two-perspectives"
+  - "doctrine-research/01-buddhist-worldview-two-perspectives"
 tags:
   - "종류/인포그래픽"
   - "주제/불교세계관"

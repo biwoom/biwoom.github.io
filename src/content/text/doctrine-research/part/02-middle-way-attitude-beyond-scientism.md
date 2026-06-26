@@ -1,16 +1,16 @@
 ---
 title: "과학주의를 넘어 불교적 사실을 이해하는 중도적 태도"
-series: "수행연구"
-seriesSlug: "body-mind-transformation"
-seriesOrder: 40
+series: "교리연구"
+seriesSlug: "doctrine-research"
+seriesOrder: 50
 part: "불교세계관"
 partSlug: "buddhist-worldview"
-partOrder: 20
+partOrder: 10
 group: "불교적 사실 이해"
 groupOrder: 20
-category: "수행"
-chapter: 3
-order: 3
+category: "교리"
+chapter: 2
+order: 2
 date: 2026-06-23
 status: revising
 entities:
@@ -25,7 +25,7 @@ tags:
   - "개념/업과-윤회"
   - "개념/삼계육도"
   - "개념/해탈"
-  - "형식/수행연구"
+  - "형식/교리연구"
 tagAliases:
   "개념/과학주의": ["scientism", "과학 절대화"]
   "개념/불교적-사실": ["Buddhist fact", "불교적 사실 이해"]
@@ -35,11 +35,11 @@ tagAliases:
   "개념/업과-윤회": ["karma and rebirth", "業", "輪廻"]
   "개념/삼계육도": ["three realms and six destinies", "三界六道"]
   "개념/해탈": ["liberation", "vimutti", "mokṣa"]
-  "형식/수행연구": ["practice research", "수행 연구"]
+  "형식/교리연구": ["doctrine research", "교리 연구"]
 authors: ["비움"]
 license: "CC0"
 published: true
-excerpt: "과학과 과학주의를 구분하고, 불교적 사실을 단순한 외부 정보가 아니라 수행과 이해의 조건에 따라 깊어지는 연기적 사실로 이해하는 중도적 태도를 정리한 수행연구 문서."
+excerpt: "과학과 과학주의를 구분하고, 불교적 사실을 단순한 외부 정보가 아니라 수행과 이해의 조건에 따라 깊어지는 연기적 사실로 이해하는 중도적 태도를 정리한 교리연구 문서."
 ---
 
 # 과학주의를 넘어 불교적 사실을 이해하는 중도적 태도

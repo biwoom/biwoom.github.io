@@ -22,7 +22,7 @@ relations:
 relatedText:
   - type: text
     title: "불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해"
-    path: "/text/body-mind-transformation/02-buddhist-worldview-two-perspectives/"
+    path: "/text/doctrine-research/01-buddhist-worldview-two-perspectives/"
     role: "세계 경험의 성립 구조"
 tags:
   - 종류/개념

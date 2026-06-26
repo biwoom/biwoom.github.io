@@ -1,16 +1,16 @@
 ---
 title: "불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해"
-series: "수행연구"
-seriesSlug: "body-mind-transformation"
-seriesOrder: 40
+series: "교리연구"
+seriesSlug: "doctrine-research"
+seriesOrder: 50
 part: "불교세계관"
 partSlug: "buddhist-worldview"
-partOrder: 20
+partOrder: 10
 group: "두 가지 관찰 방식"
 groupOrder: 10
-category: "수행"
-chapter: 2
-order: 2
+category: "교리"
+chapter: 1
+order: 1
 date: 2026-06-13
 status: revising
 entities:
@@ -25,7 +25,7 @@ tags:
   - "개념/무아"
   - "개념/업과-윤회"
   - "개념/연기"
-  - "형식/수행연구"
+  - "형식/교리연구"
 tagAliases:
   "개념/불교세계관": ["Buddhist worldview", "불교의 세계관"]
   "개념/오온": ["five aggregates", "五蘊", "5온"]
@@ -35,11 +35,11 @@ tagAliases:
   "개념/무아": ["anattā", "anātman", "無我"]
   "개념/업과-윤회": ["karma and rebirth", "業", "輪廻"]
   "개념/연기": ["dependent arising", "pratītyasamutpāda", "緣起"]
-  "형식/수행연구": ["practice research", "수행 연구"]
+  "형식/교리연구": ["doctrine research", "교리 연구"]
 authors: ["비움"]
 license: "CC0"
 published: true
-excerpt: "주관적 관찰과 객관적 관찰이라는 두 관점으로 나와 세계를 이해하고, 오온·십이처·십팔계와 삼계육도를 통해 무아, 업과 윤회, 연기와 해탈 가능성을 정리한 수행연구 문서."
+excerpt: "주관적 관찰과 객관적 관찰이라는 두 관점으로 나와 세계를 이해하고, 오온·십이처·십팔계와 삼계육도를 통해 무아, 업과 윤회, 연기와 해탈 가능성을 정리한 교리연구 문서."
 ---
 
 > 주관적 관찰과 객관적 관찰의 흐름
