@@ -1,3 +1,5 @@
+import { createPaginator } from './paginated-list';
+
 type FilterRoot = ParentNode & {
   querySelectorAll<T extends Element = Element>(selectors: string): NodeListOf<T>;
 };
@@ -52,7 +54,16 @@ function setupPrefixFilter(root: HTMLElement): void {
   const reset = root.querySelector<HTMLButtonElement>('[data-filter-reset]');
   const activeRow = root.querySelector<HTMLElement>('[data-filter-active]');
   const activeTags = new Map<string, { tag: string; label: string }>();
-  let visibleCount = pageSize || Number.MAX_SAFE_INTEGER;
+  const paginator = createPaginator({
+    allItems: cards,
+    pageSize: pageSize || cards.length,
+    loadMoreWrap,
+    loadMoreButton,
+    loadMoreRemaining,
+    onRender: ({ matchedItems }) => {
+      if (empty) empty.hidden = matchedItems.length !== 0;
+    },
+  });
 
   const matches = (card: HTMLElement) => {
     const tags = parseCardTags(card);
@@ -90,35 +101,14 @@ function setupPrefixFilter(root: HTMLElement): void {
 
   const apply = () => {
     const matched = cards.filter(matches);
-    const matchedSet = new Set(matched);
-
-    cards.forEach(card => {
-      card.hidden = true;
-    });
-
-    matched.slice(0, visibleCount).forEach(card => {
-      card.hidden = false;
-    });
-
-    if (empty) empty.hidden = matched.length !== 0;
-
-    if (loadMoreWrap && loadMoreRemaining) {
-      const remaining = matched.length - visibleCount;
-      loadMoreWrap.hidden = remaining <= 0;
-      loadMoreRemaining.textContent = `(${Math.max(remaining, 0)})`;
-    }
-
-    cards.forEach(card => {
-      card.toggleAttribute('data-filtered-out', !matchedSet.has(card));
-    });
-
+    paginator.render(matched);
     syncControls();
   };
 
   reset?.addEventListener('click', () => {
     activeTags.clear();
-    visibleCount = pageSize || Number.MAX_SAFE_INTEGER;
-    apply();
+    paginator.reset(cards.filter(matches));
+    syncControls();
   });
 
   root.querySelectorAll<HTMLButtonElement>('[data-filter-tag]').forEach(button => {
@@ -133,9 +123,9 @@ function setupPrefixFilter(root: HTMLElement): void {
       } else {
         activeTags.set(prefix, { tag, label });
       }
-      visibleCount = pageSize || Number.MAX_SAFE_INTEGER;
       button.closest('details')?.removeAttribute('open');
-      apply();
+      paginator.reset(cards.filter(matches));
+      syncControls();
     });
   });
 
@@ -143,13 +133,8 @@ function setupPrefixFilter(root: HTMLElement): void {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-clear-prefix]');
     if (!button?.dataset.clearPrefix) return;
     activeTags.delete(button.dataset.clearPrefix);
-    visibleCount = pageSize || Number.MAX_SAFE_INTEGER;
-    apply();
-  });
-
-  loadMoreButton?.addEventListener('click', () => {
-    visibleCount += pageSize || cards.length;
-    apply();
+    paginator.reset(cards.filter(matches));
+    syncControls();
   });
 
   document.addEventListener('click', event => closeOutsideDetails(root, event));
@@ -184,7 +169,17 @@ function setupDesignIndexFilter(root: HTMLElement): void {
   const resetButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-design-reset]'));
   const selectedPrefixTags = new Map<string, Set<string>>();
   let activeKind = 'all';
-  let visibleCount = pageSize;
+  const paginator = createPaginator({
+    allItems: cards,
+    pageSize,
+    loadMoreWrap,
+    loadMoreButton,
+    loadMoreRemaining,
+    onRender: ({ matchedItems }) => {
+      countEl.textContent = String(matchedItems.length);
+      noResults.hidden = matchedItems.length !== 0;
+    },
+  });
 
   const matchCard = (card: HTMLElement): boolean => {
     const kind = card.dataset.kind ?? 'infographic';
@@ -247,30 +242,7 @@ function setupDesignIndexFilter(root: HTMLElement): void {
 
   const applyFilters = ({ syncUrl = true } = {}) => {
     const matched = cards.filter(matchCard);
-    const unmatched = cards.filter(card => !matchCard(card));
-
-    visibleCount = pageSize;
-
-    matched.forEach((card, index) => {
-      card.hidden = index >= visibleCount;
-    });
-    unmatched.forEach(card => {
-      card.hidden = true;
-    });
-
-    countEl.textContent = String(matched.length);
-    noResults.hidden = matched.length !== 0;
-
-    if (loadMoreWrap && loadMoreRemaining) {
-      const remaining = matched.length - visibleCount;
-      if (remaining > 0) {
-        loadMoreWrap.hidden = false;
-        loadMoreRemaining.textContent = `(${remaining})`;
-      } else {
-        loadMoreWrap.hidden = true;
-      }
-    }
-
+    paginator.reset(matched);
     renderFilterPills();
     syncControls();
     if (syncUrl) updateUrl();
@@ -305,21 +277,6 @@ function setupDesignIndexFilter(root: HTMLElement): void {
       selectedPrefixTags.clear();
       applyFilters();
     });
-  });
-
-  loadMoreButton?.addEventListener('click', () => {
-    const matched = cards.filter(matchCard);
-    visibleCount += pageSize;
-    matched.forEach((card, index) => {
-      card.hidden = index >= visibleCount;
-    });
-
-    const remaining = matched.length - visibleCount;
-    if (remaining > 0 && loadMoreRemaining) {
-      loadMoreRemaining.textContent = `(${remaining})`;
-    } else if (loadMoreWrap) {
-      loadMoreWrap.hidden = true;
-    }
   });
 
   const initialParams = new URLSearchParams(window.location.search);

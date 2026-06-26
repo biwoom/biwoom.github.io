@@ -37,6 +37,7 @@ Last updated: 2026-06-26
 - `site-config.mjs` is the root source of truth for fixed site settings and env-backed DESIGN asset settings.
 - `src/lib/site-config.ts` is the app-facing config entry point for Astro components and utility modules.
 - `src/lib/client/content-filters.ts` centralizes shared prefix-filter, DESIGN library filter, and TEXT/STORY tag-index client behavior.
+- `src/lib/client/paginated-list.ts` centralizes shared "더 보기" pagination behavior for menu indexes and filterable card lists.
 - `npm run check` runs the content validator and validator fixture tests.
 - `npm run build` now requires the validator to pass before the Astro build starts.
 - Phase 3 styling work is complete for active Astro pages and shared components; remaining inline style search results are isolated DESIGN HTML asset internals.
@@ -58,6 +59,7 @@ Last updated: 2026-06-26
 - Shared semantic typography classes now use `ol-meta-label` and `ol-section-label` instead of the older mono-named labels.
 - TEXT and STORY use the shared Entity side-panel component with explicit `variant` props so each menu can carry its own styling without a single universal panel skin.
 - TEXT and STORY series pages now share one tag-index interaction layer instead of duplicating near-identical client scripts.
+- BLOG, TEXT, STORY, DESIGN, and NET list surfaces are moving onto one shared client-side pagination pattern so filtered and unfiltered card grids use the same load-more behavior.
 - TEXT and STORY document pages now use a shared right-side desktop utility stack for `On this page` TOC and Entity name cards instead of keeping the desktop TOC inside the top content toolbar.
 - Desktop `On this page` TOC cards now default to collapsed state, show the heading count in the trigger, and use scroll-spy highlighting for the active `h2`/`h3` section.
 - Mobile TOC behavior remains the existing dropdown/panel pattern; the desktop sticky TOC changes do not alter the mobile controls.

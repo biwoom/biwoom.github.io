@@ -166,16 +166,27 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
 </BaseLayout>
 
 <script>
+  import { createPaginator } from '../../lib/client/paginated-list';
+
   const PAGE_SIZE = 6;
   let activeCategory = 'all';
   let activeYear = 'all';
-  let visibleCount = PAGE_SIZE;
 
   const posts = Array.from(document.querySelectorAll<HTMLElement>('#blog-posts .ol-post'));
   const noResults = document.getElementById('blog-no-results')!;
   const loadmoreWrap = document.getElementById('blog-loadmore-wrap');
   const loadmoreBtn = document.getElementById('blog-loadmore-btn');
   const loadmoreRemaining = document.getElementById('blog-loadmore-remaining');
+  const paginator = createPaginator({
+    allItems: posts,
+    pageSize: PAGE_SIZE,
+    loadMoreWrap: loadmoreWrap,
+    loadMoreButton: loadmoreBtn,
+    loadMoreRemaining: loadmoreRemaining,
+    onRender: ({ matchedItems }) => {
+      noResults.hidden = matchedItems.length !== 0;
+    },
+  });
 
   function matchPost(el: HTMLElement): boolean {
     if (activeCategory !== 'all' && el.dataset.category !== activeCategory) return false;
@@ -184,24 +195,8 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
   }
 
   function applyFilters() {
-    visibleCount = PAGE_SIZE;
     const matched = posts.filter(matchPost);
-    const unmatched = posts.filter(p => !matchPost(p));
-
-    matched.forEach((el, i) => { el.hidden = i >= visibleCount; });
-    unmatched.forEach(el => { el.hidden = true; });
-
-    noResults.hidden = matched.length !== 0;
-
-    if (loadmoreWrap && loadmoreRemaining) {
-      const remaining = matched.length - visibleCount;
-      if (remaining > 0) {
-        loadmoreWrap.hidden = false;
-        loadmoreRemaining.textContent = `(${remaining})`;
-      } else {
-        loadmoreWrap.hidden = true;
-      }
-    }
+    paginator.reset(matched);
   }
 
   document.querySelectorAll<HTMLButtonElement>('#blog-chips .ol-chip').forEach(btn => {
@@ -223,16 +218,5 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
       applyFilters();
     });
   });
-
-    loadmoreBtn?.addEventListener('click', () => {
-    const matched = posts.filter(matchPost);
-    visibleCount += PAGE_SIZE;
-    matched.forEach((el, i) => { el.hidden = i >= visibleCount; });
-    const remaining = matched.length - visibleCount;
-    if (remaining > 0 && loadmoreRemaining) {
-      loadmoreRemaining.textContent = `(${remaining})`;
-    } else if (loadmoreWrap) {
-      loadmoreWrap.hidden = true;
-    }
-  });
+  applyFilters();
 </script>

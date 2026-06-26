@@ -19,6 +19,7 @@ const seriesCards = seriesList.map(series => {
   return { series, firstEntry, summary, tags };
 });
 const tagGroups = groupTagsByPrefix(seriesCards.flatMap(item => item.tags));
+const PAGE_SIZE = 8;
 ---
 
 <BaseLayout
@@ -57,13 +58,17 @@ const tagGroups = groupTagsByPrefix(seriesCards.flatMap(item => item.tags));
               targetSelector=".ol-text-series-card"
               totalCount={seriesCards.length}
               emptySelector="#text-no-results"
+              pageSize={PAGE_SIZE}
+              loadMoreWrapSelector="#text-loadmore-wrap"
+              loadMoreButtonSelector="#text-loadmore-btn"
+              loadMoreRemainingSelector="#text-loadmore-remaining"
             />
           </div>
 
           <section class="ol-text-series-grid" aria-label="TEXT 시리즈">
-            {seriesCards.map(({ series, summary, tags }) => {
+            {seriesCards.map(({ series, summary, tags }, index) => {
               return (
-                <a class="ol-text-series-card" href={url(`/text/${series.slug}`)} data-tags={JSON.stringify(tags)}>
+                <a class="ol-text-series-card" href={url(`/text/${series.slug}`)} data-tags={JSON.stringify(tags)} hidden={index >= PAGE_SIZE}>
                   <div>
                     <span class="ol-meta-label">{String(series.count).padStart(2, '0')} docs</span>
                     <h2 class="ol-kr">{series.label}</h2>
@@ -92,6 +97,15 @@ const tagGroups = groupTagsByPrefix(seriesCards.flatMap(item => item.tags));
           <p id="text-no-results" class="ol-kr ol-text-empty" hidden>
             선택한 태그에 해당하는 TEXT 시리즈가 없습니다.
           </p>
+
+          {seriesList.length > PAGE_SIZE && (
+            <div id="text-loadmore-wrap" class="ol-story-library-loadmore" hidden>
+              <button id="text-loadmore-btn" class="ol-btn ol-btn-outline">
+                더 보기
+                <span id="text-loadmore-remaining">({seriesList.length - PAGE_SIZE})</span>
+              </button>
+            </div>
+          )}
 
           {seriesList.length === 0 && (
             <p class="ol-kr ol-text-empty">아직 공개된 원고가 없습니다.</p>

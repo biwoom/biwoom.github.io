@@ -184,3 +184,10 @@ This file records durable project decisions that future Codex sessions should pr
 - Mobile TOC interactions should remain separate from the desktop sticky TOC pattern unless a later redesign intentionally unifies them.
 - Desktop TOC links should use scroll-spy highlighting so the active `h2` or `h3` section stays visible during reading.
 - On STORY document pages, the right-side sticky utility stack should offset below the sticky part navigation so it is not visually covered while scrolling.
+
+### Shared Menu Pagination Pattern
+
+- Menu and library list surfaces should use one shared client-side paginator instead of page-local visible-count scripts.
+- The shared paginator belongs in `src/lib/client/paginated-list.ts`.
+- Filtered card lists should reset to page 1 when filter state changes, then reuse the same load-more control pattern.
+- Deep-link or focused-card flows such as `NET` explore should be able to reveal the page that contains the focused result without forking the pagination model.

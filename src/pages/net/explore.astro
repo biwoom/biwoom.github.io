@@ -163,7 +163,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
 
             {visibleEntities.length > 0 ? (
               <div class="net-entity-grid">
-                {visibleEntities.map(entity => (
+                {visibleEntities.map((entity, index) => (
                   <div
                     class="net-entity-item"
                     data-net-entity
@@ -211,6 +211,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
                       ...(entity.data.aliases ?? []),
                       ...(entity.data.tags ?? []),
                     ].filter(Boolean).join(' ')}
+                    hidden={index >= PAGE_SIZE}
                   >
                     <OLEntityCard entity={entity.data} />
                   </div>
@@ -221,7 +222,7 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
             )}
             <p class="ol-kr net-empty" data-net-empty hidden>조건에 맞는 이름카드가 없습니다.</p>
             {visibleEntities.length > PAGE_SIZE && (
-              <div class="net-loadmore-wrap" data-net-loadmore-wrap>
+              <div class="net-loadmore-wrap" data-net-loadmore-wrap hidden>
                 <button type="button" class="ol-btn ol-btn-outline" data-net-loadmore>
                   더 보기
                   <span data-net-loadmore-remaining>({visibleEntities.length - PAGE_SIZE})</span>
@@ -261,6 +262,8 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
 </BaseLayout>
 
 <script>
+  import { createPaginator } from '../../lib/client/paginated-list';
+
   function setupNetExploreFilters() {
     const root = document.querySelector<HTMLElement>('[data-net-explore]');
     const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-net-entity]'));
@@ -289,7 +292,17 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
     let selectedType = 'all';
     let selectedQuery = '';
     let focusId = '';
-    let visibleCount = PAGE_SIZE;
+    const paginator = createPaginator({
+      allItems: cards,
+      pageSize: PAGE_SIZE,
+      loadMoreWrap: loadmoreWrap,
+      loadMoreButton: loadmoreButton,
+      loadMoreRemaining: loadmoreRemaining,
+      onRender: ({ matchedItems }) => {
+        if (resultCount) resultCount.textContent = String(matchedItems.length);
+        if (empty) empty.hidden = matchedItems.length > 0;
+      },
+    });
     const normalize = (value: string) => value.trim().toLocaleLowerCase('ko-KR');
     const detailType = document.querySelector<HTMLElement>('[data-net-detail-type]');
     const detailName = document.querySelector<HTMLElement>('[data-net-detail-name]');
@@ -521,25 +534,14 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
     };
 
     const apply = ({ updateUrl = true, resetPage = false } = {}) => {
-      if (resetPage) visibleCount = PAGE_SIZE;
       const matchedCards = cards.filter(cardMatches);
-      cards.forEach(card => {
-        card.hidden = true;
-      });
-      matchedCards.forEach((card, index) => {
-        card.hidden = index >= visibleCount;
-      });
-      if (resultCount) resultCount.textContent = String(matchedCards.length);
-      if (empty) empty.hidden = matchedCards.length > 0;
-      if (loadmoreWrap && loadmoreRemaining) {
-        const remaining = matchedCards.length - visibleCount;
-        loadmoreWrap.hidden = remaining <= 0;
-        loadmoreRemaining.textContent = `(${remaining})`;
-      }
+      if (resetPage) paginator.reset(matchedCards);
+      else paginator.render(matchedCards);
       syncControls();
       if (focusId) {
-        const focusedCard = matchedCards.find(card => !card.hidden && card.dataset.id === focusId);
+        const focusedCard = matchedCards.find(card => card.dataset.id === focusId);
         if (focusedCard) {
+          paginator.revealThrough(focusedCard);
           selectCard(focusedCard);
           focusId = '';
           if (updateUrl) writeUrl();
@@ -597,11 +599,6 @@ const relatedNameCards = (entity: { data: Record<string, any> }) => {
 
     resetButtons.forEach(button => {
       button.addEventListener('click', resetFilters);
-    });
-
-    loadmoreButton?.addEventListener('click', () => {
-      visibleCount += PAGE_SIZE;
-      apply({ updateUrl: false });
     });
 
     searchForm?.addEventListener('submit', event => {

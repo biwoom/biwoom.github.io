@@ -219,6 +219,19 @@ This file records concise date-based work summaries for continuity across Codex 
 - Updated `OLSearchModal.astro` so Pagefind results show section, breadcrumb, title, route path, and excerpt instead of title/excerpt only.
 - Added automatic Pagefind metadata output through `BaseLayout` and the TEXT/STORY/DESIGN/BLOG/ENTITY detail templates.
 
+## 2026-06-26
+
+### Unified Load-More Pagination Phase 1
+
+- Added `src/lib/client/paginated-list.ts` as the shared client paginator for card-grid style menu pages.
+- Updated `src/lib/client/content-filters.ts` so shared TEXT/STORY prefix filters and the DESIGN index filter use the shared paginator instead of local visible-count logic.
+- Updated `src/pages/blog/index.astro` to use the shared paginator and to apply its initial filtered render on page load.
+- Updated `src/pages/net/explore.astro` to use the shared paginator, keep result counts in sync, and reveal deep-linked focused cards even when they start beyond the first page.
+- Updated `src/pages/text/index.astro` to add the same load-more structure used by the other menu pages.
+- Updated `src/pages/story/index.astro` card markup so the shared prefix filter starts from the same hidden-after-page-size baseline as TEXT and DESIGN.
+- DESIGN index pagination now runs through the shared paginator path already exposed by `initDesignIndexFilters()`.
+- Local validation: `npm run build` passed, including `npm run check:content`, asset sync, Astro build, and Pagefind indexing.
+
 ## 2026-06-21
 
 ### Indramang Design Reference Assets
@@ -732,5 +745,17 @@ This file records concise date-based work summaries for continuity across Codex 
 - Added scroll-spy behavior for desktop and mobile TOC links so the active `h2`/`h3` section is highlighted while scrolling.
 - Removed leftover STORY-specific TOC card overrides so STORY now follows the same shared TOC card spacing and padding pattern as TEXT.
 - Adjusted the STORY right-side sticky utility stack to offset below the sticky part navigation, preventing the desktop TOC from being covered while scrolling.
+- Local validation:
+  - `npm run build` passed.
+
+### Brand Definition Update
+
+- Updated `src/content/pages/brand.md` to version `v1.4` with the latest update date `2026-06-26`.
+- Rewrote the typography note so it matches the current implementation: Pretendard as the external default font with `Noto Sans KR` and `Inter` in the fallback stack.
+- Reordered the `수정 변경사항` section into latest-first order.
+- Added the recent public-facing document and reading-surface changes that affect the brand document:
+  - the shared `HOME / TEXT / STORY / DESIGN / NET (+ BLOG)` operating structure remains current
+  - desktop TEXT/STORY reading surfaces now use a right-side `On this page` plus Entity information pattern
+  - desktop TOC behavior now defaults to collapsed state with heading counts and scroll-spy highlighting
 - Local validation:
   - `npm run build` passed.

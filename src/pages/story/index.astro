@@ -83,6 +83,7 @@ const statusLabel: Record<string, string> = {
                 class="ol-card ol-story-card ol-story-library-card"
                 data-tags={JSON.stringify(tags)}
                 data-index={i}
+                hidden={i >= PAGE_SIZE}
               >
                 <div>
                   <span class="ol-meta-label ol-story-library-meta">
