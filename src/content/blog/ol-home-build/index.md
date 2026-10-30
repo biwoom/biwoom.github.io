@@ -1,9 +1,6 @@
 ---
-title: OL HOME 구축기 — Phase 1~3, 온톨로지에서 검색까지
 description: Astro 6 기반 정적 사이트를 세 단계에 걸쳐 구축한 과정. 온톨로지 설계, WORKS/BOOK 분리, 모바일 대응, Pagefind 검색까지의 핵심 결정들.
 date: 2026-05-30T00:00:00.000Z
-category: OL
-readingTime: 10
 tags:
   - topic/개발
   - framework/astro
@@ -12,8 +9,9 @@ tags:
   - project/ol-home
   - topic/development
   - feature/search
-published: true
 ---
+
+# OL HOME 구축기 — Phase 1~3, 온톨로지에서 검색까지
 
 OL HOME은 단순 랜딩 페이지가 아니라, 온톨로지 기반 불교 콘텐츠 포털이다. Astro 6 + GitHub Pages 위에서 세 단계에 걸쳐 구축했다.
 

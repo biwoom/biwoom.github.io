@@ -4,8 +4,12 @@
 }
 
 /* ===== TASK 11: Dark mode icon visibility ===== */
-html.dark .ol-icon-sun { display: none; }
-html:not(.dark) .ol-icon-moon { display: none; }
+html.dark .ol-icon-sun {
+  display: none;
+}
+html:not(.dark) .ol-icon-moon {
+  display: none;
+}
 
 /* Disable color transitions during theme flips to avoid full-page flicker. */
 html.theme-switching *,
@@ -16,7 +20,10 @@ html.theme-switching *::after {
 }
 
 /* ===== Korean text optimization ===== */
-:lang(ko), .ol-kr { word-break: keep-all; }
+:lang(ko),
+.ol-kr {
+  word-break: keep-all;
+}
 
 /* 햄버거 버튼 (데스크탑에서 숨김) */
 .ol-mobile-menu-trigger {
@@ -34,4 +41,171 @@ html.theme-switching *::after {
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
-.ol-mobile-menu-trigger:hover { background: var(--ol-surface-2); }
+.ol-mobile-menu-trigger:hover {
+  background: var(--ol-surface-2);
+}
+
+/* ============================================================
+   OL Mobile Menu — Bottom Sheet
+   ============================================================ */
+
+/* 오버레이 (배경 dim) */
+.ol-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+.ol-mobile-overlay[aria-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 하단 시트 본체 */
+.ol-mobile-sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  background: var(--ol-surface);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(0);
+  transition: transform 250ms ease;
+}
+.ol-mobile-overlay[aria-hidden="true"] .ol-mobile-sheet {
+  transform: translateY(100%);
+}
+
+/* 드래그 핸들 */
+.ol-mobile-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--ol-border-strong);
+  border-radius: 2px;
+  margin: 0 auto 12px;
+}
+
+/* 링크 영역 */
+.ol-mobile-sheet-links {
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+  overflow-y: auto;
+  flex: 1; /* 남은 공간 채우기 */
+  min-height: 0; /* flex 컨테이너 내 overflow 활성화 */
+}
+
+/* 개별 메뉴 링크 */
+.ol-mobile-sheet-link {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ol-ink);
+  text-decoration: none;
+  border-radius: var(--ol-r);
+  transition: background 80ms ease;
+  letter-spacing: 0.02em;
+  -webkit-tap-highlight-color: transparent;
+}
+.ol-mobile-sheet-link:hover,
+.ol-mobile-sheet-link:active {
+  background: var(--ol-surface-2);
+}
+.ol-mobile-sheet-link.active {
+  color: var(--ol-ink);
+  background: var(--ol-surface-2);
+}
+
+/* 보조 링크 */
+.ol-mobile-sheet-link--sub {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ol-muted);
+}
+.ol-mobile-sheet-link--sub:hover {
+  color: var(--ol-ink);
+}
+.ol-mobile-sheet-link-icon {
+  margin-left: 4px;
+}
+
+/* 구분선 */
+.ol-mobile-sheet-divider {
+  height: 1px;
+  background: var(--ol-border);
+  margin: 4px 16px;
+}
+
+/* 닫기 버튼 */
+.ol-mobile-sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 16px);
+  margin: 8px 8px 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ol-muted);
+  background: var(--ol-surface-2);
+  border: none;
+  border-radius: var(--ol-r);
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 80ms ease,
+    color 80ms ease;
+}
+.ol-mobile-sheet-close:hover {
+  background: var(--ol-surface-3);
+  color: var(--ol-ink);
+}
+
+/* iOS safe area 대응 */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .ol-mobile-sheet-close {
+    margin-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
+
+/* 다크모드 */
+.dark .ol-mobile-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+.dark .ol-mobile-sheet {
+  background: var(--ol-surface);
+}
+.dark .ol-mobile-sheet-handle {
+  background: var(--ol-border);
+}
+.dark .ol-mobile-sheet-link:hover,
+.dark .ol-mobile-sheet-link:active,
+.dark .ol-mobile-sheet-link.active {
+  background: var(--ol-surface-2);
+}
+.dark .ol-mobile-sheet-close {
+  background: var(--ol-surface-2);
+  color: var(--ol-muted);
+}
+.dark .ol-mobile-sheet-close:hover {
+  background: var(--ol-surface-3);
+}
+
+.ol-mobile-overlay[hidden] {
+  display: none;
+}
+.ol-mobile-overlay[aria-hidden="true"] {
+  visibility: hidden;
+}

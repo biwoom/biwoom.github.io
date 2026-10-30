@@ -2,6 +2,51 @@
 
 This file records concise date-based work summaries for continuity across Codex sessions.
 
+## 2026-10-30
+
+### Move Four Existing TEXT Articles to BLOG
+
+- Moved the six-step meditation manuscript and three doctrine-research articles from `text/900.기존문헌/` to descriptive Markdown filenames directly under `src/content/blog/`.
+- Preserved original document identities, publication dates, body text and rights metadata; adjusted only the meditation article's two image links and copied its referenced images to `blog/assets/basic-meditation/`.
+- Assigned BLOG canonical URLs, redirected the four former TEXT article URLs, updated older aliases/redirect targets and kept TEXT series introductions and their existing source assets intact.
+- Validation: 9 content tests, typecheck (zero diagnostics), build (119 pages), link audit (46 redirects) and UI contracts all passed. Verified all four rendered pages have BLOG styling and search classification.
+- No commit or GitHub upload performed.
+
+### Unify TEXT Individual Documents With STORY Styling
+
+- Switched TEXT document routes to the same `StoryReader.astro` used by STORY; removed unused `TextReader` and `TextLayout`.
+- Parameterized collection breadcrumbs, Pagefind section/category metadata and labels. TEXT retains its public URLs and folder hierarchy while using STORY hero/part links/sidebar/body/TOC/copy presentation.
+- Updated static UI contracts so both collections must have STORY document structure and the correct search classification, with no legacy TEXT document shell. BLOG remains dedicated.
+- Validation: 9 content tests, typecheck (zero diagnostics), build and built-link/UI-contract checks. Browser interaction is not verified because browser access remains unavailable. No commit or upload performed.
+
+### Restore Search, Document and BLOG Presentation
+
+- Root cause: retiring `atlas.css` also removed shared search/mobile-sheet styles; replacing collection markup with a generic reader disconnected existing TEXT/STORY/BLOG styles.
+- Extracted search and mobile-sheet CSS into shared files, added initial hidden/inert overlay states, and synchronized open/close handling.
+- Restored TEXT sidebar/article/TOC/copy markup and STORY chapter/sidebar/mobile/TOC/copy markup against the normalized folder model. Restored BLOG list/image frames/archive/pagination and dedicated post header/body/footer styles. Kept rights exceptions and ordinary asset rendering.
+- Added `scripts/check-ui-contracts.mjs` to `check:built` to detect missing compiled overlay CSS and missing collection-specific markup; scope is static regression checking, not browser QA.
+- Validation: content fixtures passed (9 tests); type and build checks passed; 115 pages/42 redirects passed local-link audit; UI contracts passed for 34 Markdown documents and BLOG index.
+- Browser verification limitation: browser access host unavailable; native Chrome access returned "Computer Use was not approved to use Google Chrome". No approval rules were changed and no alternative UI control was attempted.
+- No commit, push or live deployment check performed.
+
+### Obsidian Content Refactor Implementation
+
+- Implemented YAML-free title/body writing, numeric-prefix sorting, folder-derived TEXT category/work/section hierarchy and ordinary PDF/image/HTML items.
+- Added shared library/reader components; TEXT uses existing STORY first-item links and expandable lists, with no actual tab switching. Preserved the shared tag modal and paginator.
+- Added committed `content-registry.json` for stable URLs, first-publication preparation dates and path/hash move tracking; retained existing public URLs, dates, unpublished states and rights exceptions.
+- Migrated 34 original tracked source assets (all verified by content hash), DESIGN prose and useful Entity explanations into ordinary TEXT material. Removed active DESIGN/NET/Entity/Ontology collections, UI and provider settings. Preserved retired ATLAS HTML under `.agents/archive/atlas/`.
+- Added general asset synchronization, Markdown link resolution, hidden/draft exclusion, static link verification and CI type/built-link checks. Updated AGENTS, skills, authoring manual, brand definition, guide and current state.
+- Verification: `npm run check` passed (9 tests); `npm run typecheck` passed with zero errors/warnings/hints; build produced 115 pages; `npm run check:built` verified local references and 42 redirects. Root sitemap/robots/RSS and legacy brand route checked; private sample content excluded.
+- Limitation: dev-server launch was rejected by automatic approval policy because `.codex/rules/default.rules` requires confirmation for a persistent process and approval mode is never. Browser interaction and live watcher behavior were not verified. Move+edit without a running watcher may require `content:move`; standard Markdown links are supported, Obsidian special embeds are not.
+- No commit, GitHub upload, Actions inspection or live deployment verification performed.
+
+### Obsidian Content Refactor Development Guide
+
+- Added `.agents/references/obsidian-content-refactor-guide.md` recording the agreed folder-based TEXT structure, numeric-prefix sorting, and reuse of current STORY links/expandable lists without tab switching.
+- Included DESIGN/NET/Entity/Ontology removal, frontmatter/schema reduction, asset and URL migration, phased implementation, and verification criteria.
+- Distinguished approved requirements from pending publishing/date/stable-URL decisions; updated current state and decision records accordingly.
+- Scope: internal documentation only. No application/content migration, user Obsidian configuration changes, build, or GitHub upload performed. Validation: reviewed documentation and diff for consistency.
+
 ## 2026-06-12
 
 ### GitHub Pages Root Deployment

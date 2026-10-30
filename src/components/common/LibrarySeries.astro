@@ -1,0 +1,184 @@
+---
+import OLTagResultsModal from "./OLTagResultsModal.astro";
+import { getPublicTags, groupTagsByPrefix } from "../../lib/tags";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import type { Library, Section } from "../../lib/library";
+interface Props {
+  series: Library;
+  section: Section;
+}
+const { series, section } = Astro.props;
+const label = section.toUpperCase();
+const tagGroups = groupTagsByPrefix(
+  series.entries.flatMap((entry) => getPublicTags(entry.data.tags)),
+);
+---
+
+<BaseLayout
+  title={`${series.label} — OL ${label}`}
+  description={series.description}
+  pagefindBody={false}
+>
+  <main class="ol-story-reader-page">
+    <section class="ol-story-series-hero ol-story-series-hero--centered">
+      <span class="ol-section-label">
+        {series.category || `${label} SERIES`}
+      </span>
+      <h1 class="ol-kr">{series.label}</h1>
+      {series.description && <p class="ol-kr">{series.description}</p>}
+      {tagGroups.length > 0 && (
+        <div class="ol-story-tag-area" data-tag-results-index>
+          <div class="ol-story-tag-row">
+            {tagGroups.map((group) => (
+              <div class="ol-story-tag-menu">
+                <button
+                  class="ol-story-tag-menu-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  data-tag-menu-trigger
+                >
+                  {group.prefix}
+                </button>
+                <div class="ol-story-tag-menu-panel">
+                  {group.tags.map((tag) => (
+                    <button
+                      type="button"
+                      data-tag-select
+                      data-tag-value={tag.tag}
+                      data-tag-label={tag.label}
+                    >
+                      {tag.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <OLTagResultsModal
+            variant={section}
+            emptyText="선택한 태그에 해당하는 자료가 없습니다."
+          >
+            {series.parts.map((part) => (
+              <section class="ol-tag-results-section" data-tag-result-part>
+                <h3>{part.label}</h3>
+                <div class="ol-tag-results-group" data-tag-result-group>
+                  <ol>
+                    {part.entries.map((entry) => (
+                      <li
+                        data-tag-result-entry
+                        data-tags={JSON.stringify(
+                          getPublicTags(entry.data.tags),
+                        )}
+                      >
+                        <a href={entry.data.url}>{entry.data.title}</a>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </section>
+            ))}
+          </OLTagResultsModal>
+        </div>
+      )}
+    </section>
+    {series.parts.length > 0 && (
+      <nav
+        class="ol-story-part-nav"
+        aria-label={`${series.label} 자료 바로가기`}
+      >
+        {series.parts.map((part, index) => (
+          <a href={part.entries[0].data.url}>
+            <span>
+              {section === "story"
+                ? `PART ${index + 1}`
+                : `${part.entries.length}개 자료`}
+            </span>
+            <strong class="ol-kr">{part.label}</strong>
+          </a>
+        ))}
+      </nav>
+    )}
+    <section class="ol-story-reader-shell">
+      <div
+        class:list={[
+          "ol-story-biblio-grid",
+          { "ol-story-biblio-grid--compact": !series.meta },
+        ]}
+      >
+        <section class="ol-story-cover-panel">
+          <div class="ol-story-book-cover">
+            <span>OL {label}</span>
+            <strong class="ol-kr">{series.label}</strong>
+            <em>{series.count}개 자료</em>
+          </div>
+        </section>
+        <section class="ol-story-biblio-toc-card">
+          <div class="ol-story-biblio-card-head">
+            <div>
+              <span class="ol-section-label">Contents</span>
+              <h2 class="ol-kr">
+                {section === "story" ? "파트 목록" : "자료 목록"}
+              </h2>
+            </div>
+          </div>
+          <div class="ol-story-biblio-card-content">
+            <div class="ol-story-part-overview">
+              {series.parts.map((part, index) => (
+                <details class="ol-story-part-overview-item" open={index === 0}>
+                  <summary>
+                    <span>
+                      {section === "story"
+                        ? `PART ${index + 1}`
+                        : String(index + 1).padStart(2, "0")}
+                    </span>
+                    <strong class="ol-kr">{part.label}</strong>
+                    <em>{part.entries.length}개 자료</em>
+                  </summary>
+                  <div class="ol-story-part-overview-docs">
+                    <section class="ol-story-part-overview-group">
+                      <ol>
+                        {part.entries.map((entry, i) => (
+                          <li>
+                            <a href={entry.data.url}>
+                              <span>{String(i + 1).padStart(2, "0")}</span>
+                              <strong class="ol-kr">{entry.data.title}</strong>
+                              {entry.data.format && (
+                                <small>{entry.data.format}</small>
+                              )}
+                            </a>
+                          </li>
+                        ))}
+                      </ol>
+                    </section>
+                    <a
+                      class="ol-story-part-overview-start"
+                      href={part.entries[0].data.url}
+                    >
+                      {part.label} 첫 자료로 이동
+                    </a>
+                  </div>
+                </details>
+              ))}
+              {series.count === 0 && <p>준비 중입니다.</p>}
+            </div>
+          </div>
+        </section>
+        {series.meta && (
+          <section class="ol-story-biblio-body">
+            <div class="ol-story-biblio-card-head">
+              <h2 class="ol-kr">소개</h2>
+            </div>
+            <div class="ol-story-biblio-card-content">
+              <slot />
+            </div>
+          </section>
+        )}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  import { initTagResultIndexes } from "../../lib/client/content-filters";
+  initTagResultIndexes();
+</script>

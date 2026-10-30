@@ -5,15 +5,12 @@
 @import "./components/copy.css";
 @import "./components/doc-nav.css";
 @import "./components/widgets.css";
+@import "./components/search.css";
 @import "./components/prose.css";
 @import "./layout/footer.css";
 @import "./layout/mobile.css";
-@import "./pages/design.css";
 @import "./pages/partners.css";
-@import "./pages/ai.css";
 @import "./pages/blog.css";
-@import "./pages/entity.css";
-@import "./pages/net.css";
 @import "./pages/text-global-responsive.css";
 @import "./pages/text-layout.css";
 @import "./pages/text-layout-responsive.css";
@@ -22,7 +19,6 @@
 @import "./pages/text-series.css";
 @import "./pages/text-reader-responsive.css";
 @import "./pages/text-dark.css";
-@import "./pages/atlas.css";
 @import "./pages/story-base.css";
 @import "./pages/story-tags.css";
 @import "./pages/story-mobile-controls.css";
@@ -31,3 +27,4 @@
 @import "./pages/story-reader.css";
 @import "./pages/story-dark.css";
 @import "./pages/story-responsive.css";
+@import "./pages/reading.css";

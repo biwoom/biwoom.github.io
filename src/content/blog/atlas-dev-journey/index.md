@@ -1,9 +1,6 @@
 ---
-title: OL ATLAS 개발기 — v0.0.1에서 v0.0.6까지, 단일 HTML의 진화
 description: 듀얼 런타임 폐기에서 독서뷰 완성까지. 6개 버전에 걸친 OL ATLAS의 핵심 설계 결정과 구현 과정을 기록합니다.
 date: 2026-05-27T00:00:00.000Z
-category: ATLAS
-readingTime: 12
 tags:
   - project/atlas
   - topic/개발
@@ -11,8 +8,9 @@ tags:
   - kind/blog
   - topic/development
   - format/single-html
-published: true
 ---
+
+# OL ATLAS 개발기 — v0.0.1에서 v0.0.6까지, 단일 HTML의 진화
 
 OL ATLAS는 단일 HTML 파일로 동작하는 불교 콘텐츠 뷰어 겸 에디터다. 설치도 서버도 필요 없다. 파일 하나를 더블클릭하면 열리고, 수정하고, 그대로 누군가에게 보낸다.
 

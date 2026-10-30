@@ -1,44 +1,24 @@
 ---
-import { getCollection } from 'astro:content';
-import { getLatestAtlasBuild } from '../../lib/atlas';
-import { isTextDocumentEntry } from '../../lib/text';
-import { isStoryDocumentEntry } from '../../lib/story';
-
-const stories = await getCollection('story', entry => entry.data.published && isStoryDocumentEntry(entry));
-const texts = await getCollection('text', entry => entry.data.published !== false && isTextDocumentEntry(entry));
-const designs = await getCollection('design', ({ data }) => data.published);
-const blogs = await getCollection('blog', ({ data }) => data.published);
-const netEntities = await getCollection('entities', ({ data }) => data.published);
-
-const atlasVersion = getLatestAtlasBuild().version;
+import { getDocuments } from "../../lib/library";
+import { getCollection } from "astro:content";
+const groups = await Promise.all([
+  getDocuments("text"),
+  getDocuments("story"),
+  getCollection("blog", (e) => e.data.published),
+]);
 ---
+
 <section class="ol-section-tight">
   <div class="ol-container">
     <div class="ol-stats">
-      <div class="ol-stat">
-        <div class="n"><em>{stories.length}</em></div>
-        <div class="l">콘텐츠 STORY</div>
-      </div>
-      <div class="ol-stat">
-        <div class="n"><em>{texts.length}</em></div>
-        <div class="l">문헌 TEXT</div>
-      </div>
-      <div class="ol-stat">
-        <div class="n"><em>{designs.length}</em></div>
-        <div class="l">DESIGN 자료</div>
-      </div>
-      <div class="ol-stat">
-        <div class="n"><em>{blogs.length}</em></div>
-        <div class="l">BLOG 기록</div>
-      </div>
-      <div class="ol-stat">
-        <div class="n"><em>{netEntities.length}</em></div>
-        <div class="l">NET 이름카드</div>
-      </div>
-      <!-- <div class="ol-stat">
-        <div class="n"><em>v{atlasVersion}</em></div>
-        <div class="l">ATLAS 빌드</div>
-      </div> -->
+      {groups.map((entries, i) => (
+        <div class="ol-stat">
+          <div class="n">
+            <em>{entries.filter((e) => e.data.kind !== "series").length}</em>
+          </div>
+          <div class="l">{["문헌 TEXT", "이야기 STORY", "기록 BLOG"][i]}</div>
+        </div>
+      ))}
     </div>
   </div>
 </section>

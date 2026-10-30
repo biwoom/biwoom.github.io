@@ -17,15 +17,7 @@ description: Maintain OL HOME manuals, brand documents, AGENTS.md, README.md, an
 2. Read the current version before editing.
 3. Align content with the current codebase, not older project names or routes.
 4. Keep internal operating manuals under `.agents/references/` when they are for Codex or maintainers rather than public visitors.
-5. For public manuals in `src/content/pages/`, keep frontmatter limited to the `pages` schema:
-
-```yaml
----
-title: "문서 제목"
-description: "문서 설명"
-published: true
----
-```
+5. Public manuals may omit YAML and use an H1 title. Keep any optional frontmatter within the current allowed input fields; preserve existing descriptions and rights exceptions.
 
 6. Put document version, latest update date, target project, and deployment URL in the body.
 7. Add or update a bottom section named `수정 변경사항`.
@@ -33,16 +25,15 @@ published: true
 
 ## Current OL HOME Facts
 
-- Production URL: `https://biwoom.github.io/`
-- GitHub Pages repository: `biwoom/biwoom.github.io`
-- Astro `base` should not be set.
-- Content source root: `src/content/`
-- Generated asset output: `public/generated/`
-- Fixed site settings and env-backed DESIGN asset settings are centralized in `site-config.mjs`.
-- App code should read shared site and DESIGN asset settings through `src/lib/site-config.ts`.
-- Supported environment examples live in `.env.example`; fixed production values such as the canonical site URL stay code-managed.
-- Deploy workflow: `.github/workflows/deploy.yml`
-- Public primary navigation currently includes `HOME`, `TEXT`, `STORY`, `DESIGN`, `NET`, with `BLOG` as a separate action link.
+- Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
+- `src/content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
+- TEXT uses category/work/material-section/item folders; order comes from numeric prefixes and title/body writing is supported without YAML.
+- DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
+- `src/content.config.ts` defines normalized data; `scripts/lib/content.mjs` shares source interpretation with validation.
+- `content-registry.json` is committed source metadata for stable URLs/dates/paths. `public/generated/content/` is derived output and is not committed.
+- Shared settings: `site-config.mjs`, app entry `src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
+- Deploy workflow: `.github/workflows/deploy.yml`. Upload requests stop after requested push.
+- TEXT reuses STORY series links and expandable lists; no real tab switching.
 
 ## Document Placement
 
@@ -59,8 +50,7 @@ published: true
 - Keep operational instructions concrete: paths, commands, expected routes.
 - Avoid stale references to project-page URLs such as `/ol-home` or `/biwoom` unless documenting history.
 - When describing generated files, say not to commit `dist/`, `.astro/`, `node_modules/`, or `public/generated/`.
-- Do not describe `/generated/design/...` as the authoring rule for new content; document provider-neutral rules such as `design-asset:{slug}/{asset}` or resolver-based asset fields.
-- When documentation mentions DESIGN asset migration or external storage, include `PUBLIC_DESIGN_ASSET_BASE_URL`, optional `DESIGN_ASSET_PROVIDER=external`, and optional `DESIGN_ASSET_MANIFEST` only where operationally relevant.
+- Use ordinary relative attachment links. Do not introduce DESIGN asset keys or generated URLs as authoring requirements.
 - Shared UI behavior should be documented at the component/system level when it has been unified, for example the shared TEXT/STORY tag-results modal layer.
 
 ## Validation
@@ -72,3 +62,9 @@ published: true
 ```sh
 rg "ol-home|/biwoom|base:" astro.config.mjs public src README.md AGENTS.md .agents
 ```
+
+## 수정 변경사항
+
+### 2026-10-30
+
+- Updated facts and asset guidance for Obsidian authoring and the retired DESIGN/NET/Entity/Ontology systems.

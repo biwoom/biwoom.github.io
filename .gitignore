@@ -31,3 +31,5 @@ biwoom.code-workspace
 
 docs/net-map/
 docs/net-explorer/
+# Obsidian personal state and plugins (the Markdown vault remains versioned)
+src/content/.obsidian/

@@ -1,12 +1,14 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { url } from '../../lib/url';
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { url } from "../../lib/url";
 
 export async function getStaticPaths() {
-  const pages = await getCollection('pages', e => e.data.published);
-  return pages.map(entry => ({
-    params: { slug: entry.id },
+  const pages = await getCollection("pages", (e) => e.data.published);
+  return pages.map((entry) => ({
+    params: {
+      slug: entry.data.url.replace(/^\/pages\//, "").replace(/\/$/, ""),
+    },
     props: { entry },
   }));
 }
@@ -23,20 +25,18 @@ const { Content } = await render(entry);
     <section class="ol-section">
       <div class="ol-container ol-container--readable">
         <header class="ol-page-header">
-          <h1 class="ol-page-heading ol-kr">
-            {entry.data.title}
-          </h1>
+          <h1 class="ol-page-heading ol-kr">{entry.data.title}</h1>
           {entry.data.description && (
-            <p class="ol-page-description ol-kr">
-              {entry.data.description}
-            </p>
+            <p class="ol-page-description ol-kr">{entry.data.description}</p>
           )}
         </header>
         <div class="ol-prose">
           <Content />
         </div>
         <footer class="ol-page-return">
-          <a href={url('/')} class="ol-page-return-link">← 홈으로</a>
+          <a href={url("/")} class="ol-page-return-link">
+            ← 홈으로
+          </a>
         </footer>
       </div>
     </section>

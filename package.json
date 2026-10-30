@@ -7,14 +7,18 @@
   },
   "scripts": {
     "check:content": "node scripts/check-content.mjs",
-    "check:content:fixtures": "node scripts/check-content-fixtures.mjs",
+    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs",
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node scripts/sync-content-assets.mjs",
-    "dev": "npm run sync:assets && astro dev",
-    "build:site": "npm run sync:assets && astro build && npx pagefind --site dist",
+    "dev": "npm run prepare:content && npm run sync:assets && astro dev",
+    "build:site": "npm run prepare:content && npm run sync:assets && astro build && npx pagefind --site dist",
     "build": "npm run check:content && npm run build:site",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prepare:content": "node scripts/prepare-content.mjs",
+    "content:move": "node scripts/content-move.mjs",
+    "typecheck": "astro check",
+    "check:built": "node scripts/check-built-links.mjs && node scripts/check-ui-contracts.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",
@@ -22,12 +26,18 @@
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^6.3.8",
     "basecoat-css": "^0.3.11",
+    "js-yaml": "^5.5.0",
     "remark-footnotes": "^4.0.1",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
     "@tailwindcss/vite": "^4.3.0",
     "pagefind": "^1.5.2",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3"
   }
 }

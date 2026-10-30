@@ -1,9 +1,6 @@
 ---
-title: "OL HOME 리팩터링 기록 — 검증, 공용 모듈, TOC, 페이지네이션"
-description: "2026년 6월 25일과 26일에 진행한 OL HOME 코드 정리, 콘텐츠 검증 강화, TEXT·STORY 리더 개선, 목록 페이지네이션 통일 작업 기록."
+description: 2026년 6월 25일과 26일에 진행한 OL HOME 코드 정리, 콘텐츠 검증 강화, TEXT·STORY 리더 개선, 목록 페이지네이션 통일 작업 기록.
 date: 2026-06-26T00:00:00.000Z
-category: OL
-readingTime: 7
 tags:
   - topic/개발
   - topic/리팩터링
@@ -18,8 +15,9 @@ tags:
   - feature/pagination
   - feature/text-reader
   - feature/story-reader
-published: true
 ---
+
+# OL HOME 리팩터링 기록 — 검증, 공용 모듈, TOC, 페이지네이션
 
 어제와 오늘의 작업은 OL HOME의 겉모양을 크게 바꾸기보다, 앞으로 콘텐츠가 늘어날 때 버틸 수 있는 내부 구조를 정리하는 데 집중했다. 큰 방향은 세 가지였다.
 

@@ -1,9 +1,6 @@
 ---
-title: TEXT와 STORY 리더 개편 — 시리즈 구조, 태그 인덱스, 문서 탐색
 description: OL HOME의 TEXT·STORY 콘텐츠를 시리즈 중심 구조로 정리하고, 태그 필터와 검색 패널, 모바일 도구, 이전·다음 문서 탐색을 확장한 작업 기록.
 date: 2026-06-11T00:00:00.000Z
-category: OL
-readingTime: 8
 tags:
   - topic/개발
   - project/text
@@ -16,8 +13,9 @@ tags:
   - feature/story-reader
   - feature/tag-index
   - feature/content-pipeline
-published: true
 ---
+
+# TEXT와 STORY 리더 개편 — 시리즈 구조, 태그 인덱스, 문서 탐색
 
 오늘 작업의 중심은 OL HOME의 TEXT와 STORY 페이지를 단순 목록에서 "시리즈 단위로 읽고 탐색하는 콘텐츠 리더"로 바꾸는 것이었다. 동시에 DESIGN 콘텐츠도 `src/content`를 원본으로 삼고 빌드 시 `public/generated`로 복사하는 흐름 안에 새 항목을 추가했다.
 

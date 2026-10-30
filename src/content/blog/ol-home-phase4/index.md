@@ -1,9 +1,6 @@
 ---
-title: Phase 4 — 필터, 페이지네이션, Pages 컬렉션, 사이트 설정 통합
 description: BLOG·BOOK·WORKS·DESIGN 페이지에 필터와 페이지네이션을 적용하고, 상설 문서용 Pages 컬렉션을 신설하고, 사이트 정보를 한 곳으로 통합한 작업 기록.
 date: 2026-05-31T00:00:00.000Z
-category: OL
-readingTime: 7
 tags:
   - topic/개발
   - topic/필터
@@ -13,8 +10,9 @@ tags:
   - topic/development
   - feature/filter
   - feature/pagination
-published: true
 ---
+
+# Phase 4 — 필터, 페이지네이션, Pages 컬렉션, 사이트 설정 통합
 
 오늘 OL HOME에 적용한 작업들을 정리한다. 페이지별 필터와 페이지네이션 통일, 구조적 개선, 그리고 몇 가지 새로운 기능 추가.
 

@@ -2,8 +2,6 @@
 title: 실상사 생명평화문양에서 인드라망 디자인까지
 description: 실상사 생명평화 운동에서 안상수 작가가 만든 생명평화문양을 바탕으로, 보리수와 인드라망, 다양성, 픽토그래프로 확장된 다섯 DESIGN 이미지를 정리한다.
 date: 2026-06-21T00:00:00.000Z
-category: DESIGN
-readingTime: 6
 thumbnailAsset: thumb.jpg
 tags:
   - project/design
@@ -18,8 +16,8 @@ tags:
   - topic/life-peace
   - topic/diversity
   - topic/oracle-bone-script
-published: true
 ---
+
 # 생명평화무늬와 인드라망 문양 작업 기록
 
 이번 작업은 실상사 생명평화무늬에서 받은 인상을 바탕으로, OL DESIGN 안에서 인드라망 문양을 몇 가지 방향으로 확장해 보는 일이었다.
@@ -30,7 +28,7 @@ published: true
 
 참조: [실상사 생명평화무늬](https://silsangsa.or.kr/Lifepeace-Symbo)
 
-![생명평화문양](design-asset:life-peace-indramang/Life-Peace-Indramang.PNG)
+![생명평화문양](content-asset:text/950.시각자료/004.생명평화 인드라망 문양/001.자료/assets/Life-Peace-Indramang.PNG)
 
 ## 생명평화무늬
 
@@ -42,7 +40,7 @@ published: true
 
 그래서 이 이미지는 OL DESIGN에서 하나의 참고 이미지로만 남지 않는다. 불교적 세계관을 어떻게 문양으로 옮길 수 있는지 보여주는 중요한 출발점이 된다.
 
-![보리수 인드라망 문양](design-asset:bodhi-tree-indramang/Bodhi-Tree-Indramang.PNG)
+![보리수 인드라망 문양](content-asset:text/950.시각자료/001.보리수 인드라망 문양/001.자료/assets/Bodhi-Tree-Indramang.PNG)
 
 ## 보리수 인드라망
 
@@ -54,7 +52,7 @@ published: true
 
 이 문양은 생명평화무늬의 직접 변형은 아니다. 다만 그 안에 흐르는 불교적 통찰은 같다.
 
-![다양성 인드라망 문양](design-asset:diversity-indramang/Diversity-Indramang-1.PNG)
+![다양성 인드라망 문양](content-asset:text/950.시각자료/002.다양성 인드라망 문양/001.자료/assets/Diversity-Indramang-1.PNG)
 
 ## 다양성 인드라망
 
@@ -66,7 +64,7 @@ published: true
 
 그래서 이 문양은 질서보다 공존에 가깝다. 하나의 중심을 유지하면서도, 그 안에 여러 색과 결이 함께 머물 수 있는지를 시각적으로 확인해 본 작업이다.
 
-![인드라망 픽토그래프 1](design-asset:pictograph-indramang-1/Pictograph-Indramang-1.PNG)
+![인드라망 픽토그래프 1](content-asset:text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/assets/Pictograph-Indramang-1.PNG)
 
 ## 인드라망 픽토그래프
 

@@ -1,35 +1,24 @@
 ---
-import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getBlogThumbnailCandidates } from '../../lib/assets';
-import { url } from '../../lib/url';
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getBlogThumbnailUrl } from "../../lib/assets";
 
-const posts = await getCollection('blog', e => e.data.published);
+const posts = await getCollection("blog", (e) => e.data.published);
 posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/content/blog/**/*.{png,jpg,jpeg,webp,gif,avif}',
-  { eager: true }
+const thumbnails = Object.fromEntries(
+  posts.map((post) => [post.id, getBlogThumbnailUrl(post)]),
 );
-
-const thumbnails: Record<string, ImageMetadata> = {};
-for (const post of posts) {
-  for (const filename of getBlogThumbnailCandidates(post)) {
-    const key = `/src/content/blog/${post.id}/${filename}`;
-    const mod = imageModules[key];
-    if (mod) {
-      thumbnails[post.id] = mod.default;
-      break;
-    }
-  }
-}
 
 const PAGE_SIZE = 6;
 
-const categories = [...new Set(posts.map(p => p.data.category).filter(Boolean))] as string[];
+const categories = [
+  ...new Set(posts.map((p) => p.data.category).filter(Boolean)),
+] as string[];
 
-const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sort((a, b) => b - a);
+const archiveYears = [
+  ...new Set(posts.map((p) => p.data.date.getFullYear())),
+].sort((a, b) => b - a);
 ---
 
 <BaseLayout
@@ -43,11 +32,14 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
       <div class="ol-container">
         <span class="ol-section-label">JOURNAL · 작업 일지</span>
         <h1 class="ol-kr">
-          만들고 고친 자취를<br>
+          만들고 고친 자취를
+          <br />
           <em>그대로</em> 적어둡니다.
         </h1>
         <p class="ol-lead ol-kr">
-          OL BLOG는 결과물의 광고가 아니라, 결정의 기록입니다. 무엇을 고쳤고, 무엇을 포기했고, 무엇을 다음으로 미뤘는지 — 누군가 비슷한 일을 시작할 때 참고가 되도록.
+          OL BLOG는 결과물의 광고가 아니라, 결정의 기록입니다. 무엇을 고쳤고,
+          무엇을 포기했고, 무엇을 다음으로 미뤘는지 — 누군가 비슷한 일을 시작할
+          때 참고가 되도록.
         </p>
       </div>
     </section>
@@ -57,9 +49,11 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
       <div class="ol-container">
         <div class="ol-row ol-blog-chip-row">
           <div class="ol-chips" id="blog-chips">
-            <button class="ol-chip active" data-category="all">전체 <span class="count">{posts.length}</span></button>
-            {categories.map(cat => {
-              const count = posts.filter(p => p.data.category === cat).length;
+            <button class="ol-chip active" data-category="all">
+              전체 <span class="count">{posts.length}</span>
+            </button>
+            {categories.map((cat) => {
+              const count = posts.filter((p) => p.data.category === cat).length;
               return (
                 <button class="ol-chip" data-category={cat}>
                   {cat} <span class="count">{count}</span>
@@ -73,55 +67,89 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
           <div>
             <div id="blog-posts">
               {posts.length === 0 ? (
-                <div class="ol-blog-empty">
-                  아직 발행된 글이 없습니다.
-                </div>
-              ) : posts.map((post, i) => {
-                const hasThumbnail = !!thumbnails[post.id];
-                return (
-                <article
-                  class:list={['ol-post', { 'ol-post--text-only': !hasThumbnail }]}
-                  data-category={post.data.category ?? ''}
-                  data-year={post.data.date.getFullYear()}
-                  data-index={i}
-                  hidden={i >= PAGE_SIZE}
-                >
-                  {hasThumbnail && (
-                    <div>
-                      <div class="when">{post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, ' · ').replace('.', '')}</div>
-                      {post.data.category && (
-                        <span class="ol-badge ol-blog-card-badge">{post.data.category}</span>
-                      )}
-                      <div class="ol-blog-card-media">
-                        <a href={url(`/blog/${post.id}`)} class="ol-blog-card-media-link">
-                          <div class="ol-blog-card-thumb-frame">
-                            <Image src={thumbnails[post.id]} alt={post.data.title} class="ol-blog-card-thumb-image" />
+                <div class="ol-blog-empty">아직 발행된 글이 없습니다.</div>
+              ) : (
+                posts.map((post, i) => {
+                  const hasThumbnail = !!thumbnails[post.id];
+                  return (
+                    <article
+                      class:list={[
+                        "ol-post",
+                        { "ol-post--text-only": !hasThumbnail },
+                      ]}
+                      data-category={post.data.category ?? ""}
+                      data-year={post.data.date.getFullYear()}
+                      data-index={i}
+                      hidden={i >= PAGE_SIZE}
+                    >
+                      {hasThumbnail && (
+                        <div>
+                          <div class="when">
+                            {post.data.date
+                              .toLocaleDateString("ko-KR", {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                              })
+                              .replace(/\. /g, " · ")
+                              .replace(".", "")}
                           </div>
+                          {post.data.category && (
+                            <span class="ol-badge ol-blog-card-badge">
+                              {post.data.category}
+                            </span>
+                          )}
+                          <div class="ol-blog-card-media">
+                            <a
+                              href={post.data.url}
+                              class="ol-blog-card-media-link"
+                            >
+                              <div class="ol-blog-card-thumb-frame">
+                                <img
+                                  src={thumbnails[post.id]}
+                                  alt={post.data.title}
+                                  class="ol-blog-card-thumb-image"
+                                />
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        {!hasThumbnail && (
+                          <div class="ol-blog-card-meta-row">
+                            <div class="when">
+                              {post.data.date
+                                .toLocaleDateString("ko-KR", {
+                                  year: "numeric",
+                                  month: "2-digit",
+                                  day: "2-digit",
+                                })
+                                .replace(/\. /g, " · ")
+                                .replace(".", "")}
+                            </div>
+                            {post.data.category && (
+                              <span class="ol-badge">{post.data.category}</span>
+                            )}
+                          </div>
+                        )}
+                        <a href={post.data.url} class="ol-post-title-link">
+                          <h3 class="ol-kr">{post.data.title}</h3>
+                        </a>
+                        <p class="ol-kr">{post.data.description}</p>
+                        {post.data.readingTime && (
+                          <div class="meta">
+                            <span>{post.data.readingTime}분 읽기</span>
+                          </div>
+                        )}
+                        <a class="read" href={post.data.url}>
+                          전문 읽기 →
                         </a>
                       </div>
-                    </div>
-                  )}
-                  <div>
-                    {!hasThumbnail && (
-                      <div class="ol-blog-card-meta-row">
-                        <div class="when">{post.data.date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, ' · ').replace('.', '')}</div>
-                        {post.data.category && (
-                          <span class="ol-badge">{post.data.category}</span>
-                        )}
-                      </div>
-                    )}
-                    <a href={url(`/blog/${post.id}`)} class="ol-post-title-link">
-                      <h3 class="ol-kr">{post.data.title}</h3>
-                    </a>
-                    <p class="ol-kr">{post.data.description}</p>
-                    {post.data.readingTime && (
-                      <div class="meta"><span>{post.data.readingTime}분 읽기</span></div>
-                    )}
-                    <a class="read" href={url(`/blog/${post.id}`)}>전문 읽기 →</a>
-                  </div>
-                </article>
-                );
-              })}
+                    </article>
+                  );
+                })
+              )}
             </div>
 
             <div id="blog-no-results" class="ol-kr ol-blog-empty" hidden>
@@ -132,7 +160,9 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
               <div class="ol-blog-loadmore" id="blog-loadmore-wrap" hidden>
                 <button id="blog-loadmore-btn" class="ol-btn ol-btn-outline">
                   더 보기
-                  <span id="blog-loadmore-remaining">({posts.length - PAGE_SIZE})</span>
+                  <span id="blog-loadmore-remaining">
+                    ({posts.length - PAGE_SIZE})
+                  </span>
                 </button>
               </div>
             )}
@@ -147,17 +177,19 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
                   <span class="ol-kr">전체</span>
                   <span class="ol-blog-archive-count">{posts.length}</span>
                 </button>
-                {archiveYears.map(year => (
+                {archiveYears.map((year) => (
                   <button class="ol-blog-archive-btn" data-year={String(year)}>
                     <span class="ol-kr">{year}년</span>
                     <span class="ol-blog-archive-count">
-                      {posts.filter(p => p.data.date.getFullYear() === year).length}
+                      {
+                        posts.filter((p) => p.data.date.getFullYear() === year)
+                          .length
+                      }
                     </span>
                   </button>
                 ))}
               </div>
             </div>
-
           </aside>
         </div>
       </div>
@@ -166,17 +198,20 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
 </BaseLayout>
 
 <script>
-  import { createPaginator } from '../../lib/client/paginated-list';
+  import { createPaginator } from "../../lib/client/paginated-list";
 
   const PAGE_SIZE = 6;
-  let activeCategory = 'all';
-  let activeYear = 'all';
+  let activeCategory = "all";
+  let activeYear = "all";
 
-  const posts = Array.from(document.querySelectorAll<HTMLElement>('#blog-posts .ol-post'));
-  const noResults = document.getElementById('blog-no-results')!;
-  const loadmoreWrap = document.getElementById('blog-loadmore-wrap');
-  const loadmoreBtn = document.getElementById('blog-loadmore-btn');
-  const loadmoreRemaining = document.getElementById('blog-loadmore-remaining');
+  const posts = Array.from(
+    document.querySelectorAll<HTMLElement>("#blog-posts .ol-post"),
+  );
+  const noResults = document.getElementById("blog-no-results")!;
+  const loadmoreWrap = document.getElementById("blog-loadmore-wrap");
+  const loadmoreBtn =
+    document.querySelector<HTMLButtonElement>("#blog-loadmore-btn");
+  const loadmoreRemaining = document.getElementById("blog-loadmore-remaining");
   const paginator = createPaginator({
     allItems: posts,
     pageSize: PAGE_SIZE,
@@ -189,8 +224,9 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
   });
 
   function matchPost(el: HTMLElement): boolean {
-    if (activeCategory !== 'all' && el.dataset.category !== activeCategory) return false;
-    if (activeYear !== 'all' && el.dataset.year !== activeYear) return false;
+    if (activeCategory !== "all" && el.dataset.category !== activeCategory)
+      return false;
+    if (activeYear !== "all" && el.dataset.year !== activeYear) return false;
     return true;
   }
 
@@ -199,24 +235,32 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     paginator.reset(matched);
   }
 
-  document.querySelectorAll<HTMLButtonElement>('#blog-chips .ol-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeCategory = btn.dataset.category ?? 'all';
-      document.querySelectorAll<HTMLElement>('#blog-chips .ol-chip').forEach(b => {
-        b.classList.toggle('active', b === btn);
+  document
+    .querySelectorAll<HTMLButtonElement>("#blog-chips .ol-chip")
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeCategory = btn.dataset.category ?? "all";
+        document
+          .querySelectorAll<HTMLElement>("#blog-chips .ol-chip")
+          .forEach((b) => {
+            b.classList.toggle("active", b === btn);
+          });
+        applyFilters();
       });
-      applyFilters();
     });
-  });
 
-  document.querySelectorAll<HTMLButtonElement>('.ol-blog-archive-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeYear = btn.dataset.year ?? 'all';
-      document.querySelectorAll<HTMLElement>('.ol-blog-archive-btn').forEach(b => {
-        b.classList.toggle('active', b === btn);
+  document
+    .querySelectorAll<HTMLButtonElement>(".ol-blog-archive-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeYear = btn.dataset.year ?? "all";
+        document
+          .querySelectorAll<HTMLElement>(".ol-blog-archive-btn")
+          .forEach((b) => {
+            b.classList.toggle("active", b === btn);
+          });
+        applyFilters();
       });
-      applyFilters();
     });
-  });
   applyFilters();
 </script>

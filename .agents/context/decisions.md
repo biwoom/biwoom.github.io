@@ -71,6 +71,42 @@ This file records durable project decisions that future Codex sessions should pr
 - The OL HOME content management manual belongs at `.agents/references/ol-home-content-management-manual.md`.
 - Public `pages` content should be limited to visitor-facing permanent documents such as the brand definition.
 
+## 2026-10-30 — Unify TEXT Documents With STORY Styling
+
+- User explicitly requested STORY styling for TEXT individual documents as well as series screens. Both collections now use the same `StoryReader.astro`, parameterized by collection.
+- Keep TEXT breadcrumb/category/search metadata and canonical URLs. TEXT uses material-section/item labels while STORY keeps PART/CHAPTER labels.
+- Remove the now-unused TEXT-only reader/layout. Preserve the dedicated BLOG list/detail presentation; this decision does not reintroduce a generic reader for BLOG.
+- This supersedes the TEXT-specific layout restoration portion of the preceding UI-preservation decision. Keep static CSS/markup regression checks aligned with the shared STORY document structure.
+
+## 2026-10-30 — Preserve Collection UI During Data Refactors
+
+- Folder/metadata simplification must preserve existing TEXT/STORY document and BLOG list/detail markup/CSS contracts. Use collection-specific templates over forcing every page through one generic reader.
+- Share normalized data, assets, series behavior and helpers; do not restore retired Entity/ontology fields merely to support old views.
+- Search and mobile menu CSS are global component/layout assets, independent of any optional menu page stylesheet. Closed overlays must have initial HTML `hidden`/`inert` plus synchronized `aria-hidden` and explicit CSS handling.
+- Extend `check:built` with static UI markup/CSS regression checks. Passing these does not imply browser interaction or visual QA has been performed.
+
+## 2026-10-30 — Refactor Implementation Policies
+
+- The approved simplification below is now implemented locally; production has not been updated.
+- Public menu folders default to public; `_drafts`/templates/dotfolders and explicit `published: false` are excluded. Hidden introductions hide their series descendants.
+- Keep a committed `content-registry.json` outside the authoring vault. It records stable URLs, first-publication preparation dates, source hashes, previous paths and work routes. Existing public addresses and date/rights exceptions are preserved.
+- Match unchanged moved files by content hash. For simultaneous move+edit without an active watcher or duplicate-content ambiguity, use `npm run content:move -- old new` before preparation rather than pretending identity is inferable.
+- Allow Korean author-facing names and optional `001.` prefixes; code filenames remain ASCII. Support numeric-only filenames with a body H1 title.
+- Use category/work/section depth for TEXT; preserve STORY series/part shape. `index.md` is an optional introduction. First H1 is displayed once, and a manual body TOC is suppressed only in site rendering in favor of the automatic TOC.
+- Use relative Markdown links and general assets under `public/generated/content/`. No retired DESIGN provider/env settings remain. Wikilinks and special Obsidian embeds are out of scope.
+- DESIGN prose/assets and useful Entity explanations are migrated to ordinary TEXT documents; only meaningful legacy detail redirects remain. ATLAS source HTML is archived outside public output.
+- Migration inventory: `.agents/references/content-migration-inventory.json`.
+
+## 2026-10-30 — Approved Refactor Direction (Implemented Locally)
+
+- Use the existing `src/content/` as an Obsidian vault without Vault CMS, Front Matter, or Decap CMS for this refactor.
+- Simplify public content to TEXT/STORY/BLOG; remove DESIGN/NET and Entity/Ontology systems after preserving needed assets and references.
+- Derive TEXT category → work/series → material section/part → item from folders; translation and research have no required correspondence.
+- Parse `001.Name` numeric prefixes for ordering and hide prefixes in display labels. Do not duplicate ordering in per-document metadata.
+- Adapt the currently implemented STORY series layout and link/expand behavior to TEXT. Actual tab-panel switching was discussed historically but was not adopted and is excluded.
+- Accept title/body-focused writing and remove unnecessary frontmatter with matching schema/consumer cleanup. Preserve existing rights, dates, unpublished states, and links during migration.
+- Full guide and unresolved operating-policy choices: `.agents/references/obsidian-content-refactor-guide.md`. The direction is implemented locally; remaining limits are recorded in current-state.md.
+
 ## Historical Notes
 
 - The project previously used or referenced `ol-home` and project-page style URLs.

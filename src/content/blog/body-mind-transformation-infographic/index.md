@@ -1,9 +1,6 @@
 ---
-title: 몸과 마음의 전환을 여섯 단계 인포그래픽으로 정리하기
 description: 불교명상 기초 수행 프로그램을 강의와 실참에서 바로 사용할 수 있도록 여섯 단계 인포그래픽으로 정리한 제작 기록.
 date: 2026-06-04T00:00:00.000Z
-category: DESIGN
-readingTime: 5
 tags:
   - project/design
   - topic/인포그래픽
@@ -12,8 +9,9 @@ tags:
   - tool/claude-design
   - kind/blog
   - kind/infographic
-published: true
 ---
+
+# 몸과 마음의 전환을 여섯 단계 인포그래픽으로 정리하기
 
 이번 인포그래픽은 `몸과 마음의 전환` 불교명상 기초수행을 강의와 실제 수행 지침에서 바로 쓸 수 있도록 정리한 자료다.
 

@@ -18,18 +18,6 @@ function closeOutsideDetails(root: ParentNode, event: Event): void {
   });
 }
 
-function makeFilterPill(label: string, onClear: () => void): HTMLSpanElement {
-  const pill = document.createElement('span');
-  pill.className = 'ol-design-filter-pill';
-  pill.innerHTML = `${label} <button type="button" aria-label="필터 해제">x</button>`;
-  pill.querySelector('button')?.addEventListener('click', event => {
-    event.preventDefault();
-    event.stopPropagation();
-    onClear();
-  });
-  return pill;
-}
-
 function setupPrefixFilter(root: HTMLElement): void {
   if (root.dataset.filterReady === 'true') return;
   root.dataset.filterReady = 'true';
@@ -139,165 +127,6 @@ function setupPrefixFilter(root: HTMLElement): void {
 
   document.addEventListener('click', event => closeOutsideDetails(root, event));
   apply();
-}
-
-function setupDesignIndexFilter(root: HTMLElement): void {
-  if (root.dataset.designFilterReady === 'true') return;
-  root.dataset.designFilterReady = 'true';
-
-  const pageSize = Number(root.dataset.pageSize || 12);
-  const grid = root.querySelector<HTMLElement>('[data-design-grid]');
-  const countEl = root.querySelector<HTMLElement>('[data-design-visible-count]');
-  const noResults = root.querySelector<HTMLElement>('[data-design-no-results]');
-  const activeFiltersEl = root.querySelector<HTMLElement>('[data-design-active-filters]');
-  const loadMoreWrap = root.querySelector<HTMLElement>('[data-design-loadmore-wrap]');
-  const loadMoreButton = root.querySelector<HTMLButtonElement>('[data-design-loadmore-button]');
-  const loadMoreRemaining = root.querySelector<HTMLElement>('[data-design-loadmore-remaining]');
-  const kindLabels = JSON.parse(
-    (
-      root.querySelector<HTMLScriptElement>('[data-design-kind-labels]')
-      ?? document.querySelector<HTMLScriptElement>('[data-design-kind-labels]')
-    )?.textContent || '{}',
-  ) as Record<string, string>;
-
-  if (!grid || !countEl || !noResults || !activeFiltersEl) return;
-
-  const cards = Array.from(grid.querySelectorAll<HTMLElement>('.ol-design-card'));
-  const kindButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-filter-kind]'));
-  const prefixButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-filter-prefix]'));
-  const prefixGroups = Array.from(root.querySelectorAll<HTMLElement>('[data-design-prefix]'));
-  const resetButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-design-reset]'));
-  const selectedPrefixTags = new Map<string, Set<string>>();
-  let activeKind = 'all';
-  const paginator = createPaginator({
-    allItems: cards,
-    pageSize,
-    loadMoreWrap,
-    loadMoreButton,
-    loadMoreRemaining,
-    onRender: ({ matchedItems }) => {
-      countEl.textContent = String(matchedItems.length);
-      noResults.hidden = matchedItems.length !== 0;
-    },
-  });
-
-  const matchCard = (card: HTMLElement): boolean => {
-    const kind = card.dataset.kind ?? 'infographic';
-    const tags = parseCardTags(card);
-    if (activeKind !== 'all' && kind !== activeKind) return false;
-    return Array.from(selectedPrefixTags.values()).every(group =>
-      Array.from(group).some(tag => tags.includes(tag)),
-    );
-  };
-
-  const syncControls = () => {
-    kindButtons.forEach(button => {
-      button.classList.toggle('active', button.dataset.filterKind === activeKind);
-    });
-    prefixButtons.forEach(button => {
-      const prefix = button.dataset.filterPrefix;
-      const tag = button.dataset.filterTag;
-      button.classList.toggle('active', Boolean(prefix && tag && selectedPrefixTags.get(prefix)?.has(tag)));
-    });
-    prefixGroups.forEach(group => {
-      const prefix = group.dataset.designPrefix;
-      group.classList.toggle('active', Boolean(prefix && selectedPrefixTags.get(prefix)?.size));
-    });
-  };
-
-  const updateUrl = () => {
-    const nextUrl = new URL(window.location.href);
-    if (activeKind !== 'all') nextUrl.searchParams.set('kind', activeKind);
-    else nextUrl.searchParams.delete('kind');
-
-    nextUrl.searchParams.delete('tag');
-    selectedPrefixTags.forEach(group => {
-      group.forEach(tag => nextUrl.searchParams.append('tag', tag));
-    });
-    window.history.replaceState({}, '', nextUrl);
-  };
-
-  const renderFilterPills = () => {
-    activeFiltersEl.innerHTML = '';
-
-    if (activeKind !== 'all') {
-      activeFiltersEl.appendChild(makeFilterPill(kindLabels[activeKind] ?? activeKind, () => {
-        activeKind = 'all';
-        applyFilters();
-      }));
-    }
-
-    selectedPrefixTags.forEach((group, prefix) => {
-      group.forEach(tag => {
-        activeFiltersEl.appendChild(makeFilterPill(tag, () => {
-          const nextGroup = selectedPrefixTags.get(prefix);
-          nextGroup?.delete(tag);
-          if (nextGroup && nextGroup.size > 0) selectedPrefixTags.set(prefix, nextGroup);
-          else selectedPrefixTags.delete(prefix);
-          applyFilters();
-        }));
-      });
-    });
-  };
-
-  const applyFilters = ({ syncUrl = true } = {}) => {
-    const matched = cards.filter(matchCard);
-    paginator.reset(matched);
-    renderFilterPills();
-    syncControls();
-    if (syncUrl) updateUrl();
-  };
-
-  kindButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      activeKind = button.dataset.filterKind ?? 'all';
-      applyFilters();
-    });
-  });
-
-  prefixButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const prefix = button.dataset.filterPrefix;
-      const tag = button.dataset.filterTag;
-      if (!prefix || !tag) return;
-      const group = selectedPrefixTags.get(prefix) ?? new Set<string>();
-      if (group.has(tag)) group.delete(tag);
-      else group.add(tag);
-
-      if (group.size > 0) selectedPrefixTags.set(prefix, group);
-      else selectedPrefixTags.delete(prefix);
-
-      applyFilters();
-    });
-  });
-
-  resetButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      activeKind = 'all';
-      selectedPrefixTags.clear();
-      applyFilters();
-    });
-  });
-
-  const initialParams = new URLSearchParams(window.location.search);
-  const initialKind = initialParams.get('kind');
-  const initialTags = initialParams.getAll('tag');
-
-  if (initialKind && kindButtons.some(button => button.dataset.filterKind === initialKind)) {
-    activeKind = initialKind;
-  }
-
-  initialTags.forEach(tag => {
-    const button = prefixButtons.find(item => item.dataset.filterTag === tag);
-    const prefix = button?.dataset.filterPrefix;
-    if (!prefix) return;
-    const group = selectedPrefixTags.get(prefix) ?? new Set<string>();
-    group.add(tag);
-    selectedPrefixTags.set(prefix, group);
-  });
-
-  document.addEventListener('click', event => closeOutsideDetails(root, event));
-  applyFilters({ syncUrl: false });
 }
 
 function setupTagResultIndex(root: HTMLElement): void {
@@ -439,12 +268,6 @@ function runOnDomReady(callback: () => void): void {
 export function initPrefixFilters(scope: FilterRoot = document): void {
   runOnDomReady(() => {
     scope.querySelectorAll<HTMLElement>('[data-prefix-filter]').forEach(setupPrefixFilter);
-  });
-}
-
-export function initDesignIndexFilters(scope: FilterRoot = document): void {
-  runOnDomReady(() => {
-    scope.querySelectorAll<HTMLElement>('[data-design-filter-root]').forEach(setupDesignIndexFilter);
   });
 }
 

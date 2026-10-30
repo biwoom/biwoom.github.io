@@ -1,131 +1,152 @@
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { spawnSync } from 'node:child_process';
-
-const scriptPath = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  'check-content.mjs',
-);
-
-async function writeFixture(root, slug, frontmatter, files = {}) {
-  const entryDir = path.join(root, 'src', 'content', 'design', slug);
-  await mkdir(path.join(entryDir, 'assets'), { recursive: true });
-  await writeFile(
-    path.join(entryDir, 'index.md'),
-    `---\n${frontmatter.trim()}\n---\n\nFixture\n`,
-  );
-
-  await Promise.all(Object.entries(files).map(async ([relativePath, content]) => {
-    const target = path.join(entryDir, relativePath);
-    await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, content);
-  }));
-}
-
-function runCheck(root, env = {}) {
-  return spawnSync(
-    process.execPath,
-    [scriptPath, '--root', root, '--quiet'],
-    {
-      encoding: 'utf8',
-      env: { ...process.env, ...env },
-    },
-  );
-}
-
-async function withTempRepo(test) {
-  const root = await mkdtemp(path.join(tmpdir(), 'ol-content-check-'));
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {
+  nameInfo,
+  compareNames,
+  normalize,
+  folderParts,
+  mediaEntries,
+} from "./lib/content.mjs";
+import { prepare } from "./prepare-content.mjs";
+import { validate } from "./check-content.mjs";
+function fixture(fn) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "ol-content-"));
   try {
-    await mkdir(path.join(root, 'src', 'content'), { recursive: true });
-    await test(root);
+    fs.mkdirSync(
+      path.join(root, "src/content/text/001.중관부/001.대승현론/01.번역"),
+      { recursive: true },
+    );
+    return fn(root);
   } finally {
-    await rm(root, { recursive: true, force: true });
+    fs.rmSync(root, { recursive: true, force: true });
   }
 }
-
-async function expectPass(name, setup, env) {
-  await withTempRepo(async root => {
-    await setup(root);
-    const result = runCheck(root, env);
-    if (result.status !== 0) {
-      throw new Error(`${name} should pass:\n${result.stderr || result.stdout}`);
-    }
-  });
+const rel = "text/001.중관부/001.대승현론/01.번역/001.1권.md";
+function write(root, relative, body) {
+  const p = path.join(root, "src/content", relative);
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, body);
+  return p;
 }
-
-async function expectFail(name, setup, pattern, env) {
-  await withTempRepo(async root => {
-    await setup(root);
-    const result = runCheck(root, env);
-    const output = `${result.stderr}\n${result.stdout}`;
-    if (result.status === 0) {
-      throw new Error(`${name} should fail`);
-    }
-    if (!pattern.test(output)) {
-      throw new Error(`${name} failed with unexpected output:\n${output}`);
-    }
-  });
-}
-
-const validDesignFrontmatter = `
-title: "Fixture"
-description: "Fixture description"
-published: true
-format: image
-primaryKind: infographic
-type: infographic
-status: draft
-version: "0.1"
-license: "internal"
-tags:
-  - kind/fixture
-thumbnailAsset: "thumb.jpg"
-`;
-
-await expectPass(
-  'valid local asset',
-  root => writeFixture(root, 'valid', validDesignFrontmatter, { 'assets/thumb.jpg': 'ok' }),
-);
-
-await expectFail(
-  'deprecated field',
-  root => writeFixture(root, 'deprecated', `${validDesignFrontmatter}\nthumbnailPath: "old.jpg"`, { 'assets/thumb.jpg': 'ok' }),
-  /deprecated field is not allowed: thumbnailPath/,
-);
-
-await expectFail(
-  'bad tag syntax',
-  root => writeFixture(root, 'bad-tag', validDesignFrontmatter.replace('kind/fixture', 'kind:fixture'), { 'assets/thumb.jpg': 'ok' }),
-  /tag must use prefix\/value format/,
-);
-
-await expectFail(
-  'missing asset',
-  root => writeFixture(root, 'missing-asset', validDesignFrontmatter),
-  /thumbnailAsset not found: thumb\.jpg/,
-);
-
-await expectFail(
-  'forbidden file',
-  async root => {
-    await writeFixture(root, 'forbidden', validDesignFrontmatter, { 'assets/thumb.jpg': 'ok' });
-    await writeFile(path.join(root, '.DS_Store'), '');
-  },
-  /forbidden file/,
-);
-
-await expectPass(
-  'design external manifest asset',
-  async root => {
-    await writeFixture(root, 'external', validDesignFrontmatter);
-    await writeFile(
-      path.join(root, 'design-assets.json'),
-      JSON.stringify({ assets: ['external/thumb.jpg'] }),
+test("numeric names preserve title digits and accept different padding", () => {
+  assert.deepEqual(nameInfo("001.1권.md"), { label: "1권", order: 1 });
+  assert.equal(nameInfo("001.md").order, 1);
+  assert.deepEqual(["10.연구", "002.번역", "참고"].sort(compareNames), [
+    "002.번역",
+    "10.연구",
+    "참고",
+  ]);
+});
+test("YAML-free headings and independent material sections normalize", () =>
+  fixture((root) => {
+    write(root, rel, "# 대승현론 제1권\n\n본문입니다.");
+    const r = prepare(root);
+    const d = normalize(
+      rel,
+      fs.readFileSync(path.join(root, "src/content", rel), "utf8"),
+      r,
     );
-  },
-  { DESIGN_ASSET_MANIFEST: 'design-assets.json' },
-);
-
-console.log('content fixture checks passed');
+    assert.equal(d.title, "대승현론 제1권");
+    assert.equal(d.category, "중관부");
+    assert.equal(d.series, "대승현론");
+    assert.equal(d.part, "번역");
+    assert.equal(d.published, true);
+    assert.equal(
+      folderParts(rel.replace("01.번역", "02.연구")).seriesPath,
+      d.seriesKey,
+    );
+    assert.deepEqual(validate(root), []);
+  }));
+test("moves and numeric renames preserve URL and first-publication date", () =>
+  fixture((root) => {
+    const a = write(root, rel, "# 제목\n\n내용");
+    const before = prepare(root).files[rel];
+    const target = rel.replace("001.1권.md", "010.제목변경.md");
+    fs.renameSync(a, path.join(root, "src/content", target));
+    const after = prepare(root).files[target];
+    assert.equal(after.url, before.url);
+    assert.equal(after.date, before.date);
+  }));
+test("drafts, private configuration and auxiliary images are excluded; direct PDF is included", () =>
+  fixture((root) => {
+    write(root, "text/_drafts/private.md", "# 비공개");
+    write(root, "text/.obsidian/cache.md", "# 설정");
+    write(
+      root,
+      "text/001.중관부/001.대승현론/01.번역/assets/image.png",
+      "image",
+    );
+    write(root, rel.replace(".md", ".pdf"), "%PDF-test");
+    const r = prepare(root);
+    assert.equal(Object.keys(r.files).length, 1);
+    assert.ok(r.files[rel.replace(".md", ".pdf")]);
+    const media = mediaEntries(root);
+    assert.equal(media.length, 1);
+    assert.equal(media[0].data.format, "PDF");
+    assert.equal(media[0].data.title, "1권");
+  }));
+test("unpublished intro hides its documents; rights overrides remain intact", () =>
+  fixture((root) => {
+    write(
+      root,
+      "text/001.중관부/001.대승현론/index.md",
+      "---\npublished: false\n---\n# 소개",
+    );
+    write(root, rel, "---\nlicense: CC-BY\nrightsHolder: 원저자\n---\n# 제목");
+    const r = prepare(root);
+    const d = normalize(
+      rel,
+      fs.readFileSync(path.join(root, "src/content", rel), "utf8"),
+      r,
+    );
+    assert.equal(d.published, false);
+    assert.equal(d.license, "CC-BY");
+    assert.equal(d.rightsHolder, "원저자");
+  }));
+test("missing assets and removed schema fields are actionable errors", () =>
+  fixture((root) => {
+    write(
+      root,
+      rel,
+      "---\nentities: [old-id]\n---\n# 제목\n\n![없음](./missing.png)",
+    );
+    const errors = validate(root);
+    assert.ok(errors.some((e) => e.includes("entities")));
+    assert.ok(errors.some((e) => e.includes("missing local target")));
+  }));
+test("same displayed filename in two independent sections gets distinct URLs", () =>
+  fixture((root) => {
+    write(root, rel, "# 번역");
+    write(root, rel.replace("01.번역", "02.연구"), "# 독립 연구");
+    const r = prepare(root);
+    const urls = Object.values(r.files).map((x) => x.url);
+    assert.equal(new Set(urls).size, 2);
+  }));
+test("series folder renames preserve the work route and old document links", () =>
+  fixture((root) => {
+    write(root, rel, "# 제목");
+    const before = prepare(root);
+    const work = "text/001.중관부/001.대승현론";
+    const oldUrl = before.folders[work].url;
+    fs.renameSync(
+      path.join(root, "src/content", work),
+      path.join(root, "src/content/text/001.중관부/002.대승현론 수정"),
+    );
+    const after = prepare(root);
+    const newRel = rel.replace("001.대승현론", "002.대승현론 수정");
+    assert.equal(
+      after.folders["text/001.중관부/002.대승현론 수정"].url,
+      oldUrl,
+    );
+    assert.equal(after.aliases[rel], newRel);
+  }));
+test("publication date is not assigned to an explicitly unpublished new document", () =>
+  fixture((root) => {
+    const p = write(root, rel, "---\npublished: false\n---\n# 제목");
+    assert.equal(prepare(root).files[rel].date, null);
+    fs.writeFileSync(p, "# 제목");
+    assert.match(prepare(root).files[rel].date, /^\d{4}-\d{2}-\d{2}$/);
+  }));

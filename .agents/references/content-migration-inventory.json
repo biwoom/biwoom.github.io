@@ -1,0 +1,437 @@
+{
+  "date": "2026-10-30",
+  "items": [
+    {
+      "source": "text/body-mind-transformation/index.md",
+      "target": "text/900.기존문헌/040.수행연구/index.md",
+      "url": "/text/body-mind-transformation/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "text/body-mind-transformation/part/01-six-steps.md",
+      "target": "text/900.기존문헌/040.수행연구/010.기초수행/001.몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+      "url": "/text/body-mind-transformation/01-six-steps/",
+      "published": true,
+      "date": "2026-06-04T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "text/doctrine-research/index.md",
+      "target": "text/900.기존문헌/050.교리연구/index.md",
+      "url": "/text/doctrine-research/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "text/doctrine-research/part/01-buddhist-worldview-two-perspectives.md",
+      "target": "text/900.기존문헌/050.교리연구/010.불교세계관/001.불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
+      "url": "/text/doctrine-research/01-buddhist-worldview-two-perspectives/",
+      "published": true,
+      "date": "2026-06-13T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "text/doctrine-research/part/02-middle-way-attitude-beyond-scientism.md",
+      "target": "text/900.기존문헌/050.교리연구/010.불교세계관/002.과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
+      "url": "/text/doctrine-research/02-middle-way-attitude-beyond-scientism/",
+      "published": true,
+      "date": "2026-06-23T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "text/doctrine-research/part/03-anuttara-samma-sambodhi.md",
+      "target": "text/900.기존문헌/050.교리연구/010.불교세계관/003.부처님의 깨달음 - 무상정등정각에 대하여.md",
+      "url": "/text/doctrine-research/03-anuttara-samma-sambodhi/",
+      "published": true,
+      "date": "2026-06-23T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "story/buddha-story/index.md",
+      "target": "story/010.붓다 스토리/index.md",
+      "url": "/story/buddha-story/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "story/buddha-story/part-1/01-sumedha-begins-to-ask.md",
+      "target": "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md",
+      "url": "/story/buddha-story/part-1/01-sumedha-begins-to-ask/",
+      "published": true,
+      "date": "2026-06-18T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "story/buddha-story/part-1/02-sumedha-finds-new-path.md",
+      "target": "story/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md",
+      "url": "/story/buddha-story/part-1/02-sumedha-finds-new-path/",
+      "published": true,
+      "date": "2026-06-18T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest.md",
+      "target": "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
+      "url": "/story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest/",
+      "published": true,
+      "date": "2026-06-18T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "story/dhammapada-story/index.md",
+      "target": "story/020.담마빠다 스토리/index.md",
+      "url": "/story/dhammapada-story/",
+      "published": true,
+      "date": null,
+      "license": "External source - rights unverified"
+    },
+    {
+      "source": "story/dhammapada-story/part-1/01-cakkhupala.md",
+      "target": "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
+      "url": "/story/dhammapada-story/part-1/01-cakkhupala/",
+      "published": true,
+      "date": "2026-06-26T00:00:00.000Z",
+      "license": "External source - rights unverified"
+    },
+    {
+      "source": "story/placeholder/index.md",
+      "target": "story/999.OL STORY — 준비 중/index.md",
+      "url": "/story/placeholder/",
+      "published": false,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "blog/atlas-dev-journey/index.md",
+      "target": "blog/atlas-dev-journey/index.md",
+      "url": "/blog/atlas-dev-journey/",
+      "published": true,
+      "date": "2026-05-27T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/atlas-footnotes/index.md",
+      "target": "blog/atlas-footnotes/index.md",
+      "url": "/blog/atlas-footnotes/",
+      "published": true,
+      "date": "2026-05-31T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/blog-atlas-code-restructuring/index.md",
+      "target": "blog/blog-atlas-code-restructuring/index.md",
+      "url": "/blog/blog-atlas-code-restructuring/",
+      "published": true,
+      "date": "2026-06-01T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/body-mind-transformation-infographic/index.md",
+      "target": "blog/body-mind-transformation-infographic/index.md",
+      "url": "/blog/body-mind-transformation-infographic/",
+      "published": true,
+      "date": "2026-06-04T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/book-design-guide/index.md",
+      "target": "blog/book-design-guide/index.md",
+      "url": "/blog/book-design-guide/",
+      "published": true,
+      "date": "2026-05-28T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/buddhist-worldview-two-perspectives/index.md",
+      "target": "blog/buddhist-worldview-two-perspectives/index.md",
+      "url": "/blog/buddhist-worldview-two-perspectives/",
+      "published": true,
+      "date": "2026-06-11T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/indramang-life-peace-patterns/index.md",
+      "target": "blog/indramang-life-peace-patterns/index.md",
+      "url": "/blog/indramang-life-peace-patterns/",
+      "published": true,
+      "date": "2026-06-21T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/lamrim-infographic-making/index.md",
+      "target": "blog/lamrim-infographic-making/index.md",
+      "url": "/blog/lamrim-infographic-making/",
+      "published": true,
+      "date": "2026-06-04T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/net-menu-name-card-phase1/index.md",
+      "target": "blog/net-menu-name-card-phase1/index.md",
+      "url": "/blog/net-menu-name-card-phase1/",
+      "published": true,
+      "date": "2026-06-20T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-brand-design/index.md",
+      "target": "blog/ol-brand-design/index.md",
+      "url": "/blog/ol-brand-design/",
+      "published": true,
+      "date": "2026-05-25T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-design-works-library-shift/index.md",
+      "target": "blog/ol-design-works-library-shift/index.md",
+      "url": "/blog/ol-design-works-library-shift/",
+      "published": true,
+      "date": "2026-06-04T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-home-build/index.md",
+      "target": "blog/ol-home-build/index.md",
+      "url": "/blog/ol-home-build/",
+      "published": true,
+      "date": "2026-05-30T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-home-phase4/index.md",
+      "target": "blog/ol-home-phase4/index.md",
+      "url": "/blog/ol-home-phase4/",
+      "published": true,
+      "date": "2026-05-31T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-home-refactoring-and-pagination/index.md",
+      "target": "blog/ol-home-refactoring-and-pagination/index.md",
+      "url": "/blog/ol-home-refactoring-and-pagination/",
+      "published": true,
+      "date": "2026-06-26T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-home-text-story-reader-update/index.md",
+      "target": "blog/ol-home-text-story-reader-update/index.md",
+      "url": "/blog/ol-home-text-story-reader-update/",
+      "published": true,
+      "date": "2026-06-11T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "blog/ol-why/index.md",
+      "target": "blog/ol-why/index.md",
+      "url": "/blog/ol-why/",
+      "published": true,
+      "date": "2026-05-23T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "pages/brand.md",
+      "target": "pages/brand.md",
+      "url": "/pages/brand/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "design/bodhi-tree-indramang/index.md",
+      "target": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+      "url": "/text/read/788ae63f1e0780/",
+      "published": true,
+      "date": "2026-06-21T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/diversity-indramang/index.md",
+      "target": "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+      "url": "/text/read/97a90ebeefaadb/",
+      "published": true,
+      "date": "2026-06-21T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/lamrim-infographic/index.md",
+      "target": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+      "url": "/text/read/fc15e943236351/",
+      "published": true,
+      "date": "2026-06-04T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/life-peace-indramang/index.md",
+      "target": "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+      "url": "/text/read/7aae6d70415806/",
+      "published": true,
+      "date": "2026-06-21T00:00:00.000Z",
+      "license": "CC-BY-SA 4.0 © 2025 안상수 All Rights Reserved."
+    },
+    {
+      "source": "design/pictograph-indramang-1/index.md",
+      "target": "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+      "url": "/text/read/22e2316fc9f326/",
+      "published": true,
+      "date": "2026-06-21T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/pictograph-indramang-2/index.md",
+      "target": "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+      "url": "/text/read/557d12d0bac979/",
+      "published": true,
+      "date": "2026-06-21T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/six-steps-body-mind-infographic/index.md",
+      "target": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+      "url": "/text/read/1b6a2b94f3b00b/",
+      "published": true,
+      "date": "2026-06-04T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/sumedha-sumitta-first-meeting/index.md",
+      "target": "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+      "url": "/text/read/cac235159782e8/",
+      "published": true,
+      "date": "2026-06-20T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/sumitta-profile/index.md",
+      "target": "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+      "url": "/text/read/cd6bd2bf1f7b10/",
+      "published": true,
+      "date": "2026-06-19T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "design/two-perspectives/index.md",
+      "target": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
+      "url": "/text/read/3ab0b2466d582f/",
+      "published": true,
+      "date": "2026-06-11T00:00:00.000Z",
+      "license": "CC0"
+    },
+    {
+      "source": "entities/concepts/dependent-origination.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md",
+      "url": "/text/read/9b8d3fae3f2283/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/concepts/five-aggregates.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/오온.md",
+      "url": "/text/read/534a663b95d5af/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/concepts/sunyata.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/공.md",
+      "url": "/text/read/aa053c58bec29a/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/concepts/twelve-sense-bases.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/십이처.md",
+      "url": "/text/read/fc0d9244f29a28/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/persons/nagarjuna.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/나가르주나.md",
+      "url": "/text/read/8c89ac33088890/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/persons/sakka.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/삭카.md",
+      "url": "/text/read/beff23f5fae062/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/persons/siddhartha-gautama.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/싯다르타 가우타마.md",
+      "url": "/text/read/ba954f12e735ca/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/persons/sumedha.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/수메다.md",
+      "url": "/text/read/785a1bbd3bef89/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/persons/sumitta.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/수밋타.md",
+      "url": "/text/read/2ecef5595ecc6c/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/persons/vissukamma.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/위쑤깜마.md",
+      "url": "/text/read/16acdaa09432b1/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/places/amaravati.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/아마라와띠.md",
+      "url": "/text/read/3c4000644c232d/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/places/dhammika-mountain.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/담미까 산.md",
+      "url": "/text/read/851800deea8bd7/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/places/himalaya.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/히말라야.md",
+      "url": "/text/read/e09f1c546c0747/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    },
+    {
+      "source": "entities/places/lumbini.md",
+      "target": "text/980.참고자료/001.불교 참고 노트/001.자료/룸비니.md",
+      "url": "/text/read/5b81d3b98643c0/",
+      "published": true,
+      "date": null,
+      "license": "CC0"
+    }
+  ]
+}

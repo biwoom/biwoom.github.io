@@ -1,0 +1,42 @@
+---
+import { render } from "astro:content";
+import { getLibrary } from "../../lib/library";
+import LibrarySeries from "../../components/common/LibrarySeries.astro";
+import StoryReader from "../../components/common/StoryReader.astro";
+export async function getStaticPaths() {
+  const library = await getLibrary("story");
+  return library.flatMap((series) => [
+    {
+      params: {
+        path: decodeURI(
+          series.url.replace(/^\/story\//, "").replace(/\/$/, ""),
+        ),
+      },
+      props: { series },
+    },
+    ...series.entries.map((entry) => ({
+      params: {
+        path: decodeURI(
+          entry.data.url.replace(/^\/story\//, "").replace(/\/$/, ""),
+        ),
+      },
+      props: { series, entry },
+    })),
+  ]);
+}
+const { series, entry } = Astro.props;
+const Intro =
+  !entry && series.meta ? (await render(series.meta)).Content : undefined;
+---
+
+{entry ? (
+  <StoryReader entry={entry} series={series} />
+) : (
+  <LibrarySeries series={series} section="story">
+    {Intro && (
+      <div class="ol-prose">
+        <Intro />
+      </div>
+    )}
+  </LibrarySeries>
+)}

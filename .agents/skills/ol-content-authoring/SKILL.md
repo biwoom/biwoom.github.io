@@ -1,113 +1,27 @@
 ---
 name: ol-content-authoring
-description: Create or update OL HOME content entries under src/content. Use when working on blog posts, text documents, story chapters, design entries, entity pages, ontology docs, permanent pages, frontmatter, tags, publication flags, or content assets for the OL Astro site.
+description: Create or revise OL HOME Markdown and content assets in the Obsidian vault under src/content.
 ---
 
 # OL Content Authoring
 
-## Workflow
+Latest update: 2026-10-30.
 
-1. Identify the target collection from the user request.
-2. Read `src/content.config.ts` before adding or changing frontmatter.
-3. For internal content-management rules, read `.agents/references/ol-home-content-management-manual.md`.
-4. Inspect a nearby existing entry in the same collection and follow its structure.
-5. Place content in the correct folder:
-   - `src/content/pages/` for public permanent project documents only.
-   - `src/content/blog/{slug}/index.md` for dated work logs.
-   - `src/content/text/{series}/` for TEXT series and documents.
-   - `src/content/story/{series}/` for STORY series and chapters.
-   - `src/content/design/{slug}/index.md` plus `assets/` for visual works.
-   - `src/content/entities/{type}s/` for ontology entries.
-   - `src/content/ontology/` for ontology reference docs.
-6. Use ASCII slugs and route-bearing filenames. Put Korean titles in frontmatter.
-7. Set `published: true` only when the content should be public.
-8. Run `npm run check` after frontmatter or asset edits.
-9. Run `npm run build` after edits and confirm the expected route is generated.
+1. Read `.agents/references/ol-home-content-management-manual.md` and `src/content.config.ts` before changing authoring rules.
+2. Use `src/content/` as the existing Obsidian vault. Do not install a CMS or edit personal `.obsidian` state.
+3. Place TEXT at `text/category/work/section/document.md`, STORY at `story/series/part/document.md`, BLOG under `blog/`, and public permanent pages under `pages/`.
+4. Korean author-facing names are supported. Use optional numeric prefixes for order, such as `001.중관부`. Keep code and internal guide filenames ASCII.
+5. Prefer title/H1 and body only. `index.md` introductions and YAML are optional. Number-only filenames require an H1 title.
+6. Use the optional fields supported by the current schema/validator for exceptions only. Never add old hierarchy/order/entity/ontology fields or `prefixTags`. Tags are optional strings; slash prefixes are not required.
+7. Use `_drafts/` for unpublished work. Public menu documents are public by default, with explicit `published: false` preserved. Nonpublic intros hide descendants.
+8. Preserve dates, rights and provenance; put source notes in body prose. Defaults live in `site-config.mjs` and app config in `src/lib/site-config.ts`.
+9. Put listable PDFs/images/HTML directly in a material section. Put supporting files in `assets/` or `_assets/` and use relative Markdown links. Do not add DESIGN keys or generated URLs.
+10. Preserve `content-registry.json`. Moves with unchanged content retain identity; moved-and-edited files may require `npm run content:move -- old new` before preparation. Do not silently assign a replacement URL to a known moved document.
+11. Reuse the shared TEXT/STORY tag modal. Do not create real tab switching; section buttons link to the first item, with expandable full lists.
+12. Run `npm run check`, `npm run typecheck`, and `npm run build`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
-## Frontmatter Rules
+## 수정 변경사항
 
-- Do not invent frontmatter fields without updating `src/content.config.ts`.
-- Preserve URL stability unless the user explicitly requests a rename.
-- Use `date` or `publishedAt` formats already used in nearby entries.
-- Internal operating manuals belong under `.agents/references/`, not `src/content/pages/`.
-- For BuddhaStory part names and candidate chapter titles, consult `docs/toc/붓다스토리(Buddha Story) 목차 v0.1.md` first. Treat it as a planning reference, not as a final route source; actual URLs follow `src/content/story/buddha-story`.
-- For TEXT and STORY tags, prefer `prefix/name` form:
-- All collections now store tags only in `tags`.
-- Do not use `prefixTags`.
+### 2026-10-30
 
-```yaml
-tags:
-  - "인물/붓다"
-  - "장소/룸비니"
-  - "개념/연기"
-  - "kind/story"
-```
-
-- For BLOG and DESIGN management tags, keep using slash-form strings inside `tags`, for example `kind/blog`, `project/design`, `topic/indramang`.
-
-## Entity Rules
-
-- Place entity documents under `src/content/entities/{type}s/`, such as `src/content/entities/persons/sumedha.md` or `src/content/entities/places/amaravati.md`.
-- Use `id` as the stable internal key. TEXT and STORY document `entities` arrays must reference these ids, not Korean labels.
-- The order of ids in TEXT/STORY `entities` arrays is the display order for the document-side name-card panel.
-- Use current schema field names:
-  - `type: "person"` or `type: "place"`.
-  - `name.en`, not `name.english`.
-  - `description`, not `summary` or `memoryPhrase`.
-  - Do not use `kind` or `entityType` in entity frontmatter.
-- When adding a Person Entity for a STORY document, add `appearsIn` entries pointing back to the current STORY route:
-
-```yaml
-appearsIn:
-  - type: story
-    title: "수메다, 길을 묻기 시작하다"
-    path: "/story/buddha-story/part-1/01-sumedha-begins-to-ask/"
-    role: "주요 인물"
-    storySlug: "buddha-story"
-    documentSlug: "01-sumedha-begins-to-ask"
-    partSlug: "part-1"
-    chapter: 1
-    order: 1
-```
-
-- When a Person Entity is tied to locations, use `primaryPlaces` with place ids:
-
-```yaml
-primaryPlaces:
-  - placeId: "amaravati"
-    relation: "출신지"
-```
-
-- When a TEXT or STORY document lists a place id in `entities`, make sure the matching Place Entity document exists under `src/content/entities/places/`.
-- Place Entity coordinates belong in `geo`. Do not put `lat`/`lng` directly in STORY or Person Entity documents.
-- If a place is legendary, broad, or uncertain, set `geo.confidence` to `low` or `unknown` and use `map.showOnMap: false` when a marker would mislead.
-- For NET readiness, fill these fields when the source supports them:
-  - Person: `primaryPlaces`, `appearsIn`, `relatedText`, `design`, `sourceTraditions`, `spiritualStatus`.
-  - Place: `placeType`, `geo`, `kingdom`, `historical`, `map`, `relatedPersons`, `relatedStories`, `relatedText`.
-
-## Asset Rules
-
-- Keep DESIGN assets under `src/content/design/{slug}/assets/`.
-- Keep STORY HTML assets under `src/content/story/{series}/assets/`.
-- Do not edit `public/generated/` as source; it is produced by `scripts/sync-content-assets.mjs`.
-- TEXT image assets may live beside the document or series and be referenced relatively, matching existing entries.
-- Fixed site settings and env-backed DESIGN asset settings are centralized in `site-config.mjs`.
-- Astro code and shared utilities should read those settings through `src/lib/site-config.ts` instead of reading env vars ad hoc.
-- DESIGN frontmatter asset fields should stay provider-neutral. Store relative asset values such as `imageAsset: "poster.jpg"` or cross-entry keys such as `design.imageAsset: "sumitta-profile/profile.jpg"`, not absolute generated URLs.
-- New Markdown references to DESIGN assets should use `design-asset:{slug}/{asset}`.
-- Legacy `/generated/design/{slug}/{asset}` links may still render, but do not add new ones in content edits.
-- When `DESIGN_ASSET_PROVIDER=external` is enabled, local DESIGN asset sync may be skipped; content rules stay the same because the resolver layer maps URLs at build time.
-- `DESIGN_ASSET_MANIFEST` may be used during validation to confirm external DESIGN asset keys without network access.
-
-```md
-![수밋타 프로필](design-asset:sumitta-profile/profile.jpg)
-```
-
-- TEXT and STORY series pages now share one modal-based tag-results interaction layer. When adjusting tag-result behavior, extend the shared implementation instead of reintroducing page-local duplicate scripts.
-
-## Validation
-
-- Run `npm run check`.
-- Run `npm run build`.
-- Check the build output for the expected route.
-- Treat the empty `src/content/ai` warning as acceptable unless the task is about AI content.
+- Replaced legacy frontmatter/Entity/DESIGN authoring rules with the Obsidian folder-driven workflow.

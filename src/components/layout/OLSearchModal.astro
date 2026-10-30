@@ -1,6 +1,8 @@
 ---
 // OLSearchModal.astro — Pagefind Command Palette
-const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 const pagefindPath = `${base}pagefind/pagefind.js`;
 ---
 
@@ -8,18 +10,31 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
 <div
   class="ol-search-overlay"
   id="ol-search-overlay"
+  hidden
+  inert
   aria-hidden="true"
   data-pagefind-path={pagefindPath}
   data-pagefind-ignore
 >
-  <div class="ol-search-modal" role="dialog" aria-modal="true" aria-label="검색">
-
+  <div
+    class="ol-search-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="검색"
+  >
     <!-- 검색 입력 -->
     <div class="ol-search-input-wrap">
-      <svg class="ol-search-icon" width="16" height="16" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <svg
+        class="ol-search-icon"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
       </svg>
       <input
         id="ol-search-input"
@@ -38,56 +53,63 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
 
     <!-- 하단 힌트 -->
     <div class="ol-search-footer">
-      <span><kbd>↑</kbd><kbd>↓</kbd> 이동</span>
-      <span><kbd>Enter</kbd> 열기</span>
-      <span><kbd>ESC</kbd> 닫기</span>
+      <span>
+        <kbd>↑</kbd>
+        <kbd>↓</kbd> 이동
+      </span>
+      <span>
+        <kbd>Enter</kbd> 열기
+      </span>
+      <span>
+        <kbd>ESC</kbd> 닫기
+      </span>
     </div>
-
   </div>
 </div>
 
 <script>
   let pagefind: any = null;
   let selectedIndex = -1;
-  let activeSection = 'ALL';
+  let activeSection = "ALL";
   let currentResults: any[] = [];
 
-  const sectionOrder = ['TEXT', 'STORY', 'DESIGN', 'BLOG', 'ENTITY', 'PAGES'];
+  const sectionOrder = ["TEXT", "STORY", "BLOG", "PAGES"];
 
   async function loadPagefind() {
     if (pagefind) return pagefind;
     try {
-      const overlay = document.getElementById('ol-search-overlay');
-      const pfPath = overlay?.dataset.pagefindPath || '/pagefind/pagefind.js';
+      const overlay = document.getElementById("ol-search-overlay");
+      const pfPath = overlay?.dataset.pagefindPath || "/pagefind/pagefind.js";
       pagefind = await import(/* @vite-ignore */ pfPath);
       await pagefind.init();
       return pagefind;
     } catch (e) {
-      console.error('[OL Search] Pagefind 로드 실패:', e);
-      console.error('[OL Search] 시도한 경로:',
-        document.getElementById('ol-search-overlay')?.dataset.pagefindPath
+      console.error("[OL Search] Pagefind 로드 실패:", e);
+      console.error(
+        "[OL Search] 시도한 경로:",
+        document.getElementById("ol-search-overlay")?.dataset.pagefindPath,
       );
       return null;
     }
   }
 
-  const overlay = document.getElementById('ol-search-overlay')!;
-  const input = document.getElementById('ol-search-input') as HTMLInputElement;
-  const resultsEl = document.getElementById('ol-search-results')!;
+  const overlay = document.getElementById("ol-search-overlay")!;
+  const input = document.getElementById("ol-search-input") as HTMLInputElement;
+  const resultsEl = document.getElementById("ol-search-results")!;
 
   function escapeHtml(value: unknown) {
-    return String(value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function displayPath(rawUrl: string) {
     try {
       const parsed = new URL(rawUrl, window.location.origin);
-      return parsed.pathname.replace(/\/$/, '') || '/';
+      return parsed.pathname.replace(/\/$/, "") || "/";
     } catch {
       return rawUrl;
     }
@@ -95,15 +117,24 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
 
   function resultKicker(result: any) {
     const meta = result.meta ?? {};
-    const breadcrumb = meta.breadcrumb || [meta.sectionLabel || meta.section, meta.series, meta.part || meta.category || meta.type, meta.group]
-      .filter(Boolean)
-      .join(' · ');
-    return breadcrumb || 'OL';
+    const breadcrumb =
+      meta.breadcrumb ||
+      [
+        meta.sectionLabel || meta.section,
+        meta.series,
+        meta.part || meta.category || meta.type,
+        meta.group,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+    return breadcrumb || "OL";
   }
 
   function resultSection(result: any) {
-    const section = String(result.meta?.section ?? result.meta?.sectionLabel ?? 'OL').toUpperCase();
-    return section || 'OL';
+    const section = String(
+      result.meta?.section ?? result.meta?.sectionLabel ?? "OL",
+    ).toUpperCase();
+    return section || "OL";
   }
 
   function sectionCounts(results: any[]) {
@@ -116,53 +147,62 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
   }
 
   function orderedSections(counts: Map<string, number>) {
-    const known = sectionOrder.filter(section => counts.has(section));
+    const known = sectionOrder.filter((section) => counts.has(section));
     const unknown = [...counts.keys()]
-      .filter(section => !sectionOrder.includes(section))
+      .filter((section) => !sectionOrder.includes(section))
       .sort((a, b) => a.localeCompare(b));
-    return ['ALL', ...known, ...unknown];
+    return ["ALL", ...known, ...unknown];
   }
 
   function renderSearchResults() {
     const counts = sectionCounts(currentResults);
     const sections = orderedSections(counts);
-    const filteredResults = activeSection === 'ALL'
-      ? currentResults
-      : currentResults.filter(result => resultSection(result) === activeSection);
+    const filteredResults =
+      activeSection === "ALL"
+        ? currentResults
+        : currentResults.filter(
+            (result) => resultSection(result) === activeSection,
+          );
 
-    if (activeSection !== 'ALL' && filteredResults.length === 0) {
-      activeSection = 'ALL';
+    if (activeSection !== "ALL" && filteredResults.length === 0) {
+      activeSection = "ALL";
       renderSearchResults();
       return;
     }
 
-    const tabs = sections.map(section => {
-      const count = section === 'ALL' ? currentResults.length : counts.get(section) ?? 0;
-      const label = section === 'ALL' ? '전체' : section;
-      return `
+    const tabs = sections
+      .map((section) => {
+        const count =
+          section === "ALL"
+            ? currentResults.length
+            : (counts.get(section) ?? 0);
+        const label = section === "ALL" ? "전체" : section;
+        return `
         <button
           type="button"
-          class="ol-search-filter${section === activeSection ? ' active' : ''}"
+          class="ol-search-filter${section === activeSection ? " active" : ""}"
           data-search-section="${escapeHtml(section)}"
-          aria-pressed="${section === activeSection ? 'true' : 'false'}"
+          aria-pressed="${section === activeSection ? "true" : "false"}"
         >
           <span>${escapeHtml(label)}</span>
           <strong>${count}</strong>
         </button>
       `;
-    }).join('');
+      })
+      .join("");
 
-    const resultList = filteredResults.map((r: any, i: number) => {
-      const meta = r.meta ?? {};
-      const section = meta.sectionLabel || meta.section || 'OL';
-      const title = meta.title || '제목 없음';
-      const path = displayPath(r.url);
-      const kicker = resultKicker(r);
+    const resultList = filteredResults
+      .map((r: any, i: number) => {
+        const meta = r.meta ?? {};
+        const section = meta.sectionLabel || meta.section || "OL";
+        const title = meta.title || "제목 없음";
+        const path = displayPath(r.url);
+        const kicker = resultKicker(r);
 
-      return `
+        return `
         <a
           href="${escapeHtml(r.url)}"
-          class="ol-search-result${i === 0 ? ' active' : ''}"
+          class="ol-search-result${i === 0 ? " active" : ""}"
           data-index="${i}"
         >
           <span class="ol-search-result-meta">
@@ -171,10 +211,11 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
           </span>
           <span class="ol-search-result-title">${escapeHtml(title)}</span>
           <span class="ol-search-result-path">${escapeHtml(path)}</span>
-          <span class="ol-search-result-excerpt">${r.excerpt ?? ''}</span>
+          <span class="ol-search-result-excerpt">${r.excerpt ?? ""}</span>
         </a>
       `;
-    }).join('');
+      })
+      .join("");
 
     resultsEl.innerHTML = `
       <div class="ol-search-filters" role="tablist" aria-label="검색 결과 유형">
@@ -189,110 +230,123 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
   }
 
   function openSearch() {
-    overlay.setAttribute('aria-hidden', 'false');
-    overlay.removeAttribute('inert');
-    input.value = '';
-    resultsEl.innerHTML = '<div class="ol-search-empty">검색어를 입력하세요</div>';
+    overlay.hidden = false;
+    overlay.setAttribute("aria-hidden", "false");
+    overlay.removeAttribute("inert");
+    input.value = "";
+    resultsEl.innerHTML =
+      '<div class="ol-search-empty">검색어를 입력하세요</div>';
     selectedIndex = -1;
-    activeSection = 'ALL';
+    activeSection = "ALL";
     currentResults = [];
     requestAnimationFrame(() => input.focus());
     loadPagefind(); // 첫 열기 시 미리 로드
   }
 
   function closeSearch() {
-    overlay.setAttribute('aria-hidden', 'true');
-    overlay.setAttribute('inert', '');
+    overlay.hidden = true;
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.setAttribute("inert", "");
     input.blur();
   }
 
   // 검색 실행 (디바운스 200ms)
   let debounceTimer: ReturnType<typeof setTimeout>;
-  input.addEventListener('input', () => {
+  input.addEventListener("input", () => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(async () => {
       const query = input.value.trim();
       if (!query) {
-        resultsEl.innerHTML = '<div class="ol-search-empty">검색어를 입력하세요</div>';
+        resultsEl.innerHTML =
+          '<div class="ol-search-empty">검색어를 입력하세요</div>';
         selectedIndex = -1;
-        activeSection = 'ALL';
+        activeSection = "ALL";
         currentResults = [];
         return;
       }
 
       const pf = await loadPagefind();
       if (!pf) {
-        resultsEl.innerHTML = '<div class="ol-search-empty">검색 인덱스를 불러올 수 없습니다</div>';
+        resultsEl.innerHTML =
+          '<div class="ol-search-empty">검색 인덱스를 불러올 수 없습니다</div>';
         return;
       }
 
       const search = await pf.search(query);
       if (search.results.length === 0) {
-        resultsEl.innerHTML = '<div class="ol-search-empty">검색 결과가 없습니다</div>';
+        resultsEl.innerHTML =
+          '<div class="ol-search-empty">검색 결과가 없습니다</div>';
         selectedIndex = -1;
         return;
       }
 
       // 상위 8개 결과
       currentResults = await Promise.all(
-        search.results.slice(0, 24).map((r: any) => r.data())
+        search.results.slice(0, 24).map((r: any) => r.data()),
       );
-      activeSection = 'ALL';
+      activeSection = "ALL";
       renderSearchResults();
     }, 200);
   });
 
   // 키보드 네비게이션
-  input.addEventListener('keydown', (e) => {
-    const items = resultsEl.querySelectorAll<HTMLAnchorElement>('.ol-search-result');
+  input.addEventListener("keydown", (e) => {
+    const items =
+      resultsEl.querySelectorAll<HTMLAnchorElement>(".ol-search-result");
     if (!items.length) return;
 
-    if (e.key === 'ArrowDown') {
+    if (e.key === "ArrowDown") {
       e.preventDefault();
       selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
       updateSelection(items);
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
       selectedIndex = Math.max(selectedIndex - 1, 0);
       updateSelection(items);
-    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+    } else if (e.key === "Enter" && selectedIndex >= 0) {
       e.preventDefault();
       items[selectedIndex].click();
     }
   });
 
   function updateSelection(items: NodeListOf<HTMLAnchorElement>) {
-    items.forEach((el, i) => el.classList.toggle('active', i === selectedIndex));
-    items[selectedIndex]?.scrollIntoView({ block: 'nearest' });
+    items.forEach((el, i) =>
+      el.classList.toggle("active", i === selectedIndex),
+    );
+    items[selectedIndex]?.scrollIntoView({ block: "nearest" });
   }
 
   // 결과 클릭 시 닫기
-  resultsEl.addEventListener('click', (e) => {
-    const filter = (e.target as Element).closest<HTMLButtonElement>('[data-search-section]');
+  resultsEl.addEventListener("click", (e) => {
+    const filter = (e.target as Element).closest<HTMLButtonElement>(
+      "[data-search-section]",
+    );
     if (filter) {
-      activeSection = filter.dataset.searchSection || 'ALL';
+      activeSection = filter.dataset.searchSection || "ALL";
       renderSearchResults();
       return;
     }
 
-    if ((e.target as Element).closest('.ol-search-result')) closeSearch();
+    if ((e.target as Element).closest(".ol-search-result")) closeSearch();
   });
 
   // 전역 단축키: Cmd+K / Ctrl+K
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
       e.preventDefault();
-      const isOpen = overlay.getAttribute('aria-hidden') === 'false';
+      const isOpen = overlay.getAttribute("aria-hidden") === "false";
       isOpen ? closeSearch() : openSearch();
     }
-    if (e.key === 'Escape') closeSearch();
+    if (e.key === "Escape") closeSearch();
   });
 
   // 오버레이 클릭으로 닫기
-  overlay.addEventListener('click', (e) => {
+  overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closeSearch();
   });
 
   // 헤더 검색 버튼 연결
-  document.getElementById('ol-search-trigger')?.addEventListener('click', openSearch);
+  document
+    .getElementById("ol-search-trigger")
+    ?.addEventListener("click", openSearch);
 </script>

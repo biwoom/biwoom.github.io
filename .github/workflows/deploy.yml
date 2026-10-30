@@ -41,8 +41,14 @@ jobs:
       - name: Check content
         run: npm run check
 
+      - name: Check types
+        run: npm run typecheck
+
       - name: Build
         run: npm run build:site
+
+      - name: Check generated links
+        run: npm run check:built
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

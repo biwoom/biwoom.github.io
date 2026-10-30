@@ -1,9 +1,6 @@
 ---
-title: 보리도차제론을 람림 삼사도 인포그래픽으로 만들기
 description: 보리도차제론의 수행체계를 신해도·귀의도·출리도·보리도 구조로 다시 정리하고 인포그래픽으로 제작한 과정.
 date: 2026-06-04T00:00:00.000Z
-category: DESIGN
-readingTime: 6
 tags:
   - project/design
   - topic/람림
@@ -13,8 +10,9 @@ tags:
   - kind/blog
   - text/보리도차제론
   - kind/infographic
-published: true
 ---
+
+# 보리도차제론을 람림 삼사도 인포그래픽으로 만들기
 
 이번 인포그래픽은 보리도차제론의 수행체계를 강의에서 한눈에 설명하기 위한 자료다.
 

@@ -1,9 +1,6 @@
 ---
-title: DESIGN은 인포그래픽으로, WORKS는 문서 라이브러리로
 description: OL DESIGN을 인포그래픽 중심 라이브러리로 재정의하고, OL WORKS를 BOOK의 전 단계가 아닌 살아 있는 문서 라이브러리로 정리한 작업 기록.
 date: 2026-06-04T00:00:00.000Z
-category: OL
-readingTime: 6
 tags:
   - project/design
   - project/works
@@ -12,8 +9,9 @@ tags:
   - kind/blog
   - topic/infographic-library
   - topic/document-library
-published: true
 ---
+
+# DESIGN은 인포그래픽으로, WORKS는 문서 라이브러리로
 
 오늘 작업은 메뉴 두 개의 성격을 다시 잡는 일이었다. 하나는 DESIGN, 다른 하나는 WORKS다.
 
