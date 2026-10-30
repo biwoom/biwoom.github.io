@@ -4,6 +4,11 @@
    ============================================================ */
 
 :root {
+  /* BORIDO menu accents: keep text monochrome for readable contrast. */
+  --ol-accent-home: #00d3f3;
+  --ol-accent-text: #f0b100;
+  --ol-accent-story: #7ccf00;
+
   /* ── Color ── */
   --ol-bg:              #ffffff;
   --ol-surface:         #ffffff;

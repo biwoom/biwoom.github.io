@@ -1,6 +1,6 @@
 ---
 name: ol-content-authoring
-description: Create or revise OL HOME Markdown and content assets in the Obsidian vault under src/content.
+description: Create or revise BORIDO (OL 코어) Markdown and content assets in the Obsidian vault under src/content.
 ---
 
 # OL Content Authoring

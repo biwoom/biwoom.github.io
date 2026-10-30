@@ -11,15 +11,15 @@ tags:
   - feature/search
 ---
 
-# OL HOME 구축기 — Phase 1~3, 온톨로지에서 검색까지
+# BORIDO HOME 구축기 — Phase 1~3, 온톨로지에서 검색까지
 
-OL HOME은 단순 랜딩 페이지가 아니라, 온톨로지 기반 불교 콘텐츠 포털이다. Astro 6 + GitHub Pages 위에서 세 단계에 걸쳐 구축했다.
+BORIDO HOME은 단순 랜딩 페이지가 아니라, 온톨로지 기반 불교 콘텐츠 포털이다. Astro 6 + GitHub Pages 위에서 세 단계에 걸쳐 구축했다.
 
 ## Phase 1 — 기초 구조와 온톨로지
 
 첫 번째 단계의 핵심은 "콘텐츠보다 스키마가 먼저"였다.
 
-대부분의 콘텐츠 시스템은 태그로 관계를 표현하지만, `tags: [용수, 중관학]`만으로는 용수가 중관학을 창시했는지 비판했는지 알 수 없다. OL은 주어-관계-목적어(Triple) 구조로 의미를 보존한다.
+대부분의 콘텐츠 시스템은 태그로 관계를 표현하지만, `tags: [용수, 중관학]`만으로는 용수가 중관학을 창시했는지 비판했는지 알 수 없다. 보리도는 주어-관계-목적어(Triple) 구조로 의미를 보존한다.
 
 ```yaml
 relations:
@@ -58,6 +58,6 @@ BLOG 페이지 신설, DESIGN 페이지 기초 구조(사이드바 필터 + 카�
 
 ## Phase 3 — Pagefind 검색
 
-검색 엔진으로 Pagefind를 선택한 이유는 OL의 "self-contained" 철학과 맞기 때문이다. 서버 불필요, 클라이언트 JS 6KB 이내, 빌드 후 자동 인덱싱. Algolia 같은 외부 서비스는 선택지에서 제외했다.
+검색 엔진으로 Pagefind를 선택한 이유는 보리도의 "self-contained" 철학과 맞기 때문이다. 서버 불필요, 클라이언트 JS 6KB 이내, 빌드 후 자동 인덱싱. Algolia 같은 외부 서비스는 선택지에서 제외했다.
 
 검색 UI는 Command Palette(Cmd+K) 방식. 헤더 우측 돋보기 아이콘 클릭 또는 단축키로 모달이 열린다. `data-pagefind-body`를 `<main>`에 붙여 본문만 인덱싱하고, 헤더·푸터는 `data-pagefind-ignore`로 제외했다.

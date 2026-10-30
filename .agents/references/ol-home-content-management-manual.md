@@ -1,8 +1,8 @@
-# OL HOME 콘텐츠 관리 매뉴얼
+# BORIDO 콘텐츠 관리 매뉴얼
 
 - 문서 버전: v2.1
 - 최신 수정일: 2026-10-30
-- 대상 프로젝트: OL HOME
+- 대상 프로젝트: BORIDO (OL 코어)
 - 배포 URL: https://biwoom.github.io/
 
 ## 집필 원칙

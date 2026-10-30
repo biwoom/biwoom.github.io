@@ -11,7 +11,7 @@ const categories = [...new Set(library.map((s) => s.category).filter(Boolean))];
 ---
 
 <BaseLayout
-  title={`OL ${section.toUpperCase()}`}
+  title={`BORIDO ${section.toUpperCase()}`}
   description={
     section === "text"
       ? "불교 문헌의 번역·연구·시각자료"
@@ -24,7 +24,7 @@ const categories = [...new Set(library.map((s) => s.category).filter(Boolean))];
       class={`ol-hero ol-grid-bg ol-grid-bg--${section} ol-hero--compact`}
     >
       <div class="ol-container">
-        <span class="ol-section-label">OL {section.toUpperCase()}</span>
+        <span class="ol-section-label">BORIDO {section.toUpperCase()}</span>
         <h1 class="ol-kr">
           {section === "text"
             ? "불교 문헌을 읽고 연구하다."

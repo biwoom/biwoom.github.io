@@ -1,5 +1,6 @@
 ---
 import { url } from '../../lib/url';
+import { BRAND } from "../../lib/site-config";
 import { site } from '../../lib/site';
 const currentYear = new Date().getFullYear();
 ---
@@ -10,6 +11,7 @@ const currentYear = new Date().getFullYear();
       <!-- Brand column -->
       <div>
         <div class="ol-brand ol-footer-brand">
+          <img class="ol-brand-symbol ol-brand-symbol--monochrome" src={url(BRAND.logoMonochrome)} width="38" height="38" alt="" />
           <span class="ol-brand-name">{site.name}</span>
           <span class="ol-footer-tagline">{site.tagline}</span>
         </div>
@@ -33,15 +35,15 @@ const currentYear = new Date().getFullYear();
       <!-- Projects -->
       <div>
         <h4>PROJECTS</h4>
-        <a href={url('/text')}>OL TEXT</a>  
-        <a href={url('/story')}>OL STORY</a>
+        <a href={url('/text')}>BORIDO TEXT</a>
+        <a href={url('/story')}>BORIDO STORY</a>
       </div>
 
       <!-- Read -->
       <div>
         <h4>READ</h4>
         <a href={url('/blog')}>BLOG · 작업 일지</a>
-        <a href={url('/pages/brand')}>OL 브랜드 정의서</a>
+        <a href={url('/pages/brand')}>보리도 브랜드 정의서</a>
         <a href={url('/partners')}>기여 및 협력단체</a>
       </div>
 
@@ -55,8 +57,8 @@ const currentYear = new Date().getFullYear();
     </div>
 
     <div class="ol-footer-bottom">
-      <span>© {currentYear} OL · 오픈 소스 불교콘텐츠</span>
-      <span>Weaving the Wisdom</span>
+      <span>© {currentYear} {site.name} · 오픈 소스 불교콘텐츠</span>
+      <span>{site.nameKo} · {site.tagline}</span>
     </div>
   </div>
 </footer>

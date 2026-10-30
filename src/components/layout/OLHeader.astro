@@ -1,4 +1,5 @@
 ---
+import { BRAND } from "../../lib/site-config";
 import { url } from "../../lib/url";
 
 const navItems = [
@@ -23,8 +24,9 @@ function isActive(href: string): boolean {
   <div class="ol-container ol-header-inner">
     <!-- Brand -->
     <a href={url("/")} class="ol-brand">
-      <span class="ol-brand-name">OL</span>
-      <span class="ol-brand-meta">Weaving the Wisdom</span>
+      <img class="ol-brand-symbol ol-brand-symbol--monochrome" src={url(BRAND.logoMonochrome)} width="38" height="38" alt="" />
+      <span class="ol-brand-name">{BRAND.name}</span>
+      <span class="ol-brand-meta">{BRAND.nameKo}</span>
     </a>
 
     <!-- Nav -->

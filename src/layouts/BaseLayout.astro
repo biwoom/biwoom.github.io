@@ -3,7 +3,7 @@ import '../styles/global.css';
 import OLHeader from '../components/layout/OLHeader.astro';
 import OLFooter from '../components/layout/OLFooter.astro';
 import OLSearchModal from '../components/layout/OLSearchModal.astro';
-import { SITE_URL_ORIGIN } from '../lib/site-config';
+import { SITE_URL_ORIGIN, BRAND } from '../lib/site-config';
 import { url } from '../lib/url';
 
 interface Props {
@@ -16,13 +16,17 @@ interface Props {
 }
 
 const {
-  title = 'OL — Weaving the Wisdom',
-  description = 'OL(올)은 한 올, 한 올 지혜를 엮어가는 불교 콘텐츠 프로젝트입니다.',
+  title = `${BRAND.name} · ${BRAND.nameKo} — ${BRAND.tagline}`,
+  description = BRAND.description,
   ogImage,
   lang = 'ko',
   pagefindMeta = {},
   pagefindBody = true,
 } = Astro.props;
+
+const sectionPath = Astro.url.pathname;
+const siteSection = sectionPath === '/' ? 'home' : sectionPath.match(/^\/(text|story|blog)(?:\/|$)/)?.[1];
+const hasAccentTheme = ['home', 'text', 'story'].includes(siteSection ?? '');
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? SITE_URL_ORIGIN;
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
@@ -49,7 +53,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImageUrl} />
-  <meta property="og:site_name" content="OL — Weaving the Wisdom" />
+  <meta property="og:site_name" content={`${BRAND.name} · ${BRAND.nameKo}`} />
   <meta property="og:locale" content="ko_KR" />
 
   {pagefindMetaEntries.map(([key, value]) => (
@@ -99,7 +103,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
     }
   </script>
 </head>
-<body class="ol-kr">
+<body class="ol-kr" data-site-section={siteSection} data-accent-theme={hasAccentTheme ? true : undefined}>
   <div class="ol-app">
     <OLHeader />
     <OLSearchModal />

@@ -1,12 +1,24 @@
 # Current State
 
-Last updated: 2026-10-30
+Last updated: 2026-10-31
+
+## Brand
+
+- Public brand: BORIDO (보리도). OL is the source-code core name.
+- Official logo originals: public/brand/borido-mark-monochrome.png (004) and borido-mark-gold.png (006). Header/footer use monochrome inside dark rounded boxes; favicon/apple/sharing assets use monochrome. Gold remains an available source asset. Rebuild derived icons with npm run brand:assets.
+- docs/ legacy plans carry historical-status notices; current structure remains TEXT/STORY/BLOG.
+- Future domain: `borido.org`; no domain migration has been performed.
 
 ## Project
 
-- OL HOME: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
+- BORIDO (보리도), powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
 - Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
 - Refactor commit `f70b680` was pushed to `origin/main` on 2026-10-30. Production deployment completion has not been verified.
+
+## Menu Accents
+
+- HOME #00d3f3, TEXT #f0b100, STORY #7ccf00; BLOG retains its existing palette.
+- BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button/hero gradients to that menu, including library/document pages and dark mode.
 
 ## Current Architecture
 

@@ -2,7 +2,7 @@
 
 ## Project
 
-OL HOME is a static Astro site at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
+BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
 
 ## Current Architecture
 

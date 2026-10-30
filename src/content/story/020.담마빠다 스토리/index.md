@@ -10,7 +10,7 @@ tags:
   - topic/dhammapada
 license: External source - rights unverified
 rightsHolder: Ancient Buddhist Texts
-copyrightNotice: English source collected from Ancient Buddhist Texts. Rights and reuse terms should be confirmed before redistribution beyond OL HOME.
+copyrightNotice: English source collected from Ancient Buddhist Texts. Rights and reuse terms should be confirmed before redistribution beyond BORIDO HOME.
 lang: en
 ---
 

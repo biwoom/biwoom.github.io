@@ -8,8 +8,8 @@ export async function GET(context: APIContext) {
   ).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({
-    title: "OL BLOG — 불교 콘텐츠 작업 일지",
-    description: "OL 프로젝트의 개발 기록, 결정과 회고, 작은 발견들.",
+    title: "BORIDO BLOG — 불교 콘텐츠 작업 일지",
+    description: "보리도 프로젝트의 개발 기록, 결정과 회고, 작은 발견들.",
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,

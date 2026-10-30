@@ -22,3 +22,5 @@
 @import "./pages/story-dark.css";
 @import "./pages/story-responsive.css";
 @import "./pages/reading.css";
+
+@import "./components/menu-accents.css";

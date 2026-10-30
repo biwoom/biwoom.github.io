@@ -1,5 +1,5 @@
 ---
-description: 부처님의 생애와 과거 보살행을 이야기 형식으로 재구성한 OL STORY 시리즈입니다.
+description: 부처님의 생애와 과거 보살행을 이야기 형식으로 재구성한 BORIDO STORY 시리즈입니다.
 tags:
   - 인물/수메다
   - 개념/보살도

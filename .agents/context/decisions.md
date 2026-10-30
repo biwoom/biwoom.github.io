@@ -1,5 +1,20 @@
 # Decisions
 
+## 2026-10-31 — Menu Accent Colors and Monochrome Identity
+
+- Use supplied 004 monochrome in black rounded header/footer logo boxes and for favicon/apple icons. Keep both logo originals.
+- HOME cyan #00d3f3, TEXT gold #f0b100, STORY green #7ccf00. BLOG stays monochrome.
+- Scope themes by route in BaseLayout; keep readable black text on bright accent fills and subtle hero gradients in both color modes.
+
+
+## 2026-10-31 — Brand Assets and Historical Names
+
+- BORIDO/보리도 is the public brand; OL remains the code core. Use supplied 004 monochrome and 006 gold logo originals, preserved in public/brand.
+- Derive header/footer identity, favicon/ICO/apple icon and social image from these assets with scripts/build-brand-assets.mjs.
+- Label past ATLAS development and retired planning documents explicitly as historical. Do not rename engine identifiers, CSS hooks, storage keys, source URLs or archived originals.
+- Keep biwoom.github.io as the production URL. borido.org remains a future migration.
+
+
 ## 현행 규칙 우선순위 (2026-10-30)
 
 - AGENTS.md와 2026-10-30 이후 결정이 과거 지침보다 우선한다.
@@ -102,6 +117,11 @@ This file records durable project decisions that future Codex sessions should pr
 - Share normalized data, assets, series behavior and helpers; do not restore retired Entity/ontology fields merely to support old views.
 - Search and mobile menu CSS are global component/layout assets, independent of any optional menu page stylesheet. Closed overlays must have initial HTML `hidden`/`inert` plus synchronized `aria-hidden` and explicit CSS handling.
 - Extend `check:built` with static UI markup/CSS regression checks. Passing these does not imply browser interaction or visual QA has been performed.
+
+## 2026-10-31 — Brand
+
+- Public brand is BORIDO (보리도); OL remains the source-code core name.
+- `borido.org` is a future domain; keep the current production URL and deployment configuration until the domain migration is requested.
 
 ## 2026-10-30 — Refactor Implementation Policies
 

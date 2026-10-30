@@ -1,4 +1,4 @@
-# OL HOME
+# BORIDO (보리도)
 
 불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
 
@@ -84,3 +84,7 @@ npm run check:built
 DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 설명은 일반 자료로 이관한 뒤 사용자 요청으로 일부 삭제되었습니다. 삭제 자료는 복원하지 않으며 현재 공개 목적지가 존재하는 과거 주소만 안내합니다. 이전 ATLAS HTML은 `.agents/archive/atlas/`에 보존하며 배포하지 않습니다.
 
 자세한 집필 규칙은 `.agents/references/ol-home-content-management-manual.md`, 개편 기록은 `.agents/references/obsidian-content-refactor-guide.md`를 확인하세요.
+
+## 브랜드 자산
+
+BORIDO(보리도)의 공식 로고는 `public/brand/borido-mark-monochrome.png`(제공 원본 004)와 `borido-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. OL은 내부 코어 이름이며 현재 사이트 주소는 유지합니다.

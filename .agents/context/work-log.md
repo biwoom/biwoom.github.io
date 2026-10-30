@@ -2,6 +2,20 @@
 
 This file records concise date-based work summaries for continuity across Codex sessions.
 
+## 2026-10-31
+
+### BORIDO Logo and Remaining Brand Cleanup
+
+- Applied supplied logo originals 004/006 to header/footer and generated favicon/ICO/apple/social assets; preserved originals and added reproducible brand:assets command.
+- Rewrote current brand introduction around TEXT/STORY/BLOG, labeled ATLAS articles and legacy plans as historical, updated skill UI descriptions and public attachment HTML labels while preserving OL engine identifiers.
+- Verified the logo originals byte-for-byte and visually inspected the generated sharing image. Content tests (19), typecheck (zero diagnostics), build, local-link audit and static UI contracts passed. Browser interaction was not tested.
+- Production domain remains unchanged. No upload requested.
+
+
+### BORIDO Brand Transition
+
+- Updated the public brand to BORIDO (보리도), retained OL as the code core name, and documented the future borido.org domain without changing deployment.
+
 ## 2026-10-30
 
 ### Harden Obsidian Transition and Preserve User Deletions

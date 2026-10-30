@@ -1,6 +1,6 @@
 ---
 name: ol-doc-maintenance
-description: Maintain OL HOME manuals, brand documents, AGENTS.md, README.md, and project rule documents. Use when updating durable project guidance, Codex rules, content management manuals, brand definitions, changelog sections inside docs, or documentation that governs how OL HOME should be operated.
+description: Maintain BORIDO (OL 코어) manuals, brand documents, AGENTS.md, README.md, and project rule documents. Use when updating durable project guidance, Codex rules, content management manuals, brand definitions, changelog sections inside docs, or documentation that governs how BORIDO (OL 코어) should be operated.
 ---
 
 # OL Doc Maintenance
@@ -23,7 +23,7 @@ description: Maintain OL HOME manuals, brand documents, AGENTS.md, README.md, an
 7. Add or update a bottom section named `수정 변경사항`.
 8. Run `npm run build` after public content changes.
 
-## Current OL HOME Facts
+## Current BORIDO (OL 코어) Facts
 
 - Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
 - `src/content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.

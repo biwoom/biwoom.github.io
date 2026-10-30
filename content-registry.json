@@ -19,7 +19,7 @@
       "id": "story-3777d2d62fba28",
       "url": "/story/buddha-story/",
       "date": "2026-10-30",
-      "hash": "513ded3222cd04ba0efb6719aedbf89e681f2ea5b6c13a51d062c7e4fe8ce165",
+      "hash": "ba2f38290127061ca61412590c4a31cdbd4ee737f8a6c336b514e70009e10ba0",
       "seriesKey": "story/010.붓다 스토리"
     },
     "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md": {
@@ -47,14 +47,14 @@
       "id": "story-0500c29e3f00b7",
       "url": "/story/dhammapada-story/",
       "date": "2026-10-30",
-      "hash": "e10d73faf3c87cb0a0ac25888978ca07c4b2c56a127cdc03157d9c5974d522f7",
+      "hash": "09590ce63e72ccefd841161ab67d20f54bfaae30f7b368c73ec8ce71858f3b3f",
       "seriesKey": "story/020.담마빠다 스토리"
     },
     "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md": {
       "id": "story-d6ad6b13db1441",
       "url": "/story/dhammapada-story/part-1/01-cakkhupala/",
       "date": "2026-06-26",
-      "hash": "044eb8c85d2480f193ade3a44d498f0c8ebae1df3a671a92e864e0ece1494c21",
+      "hash": "23b578c9323cd1d002b21e6f2c8447f7e963c1b1bb5e639c47cd8062d3d4ee4f",
       "seriesKey": "story/020.담마빠다 스토리"
     },
     "story/999.OL STORY — 준비 중/index.md": {
@@ -68,21 +68,21 @@
       "id": "blog-a99c35106d0edf",
       "url": "/blog/atlas-dev-journey/",
       "date": "2026-05-27",
-      "hash": "53963ba032e5bac1396316ed912fafae7ac3747766739dab2814ea3d9e8b0f4f",
+      "hash": "af996bd4cc633f2c3980cdb05f998120fed0087396c2a3b6e399e61b62f7e6e6",
       "seriesKey": "blog/standalone"
     },
     "blog/atlas-footnotes/index.md": {
       "id": "blog-7e2b2385c139bf",
       "url": "/blog/atlas-footnotes/",
       "date": "2026-05-31",
-      "hash": "6314d425fa740228d56f94c271d84a2e2ab11e398111dea41e75e619cd7355c1",
+      "hash": "59d292476df0a0c9152357eff933a107471722eb596a64965c39f37ed1cfba64",
       "seriesKey": "blog/standalone"
     },
     "blog/blog-atlas-code-restructuring/index.md": {
       "id": "blog-13fe94521f7eff",
       "url": "/blog/blog-atlas-code-restructuring/",
       "date": "2026-06-01",
-      "hash": "9ea046dea28a2a46324274cc720ae0fa8c4f84104a4c5797028da0248da3f470",
+      "hash": "cb6170b27324ac7558371bacb1b20275232f32e668f7cfe89bb02a8dd11b9684",
       "seriesKey": "blog/standalone"
     },
     "blog/body-mind-transformation-infographic/index.md": {
@@ -96,7 +96,7 @@
       "id": "blog-836c67c8dbca96",
       "url": "/blog/book-design-guide/",
       "date": "2026-05-28",
-      "hash": "053df552e24184bd366ee9b56fece65991edbaeac768c5743b8bbfdd501cc6f4",
+      "hash": "ac4c83017933a7f417c64e286518d72eab4917e6b681f9097b6eff2488a6ba92",
       "seriesKey": "blog/standalone"
     },
     "blog/buddhist-worldview-two-perspectives/index.md": {
@@ -110,7 +110,7 @@
       "id": "blog-7e5c5458d494c9",
       "url": "/blog/indramang-life-peace-patterns/",
       "date": "2026-06-21",
-      "hash": "9cc47c26f07f233b0158bb7636e0a06d5cb8e3f8216b94ec917f046a8006443a",
+      "hash": "d102725d6d92e250ce955121a7251ea1a94124f8b8af3e3260dfe338ce010428",
       "seriesKey": "blog/standalone"
     },
     "blog/lamrim-infographic-making/index.md": {
@@ -124,63 +124,63 @@
       "id": "blog-640fb779bf3084",
       "url": "/blog/net-menu-name-card-phase1/",
       "date": "2026-06-20",
-      "hash": "35e8f0edcb39637690d6675abe91ce21b3f6190f7c276a76621e71fb8bc91a70",
+      "hash": "6136300fa8ba526d54a64851c6017f41ec826f2c92889fd96ccfef7a8f647165",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-brand-design/index.md": {
       "id": "blog-9b9c8c6df4dfd1",
       "url": "/blog/ol-brand-design/",
       "date": "2026-05-25",
-      "hash": "307d76b75c7e5aafdb093d950b18da396fbbacdd79b3d4aca5e593bce384a1fd",
+      "hash": "31ca89eea1e9b28314cd81604ff900339ac2944475ddad9ea349fe028f6a1ee2",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-design-works-library-shift/index.md": {
       "id": "blog-628965f4ca7f5b",
       "url": "/blog/ol-design-works-library-shift/",
       "date": "2026-06-04",
-      "hash": "45394a6994ab211cfe7be3575e79b1a7a0d12340027db60914a68b5f9fc50df3",
+      "hash": "d39b27c2b70f6e5cc085cdf60b1927ef16505c48638324437b1ef1f1b0d47c58",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-build/index.md": {
       "id": "blog-af2e99eea31e5e",
       "url": "/blog/ol-home-build/",
       "date": "2026-05-30",
-      "hash": "cc4b5e655d3b6e4841b83f6d438546cd2f56db32d0b4bb9c1c1c93faf6ce5cb7",
+      "hash": "633a6b78313731d19e1c94a3d124fd4a06b24d9a607c22438ed8659083c2602c",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-phase4/index.md": {
       "id": "blog-32ddbb1546caed",
       "url": "/blog/ol-home-phase4/",
       "date": "2026-05-31",
-      "hash": "9fb0c7ff8f33ee6cf964a8b2fa089d03d3de5eb7b7198ca2ac5aaec0571bb07e",
+      "hash": "024a6b629c7264b2e38a0fc8bf6fe8a9f451b29b5a858cdecf7a0bd945c3f705",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-refactoring-and-pagination/index.md": {
       "id": "blog-225ca115c1c287",
       "url": "/blog/ol-home-refactoring-and-pagination/",
       "date": "2026-06-26",
-      "hash": "eb551078e487a211347055e2cf03b14ee89bd2358acc651f8d1b44d8cb198bd0",
+      "hash": "ae5eb6a4c3c577a89178b2507b54fd8d0860b859c0411ae93e2ea6ea94a8d14e",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-text-story-reader-update/index.md": {
       "id": "blog-0077606ed3487b",
       "url": "/blog/ol-home-text-story-reader-update/",
       "date": "2026-06-11",
-      "hash": "b8cd3de7007691c561e90b4df3a7c61fc0bead3d271b124d9216697c92b864c6",
+      "hash": "dd98dfdefea0573f7c51bee88f3eae00a56223aa264e5a843a625ae0c2cef2ac",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-why/index.md": {
       "id": "blog-56a140a591ce16",
       "url": "/blog/ol-why/",
       "date": "2026-05-23",
-      "hash": "70489568ac8d78bb58608f0d62d40db821c2e886fba373bcec488ac4e28f93d9",
+      "hash": "e75c9c830d8e41496855c3f04304a2bbb11fe10b67d0cdd21231a33cf6f322ba",
       "seriesKey": "blog/standalone"
     },
     "pages/brand.md": {
       "id": "pages-53dfbb7cee6fb5",
       "url": "/pages/brand/",
       "date": "2026-10-30",
-      "hash": "74f026d4c026e7d848a8ed5595ce0c9519bf3d3d6b701f2b983761fb56654683",
+      "hash": "770e94cfc1c4e1845afc7950b535e12ea23f299d100b432fee91fa48b994ded1",
       "seriesKey": "pages/standalone"
     },
     "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md": {

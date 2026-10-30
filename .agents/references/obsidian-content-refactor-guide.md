@@ -1,8 +1,8 @@
-# OL HOME Obsidian 기반 콘텐츠 구조 개편 개발 가이드
+# BORIDO Obsidian 기반 콘텐츠 구조 개편 개발 가이드
 
 - 문서 버전: v0.4
 - 최신 수정일: 2026-10-30
-- 대상 프로젝트: OL HOME (`biwoom/biwoom.github.io`)
+- 대상 프로젝트: BORIDO (OL 코어) (`biwoom/biwoom.github.io`)
 - 운영 URL: https://biwoom.github.io/
 - 상태: 2026-10-30 로컬 구현. 아래 계획의 기준 시점과 현재 적용 결과를 구분하며, GitHub 업로드·운영 배포는 수행하지 않았다.
 - 목적: 사용자가 Obsidian에서 제목과 본문을 작성하고 폴더를 관리하면, Astro가 사이트에 필요한 정보를 자동으로 해석하도록 전환한다.
