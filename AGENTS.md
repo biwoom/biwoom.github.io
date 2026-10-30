@@ -9,7 +9,8 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - `src/content/` is both the content source and the user's Obsidian vault.
 - Public content menus are TEXT, STORY, BLOG. HOME is the entry page; `pages` holds visitor-facing permanent documents.
 - Vault CMS, Front Matter, and Decap CMS are not used.
-- TEXT uses category → work/series → material section/part → item. STORY uses series → part → chapter. Translation and research are independent.
+- TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
+- TEXT/STORY menu roots show top-level categories as `ol-grid-3` cards; category pages list their series. Empty category folders remain visible (track `.gitkeep` when needed).
 - TEXT uses the current STORY series link/expand behavior. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT and STORY individual documents both use `StoryReader.astro` and STORY document styling. Pass the correct collection for breadcrumbs/search; do not restore the old TEXT-only document layout. BLOG retains its dedicated list/detail layout.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
@@ -53,6 +54,10 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-10-31
+
+- Added top-level STORY categories and shared TEXT/STORY category-card navigation.
 
 ### 2026-10-30
 

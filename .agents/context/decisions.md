@@ -1,5 +1,21 @@
 # Decisions
 
+## 2026-10-31 — Content Engine Reload Verification
+
+- Restart the entire development process after changing native content parser/preparation modules. A config touch or successful build does not prove a running server has dropped cached native modules.
+- Verify actual category series card titles and membership in live HTTP checks; status 200 and data-library-view alone cannot catch stale grouping.
+
+## 2026-10-31 — STORY Categories and Category-first Navigation
+
+- TEXT and STORY share category/series/part/item interpretation; STORY category is the first folder, with numeric prefixes used only for order. Keep series/document IDs, URLs and dates during folder migration.
+- Both menu roots render category cards using ol-grid-3; each links to a category-specific series list. Remove root category filters and series cards. Include empty top-level categories, tracking `.gitkeep` if needed; exclude reserved folders.
+- Use the same normalized category fields and shared library/index UI. Category route identifiers are ASCII hashes derived from folder keys; no author frontmatter is required.
+
+## 2026-10-31 — Full-width Readers and TOC Drawer
+
+- TEXT/STORY individual documents share the full viewport-width reader shell, retaining the left document list on desktop and removing the right utility column. The article uses the available width, with prose capped at the current 1200px setting.
+- Put a TOC icon beside Copy in the article toolbar. Align desktop tools beside the document header rather than in a separate lower row; cap document header titles at 1200px. On desktop, label it 목차 and keep the toolbar sticky below site/part navigation while scrolling through the article. Use one right-to-left drawer on desktop/mobile, with native modal dialog focus containment, Escape/close/backdrop dismissal, heading navigation and scroll-spy. Honor reduced motion. This supersedes the historical June sticky TOC/mobile dropdown rules.
+
 ## 2026-10-31 — Menu Accent Colors and Monochrome Identity
 
 - Use supplied 004 monochrome in black rounded header/footer logo boxes and for favicon/apple icons. Keep both logo originals.

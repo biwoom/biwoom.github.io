@@ -4,6 +4,34 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-10-31
 
+### STORY Categories and Shared Category Cards
+
+- Unified TEXT/STORY path interpretation and validation as category/series/part/item, using existing normalized category fields. Recognized the user's new STORY folders without rewriting their documents or personal Obsidian state.
+- Replaced menu-root filters/series cards with ol-grid-3 category cards and added category-specific series-list routes, counts, breadcrumbs and shared pagination. Empty 선시(禪詩) remains visible with a preparation message; `.gitkeep` retains its folder in Git.
+- Refreshed the active dev server's old parser and repaired temporarily merged category/series registry data using historical aliases/folder records. Verified all current STORY document/intro IDs, canonical URLs and dates against the pre-work snapshot; preserved original series URLs.
+- Updated operating rules, README, authoring manual, refactor guide, skills and continuity records. Added migration, empty-category, private-series and generated category-membership regression checks.
+- Validation: 22 fixtures; typecheck with zero diagnostics; 60-page build; links across 62 HTML pages/21 redirects and 26 document UI contracts plus menu/category checks. New category paths are in the root sitemap; RSS/robots/config stay on the existing production root.
+- Active development server HTTP checks passed for both menu roots, all three category pages and original STORY series/document routes. Browser visual/interaction QA remains unverified. No commit or upload performed.
+
+### Reader Header Alignment
+
+- Moved desktop TOC/Copy tools to the same visual row as the article header while retaining tool-only sticky positioning through the article. Mobile title remains above its tools.
+- Capped article-header and hero titles at 1200px, preserving the user's existing 1200px prose setting and transparent toolbar background. Updated the built UI contract to match the current prose width.
+- Passed 19 content fixtures, zero-diagnostic typecheck, build, link checks across 59 pages/21 redirects and UI checks for 26 documents plus BLOG index. Browser visual/interaction QA remains unverified.
+
+### Desktop Reader Toolbar Follow-up
+
+- Kept the shared TEXT/STORY TOC and Copy toolbar sticky below the site header/part menu on desktop, with a desktop-only 목차 label. Separated the tool row from the title so only the tools stay pinned.
+- Cleared heading anchor targets beneath the sticky toolbar and used overflow: clip on the document shell to preserve sticky behavior and rounded edges. Mobile tools remain in normal flow.
+- Content fixtures (19), typecheck (zero diagnostics), build, built links and document UI contracts passed. Browser interaction remains unverified.
+
+### Full-width TEXT/STORY Reader and TOC Drawer
+
+- Expanded individual readers and prose to the available viewport width, retained the desktop left document list, and removed the right TOC column. Series and BLOG layouts retain their own sizing.
+- Replaced separate desktop/mobile TOCs with a shared toolbar icon and right-edge modal drawer. Added close/Escape/backdrop dismissal, focus containment/return, reduced-motion support and active heading indication; shared Copy remains available on mobile.
+- Added compiled CSS/HTML regression checks for reader width, initially closed drawer and retired TOC removal.
+- Validation passed: 19 content fixtures, typecheck with zero diagnostics, 57-page build, links across 59 HTML pages/21 redirects, and 26 document UI contracts plus BLOG index. Actual browser visual/interaction QA remains unverified. No commit/upload performed.
+
 ### BORIDO Logo and Remaining Brand Cleanup
 
 - Applied supplied logo originals 004/006 to header/footer and generated favicon/ICO/apple/social assets; preserved originals and added reproducible brand:assets command.

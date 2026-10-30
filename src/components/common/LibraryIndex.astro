@@ -1,113 +1,76 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getLibrary } from "../../lib/library";
-import type { Section } from "../../lib/library";
+import { getCategories, getLibrary } from "../../lib/library";
+import type { Category, Section } from "../../lib/library";
+import { url } from "../../lib/url";
 interface Props {
   section: Section;
+  category?: Category;
 }
-const { section } = Astro.props;
-const library = await getLibrary(section);
-const categories = [...new Set(library.map((s) => s.category).filter(Boolean))];
+const { section, category } = Astro.props;
+const library = category?.series ?? await getLibrary(section);
+const categories = category ? [] : getCategories(section, library);
+const label = section.toUpperCase();
 ---
 
 <BaseLayout
-  title={`BORIDO ${section.toUpperCase()}`}
-  description={
-    section === "text"
-      ? "불교 문헌의 번역·연구·시각자료"
-      : "불교의 인물과 가르침을 만나는 이야기"
-  }
+  title={category ? `${category.label} — BORIDO ${label}` : `BORIDO ${label}`}
+  description={category
+    ? `${category.label}의 ${section === "text" ? "문헌" : "이야기"} 시리즈`
+    : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "불교의 인물과 가르침을 만나는 이야기"}
   pagefindBody={false}
 >
   <main>
-    <section
-      class={`ol-hero ol-grid-bg ol-grid-bg--${section} ol-hero--compact`}
-    >
+    <section class={`ol-hero ol-grid-bg ol-grid-bg--${section} ol-hero--compact`}>
       <div class="ol-container">
-        <span class="ol-section-label">BORIDO {section.toUpperCase()}</span>
-        <h1 class="ol-kr">
-          {section === "text"
-            ? "불교 문헌을 읽고 연구하다."
-            : "이야기로 만나는 불교."}
-        </h1>
+        {category ? (
+          <nav class="ol-text-breadcrumb" aria-label="현재 위치">
+            <a href={url(`/${section}/`)}>{label}</a><span>/</span><span>{category.label}</span>
+          </nav>
+        ) : <span class="ol-section-label">BORIDO {label}</span>}
+        <h1 class="ol-kr">{category?.label ?? (section === "text" ? "불교 문헌을 읽고 연구하다." : "이야기로 만나는 불교.")}</h1>
         <p class="ol-lead ol-kr">
-          {section === "text"
-            ? "문헌별 번역과 연구, 시각자료를 함께 살펴보세요."
-            : "인물과 설화, 가르침을 이야기로 읽어보세요."}
+          {category ? `${category.series.length}개 시리즈 · ${category.count}개 자료`
+            : section === "text" ? "카테고리를 선택해 문헌별 번역과 연구, 시각자료를 살펴보세요."
+            : "카테고리를 선택해 인물과 설화, 가르침을 이야기로 읽어보세요."}
         </p>
       </div>
     </section>
     <section class="ol-section">
       <div class="ol-container">
-        {categories.length > 0 && (
-          <nav class="ol-category-filter" aria-label="문헌 카테고리">
-            <button type="button" data-category="" aria-pressed="true">
-              전체
-            </button>
-            {categories.map((c) => (
-              <button type="button" data-category={c} aria-pressed="false">
-                {c}
-              </button>
-            ))}
-          </nav>
-        )}
-        <div class="ol-grid-2" data-library-grid>
-          {library.map((series) => (
-            <a
-              class="ol-card ol-story-library-card"
-              href={series.url}
-              data-library-category={series.category}
-            >
-              <span class="ol-meta-label">
-                {series.category || section.toUpperCase()} · {series.count}개
-                자료
-              </span>
+        <div class="ol-grid-3" data-library-grid data-library-view={category ? "series" : "categories"}>
+          {category ? library.map((series) => (
+            <a class="ol-card ol-story-library-card" href={url(series.url)} data-library-item>
+              <span class="ol-meta-label">{series.count}개 자료</span>
               <h2 class="ol-kr">{series.label}</h2>
               {series.description && <p>{series.description}</p>}
-              <span class="ol-meta-label">
-                {series.parts.map((p) => p.label).join(" · ")}
-              </span>
+              <span class="ol-meta-label">{series.parts.map((part) => part.label).join(" · ")}</span>
+            </a>
+          )) : categories.map((item) => (
+            <a class="ol-card ol-story-library-card" href={url(item.url)} data-library-item data-library-category={item.key}>
+              <span class="ol-meta-label">{label} CATEGORY</span>
+              <h2 class="ol-kr">{item.label}</h2>
+              <span class="ol-meta-label">{item.series.length}개 시리즈 · {item.count}개 자료</span>
             </a>
           ))}
         </div>
         <div class="ol-loadmore-wrap" data-library-more hidden>
-          <button
-            type="button"
-            class="ol-btn ol-btn-ghost"
-            data-library-more-button
-          >
+          <button type="button" class="ol-btn ol-btn-ghost" data-library-more-button>
             더 보기 <span data-library-remaining></span>
           </button>
         </div>
-        {library.length === 0 && <p>준비 중입니다.</p>}
+        {(category ? library.length === 0 : categories.length === 0) && <p>준비 중입니다.</p>}
       </div>
     </section>
   </main>
 </BaseLayout>
 <script>
   import { createPaginator } from "../../lib/client/paginated-list";
-  const cards = [
-    ...document.querySelectorAll<HTMLElement>("[data-library-category]"),
-  ];
-  const paginator = createPaginator({
-    allItems: cards,
-    pageSize: 8,
+  createPaginator({
+    allItems: [...document.querySelectorAll<HTMLElement>("[data-library-item]")],
+    pageSize: 9,
     loadMoreWrap: document.querySelector("[data-library-more]"),
     loadMoreButton: document.querySelector("[data-library-more-button]"),
     loadMoreRemaining: document.querySelector("[data-library-remaining]"),
-  });
-  paginator.reset();
-  for (const button of document.querySelectorAll<HTMLButtonElement>(
-    "[data-category]",
-  ))
-    button.addEventListener("click", () => {
-      const category = button.dataset.category;
-      for (const b of document.querySelectorAll("[data-category]"))
-        b.setAttribute("aria-pressed", String(b === button));
-      paginator.reset(
-        cards.filter(
-          (card) => !category || card.dataset.libraryCategory === category,
-        ),
-      );
-    });
+  }).reset();
 </script>

@@ -5,11 +5,11 @@ description: Create or revise BORIDO (OL 코어) Markdown and content assets in 
 
 # OL Content Authoring
 
-Latest update: 2026-10-30.
+Latest update: 2026-10-31.
 
 1. Read `.agents/references/ol-home-content-management-manual.md` and `src/content.config.ts` before changing authoring rules.
 2. Use `src/content/` as the existing Obsidian vault. Do not install a CMS or edit personal `.obsidian` state.
-3. Place TEXT at `text/category/work/section/document.md`, STORY at `story/series/part/document.md`, BLOG under `blog/`, and public permanent pages under `pages/`.
+3. Place TEXT at `text/category/work/section/document.md`, STORY at `story/category/series/part/document.md`, BLOG under `blog/`, and public permanent pages under `pages/`.
 4. Korean author-facing names are supported. Use optional numeric prefixes for order, such as `001.중관부`. Keep code and internal guide filenames ASCII.
 5. Prefer title/H1 and body only. `index.md` introductions and YAML are optional. Number-only filenames require an H1 title.
 6. Use the optional fields supported by the current schema/validator for exceptions only. Never add old hierarchy/order/entity/ontology fields or `prefixTags`. Tags are optional strings; slash prefixes are not required.
@@ -21,6 +21,10 @@ Latest update: 2026-10-30.
 12. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
 ## 수정 변경사항
+
+### 2026-10-31
+
+- Added the top-level STORY category folder; TEXT/STORY use category cards before series lists. Empty category folders may use `.gitkeep`.
 
 ### 2026-10-30
 

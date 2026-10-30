@@ -15,48 +15,6 @@
       "hash": "8efad741dc2f9f3d5c62f8130267fdb64407259d086fe16be66ef14942401524",
       "seriesKey": "text/900.기존문헌/050.교리연구"
     },
-    "story/010.붓다 스토리/index.md": {
-      "id": "story-3777d2d62fba28",
-      "url": "/story/buddha-story/",
-      "date": "2026-10-30",
-      "hash": "ba2f38290127061ca61412590c4a31cdbd4ee737f8a6c336b514e70009e10ba0",
-      "seriesKey": "story/010.붓다 스토리"
-    },
-    "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md": {
-      "id": "story-95f5f8336bc028",
-      "url": "/story/buddha-story/part-1/01-sumedha-begins-to-ask/",
-      "date": "2026-06-18",
-      "hash": "535c335c1a517942add80df1fb2e34c5c3aa586f942e78b849a6f172fd88015e",
-      "seriesKey": "story/010.붓다 스토리"
-    },
-    "story/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md": {
-      "id": "story-7cedcd75d099c2",
-      "url": "/story/buddha-story/part-1/02-sumedha-finds-new-path/",
-      "date": "2026-06-18",
-      "hash": "7ddb4bf0734045c05d2cb2f50014eefc18b4c355109b8f82508972d74af46ece",
-      "seriesKey": "story/010.붓다 스토리"
-    },
-    "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md": {
-      "id": "story-965f426ee95d39",
-      "url": "/story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest/",
-      "date": "2026-06-18",
-      "hash": "4dd65e68d7750eb527cb1a5dda189536750a4d4d93875d26baef77aab9d42375",
-      "seriesKey": "story/010.붓다 스토리"
-    },
-    "story/020.담마빠다 스토리/index.md": {
-      "id": "story-0500c29e3f00b7",
-      "url": "/story/dhammapada-story/",
-      "date": "2026-10-30",
-      "hash": "09590ce63e72ccefd841161ab67d20f54bfaae30f7b368c73ec8ce71858f3b3f",
-      "seriesKey": "story/020.담마빠다 스토리"
-    },
-    "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md": {
-      "id": "story-d6ad6b13db1441",
-      "url": "/story/dhammapada-story/part-1/01-cakkhupala/",
-      "date": "2026-06-26",
-      "hash": "23b578c9323cd1d002b21e6f2c8447f7e963c1b1bb5e639c47cd8062d3d4ee4f",
-      "seriesKey": "story/020.담마빠다 스토리"
-    },
     "story/999.OL STORY — 준비 중/index.md": {
       "id": "story-2d5a327a626ed2",
       "url": "/story/placeholder/",
@@ -462,6 +420,48 @@
       "date": "2026-06-23",
       "hash": "fdfdfcc67aecd918f459e0b19481f55545725a2b991bf547ab74cb764ffdcc77",
       "seriesKey": "blog/standalone"
+    },
+    "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md": {
+      "id": "story-95f5f8336bc028",
+      "url": "/story/buddha-story/part-1/01-sumedha-begins-to-ask/",
+      "date": "2026-06-18",
+      "hash": "535c335c1a517942add80df1fb2e34c5c3aa586f942e78b849a6f172fd88015e",
+      "seriesKey": "story/001.불전문학/010.붓다 스토리"
+    },
+    "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md": {
+      "id": "story-7cedcd75d099c2",
+      "url": "/story/buddha-story/part-1/02-sumedha-finds-new-path/",
+      "date": "2026-06-18",
+      "hash": "7ddb4bf0734045c05d2cb2f50014eefc18b4c355109b8f82508972d74af46ece",
+      "seriesKey": "story/001.불전문학/010.붓다 스토리"
+    },
+    "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md": {
+      "id": "story-965f426ee95d39",
+      "url": "/story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest/",
+      "date": "2026-06-18",
+      "hash": "4dd65e68d7750eb527cb1a5dda189536750a4d4d93875d26baef77aab9d42375",
+      "seriesKey": "story/001.불전문학/010.붓다 스토리"
+    },
+    "story/001.불전문학/010.붓다 스토리/index.md": {
+      "id": "story-3777d2d62fba28",
+      "url": "/story/buddha-story/",
+      "date": "2026-10-30",
+      "hash": "ba2f38290127061ca61412590c4a31cdbd4ee737f8a6c336b514e70009e10ba0",
+      "seriesKey": "story/001.불전문학/010.붓다 스토리"
+    },
+    "story/001.불전문학/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md": {
+      "id": "story-d6ad6b13db1441",
+      "url": "/story/dhammapada-story/part-1/01-cakkhupala/",
+      "date": "2026-06-26",
+      "hash": "23b578c9323cd1d002b21e6f2c8447f7e963c1b1bb5e639c47cd8062d3d4ee4f",
+      "seriesKey": "story/001.불전문학/020.담마빠다 스토리"
+    },
+    "story/001.불전문학/020.담마빠다 스토리/index.md": {
+      "id": "story-0500c29e3f00b7",
+      "url": "/story/dhammapada-story/",
+      "date": "2026-10-30",
+      "hash": "09590ce63e72ccefd841161ab67d20f54bfaae30f7b368c73ec8ce71858f3b3f",
+      "seriesKey": "story/001.불전문학/020.담마빠다 스토리"
     }
   },
   "folders": {
@@ -533,6 +533,18 @@
     "text/001.중관부/001.대승현론": {
       "title": "대승현론",
       "url": "/text/library/57e84aa08ef835/"
+    },
+    "story/001.불전문학": {
+      "title": "불전문학",
+      "url": "/story/buddha-story/"
+    },
+    "story/001.불전문학/010.붓다 스토리": {
+      "title": "붓다 스토리",
+      "url": "/story/buddha-story/"
+    },
+    "story/001.불전문학/020.담마빠다 스토리": {
+      "title": "담마빠다 스토리",
+      "url": "/story/dhammapada-story/"
     }
   },
   "redirects": {
@@ -591,12 +603,12 @@
     "text/doctrine-research/part/01-buddhist-worldview-two-perspectives.md": "blog/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
     "text/doctrine-research/part/02-middle-way-attitude-beyond-scientism.md": "blog/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
     "text/doctrine-research/part/03-anuttara-samma-sambodhi.md": "blog/부처님의 깨달음 - 무상정등정각에 대하여.md",
-    "story/buddha-story/index.md": "story/010.붓다 스토리/index.md",
-    "story/buddha-story/part-1/01-sumedha-begins-to-ask.md": "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md",
-    "story/buddha-story/part-1/02-sumedha-finds-new-path.md": "story/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md",
-    "story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest.md": "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
-    "story/dhammapada-story/index.md": "story/020.담마빠다 스토리/index.md",
-    "story/dhammapada-story/part-1/01-cakkhupala.md": "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
+    "story/buddha-story/index.md": "story/001.불전문학/010.붓다 스토리/index.md",
+    "story/buddha-story/part-1/01-sumedha-begins-to-ask.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md",
+    "story/buddha-story/part-1/02-sumedha-finds-new-path.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md",
+    "story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
+    "story/dhammapada-story/index.md": "story/001.불전문학/020.담마빠다 스토리/index.md",
+    "story/dhammapada-story/part-1/01-cakkhupala.md": "story/001.불전문학/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
     "story/placeholder/index.md": "story/999.OL STORY — 준비 중/index.md",
     "design/bodhi-tree-indramang/index.md": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
     "design/bodhi-tree-indramang/assets/Bodhi-Tree-Indramang.PNG": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/assets/Bodhi-Tree-Indramang.PNG",
@@ -645,6 +657,12 @@
     "text/900.기존문헌/040.수행연구/010.기초수행/001.몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md": "blog/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
     "text/900.기존문헌/050.교리연구/010.불교세계관/001.불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md": "blog/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
     "text/900.기존문헌/050.교리연구/010.불교세계관/002.과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md": "blog/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
-    "text/900.기존문헌/050.교리연구/010.불교세계관/003.부처님의 깨달음 - 무상정등정각에 대하여.md": "blog/부처님의 깨달음 - 무상정등정각에 대하여.md"
+    "text/900.기존문헌/050.교리연구/010.불교세계관/003.부처님의 깨달음 - 무상정등정각에 대하여.md": "blog/부처님의 깨달음 - 무상정등정각에 대하여.md",
+    "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md",
+    "story/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md",
+    "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
+    "story/010.붓다 스토리/index.md": "story/001.불전문학/010.붓다 스토리/index.md",
+    "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md": "story/001.불전문학/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
+    "story/020.담마빠다 스토리/index.md": "story/001.불전문학/020.담마빠다 스토리/index.md"
   }
 }

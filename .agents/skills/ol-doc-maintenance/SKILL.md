@@ -27,7 +27,7 @@ description: Maintain BORIDO (OL 코어) manuals, brand documents, AGENTS.md, RE
 
 - Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
 - `src/content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
-- TEXT uses category/work/material-section/item folders; order comes from numeric prefixes and title/body writing is supported without YAML.
+- TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item; both menu roots show category cards before series lists; order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `src/content.config.ts` defines normalized data; `scripts/lib/content.mjs` shares source interpretation with validation.
 - `content-registry.json` is committed source metadata for stable URLs/dates/paths. `public/generated/content/` is derived output and is not committed.
@@ -64,6 +64,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs public src README.md AGENTS.md .agen
 ```
 
 ## 수정 변경사항
+
+### 2026-10-31
+
+- Added STORY categories and shared category-card navigation.
 
 ### 2026-10-30
 

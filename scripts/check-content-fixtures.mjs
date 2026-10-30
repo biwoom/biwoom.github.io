@@ -5,6 +5,8 @@ import os from "node:os";
 import path from "node:path";
 import {
   nameInfo,
+  categoryFolders,
+  hash,
   compareNames,
   normalize,
   folderParts,
@@ -153,4 +155,60 @@ test("publication date is not assigned to an explicitly unpublished new document
     assert.equal(prepare(root).files[rel].date, null);
     fs.writeFileSync(p, "# 제목");
     assert.match(prepare(root).files[rel].date, /^\d{4}-\d{2}-\d{2}$/);
+  }));
+
+test("STORY categories preserve legacy series and document identity after moving", () =>
+  fixture((root) => {
+    const oldSeries = "story/010.붓다 스토리";
+    const oldDoc = `${oldSeries}/010.파트/001.첫 이야기.md`;
+    const intro = "# 붓다 스토리\n\n소개";
+    const body = "# 첫 이야기\n\n본문";
+    write(root, `${oldSeries}/index.md`, intro);
+    write(root, oldDoc, body);
+    const registry = {
+      version: 1, aliases: {}, redirects: {},
+      folders: { [oldSeries]: { title: "붓다 스토리", url: "/story/buddha-story/" } },
+      files: {
+        [`${oldSeries}/index.md`]: { id: "intro", url: "/story/buddha-story/", date: "2026-01-01", hash: hash(intro), seriesKey: oldSeries },
+        [oldDoc]: { id: "chapter", url: "/story/buddha-story/first/", date: "2026-01-02", hash: hash(body), seriesKey: oldSeries },
+      },
+    };
+    fs.writeFileSync(path.join(root, "content-registry.json"), JSON.stringify(registry));
+    const newSeries = "story/001.불전문학/010.붓다 스토리";
+    fs.mkdirSync(path.join(root, "src/content/story/001.불전문학"), { recursive: true });
+    fs.renameSync(path.join(root, "src/content", oldSeries), path.join(root, "src/content", newSeries));
+    const after = prepare(root);
+    const newDoc = oldDoc.replace(oldSeries, newSeries);
+    const normal = normalize(newDoc, body, after, root);
+    assert.equal(normal.category, "불전문학");
+    assert.equal(normal.categoryOrder, 1);
+    assert.equal(normal.series, "붓다 스토리");
+    assert.equal(normal.part, "파트");
+    assert.equal(normal.seriesUrl, "/story/buddha-story/");
+    assert.equal(normal.url, "/story/buddha-story/first/");
+    assert.equal(after.files[newDoc].id, "chapter");
+    assert.equal(after.files[newDoc].date, "2026-01-02");
+    assert.equal(after.files[`${newSeries}/index.md`].url, normal.seriesUrl);
+    assert.deepEqual(validate(root), []);
+  }));
+test("empty categories are sorted, retain their labels, and exclude reserved folders", () =>
+  fixture((root) => {
+    for (const name of ["002.선시(禪詩)", "001.불전문학", "_drafts", ".obsidian", "assets", "_assets"])
+      fs.mkdirSync(path.join(root, "src/content/story", name), { recursive: true });
+    const categories = categoryFolders("story", root);
+    assert.deepEqual(categories.map((category) => category.label), ["불전문학", "선시(禪詩)"]);
+    assert.ok(categories.every((category) => /^\/story\/category\/[a-f0-9]+\/$/.test(category.url)));
+    assert.equal(new Set(categories.map((category) => category.url)).size, 2);
+  }));
+test("STORY requires category/series/part/document and keeps private series hidden", () =>
+  fixture((root) => {
+    const series = "story/001.불전문학/010.시리즈";
+    const doc = `${series}/010.파트/001.문서.md`;
+    write(root, `${series}/index.md`, "---\npublished: false\n---\n# 비공개 시리즈");
+    write(root, doc, "# 숨긴 이야기");
+    const registry = prepare(root);
+    assert.equal(normalize(doc, "# 숨긴 이야기", registry, root).published, false);
+    assert.deepEqual(validate(root), []);
+    write(root, "story/010.옛시리즈/010.파트/001.이전 구조.md", "# 이전 구조");
+    assert.ok(validate(root).some((error) => error.includes("expected category/work/section/document")));
   }));

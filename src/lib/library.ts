@@ -1,5 +1,5 @@
 import { getCollection } from "astro:content";
-import { compareNames } from "../../scripts/lib/content.mjs";
+import { categoryFolders, compareNames } from "../../scripts/lib/content.mjs";
 export type Section = "text" | "story";
 export type Entry = Awaited<ReturnType<typeof getDocuments>>[number];
 export async function getDocuments(section: Section) {
@@ -40,6 +40,7 @@ export async function getLibrary(section: Section) {
         label: first.data.series,
         url: first.data.seriesUrl,
         category: first.data.category,
+        categoryKey: key.split("/").slice(0, 2).join("/"),
         categoryOrder: first.data.categoryOrder,
         description: meta?.data.description ?? "",
         meta,
@@ -59,3 +60,12 @@ export function entryUrl(entry: { data: { url: string } }) {
 }
 
 export type Library = Awaited<ReturnType<typeof getLibrary>>[number];
+
+export { categoryUrl } from "../../scripts/lib/content.mjs";
+export function getCategories(section: Section, library: Library[]) {
+  return categoryFolders(section).map((category) => {
+    const series = library.filter((item) => item.categoryKey === category.key);
+    return { ...category, series, count: series.reduce((sum, item) => sum + item.count, 0) };
+  });
+}
+export type Category = ReturnType<typeof getCategories>[number];

@@ -162,25 +162,34 @@ export function referenceTarget(source, url, registry) {
   if (target === ".." || target.startsWith("../")) return null;
   return resolveAlias(target, registry);
 }
+export function categoryUrl(key) {
+  return `/${key.split("/")[0]}/category/${shortId(key)}/`;
+}
+// Read folders as well as published content so an empty category remains visible.
+export function categoryFolders(collection, root = process.cwd()) {
+  if (!["text", "story"].includes(collection)) return [];
+  const base = path.join(root, "src/content", collection);
+  if (!fs.existsSync(base)) return [];
+  return fs.readdirSync(base, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && !/^[._]/.test(entry.name) && entry.name !== "assets")
+    .sort((a, b) => compareNames(a.name, b.name))
+    .map((entry) => {
+      const key = `${collection}/${entry.name}`;
+      return { key, label: nameInfo(entry.name).label, url: categoryUrl(key) };
+    });
+}
 export function folderParts(relative) {
   const [collection, ...segments] = relative.split("/");
   const dirs = segments.slice(0, -1);
-  if (collection === "text" && dirs.length >= 3)
+  if (["text", "story"].includes(collection) && dirs.length >= 3)
     return {
       collection,
       category: dirs[0],
       seriesPath: [collection, ...dirs.slice(0, 2)].join("/"),
       part: dirs[2],
     };
-  if (collection === "story" && dirs.length >= 1)
-    return {
-      collection,
-      category: "",
-      seriesPath: [collection, dirs[0]].join("/"),
-      part: dirs[1] ?? "",
-    };
   if (
-    collection === "text" &&
+    ["text", "story"].includes(collection) &&
     dirs.length === 2 &&
     path.basename(relative) === "index.md"
   )

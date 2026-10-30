@@ -2,6 +2,8 @@
 import OLTagResultsModal from "./OLTagResultsModal.astro";
 import { getPublicTags, groupTagsByPrefix } from "../../lib/tags";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { categoryUrl } from "../../lib/library";
+import { url } from "../../lib/url";
 import type { Library, Section } from "../../lib/library";
 interface Props {
   series: Library;
@@ -21,6 +23,10 @@ const tagGroups = groupTagsByPrefix(
 >
   <main class="ol-story-reader-page">
     <section class="ol-story-series-hero ol-story-series-hero--centered">
+      <nav class="ol-text-breadcrumb ol-library-breadcrumb" aria-label="현재 위치">
+        <a href={url(`/${section}/`)}>{label}</a>
+        {series.category && <><span>/</span><a href={url(categoryUrl(series.categoryKey))}>{series.category}</a></>}
+      </nav>
       <span class="ol-section-label">
         {series.category || `${label} SERIES`}
       </span>
@@ -182,3 +188,7 @@ const tagGroups = groupTagsByPrefix(
   import { initTagResultIndexes } from "../../lib/client/content-filters";
   initTagResultIndexes();
 </script>
+
+<style>
+  .ol-library-breadcrumb { justify-content: center; margin-bottom: 16px; }
+</style>

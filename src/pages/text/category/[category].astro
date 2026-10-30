@@ -1,0 +1,13 @@
+---
+import LibraryIndex from "../../../components/common/LibraryIndex.astro";
+import { getCategories, getLibrary } from "../../../lib/library";
+export async function getStaticPaths() {
+  const library = await getLibrary("text");
+  return getCategories("text", library).map((category) => ({
+    params: { category: category.url.split("/").at(-2) },
+    props: { category },
+  }));
+}
+const { category } = Astro.props;
+---
+<LibraryIndex section="text" category={category} />

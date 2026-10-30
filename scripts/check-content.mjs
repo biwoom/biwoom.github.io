@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { visit } from "unist-util-visit";
 import { prepare } from "./prepare-content.mjs";
-import { walk, normalize, parse, markdownPattern, mediaPattern, isIntroduction, markdownTree, referenceTarget, isPublicSource } from "./lib/content.mjs";
+import { walk, normalize, parse, markdownPattern, mediaPattern, isIntroduction, markdownTree, referenceTarget, isPublicSource, categoryFolders } from "./lib/content.mjs";
 export function validate(root = process.cwd()) {
   const errors = [], base = path.join(root, "src/content");
   let registry;
@@ -19,8 +19,7 @@ export function validate(root = process.cwd()) {
       const source = markdownPattern.test(file) ? fs.readFileSync(file,"utf8") : "";
       const {data,body} = parse(source), normal = normalize(relative,source,registry,root);
       const info = relative.split("/"), intro = isIntroduction(relative);
-      if (info[0] === "text" && !(info.length === 5 && path.basename(file) !== "index.md" || intro)) errors.push(`${relative}: expected category/work/section/document or category/work/index.md`);
-      if (info[0] === "story" && !(info.length === 4 && path.basename(file) !== "index.md" || intro)) errors.push(`${relative}: expected series/part/document or series/index.md`);
+      if (["text", "story"].includes(info[0]) && !(info.length === 5 && path.basename(file) !== "index.md" || intro)) errors.push(`${relative}: expected category/work/section/document or category/work/index.md`);
       if (!normal.title?.trim() || /^\d+$/.test(normal.title)) errors.push(`${relative}: add an H1 title or descriptive filename`);
       if (Number.isNaN(normal.date.valueOf())) errors.push(`${relative}: invalid date`);
       const published = isPublicSource(relative,registry,root);
@@ -46,6 +45,8 @@ export function validate(root = process.cwd()) {
       if (data.thumbnailAsset) checkReference(data.thumbnailAsset);
     } catch(error) { errors.push(`${relative}: ${error.message}`); }
   }
+  for (const collection of ["text", "story"])
+    for (const category of categoryFolders(collection, root)) claim(category.url, category.key);
   for (const route of ["/", "/text/", "/story/", "/blog/", "/partners/", "/404/"]) if (urls.has(route)) errors.push(`Content collides with reserved route ${route}`);
   for (const [from,to] of Object.entries(registry.redirects)) {
     if (urls.has(from)) errors.push(`Redirect collides with public URL ${from}`);

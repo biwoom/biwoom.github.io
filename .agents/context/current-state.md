@@ -24,9 +24,11 @@ Last updated: 2026-10-31
 
 - `src/content/` is the user's Obsidian vault and content source. Vault CMS/Front Matter/Decap CMS are not used.
 - Public content menus: TEXT/STORY/BLOG. HOME remains the landing page and `pages` contains the brand document.
-- TEXT path: category/work/material-section/item. STORY path: series/part/item. `index.md` is an optional introduction.
+- TEXT path: category/work/material-section/item. STORY path: category/series/part/item. `index.md` is an optional introduction.
+- TEXT/STORY menu roots display top-level folders as three-column category cards, linking to category-specific series lists. Empty folders remain visible; `.gitkeep` retains empty categories in Git. Category routes use ASCII hashes; document/series registry URLs and dates remain unchanged.
 - Numeric name prefixes determine order and are hidden in labels. Translation and research are independent.
 - TEXT/STORY share series links and expandable lists, not actual tab panels. Both individual document views now use the same `StoryReader` and STORY styling by explicit user request. Breadcrumbs/search section/category/URLs remain collection-specific; TEXT displays material-section/item labels. The unused TEXT-only reader/layout have been removed. BLOG retains its dedicated original list/detail templates.
+- TEXT/STORY individual readers span the available viewport width with a left document list and a wide article; prose is capped at 1200px. The article toolbar aligns to the right of the document header, whose title is capped at 1200px, and stays sticky below the desktop site/part navigation and shows a desktop 목차 label beside its icon. It opens one right-edge TOC drawer on desktop/mobile; no right TOC column or separate mobile TOC remains. Native dialog handles focus containment, with close/Escape/backdrop dismissal and active H2/H3 indication.
 - YAML-free Markdown is supported. Title priority: optional title override → first H1 → descriptive filename. Summary and reading time are computed.
 - `scripts/lib/content.mjs` provides shared parsing/normalization, with `src/content.config.ts` defining normalized schema and loaders.
 - `content-registry.json` is committed, auto-maintained source metadata for stable URLs/dates/previous paths. `scripts/prepare-content.mjs` updates it.
@@ -46,6 +48,8 @@ Last updated: 2026-10-31
 - Subsequent deletion and migration status: `.agents/references/content-deletion-followup.json`.
 
 ## Known Limits and Follow-ups
+
+- Content engine code changes require a full development-process restart. A stale native parser can keep rewriting registry series keys and merge a category into a single series even when the new static build is correct. Runtime category checks must assert actual series titles/counts. The previous root/category HTTP check inspected only view markers and missed this stale grouping.
 
 - Transition audit: `.agents/references/obsidian-transition-audit.md`. The reported defects are fixed in the follow-up implementation: common asset publication checks, canonical introduction URLs, safe TOC removal, manual alias flattening, full collection watcher refresh, typed author input and shared rights rendering. Current verification is recorded in work-log.
 

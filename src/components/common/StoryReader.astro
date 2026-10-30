@@ -5,6 +5,7 @@ import MaterialBody from "./MaterialBody.astro";
 import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import {
+  categoryUrl,
   entryUrl,
   type Entry,
   type Library,
@@ -46,7 +47,7 @@ const pagefindBreadcrumb = [
 ]
   .filter(Boolean)
   .join(" · ");
-const hasDesktopToc = headings.some(
+const hasToc = headings.some(
   (heading) => heading.depth === 2 || heading.depth === 3,
 );
 ---
@@ -75,7 +76,7 @@ const hasDesktopToc = headings.some(
         {entry.data.category && (
           <>
             <span>/</span>
-            <span>{entry.data.category}</span>
+            <a href={url(categoryUrl(series.categoryKey))}>{entry.data.category}</a>
           </>
         )}
         <span>/</span>
@@ -115,12 +116,7 @@ const hasDesktopToc = headings.some(
     )}
 
     <section class="ol-story-reader-shell">
-      <div
-        class:list={[
-          "ol-story-part-layout",
-          hasDesktopToc && "ol-story-part-layout--with-side",
-        ]}
-      >
+      <div class="ol-story-part-layout">
         <aside class="ol-story-part-sidebar" data-pagefind-ignore>
           <div class="ol-story-part-sidebar-head">
             <span>{section === "text" ? "자료 구분" : "PART"}</span>
@@ -147,16 +143,19 @@ const hasDesktopToc = headings.some(
         </aside>
 
         <article class="ol-story-part-content" data-pagefind-body>
-          <header class="ol-story-part-content-head">
-            <div>
-              <span class="ol-section-label">
-                {currentPart?.label ?? entry.data.part} ·{" "}
-                {section === "text" ? "자료" : "CHAPTER"}{" "}
-                {String(chapterNumber).padStart(2, "0")}
-              </span>
-              <h2 class="ol-kr">{entry.data.title}</h2>
-            </div>
+          <div class="ol-reader-toolbar">
             <div class="ol-story-part-tools">
+              {hasToc && (
+                <button class="ol-text-tool-btn ol-reader-toc-trigger" type="button"
+                  aria-label="문서 목차 열기" title="문서 목차" aria-haspopup="dialog"
+                  aria-expanded="false" aria-controls="ol-reader-toc" data-reader-toc-trigger>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" />
+                  </svg>
+                  <span class="ol-text-tool-label ol-reader-toc-label">목차</span>
+                </button>
+              )}
               <div
                 class="ol-copy-dropdown"
                 data-copy-dropdown
@@ -239,68 +238,17 @@ const hasDesktopToc = headings.some(
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div class="ol-story-mobile-toc" data-story-mobile-toc>
-                <button
-                  class="ol-text-tool-btn"
-                  type="button"
-                  aria-expanded="false"
-                >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                  >
-                    <line x1="8" y1="6" x2="21" y2="6" />
-                    <line x1="8" y1="12" x2="21" y2="12" />
-                    <line x1="8" y1="18" x2="21" y2="18" />
-                    <circle cx="4" cy="6" r="1" />
-                    <circle cx="4" cy="12" r="1" />
-                    <circle cx="4" cy="18" r="1" />
-                  </svg>
-                  <span class="sr-only">On this page</span>
-                </button>
-                <div class="ol-story-mobile-toc-panel">
-                  <div
-                    class="ol-story-mobile-info-links ol-story-mobile-info-links--toc"
-                    data-mobile-story-toc
-                  ></div>
-                </div>
-              </div>
-
-              <div class="ol-story-mobile-copy" data-story-mobile-copy>
-                <button
-                  class="ol-text-tool-btn"
-                  type="button"
-                  aria-expanded="false"
-                >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                  >
-                    <rect x="9" y="9" width="11" height="11" rx="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                  <span class="sr-only">Copy</span>
-                </button>
-                <div class="ol-story-mobile-copy-panel">
-                  <button type="button" data-copy-kind="link">
-                    링크 복사
-                  </button>
-                  <button type="button" data-copy-kind="markdown">
-                    마크다운 복사
-                  </button>
-                </div>
-              </div>
+          <header class="ol-story-part-content-head">
+            <div>
+              <span class="ol-section-label">
+                {currentPart?.label ?? entry.data.part} ·{" "}
+                {section === "text" ? "자료" : "CHAPTER"}{" "}
+                {String(chapterNumber).padStart(2, "0")}
+              </span>
+              <h2 class="ol-kr">{entry.data.title}</h2>
             </div>
           </header>
 
@@ -367,54 +315,27 @@ const hasDesktopToc = headings.some(
             </nav>
           )}
         </article>
-
-        {hasDesktopToc && (
-          <aside
-            class="ol-doc-side-stack ol-doc-side-stack--story"
-            data-pagefind-ignore
-          >
-            {hasDesktopToc && (
-              <div
-                class="ol-text-toc-dropdown ol-doc-side-toc ol-doc-side-toc--desktop"
-                data-story-toc-dropdown
-              >
-                <button
-                  class="ol-doc-side-toc-trigger"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="ol-story-desktop-toc-panel"
-                  data-story-desktop-toc-trigger
-                >
-                  <span class="ol-doc-side-toc-head">
-                    <span class="ol-meta-label">On this page</span>
-                    <strong data-story-desktop-toc-count>0</strong>
-                  </span>
-                  <svg
-                    class="ol-doc-side-toc-chevron"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6"></path>
-                  </svg>
-                </button>
-                <div
-                  class="ol-text-toc-panel ol-text-toc-panel--desktop"
-                  id="ol-story-desktop-toc-panel"
-                  hidden
-                >
-                  <ul data-story-toc-list></ul>
-                </div>
-              </div>
-            )}
-          </aside>
-        )}
       </div>
     </section>
+    {hasToc && (
+      <dialog id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore>
+        <section class="ol-reader-toc-panel">
+          <header class="ol-reader-toc-head">
+            <h2 id="ol-reader-toc-title">문서 목차</h2>
+            <button type="button" class="ol-text-tool-btn" aria-label="목차 닫기" data-reader-toc-close autofocus>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="m6 6 12 12M6 18 18 6" />
+              </svg>
+            </button>
+          </header>
+          <nav aria-label="문서 내 제목"><ul data-story-toc-list>
+            {headings.filter((heading) => heading.depth === 2 || heading.depth === 3).map((heading) => (
+              <li><a href={`#${heading.slug}`} data-level={heading.depth}>{heading.text}</a></li>
+            ))}
+          </ul></nav>
+        </section>
+      </dialog>
+    )}
   </main>
 </BaseLayout>
 
@@ -431,151 +352,78 @@ const hasDesktopToc = headings.some(
     return normalizeMarkdown(`# ${title}\n\n${body}`);
   };
 
-  const renderToc = () => {
-    const headings = Array.from(
-      document.querySelectorAll<HTMLHeadingElement>(
-        ".ol-prose h2, .ol-prose h3",
-      ),
-    );
-    const desktopList = document.querySelector<HTMLElement>(
-      "[data-story-toc-list]",
-    );
-    const desktopTrigger = document.querySelector<HTMLButtonElement>(
-      "[data-story-desktop-toc-trigger]",
-    );
-    const desktopCount = document.querySelector<HTMLElement>(
-      "[data-story-desktop-toc-count]",
-    );
-    const desktopPanel = document.getElementById("ol-story-desktop-toc-panel");
-    const mobileList = document.querySelector<HTMLElement>(
-      "[data-mobile-story-toc]",
-    );
-    const desktopDropdown = document.querySelector<HTMLElement>(
-      "[data-story-toc-dropdown]",
-    );
-    const mobileToc = document.querySelector<HTMLElement>(
-      "[data-story-mobile-toc]",
-    );
-    if (!desktopList || !mobileList) return;
-
-    desktopList.innerHTML = "";
-    mobileList.innerHTML = "";
-    if (headings.length === 0) {
-      if (desktopDropdown) desktopDropdown.style.display = "none";
-      if (mobileToc) mobileToc.hidden = true;
-      return;
-    }
-
-    if (desktopCount) desktopCount.textContent = String(headings.length);
-
-    headings.forEach((heading, index) => {
-      if (!heading.id) heading.id = `story-heading-${index}`;
-      const desktopItem = document.createElement("li");
-      const desktopLink = document.createElement("a");
-      desktopLink.href = `#${heading.id}`;
-      desktopLink.textContent = heading.textContent ?? "";
-      desktopLink.dataset.level = heading.tagName === "H3" ? "3" : "2";
-      desktopItem.appendChild(desktopLink);
-      desktopList.appendChild(desktopItem);
-
-      const mobileLink = document.createElement("a");
-      mobileLink.href = `#${heading.id}`;
-      mobileLink.dataset.level = desktopLink.dataset.level;
-      const meta = document.createElement("span");
-      meta.textContent = heading.tagName;
-      const label = document.createElement("strong");
-      label.textContent = heading.textContent ?? "";
-      mobileLink.append(meta, label);
-      mobileList.appendChild(mobileLink);
-    });
-
-    const syncActiveLinks = (activeId: string) => {
-      document
-        .querySelectorAll<HTMLAnchorElement>(
-          "[data-story-toc-list] a, [data-mobile-story-toc] a",
-        )
-        .forEach((link) => {
-          const isActive = link.getAttribute("href") === `#${activeId}`;
-          link.classList.toggle("active", isActive);
-          if (isActive && desktopPanel && !desktopPanel.hidden) {
-            link.scrollIntoView({ block: "nearest" });
-          }
-        });
+  const initToc = () => {
+    const drawer = document.querySelector<HTMLDialogElement>("#ol-reader-toc");
+    const trigger = document.querySelector<HTMLButtonElement>("[data-reader-toc-trigger]");
+    if (!drawer || !trigger) return;
+    const links = Array.from(drawer.querySelectorAll<HTMLAnchorElement>("[data-story-toc-list] a"));
+    const headings = links.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((heading): heading is HTMLElement => heading !== null);
+    let closing = false;
+    let previousOverflow = "";
+    const closeDrawer = (destination?: HTMLElement) => {
+      if (!drawer.open || closing) return;
+      closing = true;
+      drawer.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.setTimeout(() => {
+        drawer.close();
+        document.body.style.overflow = previousOverflow;
+        closing = false;
+        trigger.focus({ preventScroll: true });
+        if (destination) {
+          window.location.hash = encodeURIComponent(destination.id);
+          destination.scrollIntoView({ block: "start" });
+        }
+      }, reducedMotion ? 0 : 200);
     };
-
-    const visibleHeadings = new Set<string>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((item) => {
-          const id = (item.target as HTMLElement).id;
-          if (!id) return;
-          if (item.isIntersecting) visibleHeadings.add(id);
-          else visibleHeadings.delete(id);
-        });
-
-        const activeHeading =
-          headings.find((heading) => visibleHeadings.has(heading.id)) ??
-          headings.find(
-            (heading) => heading.getBoundingClientRect().top >= 0,
-          ) ??
-          headings[headings.length - 1];
-
-        if (activeHeading) syncActiveLinks(activeHeading.id);
-      },
-      {
-        rootMargin: "-20% 0px -65% 0px",
-        threshold: [0, 1],
-      },
-    );
-
-    headings.forEach((heading) => observer.observe(heading));
-    syncActiveLinks(headings[0].id);
-
-    desktopTrigger?.addEventListener("click", () => {
-      if (!desktopPanel) return;
-      const expanded = desktopTrigger.getAttribute("aria-expanded") === "true";
-      desktopTrigger.setAttribute("aria-expanded", String(!expanded));
-      desktopPanel.hidden = expanded;
+    trigger.addEventListener("click", () => {
+      if (drawer.open) { closeDrawer(); return; }
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      drawer.showModal();
+      trigger.setAttribute("aria-expanded", "true");
+      requestAnimationFrame(() => requestAnimationFrame(() => drawer.classList.add("is-open")));
     });
-  };
-
-  const closeMobilePanels = (except?: "chapters" | "toc" | "copy") => {
-    if (except !== "chapters")
-      document
-        .querySelector<HTMLButtonElement>(
-          "[data-story-mobile-chapters] > button",
-        )
-        ?.setAttribute("aria-expanded", "false");
-    if (except !== "toc")
-      document
-        .querySelector<HTMLButtonElement>("[data-story-mobile-toc] > button")
-        ?.setAttribute("aria-expanded", "false");
-    if (except !== "copy")
-      document
-        .querySelector<HTMLButtonElement>("[data-story-mobile-copy] > button")
-        ?.setAttribute("aria-expanded", "false");
-  };
-
-  document
-    .querySelectorAll<HTMLElement>(
-      "[data-story-mobile-chapters], [data-story-mobile-toc], [data-story-mobile-copy]",
-    )
-    .forEach((dropdown) => {
-      const trigger =
-        dropdown.querySelector<HTMLButtonElement>(":scope > button");
-      if (!trigger) return;
-      trigger.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const kind = dropdown.hasAttribute("data-story-mobile-chapters")
-          ? "chapters"
-          : dropdown.hasAttribute("data-story-mobile-toc")
-            ? "toc"
-            : "copy";
-        const open = trigger.getAttribute("aria-expanded") === "true";
-        closeMobilePanels(kind);
-        trigger.setAttribute("aria-expanded", String(!open));
+    drawer.querySelector("[data-reader-toc-close]")?.addEventListener("click", () => closeDrawer());
+    drawer.addEventListener("cancel", (event) => { event.preventDefault(); closeDrawer(); });
+    drawer.addEventListener("click", (event) => {
+      if (event.target === drawer) closeDrawer();
+    });
+    links.forEach((link) => link.addEventListener("click", (event) => {
+      const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+      if (!heading) return;
+      event.preventDefault();
+      closeDrawer(heading);
+    }));
+    const syncActiveLinks = () => {
+      const active = headings.filter((heading) => heading.getBoundingClientRect().top <= 160).at(-1) ?? headings[0];
+      links.forEach((link) => {
+        const selected = decodeURIComponent(link.hash.slice(1)) === active?.id;
+        link.classList.toggle("active", selected);
+        if (selected) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
       });
-    });
+    };
+    let scheduled = false;
+    window.addEventListener("scroll", () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => { syncActiveLinks(); scheduled = false; });
+    }, { passive: true });
+    syncActiveLinks();
+  };
+
+  const closeMobilePanels = () => {
+    document.querySelector<HTMLButtonElement>("[data-story-mobile-chapters] > button")
+      ?.setAttribute("aria-expanded", "false");
+  };
+  const chapterTrigger = document.querySelector<HTMLButtonElement>("[data-story-mobile-chapters] > button");
+  chapterTrigger?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    chapterTrigger.setAttribute("aria-expanded", String(chapterTrigger.getAttribute("aria-expanded") !== "true"));
+  });
 
   document
     .querySelectorAll<HTMLElement>("[data-copy-dropdown]")
@@ -625,5 +473,5 @@ const hasDesktopToc = headings.some(
     closeMobilePanels();
   });
 
-  renderToc();
+  initToc();
 </script>
