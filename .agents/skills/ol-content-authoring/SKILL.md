@@ -18,10 +18,16 @@ Latest update: 2026-10-30.
 9. Put listable PDFs/images/HTML directly in a material section. Put supporting files in `assets/` or `_assets/` and use relative Markdown links. Do not add DESIGN keys or generated URLs.
 10. Preserve `content-registry.json`. Moves with unchanged content retain identity; moved-and-edited files may require `npm run content:move -- old new` before preparation. Do not silently assign a replacement URL to a known moved document.
 11. Reuse the shared TEXT/STORY tag modal. Do not create real tab switching; section buttons link to the first item, with expandable full lists.
-12. Run `npm run check`, `npm run typecheck`, and `npm run build`; inspect expected output and assets. Do not commit generated output or upload unless requested.
+12. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
 ## 수정 변경사항
 
 ### 2026-10-30
 
 - Replaced legacy frontmatter/Entity/DESIGN authoring rules with the Obsidian folder-driven workflow.
+
+## Move and publication checks
+
+- Run explicit content:move before preparation for moved-and-edited documents; confirm the old file no longer exists and check older Markdown links after repeated moves. Cross-collection moves require deliberate canonical URL/redirect migration.
+- Private per-document assets belong in a private index.md directory or _drafts; publicly shared attachments remain public.
+- Commit the prepared content-registry.json with source changes; after committing, run npm run check:registry.

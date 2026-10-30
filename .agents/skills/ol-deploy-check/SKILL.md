@@ -15,7 +15,7 @@ git status --short --branch
 ```
 
 2. Confirm root GitHub Pages configuration:
-   - `astro.config.mjs` should set `site: 'https://biwoom.github.io'`.
+   - `astro.config.mjs` should set `site: SITE_URL`, imported from `site-config.mjs` (https://biwoom.github.io).
    - `astro.config.mjs` should not set `base`.
    - `public/robots.txt` should point to `https://biwoom.github.io/sitemap-index.xml`.
    - `src/pages/rss.xml.ts` should not hardcode `/ol-home` or `/biwoom`.
@@ -29,7 +29,11 @@ rg "biwoom.github.io/(ol-home|biwoom)|/ol-home|/biwoom|base:" astro.config.mjs p
 4. Build locally:
 
 ```sh
+npm run check
+npm run typecheck
 npm run build
+npm run check:built
+npm run check:registry
 ```
 
 5. Inspect generated artifacts when relevant:
@@ -53,7 +57,8 @@ curl -I -L https://biwoom.github.io/sitemap-index.xml
 - Sitemap URLs start with `https://biwoom.github.io/`.
 - RSS item links start with `https://biwoom.github.io/`.
 - GitHub Pages Source is GitHub Actions.
-- The deploy workflow on `main` succeeds.
+- Confirm private assets and deleted content are absent from dist.
+- Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.
 
 ## Common Failure Modes
 

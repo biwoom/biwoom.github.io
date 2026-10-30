@@ -103,14 +103,14 @@
       "id": "blog-3d2bfe8ce54cc3",
       "url": "/blog/buddhist-worldview-two-perspectives/",
       "date": "2026-06-11",
-      "hash": "4207e0df086916a426d89b737cc8ae25342c99c49f460cb0a5eb0bc89291d93b",
+      "hash": "7ba6364449a9ccd5798bd9129cb7ad59d8c537667e50172f29a0bcf007f06bba",
       "seriesKey": "blog/standalone"
     },
     "blog/indramang-life-peace-patterns/index.md": {
       "id": "blog-7e5c5458d494c9",
       "url": "/blog/indramang-life-peace-patterns/",
       "date": "2026-06-21",
-      "hash": "adee3b812991eb70894da27ddc059bdf8f5c77556a5697df8c60a280dd5490d2",
+      "hash": "9cc47c26f07f233b0158bb7636e0a06d5cb8e3f8216b94ec917f046a8006443a",
       "seriesKey": "blog/standalone"
     },
     "blog/lamrim-infographic-making/index.md": {
@@ -430,7 +430,7 @@
     },
     "text/001.중관부/001.대승현론/index.md": {
       "id": "text-cf06bceeef0f8e",
-      "url": "/text/read/cf06bceeef0f8e/",
+      "url": "/text/library/57e84aa08ef835/",
       "date": "2026-10-30",
       "seriesKey": "text/001.중관부/001.대승현론",
       "hash": "c4b12e30b9ff22a047ae5922729d7714b0984f45fa809382738b15ad621673c2"
@@ -446,7 +446,7 @@
       "id": "text-1b012d8487de24",
       "url": "/blog/buddhist-worldview-understanding/",
       "date": "2026-06-13",
-      "hash": "47aa009c401b1c23abeea2ac6cd602d19611bb3e1fd3524d919c47c0493a90b4",
+      "hash": "35f55139e779956a13281ca11237cea07a9d0ff3d76e3bae427be9ca1d8743a9",
       "seriesKey": "blog/standalone"
     },
     "blog/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md": {
@@ -581,7 +581,8 @@
     "/text/body-mind-transformation/01-six-steps/": "/blog/six-steps-basic-meditation/",
     "/text/doctrine-research/01-buddhist-worldview-two-perspectives/": "/blog/buddhist-worldview-understanding/",
     "/text/doctrine-research/02-middle-way-attitude-beyond-scientism/": "/blog/middle-way-beyond-scientism/",
-    "/text/doctrine-research/03-anuttara-samma-sambodhi/": "/blog/anuttara-samma-sambodhi/"
+    "/text/doctrine-research/03-anuttara-samma-sambodhi/": "/blog/anuttara-samma-sambodhi/",
+    "/text/read/cf06bceeef0f8e/": "/text/library/57e84aa08ef835/"
   },
   "aliases": {
     "text/body-mind-transformation/index.md": "text/900.기존문헌/040.수행연구/index.md",
@@ -597,23 +598,6 @@
     "story/dhammapada-story/index.md": "story/020.담마빠다 스토리/index.md",
     "story/dhammapada-story/part-1/01-cakkhupala.md": "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
     "story/placeholder/index.md": "story/999.OL STORY — 준비 중/index.md",
-    "blog/atlas-dev-journey/index.md": "blog/atlas-dev-journey/index.md",
-    "blog/atlas-footnotes/index.md": "blog/atlas-footnotes/index.md",
-    "blog/blog-atlas-code-restructuring/index.md": "blog/blog-atlas-code-restructuring/index.md",
-    "blog/body-mind-transformation-infographic/index.md": "blog/body-mind-transformation-infographic/index.md",
-    "blog/book-design-guide/index.md": "blog/book-design-guide/index.md",
-    "blog/buddhist-worldview-two-perspectives/index.md": "blog/buddhist-worldview-two-perspectives/index.md",
-    "blog/indramang-life-peace-patterns/index.md": "blog/indramang-life-peace-patterns/index.md",
-    "blog/lamrim-infographic-making/index.md": "blog/lamrim-infographic-making/index.md",
-    "blog/net-menu-name-card-phase1/index.md": "blog/net-menu-name-card-phase1/index.md",
-    "blog/ol-brand-design/index.md": "blog/ol-brand-design/index.md",
-    "blog/ol-design-works-library-shift/index.md": "blog/ol-design-works-library-shift/index.md",
-    "blog/ol-home-build/index.md": "blog/ol-home-build/index.md",
-    "blog/ol-home-phase4/index.md": "blog/ol-home-phase4/index.md",
-    "blog/ol-home-refactoring-and-pagination/index.md": "blog/ol-home-refactoring-and-pagination/index.md",
-    "blog/ol-home-text-story-reader-update/index.md": "blog/ol-home-text-story-reader-update/index.md",
-    "blog/ol-why/index.md": "blog/ol-why/index.md",
-    "pages/brand.md": "pages/brand.md",
     "design/bodhi-tree-indramang/index.md": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
     "design/bodhi-tree-indramang/assets/Bodhi-Tree-Indramang.PNG": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/assets/Bodhi-Tree-Indramang.PNG",
     "design/diversity-indramang/index.md": "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",

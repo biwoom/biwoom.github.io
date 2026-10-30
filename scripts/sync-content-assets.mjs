@@ -1,22 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
-import { walk, markdownPattern, readRegistry } from "./lib/content.mjs";
-export function syncAssets() {
-  const base = "src/content",
-    target = "public/generated/content";
-  const registry = readRegistry();
+import { walk, markdownPattern, readRegistry, isPublicSource } from "./lib/content.mjs";
+function allFiles(dir) {
+  return fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? allFiles(path.join(dir,e.name)) : [path.join(dir,e.name)]);
+}
+export function syncAssets(root = process.cwd()) {
+  const base = path.join(root, "src/content"),
+    target = path.join(root, "public/generated/content");
+  const registry = readRegistry(root);
   fs.mkdirSync(target, { recursive: true });
   const expected = new Set();
   for (const collection of ["text", "story", "blog", "pages"]) {
     for (const file of walk(`${base}/${collection}`, { assets: true })) {
       if (markdownPattern.test(file)) continue;
       const source = path.relative(base, file).split(path.sep).join("/");
-      if (
-        Object.entries(registry.folders).some(
-          ([folder, meta]) => meta.hidden && source.startsWith(folder + "/"),
-        )
-      )
-        continue;
+      if (!isPublicSource(source, registry, root, { asset: true })) continue;
       const relative = path.relative(base, file),
         output = path.join(target, relative);
       expected.add(path.resolve(output));
@@ -28,7 +26,7 @@ export function syncAssets() {
         fs.copyFileSync(file, output);
     }
   }
-  for (const file of walk(target, { assets: true }))
+  for (const file of allFiles(target))
     if (!expected.has(path.resolve(file))) fs.unlinkSync(file);
   function pruneEmpty(dir) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -41,7 +39,7 @@ export function syncAssets() {
   pruneEmpty(target);
   // Remove derived legacy namespaces only after source migration.
   for (const name of ["design", "story"])
-    fs.rmSync(`public/generated/${name}`, { recursive: true, force: true });
+    fs.rmSync(path.join(root, `public/generated/${name}`), { recursive: true, force: true });
   console.log(`Synced ${expected.size} content assets.`);
 }
 if (process.argv[1] === new URL(import.meta.url).pathname) syncAssets();

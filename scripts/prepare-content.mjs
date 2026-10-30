@@ -10,11 +10,17 @@ import {
   nameInfo,
   markdownPattern,
   mediaPattern,
+  linkMove,
+  isIntroduction,
+  publicationDay,
+  resolveAlias,
 } from "./lib/content.mjs";
 export function prepare(root = process.cwd()) {
   const registry = readRegistry(root),
     base = path.join(root, "src/content");
   registry.aliases ??= {};
+  for (const [alias, target] of Object.entries(registry.aliases)) if (alias === target) delete registry.aliases[alias];
+  for (const alias of Object.keys(registry.aliases)) resolveAlias(alias, registry);
   const files = ["text", "story", "blog", "pages"]
     .flatMap((c) => walk(path.join(base, c)))
     .filter((p) => markdownPattern.test(p) || mediaPattern.test(p));
@@ -28,7 +34,9 @@ export function prepare(root = process.cwd()) {
       : fs.readFileSync(p);
     const digest = hash(source),
       info = folderParts(relative);
-    const { data } = markdownPattern.test(p) ? parse(source) : { data: {} };
+    let data = {};
+    try { if (markdownPattern.test(p)) data = parse(source).data; }
+    catch (error) { throw new Error(`${relative}: ${error.message}`); }
     let record = registry.files[relative];
     if (!record) {
       const moved = Object.entries(registry.files).filter(
@@ -37,14 +45,17 @@ export function prepare(root = process.cwd()) {
           r.hash === digest &&
           old.split("/")[0] === info.collection,
       );
+      const newMatches = files.filter(file => {
+        const name = path.relative(base, file).split(path.sep).join("/");
+        return !registry.files[name] && name.split("/")[0] === info.collection && hash(fs.readFileSync(file)) === digest;
+      });
+      if (moved.length && (moved.length !== 1 || newMatches.length !== 1))
+        throw new Error(`Ambiguous move for ${relative}: use content:move before preparing identical files.`);
       if (moved.length === 1) {
         const [old, previous] = moved[0];
         record = previous;
         delete registry.files[old];
-        registry.aliases[old] = relative;
-        // Preserve old aliases too, so old Markdown links continue to resolve after multiple moves.
-        for (const [alias, target] of Object.entries(registry.aliases))
-          if (target === old) registry.aliases[alias] = relative;
+        linkMove(registry, old, relative);
       } else {
         const id = shortId(relative);
         record = {
@@ -84,6 +95,11 @@ export function prepare(root = process.cwd()) {
       if (hidden) registry.folders[info.seriesPath].hidden = true;
       else delete registry.folders[info.seriesPath].hidden;
     }
+    if (isIntroduction(relative)) {
+      const url = registry.folders[info.seriesPath].url;
+      if (record.url !== url) registry.redirects[record.url] = url;
+      record.url = url;
+    }
     record.seriesKey = info.seriesPath;
     record.hash = digest;
     if (
@@ -91,7 +107,7 @@ export function prepare(root = process.cwd()) {
       data.published !== false &&
       !registry.folders[info.seriesPath]?.hidden
     )
-      record.date = new Date().toISOString().slice(0, 10);
+      record.date = publicationDay();
   }
   const serialized = JSON.stringify(registry, null, 2) + "\n",
     file = path.join(root, "content-registry.json");
@@ -99,4 +115,11 @@ export function prepare(root = process.cwd()) {
     fs.writeFileSync(file, serialized);
   return registry;
 }
-if (process.argv[1] === new URL(import.meta.url).pathname) prepare();
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  if (process.argv.includes("--init")) {
+    const file = path.resolve("content-registry.json");
+    if (fs.existsSync(file)) throw new Error("Registry already exists; initialization never overwrites it.");
+    fs.writeFileSync(file, JSON.stringify({version: 1, files: {}, folders: {}, redirects: {}, aliases: {}}, null, 2) + "\n", { flag: "wx" });
+  }
+  prepare();
+}

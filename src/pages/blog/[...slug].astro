@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import ContentRights from "../../components/common/ContentRights.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { url } from "../../lib/url";
 
@@ -50,6 +51,7 @@ const pagefindBreadcrumb = ["BLOG", entry.data.category]
         <div class="ol-prose">
           <Content />
         </div>
+        <ContentRights data={entry.data} />
         <footer class="ol-blog-detail-footer">
           <a href={url("/blog")} class="ol-blog-detail-back">
             ← 목록으로

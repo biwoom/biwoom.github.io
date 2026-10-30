@@ -1,0 +1,409 @@
+{
+  "date": "2026-10-30",
+  "reason": "User deletion retained; original migration inventory preserved.",
+  "deletedSources": [
+    "text/900.기존문헌/040.수행연구/assets/preview1.jpg",
+    "text/900.기존문헌/040.수행연구/assets/preview2.jpg",
+    "text/900.기존문헌/040.수행연구/assets/thumb.jpg",
+    "text/900.기존문헌/040.수행연구/index.md",
+    "text/900.기존문헌/050.교리연구/index.md",
+    "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+    "text/950.시각자료/001.보리수 인드라망 문양/001.자료/assets/Bodhi-Tree-Indramang.PNG",
+    "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+    "text/950.시각자료/002.다양성 인드라망 문양/001.자료/assets/Diversity-Indramang-1.PNG",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.html",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.pdf",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/preview1.jpg",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/preview2.jpg",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/thumb.jpg",
+    "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+    "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/assets/Life-Peace-Indramang.PNG",
+    "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+    "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/assets/Pictograph-Indramang-1.PNG",
+    "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+    "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/assets/Pictograph-Indramang-2.PNG",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/index.html",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/preview1.jpg",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/preview2.jpg",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/six-steps-infographic.pdf",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/thumb.jpg",
+    "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+    "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/assets/sumedha-sumitta.png",
+    "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+    "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/assets/profile.jpg",
+    "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
+    "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/assets/index.html",
+    "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/assets/preview1.png",
+    "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/assets/thumb.jpg",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/공.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/나가르주나.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/담미까 산.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/룸비니.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/삭카.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/수메다.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/수밋타.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/십이처.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/싯다르타 가우타마.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/아마라와띠.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/오온.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/위쑤깜마.md",
+    "text/980.참고자료/001.불교 참고 노트/001.자료/히말라야.md"
+  ],
+  "omittedRedirects": [
+    "/design/bodhi-tree-indramang/",
+    "/design/diversity-indramang/",
+    "/design/lamrim-infographic/",
+    "/design/life-peace-indramang/",
+    "/design/pictograph-indramang-1/",
+    "/design/pictograph-indramang-2/",
+    "/design/six-steps-body-mind-infographic/",
+    "/design/sumedha-sumitta-first-meeting/",
+    "/design/sumitta-profile/",
+    "/design/two-perspectives/",
+    "/entity/concepts/dependent-origination/",
+    "/entity/concepts/five-aggregates/",
+    "/entity/concepts/sunyata/",
+    "/entity/concepts/twelve-sense-bases/",
+    "/entity/persons/nagarjuna/",
+    "/entity/persons/sakka/",
+    "/entity/persons/siddhartha-gautama/",
+    "/entity/persons/sumedha/",
+    "/entity/persons/sumitta/",
+    "/entity/persons/vissukamma/",
+    "/entity/places/amaravati/",
+    "/entity/places/dhammika-mountain/",
+    "/entity/places/himalaya/",
+    "/entity/places/lumbini/",
+    "/book/",
+    "/works/"
+  ],
+  "migrationFollowup": [
+    {
+      "original": "text/body-mind-transformation/index.md",
+      "migrated": "text/900.기존문헌/040.수행연구/index.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "text/body-mind-transformation/part/01-six-steps.md",
+      "migrated": "text/900.기존문헌/040.수행연구/010.기초수행/001.몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+      "current": "blog/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+      "status": "present"
+    },
+    {
+      "original": "text/doctrine-research/index.md",
+      "migrated": "text/900.기존문헌/050.교리연구/index.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "text/doctrine-research/part/01-buddhist-worldview-two-perspectives.md",
+      "migrated": "text/900.기존문헌/050.교리연구/010.불교세계관/001.불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
+      "current": "blog/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
+      "status": "present"
+    },
+    {
+      "original": "text/doctrine-research/part/02-middle-way-attitude-beyond-scientism.md",
+      "migrated": "text/900.기존문헌/050.교리연구/010.불교세계관/002.과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
+      "current": "blog/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
+      "status": "present"
+    },
+    {
+      "original": "text/doctrine-research/part/03-anuttara-samma-sambodhi.md",
+      "migrated": "text/900.기존문헌/050.교리연구/010.불교세계관/003.부처님의 깨달음 - 무상정등정각에 대하여.md",
+      "current": "blog/부처님의 깨달음 - 무상정등정각에 대하여.md",
+      "status": "present"
+    },
+    {
+      "original": "story/buddha-story/index.md",
+      "migrated": "story/010.붓다 스토리/index.md",
+      "current": "story/010.붓다 스토리/index.md",
+      "status": "present"
+    },
+    {
+      "original": "story/buddha-story/part-1/01-sumedha-begins-to-ask.md",
+      "migrated": "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md",
+      "current": "story/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md",
+      "status": "present"
+    },
+    {
+      "original": "story/buddha-story/part-1/02-sumedha-finds-new-path.md",
+      "migrated": "story/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md",
+      "current": "story/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md",
+      "status": "present"
+    },
+    {
+      "original": "story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest.md",
+      "migrated": "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
+      "current": "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
+      "status": "present"
+    },
+    {
+      "original": "story/dhammapada-story/index.md",
+      "migrated": "story/020.담마빠다 스토리/index.md",
+      "current": "story/020.담마빠다 스토리/index.md",
+      "status": "present"
+    },
+    {
+      "original": "story/dhammapada-story/part-1/01-cakkhupala.md",
+      "migrated": "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
+      "current": "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
+      "status": "present"
+    },
+    {
+      "original": "story/placeholder/index.md",
+      "migrated": "story/999.OL STORY — 준비 중/index.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "blog/atlas-dev-journey/index.md",
+      "migrated": "blog/atlas-dev-journey/index.md",
+      "current": "blog/atlas-dev-journey/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/atlas-footnotes/index.md",
+      "migrated": "blog/atlas-footnotes/index.md",
+      "current": "blog/atlas-footnotes/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/blog-atlas-code-restructuring/index.md",
+      "migrated": "blog/blog-atlas-code-restructuring/index.md",
+      "current": "blog/blog-atlas-code-restructuring/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/body-mind-transformation-infographic/index.md",
+      "migrated": "blog/body-mind-transformation-infographic/index.md",
+      "current": "blog/body-mind-transformation-infographic/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/book-design-guide/index.md",
+      "migrated": "blog/book-design-guide/index.md",
+      "current": "blog/book-design-guide/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/buddhist-worldview-two-perspectives/index.md",
+      "migrated": "blog/buddhist-worldview-two-perspectives/index.md",
+      "current": "blog/buddhist-worldview-two-perspectives/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/indramang-life-peace-patterns/index.md",
+      "migrated": "blog/indramang-life-peace-patterns/index.md",
+      "current": "blog/indramang-life-peace-patterns/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/lamrim-infographic-making/index.md",
+      "migrated": "blog/lamrim-infographic-making/index.md",
+      "current": "blog/lamrim-infographic-making/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/net-menu-name-card-phase1/index.md",
+      "migrated": "blog/net-menu-name-card-phase1/index.md",
+      "current": "blog/net-menu-name-card-phase1/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-brand-design/index.md",
+      "migrated": "blog/ol-brand-design/index.md",
+      "current": "blog/ol-brand-design/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-design-works-library-shift/index.md",
+      "migrated": "blog/ol-design-works-library-shift/index.md",
+      "current": "blog/ol-design-works-library-shift/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-home-build/index.md",
+      "migrated": "blog/ol-home-build/index.md",
+      "current": "blog/ol-home-build/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-home-phase4/index.md",
+      "migrated": "blog/ol-home-phase4/index.md",
+      "current": "blog/ol-home-phase4/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-home-refactoring-and-pagination/index.md",
+      "migrated": "blog/ol-home-refactoring-and-pagination/index.md",
+      "current": "blog/ol-home-refactoring-and-pagination/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-home-text-story-reader-update/index.md",
+      "migrated": "blog/ol-home-text-story-reader-update/index.md",
+      "current": "blog/ol-home-text-story-reader-update/index.md",
+      "status": "present"
+    },
+    {
+      "original": "blog/ol-why/index.md",
+      "migrated": "blog/ol-why/index.md",
+      "current": "blog/ol-why/index.md",
+      "status": "present"
+    },
+    {
+      "original": "pages/brand.md",
+      "migrated": "pages/brand.md",
+      "current": "pages/brand.md",
+      "status": "present"
+    },
+    {
+      "original": "design/bodhi-tree-indramang/index.md",
+      "migrated": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/diversity-indramang/index.md",
+      "migrated": "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/lamrim-infographic/index.md",
+      "migrated": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/life-peace-indramang/index.md",
+      "migrated": "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/pictograph-indramang-1/index.md",
+      "migrated": "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/pictograph-indramang-2/index.md",
+      "migrated": "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/six-steps-body-mind-infographic/index.md",
+      "migrated": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/sumedha-sumitta-first-meeting/index.md",
+      "migrated": "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/sumitta-profile/index.md",
+      "migrated": "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "design/two-perspectives/index.md",
+      "migrated": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/concepts/dependent-origination.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/concepts/five-aggregates.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/오온.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/concepts/sunyata.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/공.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/concepts/twelve-sense-bases.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/십이처.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/persons/nagarjuna.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/나가르주나.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/persons/sakka.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/삭카.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/persons/siddhartha-gautama.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/싯다르타 가우타마.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/persons/sumedha.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/수메다.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/persons/sumitta.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/수밋타.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/persons/vissukamma.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/위쑤깜마.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/places/amaravati.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/아마라와띠.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/places/dhammika-mountain.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/담미까 산.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/places/himalaya.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/히말라야.md",
+      "current": null,
+      "status": "deleted-by-user"
+    },
+    {
+      "original": "entities/places/lumbini.md",
+      "migrated": "text/980.참고자료/001.불교 참고 노트/001.자료/룸비니.md",
+      "current": null,
+      "status": "deleted-by-user"
+    }
+  ]
+}

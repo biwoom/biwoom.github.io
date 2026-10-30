@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { readRegistry } from "./lib/content.mjs";
+import { readRegistry, linkMove } from "./lib/content.mjs";
 import { prepare } from "./prepare-content.mjs";
 const [oldPath, newPath] = process.argv.slice(2),
   root = path.resolve("src/content");
@@ -23,9 +23,11 @@ if (!fs.existsSync(path.join(root, newPath)))
   throw new Error(
     "Move the document in Obsidian first, then run this command before preparing content.",
   );
+if (fs.existsSync(path.join(root, oldPath))) throw new Error("Old file still exists: this is a copy, not a move.");
+if (oldPath.split("/")[0] !== newPath.split("/")[0]) throw new Error("Cross-collection moves require explicit URL migration; use the migration procedure.");
 registry.files[newPath] = registry.files[oldPath];
 delete registry.files[oldPath];
-registry.aliases[oldPath] = newPath;
+linkMove(registry, oldPath, newPath);
 fs.writeFileSync(
   "content-registry.json",
   JSON.stringify(registry, null, 2) + "\n",

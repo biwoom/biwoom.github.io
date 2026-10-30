@@ -24,7 +24,10 @@ OL HOME is a static Astro site at `https://biwoom.github.io/`, deployed from `bi
 - Public menu documents are public by default; preserve explicit `published: false`. A nonpublic series intro hides its descendants.
 - Tags are optional string arrays; slash prefixes are optional. Do not reintroduce `prefixTags`, `entities`, `relations`, or `tagAliases`.
 - Keep provenance and notes in body text. Preserve document-specific rights exceptions.
+- Private index.md directories exclude their attachments from deployment. `_assets` is the only underscore-prefixed attachment exception. Publicly shared attachments remain public; keep private per-document attachments in private index folders or `_drafts`.
+- Introduction canonical URLs equal library URLs. Deleted sources must not be restored or redirected to unrelated material; retain registry history and render redirects only to current public targets.
 - Source schema/normalized data: `src/content.config.ts`. Shared interpretation: `scripts/lib/content.mjs`. Share these rules with validation instead of maintaining divergent defaults.
+- Restore a missing registry from Git; `prepare:content -- --init` is only for new vaults. Commit prepared registry changes with content; CI runs `check:registry`. First-publication preparation dates use Asia/Seoul.
 - `content-registry.json` is durable source metadata, not disposable build output. Commit it with content changes. It preserves URLs, first-publication preparation dates, previous paths and hashes.
 - Keep source attachments inside the vault. Use relative Markdown links; the shared remark plugin resolves them. Unsupported Obsidian wikilinks/blocks must not be described as working.
 - Use `site-config.mjs` for shared fixed settings and `src/lib/site-config.ts` in app code. Do not restore retired DESIGN environment variables.

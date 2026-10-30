@@ -15,6 +15,7 @@ import { validate } from "./check-content.mjs";
 function fixture(fn) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "ol-content-"));
   try {
+    fs.writeFileSync(path.join(root, "content-registry.json"), JSON.stringify({version:1, files:{},folders:{},redirects:{},aliases:{}}));
     fs.mkdirSync(
       path.join(root, "src/content/text/001.중관부/001.대승현론/01.번역"),
       { recursive: true },
@@ -48,6 +49,7 @@ test("YAML-free headings and independent material sections normalize", () =>
       rel,
       fs.readFileSync(path.join(root, "src/content", rel), "utf8"),
       r,
+      root,
     );
     assert.equal(d.title, "대승현론 제1권");
     assert.equal(d.category, "중관부");
@@ -101,6 +103,7 @@ test("unpublished intro hides its documents; rights overrides remain intact", ()
       rel,
       fs.readFileSync(path.join(root, "src/content", rel), "utf8"),
       r,
+      root,
     );
     assert.equal(d.published, false);
     assert.equal(d.license, "CC-BY");
@@ -115,7 +118,8 @@ test("missing assets and removed schema fields are actionable errors", () =>
     );
     const errors = validate(root);
     assert.ok(errors.some((e) => e.includes("entities")));
-    assert.ok(errors.some((e) => e.includes("missing local target")));
+    write(root, rel, "# 제목\n\n![없음](./missing.png)");
+    assert.ok(validate(root).some((e) => e.includes("missing local target")));
   }));
 test("same displayed filename in two independent sections gets distinct URLs", () =>
   fixture((root) => {

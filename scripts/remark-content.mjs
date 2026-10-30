@@ -1,11 +1,9 @@
 import path from "node:path";
 import fs from "node:fs";
 import { visit } from "unist-util-visit";
-import { readRegistry } from "./lib/content.mjs";
-export function resolveReference(source, url, registry = readRegistry()) {
-  if (url.startsWith("content-asset:"))
-    return assetUrl(url.slice("content-asset:".length));
-  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(url)) return url;
+import { readRegistry, referenceTarget, textOf } from "./lib/content.mjs";
+export function resolveReference(source, url, registry = readRegistry(), root = process.cwd()) {
+  if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(url) && !url.startsWith("content-asset:")) return url;
   const [raw, fragment] = url.split("#");
   if (!raw) return url;
   let decoded;
@@ -19,14 +17,12 @@ export function resolveReference(source, url, registry = readRegistry()) {
       registry.redirects[decoded.endsWith("/") ? decoded : decoded + "/"];
     return target ? target + (fragment ? "#" + fragment : "") : url;
   }
-  const candidate = path.posix.normalize(
-    path.posix.join(path.posix.dirname(source), decoded),
-  );
-  const target = registry.aliases?.[candidate] ?? candidate;
+  const target = referenceTarget(source, url, registry);
+  if (!target) return url;
   if (registry.files[target] && /\.mdx?$/.test(target))
     return registry.files[target].url + (fragment ? "#" + fragment : "");
-  if (fs.existsSync(path.join("src/content", target)))
-    return assetUrl(target) + (fragment ? "#" + fragment : "");
+  if (fs.existsSync(path.join(root, "src/content", target)))
+    return assetUrl(target) + (url.includes("?") ? "?" + raw.split("?").slice(1).join("?") : "") + (fragment ? "#" + fragment : "");
   return url;
 }
 export function assetUrl(relative) {
@@ -42,24 +38,22 @@ export default function remarkContent() {
       .split(path.sep)
       .join("/");
     const registry = readRegistry();
-    const textOf = (node) =>
-      node.value ?? node.children?.map(textOf).join("") ?? "";
-    // Keep the author's local manual TOC in Markdown; the site supplies its own TOC.
-    const toc = tree.children.findIndex(
-      (node) => node.type === "heading" && textOf(node).trim() === "목차",
-    );
+    // Only remove a verified list of internal TOC links, never a heading section.
+    const toc = tree.children.findIndex(node => node.type === "heading" && textOf(node).trim() === "목차");
     if (toc >= 0) {
-      const depth = tree.children[toc].depth;
-      let end = toc + 1;
-      while (
-        end < tree.children.length &&
-        !(
-          tree.children[end].type === "heading" &&
-          tree.children[end].depth <= depth
-        )
-      )
-        end++;
-      tree.children.splice(toc, end - toc);
+      for (let index = toc + 1; index < tree.children.length; index++) {
+        const node = tree.children[index];
+        if (node.type === "heading") break;
+        if (node.type !== "list") continue;
+        const links = [];
+        const collect = child => { if (child.type === "link") links.push(child.url); child.children?.forEach(collect); };
+        collect(node);
+        if (links.length && links.every(url => url.startsWith("#"))) {
+          tree.children.splice(index, 1);
+          tree.children.splice(toc, 1);
+        }
+        break;
+      }
     }
 
     // First H1 is the document title; remaining headings keep their original levels.

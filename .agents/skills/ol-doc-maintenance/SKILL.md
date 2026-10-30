@@ -46,7 +46,7 @@ description: Maintain OL HOME manuals, brand documents, AGENTS.md, README.md, an
 ## Style
 
 - Use clear Korean for project-facing documents.
-- Keep route slugs and filenames ASCII.
+- Keep code and internal guide filenames ASCII. Korean author-facing content filenames are allowed; public routes use registry URLs.
 - Keep operational instructions concrete: paths, commands, expected routes.
 - Avoid stale references to project-page URLs such as `/ol-home` or `/biwoom` unless documenting history.
 - When describing generated files, say not to commit `dist/`, `.astro/`, `node_modules/`, or `public/generated/`.

@@ -58,6 +58,10 @@ npm run content:move -- "text/이전경로.md" "text/새경로.md"
 
 같은 내용의 문서가 여러 개이면 자동 이동 감지는 모호할 수 있습니다. 파일명 접두어를 변경해도 내용이 유지되면 주소를 보존합니다. 문헌 폴더 전체 이동도 기존 색인이 있는 상태에서 처리하세요. BLOG의 기존 날짜는 보존되며, 새 공개 문서는 처음 준비할 때 날짜를 기록합니다. 정확한 과거 발행일이 필요하면 선택적으로 `date`를 지정합니다.
 
+비공개 첨부는 비공개 `index.md`가 있는 전용 폴더 또는 `_drafts`에 둡니다. 공개 글도 참조하는 공유 첨부는 공개입니다. `_assets`를 제외한 `_` 경로는 배포하지 않습니다. 상세 공개 범위는 관리 매뉴얼을 따릅니다.
+
+소개 문서의 주소는 문헌 주소와 같습니다. 최초 공개 준비일은 한국 날짜를 사용합니다. registry가 사라졌다면 Git에서 복원하세요. 신규 보관함만 `npm run prepare:content -- --init`으로 생성합니다. 콘텐츠 변경과 registry를 함께 커밋하고 `npm run check:registry`로 확인합니다.
+
 ## 개발·검증
 
 ```sh
@@ -77,6 +81,6 @@ npm run check:built
 - `scripts/sync-content-assets.mjs`: 일반 첨부파일 동기화
 - `public/generated/content/`: 파생 자산. 직접 수정하거나 커밋하지 않음
 
-DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 필요한 설명은 TEXT의 일반 자료로 이관했고, 관련 과거 주소는 새 자료로 안내합니다. 이전 ATLAS HTML은 `.agents/archive/atlas/`에 보존하며 배포하지 않습니다.
+DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 설명은 일반 자료로 이관한 뒤 사용자 요청으로 일부 삭제되었습니다. 삭제 자료는 복원하지 않으며 현재 공개 목적지가 존재하는 과거 주소만 안내합니다. 이전 ATLAS HTML은 `.agents/archive/atlas/`에 보존하며 배포하지 않습니다.
 
 자세한 집필 규칙은 `.agents/references/ol-home-content-management-manual.md`, 개편 기록은 `.agents/references/obsidian-content-refactor-guide.md`를 확인하세요.

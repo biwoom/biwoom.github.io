@@ -1,5 +1,23 @@
 # Decisions
 
+## 현행 규칙 우선순위 (2026-10-30)
+
+- AGENTS.md와 2026-10-30 이후 결정이 과거 지침보다 우선한다.
+- 아래 6월 Entity/패널/DESIGN 전용 규칙, slash 태그 강제, 이전 content-structure helper 지침은 역사 기록이며 폐지·대체되었다.
+- 현재 태그는 접두어 없는 문자열도 허용한다. 계층·정렬은 scripts/lib/content.mjs, 목록은 src/lib/library.ts에서 해석한다.
+- 한글 작성 파일명을 허용하며 코드·내부 가이드 파일명만 ASCII로 유지한다.
+- 전환 기준 커밋 f70b680은 origin/main에 전송되었다. 실서비스 배포 완료 확인과 구별한다.
+
+## 2026-10-30 — Transition Hardening
+
+- 비공개 index.md 디렉터리의 첨부는 배포하지 않는다. 일반 _ 경로는 제외하고 _assets만 첨부 예외로 허용한다.
+- 느슨한 문서의 첨부는 참조 문서 공개 상태를 따른다. 공개/비공개가 함께 사용하는 첨부는 공개 공유 자료다. 전용 비공개 첨부는 비공개 index.md 폴더나 _drafts 안에 둔다.
+- 문헌 소개 주소는 문헌 주소와 같다. 삭제한 콘텐츠와 무관한 대체 자료로 연결하지 않는다. 원본 registry 기록은 이동 추적용으로 보존하되 유효한 공개 목적지가 있는 redirect만 생성한다.
+- 최초 공개 준비일은 Asia/Seoul 날짜다. registry 누락은 오류이며 신규 보관함의 --init만 예외다.
+- 원본 YAML 타입 검사와 Markdown AST 제목 해석을 공통 계층에서 수행한다. 목차는 확인된 내부 링크 목록만 제거하며 본문은 보존한다.
+- 수동 이동은 같은 컬렉션 내에서 기존 파일이 실제로 이동한 경우만 허용하고 모든 과거 별칭을 최종 경로로 연결한다. 컬렉션 간 이동은 별도 URL 이관이다.
+
+
 This file records durable project decisions that future Codex sessions should preserve unless the user explicitly changes them.
 
 ## 2026-06-12
@@ -87,7 +105,7 @@ This file records durable project decisions that future Codex sessions should pr
 
 ## 2026-10-30 — Refactor Implementation Policies
 
-- The approved simplification below is now implemented locally; production has not been updated.
+- The approved simplification below is implemented and pushed in f70b680; production deployment completion has not been verified.
 - Public menu folders default to public; `_drafts`/templates/dotfolders and explicit `published: false` are excluded. Hidden introductions hide their series descendants.
 - Keep a committed `content-registry.json` outside the authoring vault. It records stable URLs, first-publication preparation dates, source hashes, previous paths and work routes. Existing public addresses and date/rights exceptions are preserved.
 - Match unchanged moved files by content hash. For simultaneous move+edit without an active watcher or duplicate-content ambiguity, use `npm run content:move -- old new` before preparation rather than pretending identity is inferable.
@@ -97,7 +115,7 @@ This file records durable project decisions that future Codex sessions should pr
 - DESIGN prose/assets and useful Entity explanations are migrated to ordinary TEXT documents; only meaningful legacy detail redirects remain. ATLAS source HTML is archived outside public output.
 - Migration inventory: `.agents/references/content-migration-inventory.json`.
 
-## 2026-10-30 — Approved Refactor Direction (Implemented Locally)
+## 2026-10-30 — Approved Refactor Direction (Implemented; Upload Recorded Above)
 
 - Use the existing `src/content/` as an Obsidian vault without Vault CMS, Front Matter, or Decap CMS for this refactor.
 - Simplify public content to TEXT/STORY/BLOG; remove DESIGN/NET and Entity/Ontology systems after preserving needed assets and references.
@@ -105,7 +123,7 @@ This file records durable project decisions that future Codex sessions should pr
 - Parse `001.Name` numeric prefixes for ordering and hide prefixes in display labels. Do not duplicate ordering in per-document metadata.
 - Adapt the currently implemented STORY series layout and link/expand behavior to TEXT. Actual tab-panel switching was discussed historically but was not adopted and is excluded.
 - Accept title/body-focused writing and remove unnecessary frontmatter with matching schema/consumer cleanup. Preserve existing rights, dates, unpublished states, and links during migration.
-- Full guide and unresolved operating-policy choices: `.agents/references/obsidian-content-refactor-guide.md`. The direction is implemented locally; remaining limits are recorded in current-state.md.
+- Full guide and unresolved operating-policy choices: `.agents/references/obsidian-content-refactor-guide.md`. The direction is implemented; remaining limits are recorded in current-state.md.
 
 ## Historical Notes
 

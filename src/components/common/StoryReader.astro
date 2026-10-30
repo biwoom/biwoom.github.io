@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ContentRights from "./ContentRights.astro";
 import MaterialBody from "./MaterialBody.astro";
 import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
@@ -338,25 +339,7 @@ const hasDesktopToc = headings.some(
             </div>
           </div>
 
-          <div class="ol-text-rights ol-kr">
-            <span>
-              {entry.data.rightsHolder} ·{" "}
-              {entry.data.licenseUrl ? (
-                <a
-                  href={entry.data.licenseUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {entry.data.license}
-                </a>
-              ) : (
-                entry.data.license
-              )}
-            </span>
-            {entry.data.copyrightNotice && (
-              <span>{entry.data.copyrightNotice}</span>
-            )}
-          </div>
+          <ContentRights data={entry.data} />
           {(prevEntry || nextEntry) && (
             <nav class="ol-doc-nav" aria-label="이전 다음 문서">
               {prevEntry ? (

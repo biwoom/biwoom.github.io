@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import * as yaml from "js-yaml";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
 import { CONTENT_DEFAULTS } from "../../site-config.mjs";
 
 export const collections = ["text", "story", "blog", "pages"];
@@ -45,7 +48,8 @@ export function walk(root, { assets = false } = {}) {
         e.name === "_templates"
       )
         continue;
-      if (!assets && (reserved.has(e.name) || e.name.startsWith("_"))) continue;
+      if (e.name.startsWith("_") && !(assets && e.name === "_assets")) continue;
+      if (!assets && reserved.has(e.name)) continue;
       const p = path.join(dir, e.name);
       if (e.isDirectory()) visit(p);
       else if (e.isFile()) files.push(p);
@@ -59,13 +63,16 @@ export function parse(source) {
   const data = m ? (yaml.load(m[1]) ?? {}) : {};
   if (typeof data !== "object" || Array.isArray(data))
     throw new Error("frontmatter must be an object");
+  validateInput(data);
   return { data, body: m ? source.slice(m[0].length) : source };
 }
 export function readRegistry(root = process.cwd()) {
   const p = path.join(root, "content-registry.json");
-  return fs.existsSync(p)
-    ? JSON.parse(fs.readFileSync(p, "utf8"))
-    : { version: 1, files: {}, folders: {}, redirects: {} };
+  if (!fs.existsSync(p)) throw new Error("Missing content-registry.json: restore it from Git; for a new vault run prepare:content -- --init.");
+  const registry = JSON.parse(fs.readFileSync(p, "utf8"));
+  if (registry.version !== 1 || !registry.files || !registry.folders || !registry.redirects)
+    throw new Error("Invalid content-registry.json: restore the committed registry.");
+  return registry;
 }
 export function hash(body) {
   return crypto.createHash("sha256").update(body).digest("hex");
@@ -73,24 +80,87 @@ export function hash(body) {
 export function shortId(value) {
   return hash(value.normalize("NFC")).slice(0, 14);
 }
+export const inputFields = new Set(["title", "description", "tags", "date", "published", "license", "licenseUrl", "rightsHolder", "copyrightNotice", "lang", "thumbnailAsset"]);
+export function validateInput(data) {
+  for (const [key, value] of Object.entries(data)) {
+    if (!inputFields.has(key)) throw new Error(`obsolete or unknown frontmatter field: ${key}`);
+    if (key === "tags") {
+      if (!Array.isArray(value) || value.some(t => typeof t !== "string" || !t.trim())) throw new Error("tags must be a nonempty string array (or [])");
+    } else if (key === "published") {
+      if (typeof value !== "boolean") throw new Error("published must be boolean");
+    } else if (key === "date") {
+      if (!(typeof value === "string" || value instanceof Date) || Number.isNaN(new Date(value).valueOf())) throw new Error("invalid date");
+    } else if (typeof value !== "string") throw new Error(`${key} must be a string`);
+  }
+}
+export const markdownTree = body => unified().use(remarkParse).use(remarkGfm).parse(body);
+export const textOf = node => node.type === "image" ? (node.alt ?? "") : (node.value ?? node.children?.map(textOf).join("") ?? "");
+export function firstHeading(body) {
+  return markdownTree(body).children.find(n => n.type === "heading" && n.depth === 1);
+}
 export function excerpt(body) {
-  const text = body
-    .replace(/```[\s\S]*?```/g, "")
-    .replace(/^\[\^[^\]]+\]:.*(?:\n[ \t]+.*)*/gm, "");
-  const paragraph = text
-    .split(/\n\s*\n/)
-    .map((s) => s.trim())
-    .find(
-      (s) =>
-        s &&
-        !/^(#|---|\*\*저자|\*\*출처|\*\*목차|[-*]\s|\d+\.\s|!\[|<)/.test(s),
-    );
-  return (paragraph ?? "")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/\[\^[^\]]+\]/g, "")
-    .replace(/[*_`\\]/g, "")
-    .replace(/\s+/g, " ")
-    .slice(0, 180);
+  const paragraph = markdownTree(body).children.find(n => n.type === "paragraph" && !/^(저자|출처|목차)/.test(textOf(n)) && !n.children?.some(c => c.type === "image"));
+  return paragraph ? textOf(paragraph).replace(/\s+/g, " ").trim().slice(0, 180) : "";
+}
+export function resolveAlias(relative, registry) {
+  const seen = new Set();
+  while (registry.aliases?.[relative]) {
+    if (seen.has(relative)) throw new Error(`Alias cycle: ${relative}`);
+    seen.add(relative);
+    relative = registry.aliases[relative];
+  }
+  return relative;
+}
+export function linkMove(registry, oldPath, newPath) {
+  registry.aliases ??= {};
+  delete registry.aliases[newPath];
+  registry.aliases[oldPath] = newPath;
+  for (const alias of Object.keys(registry.aliases)) registry.aliases[alias] = resolveAlias(alias, registry);
+}
+export function isIntroduction(relative) {
+  const { collection, seriesPath } = folderParts(relative);
+  return ["text", "story"].includes(collection) && relative === `${seriesPath}/index.md`;
+}
+export function publicationDay(now = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+}
+// Assets belong to their nearest index.md directory; a loose document's links are private
+// unless the same asset is also referenced by a public document. Unreferenced shared assets are public.
+export function isPublicSource(relative, registry, root = process.cwd(), { asset = false } = {}) {
+  if (relative.split("/").some(p => p.startsWith(".") || (p.startsWith("_") && !(asset && p === "_assets")))) return false;
+  if (!asset && ignored(relative)) return false;
+  const base = path.join(root, "src/content");
+  if (!fs.existsSync(path.join(base, relative))) return false;
+  for (let dir = path.posix.dirname(relative); dir !== "."; dir = path.posix.dirname(dir)) {
+    const intro = path.join(base, dir, "index.md");
+    if (fs.existsSync(intro) && parse(fs.readFileSync(intro, "utf8")).data.published === false) return false;
+  }
+  if (!asset && markdownPattern.test(relative)) return parse(fs.readFileSync(path.join(base, relative), "utf8")).data.published !== false;
+  if (asset && registry.files[relative] && mediaPattern.test(relative) && !ignored(relative)) return true;
+  if (asset) {
+    let privateUse = false, publicUse = false;
+    for (const source of Object.keys(registry.files)) {
+      if (!markdownPattern.test(source) || !fs.existsSync(path.join(base, source)) || ignored(source)) continue;
+      const { data, body } = parse(fs.readFileSync(path.join(base, source), "utf8"));
+      const urls = data.thumbnailAsset ? [data.thumbnailAsset] : [];
+      const collect = n => { if (n.url) urls.push(n.url); n.children?.forEach(collect); };
+      collect(markdownTree(body));
+      if (urls.some(url => referenceTarget(source, url, registry) === relative)) {
+        if (isPublicSource(source, registry, root)) publicUse = true; else privateUse = true;
+      }
+    }
+    if (privateUse && !publicUse) return false;
+  }
+  return true;
+}
+export function referenceTarget(source, url, registry) {
+  if (/^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(url) && !url.startsWith("content-asset:")) return null;
+  const raw = url.split("#")[0].split("?")[0];
+  let target;
+  try { target = raw.startsWith("content-asset:") ? decodeURIComponent(raw.slice(14)) : path.posix.join(path.posix.dirname(source), decodeURIComponent(raw)); } catch { return null; }
+  target = path.posix.normalize(target);
+  if (target === ".." || target.startsWith("../")) return null;
+  return resolveAlias(target, registry);
 }
 export function folderParts(relative) {
   const [collection, ...segments] = relative.split("/");
@@ -127,7 +197,7 @@ export function folderParts(relative) {
     part: "",
   };
 }
-export function normalize(relative, source, registry = readRegistry()) {
+export function normalize(relative, source, registry = readRegistry(), root = process.cwd()) {
   const { data, body } = parse(source);
   const record = registry.files[relative];
   if (!record)
@@ -138,15 +208,15 @@ export function normalize(relative, source, registry = readRegistry()) {
   const series = registry.folders[parts.seriesPath];
   const title =
     data.title?.trim() ||
-    body.match(/^#\s+(.+?)\s*#*\s*$/m)?.[1]?.replace(/[*`]/g, "") ||
+    (firstHeading(body) ? textOf(firstHeading(body)) : "") ||
     nameInfo(path.basename(relative)).label;
-  const intro = path.basename(relative) === "index.md";
+  const intro = isIntroduction(relative);
   return {
     title,
-    description: data.description ?? data.excerpt ?? excerpt(body),
+    description: data.description ?? excerpt(body),
     tags: data.tags ?? [],
     published:
-      data.published !== false && !ignored(relative) && !series?.hidden,
+      data.published !== false && !ignored(relative) && !series?.hidden && isPublicSource(relative, registry, root),
     date: new Date(data.date ?? record.date ?? "1970-01-01"),
     readingTime: Math.max(1, Math.ceil(body.length / 700)),
     url: record.url,
@@ -178,7 +248,7 @@ export function mediaEntries(root = process.cwd()) {
       !fs.existsSync(path.join(root, "src/content", relative))
     )
       continue;
-    const data = normalize(relative, "", registry);
+    const data = normalize(relative, "", registry, root);
     if (data.published)
       result.push({
         id: record.id,
@@ -190,4 +260,21 @@ export function mediaEntries(root = process.cwd()) {
       });
   }
   return result;
+}
+
+// Only routes backed by current public source files can receive legacy redirects.
+export function publicRoutes(registry, root = process.cwd()) {
+  const routes = new Map();
+  for (const [source, record] of Object.entries(registry.files)) {
+    if (!isPublicSource(source, registry, root)) continue;
+    const info = folderParts(source);
+    routes.set(record.url, source);
+    if (["text", "story"].includes(info.collection)) routes.set(registry.folders[info.seriesPath]?.url, info.seriesPath);
+  }
+  routes.delete(undefined);
+  return routes;
+}
+export function activeRedirects(registry = readRegistry(), root = process.cwd()) {
+  const routes = publicRoutes(registry, root);
+  return Object.fromEntries(Object.entries(registry.redirects).filter(([from, to]) => !routes.has(from) && routes.has(to)));
 }

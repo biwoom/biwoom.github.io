@@ -6,7 +6,7 @@ Last updated: 2026-10-30
 
 - OL HOME: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
 - Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
-- Current refactor is local and has not been uploaded or verified on production.
+- Refactor commit `f70b680` was pushed to `origin/main` on 2026-10-30. Production deployment completion has not been verified.
 
 ## Current Architecture
 
@@ -20,10 +20,10 @@ Last updated: 2026-10-30
 - `content-registry.json` is committed, auto-maintained source metadata for stable URLs/dates/previous paths. `scripts/prepare-content.mjs` updates it.
 - `_drafts`/templates/dotfolders are excluded. Public folders default to published; explicit false and hidden series intros are preserved.
 - General source attachments are synced to `public/generated/content/` and relative Markdown links are resolved by `scripts/remark-content.mjs`.
-- DESIGN/NET/Entity/Ontology active collections, UI and provider settings are removed. Existing assets/prose are ordinary TEXT materials; old detail URLs redirect.
+- DESIGN/NET/Entity/Ontology active collections, UI and provider settings are removed. Migrated ordinary TEXT visual/reference material was subsequently deleted by the user. Deleted sources are not restored; only redirects with a currently public destination are rendered. Original migration inventory remains historical evidence.
 - Legacy ATLAS HTML is preserved outside public output at `.agents/archive/atlas/`.
 - Common settings: `site-config.mjs`, app entry `src/lib/site-config.ts`. No DESIGN asset env vars are required.
-- Validation: `npm run check`, `npm run typecheck`, `npm run build`, `npm run check:built`. The last command checks both links and rendered markup/compiled CSS regressions. Shared tag modal and paginator remain in use.
+- Validation: `npm run check`, `npm run typecheck`, `npm run build`, `npm run check:built`, `npm run check:registry`; optional `npm run check:live` runs a temporary project/server and cleans up afterward. Built checks cover static attachment HTML dependencies and UI contracts. Shared tag modal and paginator remain in use.
 - Search and mobile-sheet styles are shared files independent of retired ATLAS CSS. Closed overlays start with `hidden`/`inert` and keep their `aria-hidden` state synchronized.
 
 ## Documentation
@@ -31,11 +31,14 @@ Last updated: 2026-10-30
 - Authoring: `.agents/references/ol-home-content-management-manual.md`.
 - Refactor guide and implementation notes: `.agents/references/obsidian-content-refactor-guide.md`.
 - Original migration mapping: `.agents/references/content-migration-inventory.json`.
+- Subsequent deletion and migration status: `.agents/references/content-deletion-followup.json`.
 
 ## Known Limits and Follow-ups
 
+- Transition audit: `.agents/references/obsidian-transition-audit.md`. The reported defects are fixed in the follow-up implementation: common asset publication checks, canonical introduction URLs, safe TOC removal, manual alias flattening, full collection watcher refresh, typed author input and shared rights rendering. Current verification is recorded in work-log.
+
 - Renaming/moving unchanged content is matched by hash. Simultaneous move+edit while the dev server is stopped, or duplicate-content ambiguity, requires `npm run content:move -- old new` before preparation.
 - Obsidian wikilinks, block references and special embeds are not supported; use standard Markdown links.
-- New BLOG dates represent first publication preparation unless explicitly overridden; existing dates/rights are preserved.
-- The dev server command was rejected by automatic approval policy (`.codex/rules/default.rules` requires confirmation for a persistent process; approval mode is never). The browser access host was also unavailable and native Chrome access was denied during the style repair; browser interaction and live watcher behavior remain unverified. Static CSS/markup contracts now supplement build checks.
+- New BLOG dates use Asia/Seoul and represent first publication preparation unless explicitly overridden; existing dates/rights are preserved.
+- Earlier dev-server/browser attempts were blocked during the original refactor. The follow-up audit fixes passed HTTP integration checks on a temporary development server: introduction public/private/public transitions, Markdown/PDF refresh, new folder/document discovery and BLOG rights rendering. Browser visual/interaction QA remains unverified; static CSS/markup contracts supplement these HTTP checks.
 - No GitHub push or Actions/deployment inspection is included without a user request.

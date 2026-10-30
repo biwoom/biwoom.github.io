@@ -8,6 +8,7 @@ import {
   mediaEntries,
   readRegistry,
 } from "../scripts/lib/content.mjs";
+import { watchContent } from "../scripts/lib/watch-content.mjs";
 import { prepare } from "../scripts/prepare-content.mjs";
 
 // This schema describes normalized data. Author-written frontmatter is optional.
@@ -57,28 +58,33 @@ function collection(name: string) {
     loader: {
       ...loader,
       async load(context) {
-        prepare();
-        // Folder names and registry policy can change even when Markdown is unchanged.
-        context.store.clear();
-        await loader.load({
-          ...context,
-          parseData(options) {
-            const relative = path
-              .relative(path.resolve("src/content"), options.filePath!)
-              .split(path.sep)
-              .join("/");
-            return context.parseData({
-              ...options,
-              data: {
-                ...options.data,
-                ...normalize(
-                  relative,
-                  fs.readFileSync(options.filePath!, "utf8"),
-                ),
-              },
-            });
-          },
-        });
+        const refresh = async () => {
+          prepare();
+          // Folder names and registry policy can change even when Markdown is unchanged.
+          context.store.clear();
+          await loader.load({
+            ...context,
+            watcher: undefined,
+            parseData(options) {
+              const relative = path
+                .relative(path.resolve("src/content"), options.filePath!)
+                .split(path.sep)
+                .join("/");
+              return context.parseData({
+                ...options,
+                data: {
+                  ...options.data,
+                  ...normalize(
+                    relative,
+                    fs.readFileSync(options.filePath!, "utf8"),
+                  ),
+                },
+              });
+            },
+          });
+          };
+        await refresh();
+        watchContent(context.watcher, refresh, (error: Error) => context.logger.error(error.message));
       },
     },
   });
@@ -102,20 +108,10 @@ export const collections = {
             });
         };
         await update();
-        if (context.watcher) {
-          let timer: ReturnType<typeof setTimeout>;
-          const refresh = (file: string) => {
-            if (/\.(pdf|png|jpe?g|webp|gif|svg|html)$/i.test(file)) {
-              clearTimeout(timer);
-              timer = setTimeout(async () => {
-                prepare();
-                await update();
-              }, 250);
-            }
-          };
-          for (const event of ["add", "change", "unlink"])
-            context.watcher.on(event, refresh);
-        }
+        watchContent(context.watcher, async () => {
+          prepare();
+          await update();
+        }, (error: Error) => context.logger.error(error.message));
       },
     },
   }),

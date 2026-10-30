@@ -1,8 +1,8 @@
 ---
 import RedirectLayout from "../layouts/RedirectLayout.astro";
-import { readRegistry } from "../../scripts/lib/content.mjs";
+import { activeRedirects } from "../../scripts/lib/content.mjs";
 export function getStaticPaths() {
-  return Object.entries(readRegistry().redirects).map(([from, to]) => ({
+  return Object.entries(activeRedirects()).map(([from, to]) => ({
     params: { legacy: from.replace(/^\//, "").replace(/\/$/, "") },
     props: { to: String(to) },
   }));

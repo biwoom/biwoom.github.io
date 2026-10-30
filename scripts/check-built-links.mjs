@@ -1,15 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
-import { walk, readRegistry } from "./lib/content.mjs";
+import { walk, readRegistry, activeRedirects } from "./lib/content.mjs";
 const root = path.resolve("dist"),
   errors = [];
 const htmlFiles = walk(root, { assets: true }).filter(
-  (p) => p.endsWith(".html") && !p.includes("/generated/"),
+  (p) => p.endsWith(".html"),
 );
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
+  const markup = html.replace(/<!--([\s\S]*?)-->/g, "").replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, block => block.slice(0, block.indexOf(">") + 1));
   const tags = [
-    ...html.matchAll(
+    ...markup.matchAll(
       /<(?:a|img|script|link|source|iframe|video|audio)\b[^>]*>/g,
     ),
   ]
@@ -53,7 +54,7 @@ for (const file of htmlFiles) {
   }
 }
 const registry = readRegistry();
-for (const [route, to] of Object.entries(registry.redirects)) {
+for (const [route, to] of Object.entries(activeRedirects(registry))) {
   const target = path.join(root, to, "index.html");
   if (!fs.existsSync(target))
     errors.push(`redirect ${route}: missing target ${to}`);
@@ -63,5 +64,5 @@ if (errors.length) {
   process.exitCode = 1;
 } else
   console.log(
-    `Built links verified across ${htmlFiles.length} pages and ${Object.keys(registry.redirects).length} redirects.`,
+    `Built links verified across ${htmlFiles.length} pages and ${Object.keys(activeRedirects(registry)).length} redirects.`,
   );

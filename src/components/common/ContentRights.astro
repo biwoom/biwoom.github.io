@@ -1,0 +1,10 @@
+---
+interface Props {
+  data: { rightsHolder: string; license: string; licenseUrl?: string; copyrightNotice?: string };
+}
+const { data } = Astro.props;
+---
+<div class="ol-text-rights ol-kr" data-content-rights>
+  <span>{data.rightsHolder} · {data.licenseUrl ? <a href={data.licenseUrl} target="_blank" rel="noopener noreferrer">{data.license}</a> : data.license}</span>
+  {data.copyrightNotice && <span>{data.copyrightNotice}</span>}
+</div>

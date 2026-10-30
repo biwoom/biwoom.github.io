@@ -4,6 +4,21 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-10-30
 
+### Harden Obsidian Transition and Preserve User Deletions
+
+- Fixed private attachment publication/cleanup, canonical library introduction URLs, TOC body preservation, AST title/input validation, manual move alias flattening/copy rejection, ambiguous move detection and full Markdown/material watcher invalidation. Removed legacy self-aliases and reject alias cycles.
+- Added shared document rights display, nested pages routes, thumbnail target validation, public route collision checks, attachment HTML dependency checks, Korea publication dates and registry initialization/CI commit guards.
+- Retained user-deleted sources as deleted; removed seven defunct hyperlinks while preserving labels, omit redirects without a public destination, and recorded follow-up migration/deletion metadata without rewriting the original inventory. Removed unused reader/helper components and consolidated only still-used TEXT utility styles and shared responsive styles.
+- Updated project rules, authoring/deploy/doc skills, manual, guide, decisions, current-state and audit resolution notes.
+- Validation: 19 fixture tests; typecheck with zero diagnostics; build 57 pages; built checks covered 59 HTML files/21 redirects and 26 document UI contracts. Root RSS/sitemap/robots and deleted output absence verified. Temporary dev-server HTTP checks passed for public/private/public introduction changes, Markdown/PDF refresh, new folders/documents and BLOG rights exceptions. Personal Obsidian state unchanged. Browser visual QA and production deployment are outside this verification.
+
+### Obsidian Transition Audit
+
+- Reviewed the refactor guide against schemas, registry/moves, loaders, routes, assets, Markdown transforms, UI consumers, validation and operational guidance.
+- Recorded findings and document correction targets in `.agents/references/obsidian-transition-audit.md`. Temporary fixtures reproduced private attachment copying, distinct/unrendered introduction URLs, TOC body removal and broken aliases after manual moves.
+- Existing verification passed: 9 fixtures, typecheck with zero diagnostics, 119-page build, 46 redirects and static UI contracts. Browser/live watcher and production deployment were not verified.
+- Application/content sources and personal Obsidian settings were not changed. No commit or upload performed for this audit.
+
 ### Move Four Existing TEXT Articles to BLOG
 
 - Moved the six-step meditation manuscript and three doctrine-research articles from `text/900.기존문헌/` to descriptive Markdown filenames directly under `src/content/blog/`.

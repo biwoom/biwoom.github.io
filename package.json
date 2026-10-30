@@ -7,7 +7,7 @@
   },
   "scripts": {
     "check:content": "node scripts/check-content.mjs",
-    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs",
+    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs scripts/check-transition-fixtures.mjs",
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node scripts/sync-content-assets.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",
@@ -18,7 +18,9 @@
     "prepare:content": "node scripts/prepare-content.mjs",
     "content:move": "node scripts/content-move.mjs",
     "typecheck": "astro check",
-    "check:built": "node scripts/check-built-links.mjs && node scripts/check-ui-contracts.mjs"
+    "check:built": "node scripts/check-built-links.mjs && node scripts/check-ui-contracts.mjs",
+    "check:registry": "node scripts/check-registry.mjs",
+    "check:live": "node scripts/check-content-live.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",

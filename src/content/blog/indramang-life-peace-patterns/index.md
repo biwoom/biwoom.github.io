@@ -87,8 +87,8 @@ tags:
 
 이번 작업의 핵심은 생명과 관계를 하나의 이미지 언어로 다루어 보는 것이었다. 생명평화무늬는 그 출발점이 되었고, 이후의 인드라망 문양들은 그 문제의식에 기반한 다양한 변주의 결과다.
 
-* [생명평화 인드라망 문양](/design/life-peace-indramang/)
-* [보리수 인드라망 문양](/design/bodhi-tree-indramang/)
-* [다양성 인드라망 문양](/design/diversity-indramang/)
-* [인드라망 픽토그래프 1](/design/pictograph-indramang-1/)
-* [인드라망 픽토그래프 2](/design/pictograph-indramang-2/)
+* 생명평화 인드라망 문양
+* 보리수 인드라망 문양
+* 다양성 인드라망 문양
+* 인드라망 픽토그래프 1
+* 인드라망 픽토그래프 2

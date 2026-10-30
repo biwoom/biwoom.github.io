@@ -41,6 +41,9 @@ jobs:
       - name: Check content
         run: npm run check
 
+      - name: Check committed content registry
+        run: npm run check:registry
+
       - name: Check types
         run: npm run typecheck
 
