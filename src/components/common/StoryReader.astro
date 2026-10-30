@@ -98,6 +98,19 @@ const hasToc = headings.some(
         class="ol-story-part-nav"
         aria-label={`${series.label} ${section === "text" ? "자료 구분" : "파트"} 바로가기`}
       >
+        <a
+          class="ol-story-part-home"
+          href={url(series.url)}
+          aria-label={`${series.label} 시리즈 홈으로`}
+          title={`${series.label} 시리즈 홈으로`}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 10 9-7 9 7" />
+            <path d="M5 9v12h14V9M9 21v-8h6v8" />
+          </svg>
+        </a>
         {documentParts.map((part, index) => {
           const firstEntry = part.entries[0];
           return (

@@ -10,7 +10,7 @@
 }
 
 .ol-story-series-hero {
-  max-width: 860px;
+  /* max-width: 860px; */
   margin: 0 auto 76px;
   text-align: center;
 }
@@ -86,6 +86,13 @@
   background: var(--ol-surface);
   color: var(--ol-ink-2);
   text-decoration: none;
+}
+
+.ol-story-part-nav .ol-story-part-home {
+  width: 38px;
+  min-width: 38px;
+  justify-content: center;
+  padding: 0;
 }
 
 .ol-story-part-nav a:hover {

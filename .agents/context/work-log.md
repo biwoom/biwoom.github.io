@@ -4,6 +4,11 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-10-31
 
+### Document Part Navigation Home Link
+
+- Added a first-position home icon to the shared TEXT/STORY document part navigation, linking to the current series URL with an accessible label and tooltip. Reused the existing button styling and kept the icon compact on mobile/desktop.
+- Passed 22 fixtures, zero-diagnostic typecheck, build and built link/UI checks. Live HTTP checks confirmed first-button order, series destinations and successful target responses on all six Markdown readers. No upload performed.
+
 ### STORY Categories and Shared Category Cards
 
 - Unified TEXT/STORY path interpretation and validation as category/series/part/item, using existing normalized category fields. Recognized the user's new STORY folders without rewriting their documents or personal Obsidian state.
