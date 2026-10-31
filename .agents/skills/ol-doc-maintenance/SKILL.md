@@ -31,7 +31,7 @@ description: Maintain BORIDO (OL 코어) manuals, brand documents, AGENTS.md, RE
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `src/content.config.ts` defines normalized data; `scripts/lib/content.mjs` shares source interpretation with validation.
 - `content-registry.json` is committed source metadata for stable URLs/dates/paths. `public/generated/content/` is derived output and is not committed.
-- Shared images live flat in `src/content/media/`; sync them as public assets without menu/search/document records. Nonimage migration originals are archived under `.agents/archive/media-originals/`.
+- Shared images live in `src/content/media/`; first subfolders supply categories for the auxiliary /media/ masonry gallery. Home statistics/footer link to it, without main-menu entries or per-image document records. Originals and generated previews are separate; respect user-deleted historical archives.
 - Shared settings: `site-config.mjs`, app entry `src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
 - Deploy workflow: `.github/workflows/deploy.yml`. Upload requests stop after requested push.
 - TEXT reuses STORY series links and expandable lists; no real tab switching.

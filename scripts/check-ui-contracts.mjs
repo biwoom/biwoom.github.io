@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import assert from "node:assert/strict";
+import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import {
   readRegistry,
   categoryFolders,
@@ -197,6 +198,36 @@ classes(
   ["ol-post", "ol-blog-sidebar", "ol-blog-archive-list"],
   "BLOG index",
 );
+const mediaImages = await syncMediaGallery();
+const mediaHtml = fs.readFileSync("dist/media/index.html", "utf8");
+classes(mediaHtml, ["ol-media-masonry", "ol-media-dialog"], "MEDIA");
+assert.equal((mediaHtml.match(/data-media-item(?:\s|>|=)/g) ?? []).length, mediaImages.length);
+const mediaDialog = mediaHtml.match(/<dialog[^>]*id="ol-media-dialog"[^>]*>/)?.[0];
+assert.ok(mediaDialog && !/\sopen(?:\s|=|>)/.test(mediaDialog), "MEDIA dialog must start closed");
+assert.match(mediaDialog, /aria-labelledby="ol-media-dialog-title"/);
+for (const item of mediaImages) {
+  assert.ok(mediaHtml.includes(item.previewUrl), `MEDIA: missing preview ${item.source}`);
+  assert.ok(fs.existsSync(path.join("dist", item.previewUrl)), `MEDIA: unpublished preview ${item.source}`);
+  assert.ok(fs.existsSync(path.join("dist", item.url)), `MEDIA: unpublished original ${item.source}`);
+}
+const galleryCategories = [...mediaHtml.matchAll(/<button[^>]*data-media-filter="([^"]*)"[^>]*>/g)].map(([, value]) => decode(value));
+assert.deepEqual(galleryCategories.slice().sort(), ["", ...getMediaCategories(mediaImages).map((category) => category.key)].sort(), "MEDIA category filters must match the first folder keys");
+assert.deepEqual(fs.readdirSync("dist/media"), ["index.html"], "MEDIA must not create detail pages");
+const home = fs.readFileSync("dist/index.html", "utf8");
+const mediaStat = home.match(/<a[^>]*class="[^"]*ol-stat--media[^>]*>([\s\S]*?)<\/a>/)?.[0];
+assert.ok(mediaStat && mediaStat.includes('href="/media/"'), "Home MEDIA stat must link to gallery");
+assert.match(mediaStat, new RegExp(`data-media-stat-count>${mediaImages.length}<`));
+for (const html of [home, mediaHtml]) {
+  const footer = html.match(/<footer\b[\s\S]*?<\/footer>/)?.[0] ?? "";
+  assert.ok(footer.includes('href="/media/"'), "Footer MEDIA link missing");
+  const header = html.match(/<header\b[\s\S]*?<\/header>/)?.[0] ?? "";
+  assert.ok(!header.includes('href="/media/"'), "MEDIA must stay out of main menu");
+  const sheet = html.match(/<nav[^>]*id="ol-mobile-sheet"[^>]*>([\s\S]*?)<\/nav>/)?.[1] ?? "";
+  assert.ok(!sheet.includes('href="/media/"'), "MEDIA must stay out of mobile main menu");
+}
+rule(".ol-media-masonry", /(?:column-count|columns):3/);
+rule(".ol-media-card[hidden]", /display:none/);
+rule(".ol-media-dialog:not([open])", /display:none/);
 console.log(
   `UI markup/CSS regression checks passed for ${count} documents and BLOG index (not a browser interaction test).`,
 );

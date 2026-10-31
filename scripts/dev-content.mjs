@@ -1,6 +1,7 @@
 import path from "node:path";
 import { prepare } from "./prepare-content.mjs";
 import { syncAssets } from "./sync-content-assets.mjs";
+import { syncMediaGallery } from "./lib/media-gallery.mjs";
 export default function contentDevelopment() {
   return {
     name: "ol-content-development",
@@ -17,10 +18,11 @@ export default function contentDevelopment() {
           )
             return;
           clearTimeout(timer);
-          timer = setTimeout(() => {
+          timer = setTimeout(async () => {
             try {
               prepare();
               syncAssets();
+              await syncMediaGallery();
               server.ws.send({ type: "full-reload" });
             } catch (error) {
               server.config.logger.error(error.message);

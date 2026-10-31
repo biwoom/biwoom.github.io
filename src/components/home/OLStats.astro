@@ -1,6 +1,9 @@
 ---
 import { getDocuments } from "../../lib/library";
 import { getCollection } from "astro:content";
+import { getMediaGallery } from "../../lib/media";
+import { url } from "../../lib/url";
+const media = await getMediaGallery();
 const groups = await Promise.all([
   getDocuments("text"),
   getDocuments("story"),
@@ -19,6 +22,10 @@ const groups = await Promise.all([
           <div class="l">{["문헌 TEXT", "이야기 STORY", "기록 BLOG"][i]}</div>
         </div>
       ))}
+      <a class="ol-stat ol-stat--media" href={url("/media/")} aria-label={`미디어 이미지 ${media.length}개, 미디어 페이지로 이동`}>
+        <div class="n"><em data-media-stat-count>{media.length}</em></div>
+        <div class="l">미디어 MEDIA <span aria-hidden="true">→</span></div>
+      </a>
     </div>
   </div>
 </section>

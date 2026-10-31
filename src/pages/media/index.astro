@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getMediaGallery, getMediaCategories } from "../../lib/media";
+import { url } from "../../lib/url";
+const images = await getMediaGallery();
+const categories = getMediaCategories(images);
+---
+<BaseLayout title="미디어 — BORIDO" description="보리도의 이미지와 시각 자료를 모아 봅니다." pagefindBody={false}>
+  <main class="ol-media-page" data-media-gallery>
+    <section class="ol-media-hero">
+      <div class="ol-container">
+        <span class="ol-section-label">BORIDO MEDIA</span>
+        <h1 class="ol-kr">미디어</h1>
+        <p class="ol-kr">이미지와 시각 자료를 모아 봅니다. 이미지를 선택하면 크게 볼 수 있습니다.</p>
+      </div>
+    </section>
+    <section class="ol-media-content">
+      <div class="ol-container">
+        <div class="ol-chips ol-media-filters" role="group" aria-label="미디어 카테고리">
+          <button type="button" class="ol-chip active" data-media-filter="" aria-pressed="true">전체 <span class="count">{images.length}</span></button>
+          {categories.map((category) => (
+            <button type="button" class="ol-chip" data-media-filter={category.key} aria-pressed="false">
+              {category.label} <span class="count">{category.count}</span>
+            </button>
+          ))}
+        </div>
+        <p class="ol-media-count" data-media-count role="status" aria-live="polite">{images.length}개 이미지</p>
+        <div class="ol-media-masonry">
+          {images.map((image) => (
+            <button type="button" class="ol-media-card"
+              data-media-item data-media-category={image.categoryKey}
+              data-media-label={image.category} data-media-src={url(image.url)}
+              data-media-title={image.title} data-media-filename={image.fileName}
+              data-media-width={image.width} data-media-height={image.height}
+              aria-haspopup="dialog" aria-controls="ol-media-dialog" aria-label={`${image.title} 확대 보기`}>
+              <img src={url(image.previewUrl)} width={image.previewWidth} height={image.previewHeight}
+                alt={image.title} loading="lazy" decoding="async" />
+              <span class="ol-media-card-caption">
+                <strong>{image.title}</strong><span>{image.category}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <p class="ol-media-empty" data-media-empty hidden={images.length > 0}>표시할 이미지가 없습니다.</p>
+      </div>
+    </section>
+    <dialog class="ol-media-dialog" id="ol-media-dialog" aria-modal="true" aria-labelledby="ol-media-dialog-title">
+      <header class="ol-media-dialog-head">
+        <div class="ol-media-dialog-description">
+          <p class="ol-meta-label" data-media-dialog-category></p>
+          <h2 id="ol-media-dialog-title">이미지 확대 보기</h2>
+          <p class="ol-media-dialog-filename" data-media-dialog-filename></p>
+        </div>
+        <div class="ol-media-dialog-actions">
+          <button type="button" class="ol-btn ol-btn-outline ol-btn-sm" data-media-zoom aria-pressed="false">원본 크기</button>
+          <button type="button" class="ol-btn ol-btn-ghost ol-btn-icon" data-media-close aria-label="이미지 확대 보기 닫기" autofocus>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
+          </button>
+        </div>
+      </header>
+      <div class="ol-media-dialog-view" data-media-view tabindex="0" role="region" aria-label="확대 이미지">
+        <p class="ol-media-load-status" data-media-load-status role="status">이미지를 불러오는 중입니다.</p>
+        <img class="ol-media-full-image" data-media-full-image alt="" hidden />
+      </div>
+    </dialog>
+  </main>
+</BaseLayout>
+<script>
+  import { initMediaGallery } from "../../lib/client/media-gallery";
+  initMediaGallery();
+</script>

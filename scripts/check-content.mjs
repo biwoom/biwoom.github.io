@@ -47,7 +47,7 @@ export function validate(root = process.cwd()) {
   }
   for (const collection of ["text", "story"])
     for (const category of categoryFolders(collection, root)) claim(category.url, category.key);
-  for (const route of ["/", "/text/", "/story/", "/blog/", "/partners/", "/404/"]) if (urls.has(route)) errors.push(`Content collides with reserved route ${route}`);
+  for (const route of ["/", "/text/", "/story/", "/blog/", "/media/", "/partners/", "/404/"]) if (urls.has(route)) errors.push(`Content collides with reserved route ${route}`);
   for (const [from,to] of Object.entries(registry.redirects)) {
     if (urls.has(from)) errors.push(`Redirect collides with public URL ${from}`);
     if (!from.startsWith("/") || !to.startsWith("/")) errors.push(`Invalid redirect ${from}`);

@@ -1,17 +1,19 @@
 ---
 import { getDocuments } from "../../lib/library";
 import { getCollection } from "astro:content";
+import { url } from "../../lib/url";
 const counts = await Promise.all([
   getDocuments("text"),
   getDocuments("story"),
   getCollection("blog", (e) => e.data.published),
 ]);
 const cards = [
-  { name: "TEXT", description: "문헌별 번역·연구·시각자료를 함께 읽습니다." },
-  { name: "STORY", description: "인물과 설화, 가르침을 이야기로 만납니다." },
+  { name: "불교경론", href: "/text/", description: "문헌별 번역·연구·시각자료를 함께 읽습니다." },
+  { name: "불전문학", href: "/story/", description: "인물과 설화, 선시(禪詩) 등을 만납니다." },
   {
-    name: "BLOG",
-    description: "콘텐츠를 만들고 고쳐가는 과정과 생각을 기록합니다.",
+    name: "소소한글",
+    href: "/blog/",
+    description: "콘텐츠를 제작과정과 소소한 일상을 기록합니다.",
   },
 ];
 ---
@@ -25,11 +27,11 @@ const cards = [
     </div>
     <div class="ol-grid-3">
       {cards.map((card, i) => (
-        <a href={`/${card.name.toLowerCase()}/`} class="ol-product-card">
+        <a href={url(card.href)} class="ol-product-card">
           <span class="ol-meta-label">
             0{i + 1} / {card.name}
           </span>
-          <h3>BORIDO {card.name}</h3>
+          <h3>{card.name}</h3>
           <p class="ol-kr">{card.description}</p>
           <div class="ol-product-foot">
             <span class="ol-meta-badge">

@@ -30,7 +30,7 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Source schema/normalized data: `src/content.config.ts`. Shared interpretation: `scripts/lib/content.mjs`. Share these rules with validation instead of maintaining divergent defaults.
 - Restore a missing registry from Git; `prepare:content -- --init` is only for new vaults. Commit prepared registry changes with content; CI runs `check:registry`. First-publication preparation dates use Asia/Seoul.
 - `content-registry.json` is durable source metadata, not disposable build output. Commit it with content changes. It preserves URLs, first-publication preparation dates, previous paths and hashes.
-- `src/content/media/` is the shared public asset namespace, excluded from collections, menus and search. Keep shared images flat with distinct descriptive filenames; sync to `public/generated/content/media/`. It carries no Markdown/frontmatter or document records.
+- `src/content/media/` is the shared public asset namespace. The auxiliary `/media/` gallery is linked from home statistics and the footer, never the primary/mobile menu. Derive image categories from the first subfolder (numeric prefixes only order); root images are 미분류. Keep original assets under `/generated/content/media/`, generated previews under `/generated/media-gallery/`, and no per-image documents/frontmatter/registry records.
 - Keep source attachments inside the vault. Use relative Markdown links; the shared remark plugin resolves them. Unsupported Obsidian wikilinks/blocks must not be described as working.
 - Use `site-config.mjs` for shared fixed settings and `src/lib/site-config.ts` in app code. Do not restore retired DESIGN environment variables.
 - Use shared `DocumentTags.astro` to display only the current document’s optional tags below its title. Series tag controls/modals are retired. BLOG tag buttons filter exact tags together with year archives and shared pagination.
@@ -43,7 +43,7 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Verify actual `dist` pages and local targets, plus RSS/sitemap/robots when routing changes.
 - Keep `dist/`, `.astro/`, `node_modules/`, and `public/generated/` out of commits. Do not edit generated assets as source.
 - Do not alter the user's `.obsidian` state. Personal workspace and plugin files are ignored.
-- Previous ATLAS HTML is preserved in `.agents/archive/atlas/`, outside public output.
+- Historical ATLAS/media archives may have been deleted by the user. Preserve those deletions; do not restore them.
 
 ## Continuity and Skills
 

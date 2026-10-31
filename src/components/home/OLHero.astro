@@ -6,19 +6,27 @@ import { url } from '../../lib/url';
     <span class="ol-section-label">BORIDO · 보리도 · 열린 불교 콘텐츠</span>
     <h1 class="ol-kr">
       <em>열린 불교 콘텐츠 </em><br>
-      모든 소스를 공개합니다.
     </h1>
     <p class="ol-lead ol-kr">
-      보리도는 불교의 지혜를 읽고 사유하며 삶에서 실천하는 길을 함께 찾습니다. 문헌(TEXT), 이야기(STORY), 기록(BLOG)을 통해 콘텐츠와 제작 과정을 나누고, 원본과 개발 자료를 공개합니다.
+      보리도는 불교경론(TEXT), 불전문학(STORY), 소소한 글(BLOG)을 통해 불교의 지혜를 읽고 사유하며 삶에서 실천하는 길을 함께 찾습니다.
     </p>
     <div class="ol-hero-actions">
       <a href={url('/text')} class="ol-btn ol-btn-accent">
-        불교문서 라이브러리 보기
+        불교경론 보기
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
         </svg>
       </a>
-      <a href={url('/blog')} class="ol-btn ol-btn-outline">불교콘텐츠 제작과정 보기</a>
+      <a href={url('/story')} class="ol-btn ol-btn-outline">불전문학 보기
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+        </svg>
+      </a>
+      <a href={url('/blog')} class="ol-btn ol-btn-outline">소소한 글 보기
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+        </svg>
+      </a>
     </div>
   </div>
 </section>
