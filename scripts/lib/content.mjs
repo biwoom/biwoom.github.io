@@ -86,6 +86,7 @@ export function validateInput(data) {
     if (!inputFields.has(key)) throw new Error(`obsolete or unknown frontmatter field: ${key}`);
     if (key === "tags") {
       if (!Array.isArray(value) || value.some(t => typeof t !== "string" || !t.trim())) throw new Error("tags must be a nonempty string array (or [])");
+      if (value.some(t => t.includes("/"))) throw new Error("tags must use plain names without classification prefixes");
     } else if (key === "published") {
       if (typeof value !== "boolean") throw new Error("published must be boolean");
     } else if (key === "date") {
@@ -131,6 +132,9 @@ export function isPublicSource(relative, registry, root = process.cwd(), { asset
   if (!asset && ignored(relative)) return false;
   const base = path.join(root, "src/content");
   if (!fs.existsSync(path.join(base, relative))) return false;
+  // media is a shared public asset namespace, never a document collection.
+  if (relative.startsWith("media/"))
+    return asset && !markdownPattern.test(relative) && fs.statSync(path.join(base, relative)).isFile();
   for (let dir = path.posix.dirname(relative); dir !== "."; dir = path.posix.dirname(dir)) {
     const intro = path.join(base, dir, "index.md");
     if (fs.existsSync(intro) && parse(fs.readFileSync(intro, "utf8")).data.published === false) return false;

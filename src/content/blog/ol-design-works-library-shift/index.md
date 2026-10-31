@@ -1,14 +1,7 @@
 ---
 description: BORIDO DESIGN을 인포그래픽 중심 라이브러리로 재정의하고, BORIDO WORKS를 BOOK의 전 단계가 아닌 살아 있는 문서 라이브러리로 정리한 작업 기록.
 date: 2026-06-04T00:00:00.000Z
-tags:
-  - project/design
-  - project/works
-  - topic/인포그래픽
-  - topic/문서라이브러리
-  - kind/blog
-  - topic/infographic-library
-  - topic/document-library
+tags: ["design","works","인포그래픽","문서라이브러리","blog","infographic-library","document-library"]
 ---
 
 # DESIGN은 인포그래픽으로, WORKS는 문서 라이브러리로

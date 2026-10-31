@@ -1,0 +1,16 @@
+---
+import { url } from "../../lib/url";
+interface Props {
+  tags: string[];
+  blogLinks?: boolean;
+}
+const { tags, blogLinks = false } = Astro.props;
+const labels = [...new Set(tags.map((tag) => tag.trim()).filter(Boolean))];
+---
+{labels.length > 0 && (
+  <div class="ol-document-tags" aria-label="문서 태그" data-document-tags>
+    {labels.map((tag) => blogLinks ? (
+      <a class="ol-text-tag" href={`${url("/blog/")}?tag=${encodeURIComponent(tag)}`}>{tag}</a>
+    ) : <span class="ol-text-tag">{tag}</span>)}
+  </div>
+)}

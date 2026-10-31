@@ -1,20 +1,7 @@
 ---
 description: 2026년 6월 25일과 26일에 진행한 BORIDO HOME 코드 정리, 콘텐츠 검증 강화, TEXT·STORY 리더 개선, 목록 페이지네이션 통일 작업 기록.
 date: 2026-06-26T00:00:00.000Z
-tags:
-  - topic/개발
-  - topic/리팩터링
-  - topic/페이지네이션
-  - kind/blog
-  - project/ol-home
-  - project/text
-  - project/story
-  - project/design
-  - feature/content-validation
-  - feature/tag-index
-  - feature/pagination
-  - feature/text-reader
-  - feature/story-reader
+tags: ["개발","리팩터링","페이지네이션","blog","ol-home","text","story","design","content-validation","tag-index","pagination","text-reader","story-reader"]
 ---
 
 # BORIDO HOME 리팩터링 기록 — 검증, 공용 모듈, TOC, 페이지네이션

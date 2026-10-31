@@ -4,6 +4,56 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-10-31
 
+### Flat Shared Media Assets
+
+- Flattened src/content/media to 15 image files, qualifying generic preview/thumbnail/profile names to prevent collisions. Verified every image hash before/after. Preserved 15 original Markdown/HTML/PDF artifacts under .agents/archive/media-originals and removed the old media subdirectories/OS metadata files. Mapping and SHA-256 evidence: .agents/references/shared-media-migration.json.
+- Updated 7 image links across 4 active documents, including byte-identical image references previously pointing to per-blog copies. Existing blog asset copies remain available. Media is synced to public/generated/content/media without registering content, menu entries or search pages; shared assets do not inherit draft state.
+- Updated authoring/operating docs and skills (manual v2.5, guide v0.7). Added shared-media regression coverage for encoded filenames/query/fragment resolution, private-only references, exclusion of notes/hidden files, absent content records and incremental update/deletion.
+- Passed 26 fixtures, zero-diagnostic typecheck, build, built links/UI contracts, all 7 generated document image references, archive/image integrity checks and 15 live image-URL byte comparisons. Verified media absence from menu links/sitemap/registry and root RSS/robots/config preservation.
+- The old dev process initially returned cached document URLs. After the development server restarted, all 7 updated document image URLs were verified in live HTML as well. Future native sync changes still require a full process restart. No commit/upload performed.
+
+### Plain Optional Tags and BLOG Filters
+
+- Flattened prefix/name tags into deduplicated plain tags arrays. Audited 37 tag-bearing files (including media documents added/moved by the user during this work): bodies and all other frontmatter remained unchanged. Checked 39 existing current registry records for stable IDs, URLs and dates.
+- Added shared DocumentTags below TEXT/STORY/BLOG document titles, omitted when absent, with BLOG tag links opening ?tag filters. Tags are optional and never inherited from series.
+- Removed series tag menus/modals, prefix-filter components/helpers and their dedicated styles. Compact series hero padding is 24px/20px desktop and 20px/16px mobile, with 12px description spacing and 32px lower gap; background/alignment retained.
+- BLOG tag chips show published-post counts, exact-match selection and keyboard pressed states, combined with year archives and pagination reset. All includes untagged posts; empty results, special-character tag URLs and more/reset behavior are covered. Many tags use one horizontally scrollable strip.
+- Updated normalized tag schema, input validation, authoring/operating guidance, brand v1.13, manual v2.4 and refactor guide v0.6. Added actual BLOG script event/pagination tests in a simulated DOM and extended generated-page tag contracts.
+- Validation passed: 25 fixtures, zero-diagnostic typecheck, build, links across 62 HTML pages/21 redirects, document/menu UI contracts and compiled series/tag styles. Live HTTP verified 26 document tag headers (2 untagged), 3 series pages without tag UI and BLOG filter markup. Native-browser visual/click QA remains unverified. No commit/upload performed.
+
+### Shared Library Item Backgrounds
+
+- Shared the category hero's 4% accent/theme-background tint with menu-root category cards and category-detail series rows, increasing to 8% for hover/keyboard focus. Centralized the values in library-scoped custom properties and extended reduced-motion handling to cards.
+- Preserved text colors, card/row forms, row dividers and focus indicators. Updated brand definition to v1.12 and continuity guidance.
+- Passed 22 fixtures, zero-diagnostic typecheck, build, built link/UI checks and compiled CSS checks for both tint levels, item selectors, hover/focus states and hero reuse. Browser visual/interaction QA remains unverified. No commit/upload performed.
+
+### Compact Category and Document Heroes
+
+- Reduced category-detail hero top/bottom padding to 40px/28px (28px/20px mobile), added a solid 4% menu-accent/theme-background tint and retained the divider. Kept menu-root and series styling.
+- Reduced document hero padding to 20px/16px (16px/12px mobile), breadcrumb/title/description gaps to 8–12px and bottom margin to 20px; removed the old negative document part-nav top margin. Title sizes remain 40px/30px.
+- Updated brand definition to v1.11 and continuity guidance. Passed 22 fixtures, zero-diagnostic typecheck, build, built links/UI contracts, compiled CSS checks for tint/divider/padding at both breakpoints, and live category/document HTTP checks for both collections. Browser visual QA remains unverified. No commit/upload performed.
+
+### Library List Labels and Category Divider
+
+- Added small left-aligned 카테고리 목록/시리즈 목록 labels above root/detail lists, using the labels to name the list sections for assistive technology. Added a thin theme-aware bottom border to category-detail heroes only.
+- Passed 22 fixtures, zero-diagnostic typecheck, build and built links/UI contracts. Live HTTP checks covered label text/order and category-only divider classes on both menu roots and all three category detail pages. No commit/upload performed.
+
+### Category Series Rows
+
+- Replaced TEXT/STORY category-detail series cards with numbered full-row links containing titles, optional descriptions, counts/part labels and arrows. Added thin separators, accent hover/focus treatment, compact mobile spacing and explicit hidden-row support for pagination. Menu-root category cards remain unchanged.
+- Updated the existing UI contract to expect series rows instead of a three-column card grid. Passed 22 fixtures, zero-diagnostic typecheck, build, built links/UI checks and live HTTP checks for category-card preservation, row contents and destination links (TEXT 1 series, STORY 2 series, empty 선시). Browser visual/interaction QA remains unverified. No commit/upload performed.
+
+### Restore Menu-root Hero Accents
+
+- Restored the earlier TEXT/STORY accent gradient/grid background on menu roots only, using a dedicated root-hero marker. Category-detail, series and document heroes remain neutral; typography and container alignment are retained.
+- Updated brand definition to v1.10 and continuity guidance. Passed 22 fixtures, zero-diagnostic typecheck, build, built link/UI checks and live HTTP checks that distinguish root hero classes from category detail classes. No commit/upload performed.
+
+### Neutral TEXT/STORY Heroes and Category Layout
+
+- Removed reading-menu hero color/gradient backgrounds and category grid-background markup. Set hero H1 to 40px desktop and 30px at <=900px; category roots/detail lists use max-width 1200px, 32px horizontal padding and left-aligned titles/descriptions.
+- Updated brand definition to v1.9 and continuity guidance. Preserved HOME gradients and menu accent controls.
+- Passed 22 fixtures, zero-diagnostic typecheck, build, built links/UI contracts, compiled CSS checks for the requested sizes/backgrounds/container properties, and live category-markup HTTP checks. Browser visual QA remains unverified. No commit/upload performed.
+
 ### Document Part Navigation Home Link
 
 - Added a first-position home icon to the shared TEXT/STORY document part navigation, linking to the current series URL with an accessible label and tooltip. Reused the existing button styling and kept the icon compact on mobile/desktop.

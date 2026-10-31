@@ -1,18 +1,7 @@
 ---
 description: BORIDO HOME의 TEXT·STORY 콘텐츠를 시리즈 중심 구조로 정리하고, 태그 필터와 검색 패널, 모바일 도구, 이전·다음 문서 탐색을 확장한 작업 기록.
 date: 2026-06-11T00:00:00.000Z
-tags:
-  - topic/개발
-  - project/text
-  - project/story
-  - topic/콘텐츠 구조
-  - kind/blog
-  - project/ol-home
-  - topic/development
-  - feature/text-reader
-  - feature/story-reader
-  - feature/tag-index
-  - feature/content-pipeline
+tags: ["개발","text","story","콘텐츠 구조","blog","ol-home","development","text-reader","story-reader","tag-index","content-pipeline"]
 ---
 
 # TEXT와 STORY 리더 개편 — 시리즈 구조, 태그 인덱스, 문서 탐색

@@ -23,16 +23,17 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - `index.md` is an optional work/series introduction. Do not require one to generate a library.
 - `_drafts`, `_templates`, dotfolders, and `.obsidian` must not appear in public content or search. `assets`/`_assets` are auxiliary files, not item cards.
 - Public menu documents are public by default; preserve explicit `published: false`. A nonpublic series intro hides its descendants.
-- Tags are optional string arrays; slash prefixes are optional. Do not reintroduce `prefixTags`, `entities`, `relations`, or `tagAliases`.
+- Tags are optional plain string arrays, e.g. `tags: [수메다, 수밋따]`; do not use classification prefixes or singular `tag`. Do not reintroduce `prefixTags`, `entities`, `relations`, or `tagAliases`.
 - Keep provenance and notes in body text. Preserve document-specific rights exceptions.
 - Private index.md directories exclude their attachments from deployment. `_assets` is the only underscore-prefixed attachment exception. Publicly shared attachments remain public; keep private per-document attachments in private index folders or `_drafts`.
 - Introduction canonical URLs equal library URLs. Deleted sources must not be restored or redirected to unrelated material; retain registry history and render redirects only to current public targets.
 - Source schema/normalized data: `src/content.config.ts`. Shared interpretation: `scripts/lib/content.mjs`. Share these rules with validation instead of maintaining divergent defaults.
 - Restore a missing registry from Git; `prepare:content -- --init` is only for new vaults. Commit prepared registry changes with content; CI runs `check:registry`. First-publication preparation dates use Asia/Seoul.
 - `content-registry.json` is durable source metadata, not disposable build output. Commit it with content changes. It preserves URLs, first-publication preparation dates, previous paths and hashes.
+- `src/content/media/` is the shared public asset namespace, excluded from collections, menus and search. Keep shared images flat with distinct descriptive filenames; sync to `public/generated/content/media/`. It carries no Markdown/frontmatter or document records.
 - Keep source attachments inside the vault. Use relative Markdown links; the shared remark plugin resolves them. Unsupported Obsidian wikilinks/blocks must not be described as working.
 - Use `site-config.mjs` for shared fixed settings and `src/lib/site-config.ts` in app code. Do not restore retired DESIGN environment variables.
-- Keep TEXT/STORY tag-result behavior in the common modal/client implementation.
+- Use shared `DocumentTags.astro` to display only the current document’s optional tags below its title. Series tag controls/modals are retired. BLOG tag buttons filter exact tags together with year archives and shared pagination.
 
 ## Preservation and Verification
 

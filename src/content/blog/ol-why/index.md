@@ -1,13 +1,7 @@
 ---
 description: 불교 콘텐츠 스튜디오 보리도의 출발점, 설계 원칙, 그리고 TEXT·STORY·BLOG로 구성된 콘텐츠 체계를 정리합니다.
 date: 2026-05-23T00:00:00.000Z
-tags:
-  - topic/선언문
-  - topic/브랜드
-  - kind/blog
-  - project/ol-home
-  - topic/manifesto
-  - topic/brand
+tags: ["선언문","브랜드","blog","ol-home","manifesto","brand"]
 ---
 
 # 보리도는 왜 시작되었는가 — 존재 선언문과 브랜드 체계

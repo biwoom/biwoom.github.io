@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 import { prepare } from "./prepare-content.mjs";
 import { syncAssets } from "./sync-content-assets.mjs";
 import { validate } from "./check-content.mjs";
-import { normalize, markdownTree, textOf, readRegistry, publicationDay, activeRedirects, resolveAlias } from "./lib/content.mjs";
+import { mediaEntries, normalize, markdownTree, textOf, readRegistry, publicationDay, activeRedirects, resolveAlias } from "./lib/content.mjs";
 import remarkContent, {resolveReference} from "./remark-content.mjs";
 import {watchContent} from "./lib/watch-content.mjs";
 import {EventEmitter} from "node:events";
@@ -79,4 +79,25 @@ test('private BLOG index excludes descendant documents and thumbnail links use s
  write('blog/private/index.md','---\npublished: false\n---\n# Private');const body='# Child';write('blog/private/child.md',body);write('blog/private/assets/private.png','image');
  const r=prepare(root);assert.equal(normalize('blog/private/child.md',body,r,root).published,false);
  write('blog/public.md','---\nthumbnailAsset: ./private/assets/private.png\n---\n# Public');assert.ok(validate(root).some(e=>e.includes('excluded')));
+}));
+
+test('shared media assets resolve from documents without becoming content or inheriting draft state',()=>fixture((root,write)=>{
+ const image='media/도표 1.PNG', generated=path.join(root,'public/generated/content',image);
+ write(image,'image bytes');write('media/notes.md','# Asset note');
+ write('media/.hidden.png','hidden');write('media/_drafts/private.png','private');
+ write('blog/private.md','---\npublished: false\n---\n# Private\n![shared](../media/도표%201.PNG)');
+ let registry=prepare(root);syncAssets(root);
+ assert.equal(fs.readFileSync(generated,'utf8'),'image bytes');
+ assert.equal(fs.existsSync(path.join(root,'public/generated/content/media/notes.md')),false);
+ assert.equal(fs.existsSync(path.join(root,'public/generated/content/media/.hidden.png')),false);
+ assert.equal(fs.existsSync(path.join(root,'public/generated/content/media/_drafts/private.png')),false);
+ assert.equal(Object.keys(registry.files).some(source=>source.startsWith('media/')),false);
+ assert.equal(mediaEntries(root).some(entry=>entry.data.source.startsWith('media/')),false);
+ write('blog/public.md','---\nthumbnailAsset: ../media/도표%201.PNG\n---\n# Public\n![shared](../media/도표%201.PNG?width=640#view)');
+ registry=prepare(root);assert.deepEqual(validate(root),[]);
+ const expected='/generated/content/media/'+encodeURIComponent('도표 1.PNG');
+ assert.equal(resolveReference('blog/public.md','../media/도표%201.PNG?width=640#view',registry,root),expected+'?width=640#view');
+ write(image,'updated image');syncAssets(root);assert.equal(fs.readFileSync(generated,'utf8'),'updated image');
+ write('blog/public.md','# Public');fs.unlinkSync(path.join(root,'src/content',image));syncAssets(root);
+ assert.equal(fs.existsSync(generated),false);
 }));

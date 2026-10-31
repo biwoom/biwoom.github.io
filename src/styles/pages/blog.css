@@ -169,3 +169,17 @@
 .ol-blog-detail-back:hover {
   color: var(--ol-ink);
 }
+
+/* Tags stay in one scrollable row, including when a vault has many tags. */
+.ol-blog-tag-chips {
+  width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scrollbar-width: thin;
+}
+.ol-blog-tag-chips .ol-chip { flex: 0 0 auto; white-space: nowrap; }
+.ol-blog-filter-status { margin: 0 0 16px; color: var(--ol-muted); font-size: 13px; }
+
+.ol-post[hidden] { display: none; }

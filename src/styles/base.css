@@ -373,11 +373,11 @@ a { color: inherit; }
 
 /* ===== Hero ===== */
 .ol-hero {
-  padding: 96px 0 64px;
+  padding: 96px 0 96px;
   text-align: center;
 }
 .ol-hero--compact {
-  padding-bottom: 32px;
+  /* padding-bottom: 50px; */
 }
 .ol-hero .ol-container {
   max-width: 920px;

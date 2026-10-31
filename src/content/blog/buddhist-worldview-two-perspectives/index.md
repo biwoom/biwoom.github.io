@@ -1,15 +1,7 @@
 ---
 description: 불교공부모임에서 나온 질문들에 답하며 제작한 인포그래픽. 불교적 관찰이 무엇을 설명하려는지, 그 목적이 어디에 있는지 정리했다.
 date: 2026-06-11T00:00:00.000Z
-tags:
-  - project/design
-  - topic/불교세계관
-  - topic/무아
-  - topic/연기
-  - topic/사성제
-  - topic/인포그래픽
-  - kind/blog
-  - kind/infographic
+tags: ["design","불교세계관","무아","연기","사성제","인포그래픽","blog","infographic"]
 ---
 
 # 불교의 세계관 — 두 가지 관점으로 보기
@@ -20,7 +12,7 @@ tags:
 
 그래서 이 인포그래픽의 핵심 질문은 “불교적 관찰은 무엇을 증명하려는가?”였다.
 
-![두 가지 관찰 인포그래픽 썸네일](./preview1.png)
+![두 가지 관찰 인포그래픽 썸네일](../../media/buddhist-worldview-preview1.png)
 
 ## 두 가지 관찰
 

@@ -141,3 +141,18 @@
     margin-right: auto;
   }
 }
+
+/* Compact document introductions before the sticky part navigation. */
+.ol-story-reader-page.ol-story-doc-page .ol-story-doc-hero {
+  padding: 20px 20px 16px;
+  margin-bottom: 20px;
+}
+.ol-story-doc-page .ol-story-doc-hero .ol-text-breadcrumb { margin-bottom: 0; }
+.ol-story-doc-page .ol-story-doc-hero h1,
+.ol-story-doc-page .ol-story-doc-hero p { margin-top: 12px; }
+.ol-story-doc-page .ol-story-part-nav { margin-top: 0; }
+@media (max-width: 900px) {
+  .ol-story-reader-page.ol-story-doc-page .ol-story-doc-hero { padding: 16px 20px 12px; }
+  .ol-story-doc-page .ol-story-doc-hero h1,
+  .ol-story-doc-page .ol-story-doc-hero p { margin-top: 8px; }
+}

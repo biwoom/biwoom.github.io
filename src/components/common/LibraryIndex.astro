@@ -20,8 +20,12 @@ const label = section.toUpperCase();
     : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "불교의 인물과 가르침을 만나는 이야기"}
   pagefindBody={false}
 >
-  <main>
-    <section class={`ol-hero ol-grid-bg ol-grid-bg--${section} ol-hero--compact`}>
+  <main class="ol-library-index-page">
+    <section class:list={[
+      "ol-hero ol-hero--compact",
+      category && "ol-library-category-hero",
+      !category && `ol-library-menu-hero ol-grid-bg ol-grid-bg--${section}`,
+    ]}>
       <div class="ol-container">
         {category ? (
           <nav class="ol-text-breadcrumb" aria-label="현재 위치">
@@ -36,15 +40,25 @@ const label = section.toUpperCase();
         </p>
       </div>
     </section>
-    <section class="ol-section">
+    <section class="ol-section" aria-labelledby="ol-library-list-label">
       <div class="ol-container">
-        <div class="ol-grid-3" data-library-grid data-library-view={category ? "series" : "categories"}>
-          {category ? library.map((series) => (
-            <a class="ol-card ol-story-library-card" href={url(series.url)} data-library-item>
-              <span class="ol-meta-label">{series.count}개 자료</span>
-              <h2 class="ol-kr">{series.label}</h2>
-              {series.description && <p>{series.description}</p>}
-              <span class="ol-meta-label">{series.parts.map((part) => part.label).join(" · ")}</span>
+        <p class="ol-library-list-label" id="ol-library-list-label">{category ? "시리즈 목록" : "카테고리 목록"}</p>
+        <div class:list={category ? "ol-library-series-list" : "ol-grid-3"} data-library-grid data-library-view={category ? "series" : "categories"}>
+          {category ? library.map((series, index) => (
+            <a class="ol-library-series-row" href={url(series.url)} data-library-item>
+              <span class="ol-library-series-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              <div class="ol-library-series-body">
+                <h2 class="ol-kr">{series.label}</h2>
+                {series.description && <p class="ol-kr">{series.description}</p>}
+                <div class="ol-library-series-meta">
+                  <span>{series.count}개 자료</span>
+                  {series.parts.length > 0 && <span>{series.parts.map((part) => part.label).join(" · ")}</span>}
+                </div>
+              </div>
+              <svg class="ol-library-series-arrow" width="20" height="20" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 12h16m-6-6 6 6-6 6" />
+              </svg>
             </a>
           )) : categories.map((item) => (
             <a class="ol-card ol-story-library-card" href={url(item.url)} data-library-item data-library-category={item.key}>

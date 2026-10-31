@@ -7,7 +7,7 @@
   },
   "scripts": {
     "check:content": "node scripts/check-content.mjs",
-    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs scripts/check-transition-fixtures.mjs",
+    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs scripts/check-transition-fixtures.mjs scripts/check-tags-fixtures.mjs",
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node scripts/sync-content-assets.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",

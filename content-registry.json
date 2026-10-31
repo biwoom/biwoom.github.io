@@ -26,190 +26,120 @@
       "id": "blog-a99c35106d0edf",
       "url": "/blog/atlas-dev-journey/",
       "date": "2026-05-27",
-      "hash": "af996bd4cc633f2c3980cdb05f998120fed0087396c2a3b6e399e61b62f7e6e6",
+      "hash": "bc3a89cd7343dd979c8964a5f02d01a78760477e8f8823698fbdc85129b01729",
       "seriesKey": "blog/standalone"
     },
     "blog/atlas-footnotes/index.md": {
       "id": "blog-7e2b2385c139bf",
       "url": "/blog/atlas-footnotes/",
       "date": "2026-05-31",
-      "hash": "59d292476df0a0c9152357eff933a107471722eb596a64965c39f37ed1cfba64",
+      "hash": "81b3c56d05accbef6572676bd173ed77e4ecc7be105c99f1b097e45482bc462f",
       "seriesKey": "blog/standalone"
     },
     "blog/blog-atlas-code-restructuring/index.md": {
       "id": "blog-13fe94521f7eff",
       "url": "/blog/blog-atlas-code-restructuring/",
       "date": "2026-06-01",
-      "hash": "cb6170b27324ac7558371bacb1b20275232f32e668f7cfe89bb02a8dd11b9684",
+      "hash": "dfe513b9d678634b219af044606c77f68d836d394580758fa29e910d9eafe83d",
       "seriesKey": "blog/standalone"
     },
     "blog/body-mind-transformation-infographic/index.md": {
       "id": "blog-73bb55addb4db7",
       "url": "/blog/body-mind-transformation-infographic/",
       "date": "2026-06-04",
-      "hash": "2eeed7d3cee68ea25d36f2b1e076e4c089d775896fac97dfc409004b762822a2",
+      "hash": "fa3d3bf0e2e6bbd8aeb48ce1257fea16fb4894a570f94d16d296ecf5c7279bbd",
       "seriesKey": "blog/standalone"
     },
     "blog/book-design-guide/index.md": {
       "id": "blog-836c67c8dbca96",
       "url": "/blog/book-design-guide/",
       "date": "2026-05-28",
-      "hash": "ac4c83017933a7f417c64e286518d72eab4917e6b681f9097b6eff2488a6ba92",
+      "hash": "e77db658829a9367933b891081ff9401bf55a4cc8af55e57c2963e08f657c172",
       "seriesKey": "blog/standalone"
     },
     "blog/buddhist-worldview-two-perspectives/index.md": {
       "id": "blog-3d2bfe8ce54cc3",
       "url": "/blog/buddhist-worldview-two-perspectives/",
       "date": "2026-06-11",
-      "hash": "7ba6364449a9ccd5798bd9129cb7ad59d8c537667e50172f29a0bcf007f06bba",
+      "hash": "c8abdefd7269061a9308f8a24b8074147adac535ab7e318d36a3cd6184bd92a6",
       "seriesKey": "blog/standalone"
     },
     "blog/indramang-life-peace-patterns/index.md": {
       "id": "blog-7e5c5458d494c9",
       "url": "/blog/indramang-life-peace-patterns/",
       "date": "2026-06-21",
-      "hash": "d102725d6d92e250ce955121a7251ea1a94124f8b8af3e3260dfe338ce010428",
+      "hash": "ab5c5fc8b62f551fe0e76ed6874c176f417dcbcc8d405ab0daeebd5fa3d283f4",
       "seriesKey": "blog/standalone"
     },
     "blog/lamrim-infographic-making/index.md": {
       "id": "blog-7c893fd903f62d",
       "url": "/blog/lamrim-infographic-making/",
       "date": "2026-06-04",
-      "hash": "7bf57354005c98770682e4fdea5841d696ee27ee6c9795f4f1538ffd5e9a7ed9",
+      "hash": "2020df506860850fa115d9ca17a1b871e7e2f64e792a64cde323a6c6c158e05d",
       "seriesKey": "blog/standalone"
     },
     "blog/net-menu-name-card-phase1/index.md": {
       "id": "blog-640fb779bf3084",
       "url": "/blog/net-menu-name-card-phase1/",
       "date": "2026-06-20",
-      "hash": "6136300fa8ba526d54a64851c6017f41ec826f2c92889fd96ccfef7a8f647165",
+      "hash": "6ca9305e056e8a3cfb40b42c008e3d99214d4ec3a897d4f01bcd2a413f69bf93",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-brand-design/index.md": {
       "id": "blog-9b9c8c6df4dfd1",
       "url": "/blog/ol-brand-design/",
       "date": "2026-05-25",
-      "hash": "31ca89eea1e9b28314cd81604ff900339ac2944475ddad9ea349fe028f6a1ee2",
+      "hash": "8675099bc81dd502bfe78c3fb69c65a3fba35d22252652da6d3187a6e1d66b06",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-design-works-library-shift/index.md": {
       "id": "blog-628965f4ca7f5b",
       "url": "/blog/ol-design-works-library-shift/",
       "date": "2026-06-04",
-      "hash": "d39b27c2b70f6e5cc085cdf60b1927ef16505c48638324437b1ef1f1b0d47c58",
+      "hash": "befe6e1ae0735880dc6392c5843883850a88e51b2ded5f5cc04c43b2c0aedf3d",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-build/index.md": {
       "id": "blog-af2e99eea31e5e",
       "url": "/blog/ol-home-build/",
       "date": "2026-05-30",
-      "hash": "633a6b78313731d19e1c94a3d124fd4a06b24d9a607c22438ed8659083c2602c",
+      "hash": "3bc551d4d0a999bab809c61f29219f5d01bc551b1612f1a3ffff92d736be28b6",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-phase4/index.md": {
       "id": "blog-32ddbb1546caed",
       "url": "/blog/ol-home-phase4/",
       "date": "2026-05-31",
-      "hash": "024a6b629c7264b2e38a0fc8bf6fe8a9f451b29b5a858cdecf7a0bd945c3f705",
+      "hash": "bb339ec031a05dded55879052d95135f3ef18e5db8c900665a5394c44cc96197",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-refactoring-and-pagination/index.md": {
       "id": "blog-225ca115c1c287",
       "url": "/blog/ol-home-refactoring-and-pagination/",
       "date": "2026-06-26",
-      "hash": "ae5eb6a4c3c577a89178b2507b54fd8d0860b859c0411ae93e2ea6ea94a8d14e",
+      "hash": "dac3d05eee93ca616d4998b70bd77255293b59916a65532296e899f95c193d19",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-home-text-story-reader-update/index.md": {
       "id": "blog-0077606ed3487b",
       "url": "/blog/ol-home-text-story-reader-update/",
       "date": "2026-06-11",
-      "hash": "dd98dfdefea0573f7c51bee88f3eae00a56223aa264e5a843a625ae0c2cef2ac",
+      "hash": "0fadeb3ea031d3dfbd5b42f610bca9abece8fbd285b6985c6fd4531f1a17049e",
       "seriesKey": "blog/standalone"
     },
     "blog/ol-why/index.md": {
       "id": "blog-56a140a591ce16",
       "url": "/blog/ol-why/",
       "date": "2026-05-23",
-      "hash": "e75c9c830d8e41496855c3f04304a2bbb11fe10b67d0cdd21231a33cf6f322ba",
+      "hash": "c552b07f0bd809bebc3d563c94dda2832524ce1bcb305f633229830e73a55ac2",
       "seriesKey": "blog/standalone"
     },
     "pages/brand.md": {
       "id": "pages-53dfbb7cee6fb5",
       "url": "/pages/brand/",
       "date": "2026-10-30",
-      "hash": "770e94cfc1c4e1845afc7950b535e12ea23f299d100b432fee91fa48b994ded1",
+      "hash": "5424a8c3ee99f711027016a523065ef3a813eaa522e827f8316b82f08ecee15f",
       "seriesKey": "pages/standalone"
-    },
-    "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md": {
-      "id": "text-788ae63f1e0780",
-      "url": "/text/read/788ae63f1e0780/",
-      "date": "2026-06-21",
-      "hash": "e00db8d02b601b0e0b23349d2c32b53ffbadc26b6d73284e30abfe6fa7d484a1",
-      "seriesKey": "text/950.시각자료/001.보리수 인드라망 문양"
-    },
-    "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md": {
-      "id": "text-97a90ebeefaadb",
-      "url": "/text/read/97a90ebeefaadb/",
-      "date": "2026-06-21",
-      "hash": "1a91dc31ec733cf09d1196b196cb6b25fcbfc9a1d24840f2cf280d2b7aa5062e",
-      "seriesKey": "text/950.시각자료/002.다양성 인드라망 문양"
-    },
-    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md": {
-      "id": "text-fc15e943236351",
-      "url": "/text/read/fc15e943236351/",
-      "date": "2026-06-04",
-      "hash": "17a3f3f9f4a5dab33ca60e05feec1b0f029faadbb8830c815f2f69c115647bd6",
-      "seriesKey": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계"
-    },
-    "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md": {
-      "id": "text-7aae6d70415806",
-      "url": "/text/read/7aae6d70415806/",
-      "date": "2026-06-21",
-      "hash": "468eef4188a3a1ad909785c2efa0dffff545ea7d2ff6b99aa2741359d020e7a1",
-      "seriesKey": "text/950.시각자료/004.생명평화 인드라망 문양"
-    },
-    "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md": {
-      "id": "text-22e2316fc9f326",
-      "url": "/text/read/22e2316fc9f326/",
-      "date": "2026-06-21",
-      "hash": "d69924f75b929c1c4939d4eb6adaea4208830139348856faa19c87d49ec5f40b",
-      "seriesKey": "text/950.시각자료/005.인드라망 픽토그래프 1"
-    },
-    "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md": {
-      "id": "text-557d12d0bac979",
-      "url": "/text/read/557d12d0bac979/",
-      "date": "2026-06-21",
-      "hash": "10e6716403460d8367ad5a4578a2d75b7f82e68cb439c5459e8beb869f640049",
-      "seriesKey": "text/950.시각자료/006.인드라망 픽토그래프 2"
-    },
-    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md": {
-      "id": "text-1b6a2b94f3b00b",
-      "url": "/text/read/1b6a2b94f3b00b/",
-      "date": "2026-06-04",
-      "hash": "9888d26dcc336c4fe8690ec6106c1351261dd49b5c8ec00ea4681f44bf59886b",
-      "seriesKey": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계"
-    },
-    "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md": {
-      "id": "text-cac235159782e8",
-      "url": "/text/read/cac235159782e8/",
-      "date": "2026-06-20",
-      "hash": "76b6f4e9ccd52f9429229bc97353e2bf8f147ea40b8290f3c5f28725e67efaeb",
-      "seriesKey": "text/950.시각자료/008.수메다와 수밋타의 첫 만남"
-    },
-    "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md": {
-      "id": "text-cd6bd2bf1f7b10",
-      "url": "/text/read/cd6bd2bf1f7b10/",
-      "date": "2026-06-19",
-      "hash": "a90fd54b00f3d990196ba23840eadbeb4c735236f1764ed52d70b249646ef89b",
-      "seriesKey": "text/950.시각자료/009.수밋타 프로필 이미지"
-    },
-    "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md": {
-      "id": "text-3ab0b2466d582f",
-      "url": "/text/read/3ab0b2466d582f/",
-      "date": "2026-06-11",
-      "hash": "78e5957c793a91f1a5c840e519b262d7da468fc49db8ddfcd42c81c3d01cf06e",
-      "seriesKey": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점"
     },
     "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md": {
       "id": "text-9b8d3fae3f2283",
@@ -391,77 +321,147 @@
       "url": "/text/library/57e84aa08ef835/",
       "date": "2026-10-30",
       "seriesKey": "text/001.중관부/001.대승현론",
-      "hash": "c4b12e30b9ff22a047ae5922729d7714b0984f45fa809382738b15ad621673c2"
+      "hash": "54858ec8aa875fb30adef40f0844b5439928275c281d065be128b2a5d8b946c6"
     },
     "blog/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md": {
       "id": "text-0cc5ba610b1cbb",
       "url": "/blog/six-steps-basic-meditation/",
       "date": "2026-06-04",
-      "hash": "228199d04dd2013297eb7edc0bbf04a32819b982232b2927db9b19b0d1c93f69",
+      "hash": "0229995aeff748a239eb9ba5e6b74751eb8994f019ecd90b2f986a5e7e0fdeb4",
       "seriesKey": "blog/standalone"
     },
     "blog/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md": {
       "id": "text-1b012d8487de24",
       "url": "/blog/buddhist-worldview-understanding/",
       "date": "2026-06-13",
-      "hash": "35f55139e779956a13281ca11237cea07a9d0ff3d76e3bae427be9ca1d8743a9",
+      "hash": "707ae97b43302ac8a8ccad8acb33680812c35342c2f2159c9d877f65286145c7",
       "seriesKey": "blog/standalone"
     },
     "blog/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md": {
       "id": "text-211536d4712e36",
       "url": "/blog/middle-way-beyond-scientism/",
       "date": "2026-06-23",
-      "hash": "b398b510b87959e59e97782ac2ffe54de577485f143e2c3b083bfa28d9f7b406",
+      "hash": "a95ed10a09eb1ce4434ba6c10da7701aac54629f5813b2c2a6820beb8baa0959",
       "seriesKey": "blog/standalone"
     },
     "blog/부처님의 깨달음 - 무상정등정각에 대하여.md": {
       "id": "text-05f6d170f384d1",
       "url": "/blog/anuttara-samma-sambodhi/",
       "date": "2026-06-23",
-      "hash": "fdfdfcc67aecd918f459e0b19481f55545725a2b991bf547ab74cb764ffdcc77",
+      "hash": "189cd5e36add7b72d7e3cdcc44bb0abb9eb563d214cb4bbef967da04c0ecc404",
       "seriesKey": "blog/standalone"
     },
     "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/001.수메다, 길을 묻기 시작하다.md": {
       "id": "story-95f5f8336bc028",
       "url": "/story/buddha-story/part-1/01-sumedha-begins-to-ask/",
       "date": "2026-06-18",
-      "hash": "535c335c1a517942add80df1fb2e34c5c3aa586f942e78b849a6f172fd88015e",
+      "hash": "c7c7706b72f4b988518783dada662777d67ffe08de85121aa27bb1951831f752",
       "seriesKey": "story/001.불전문학/010.붓다 스토리"
     },
     "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md": {
       "id": "story-7cedcd75d099c2",
       "url": "/story/buddha-story/part-1/02-sumedha-finds-new-path/",
       "date": "2026-06-18",
-      "hash": "7ddb4bf0734045c05d2cb2f50014eefc18b4c355109b8f82508972d74af46ece",
+      "hash": "a0e328964cb259e4022dc9ae98c65ba4937e2e55c231daaa9802e386f7b86aa2",
       "seriesKey": "story/001.불전문학/010.붓다 스토리"
     },
     "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md": {
       "id": "story-965f426ee95d39",
       "url": "/story/buddha-story/part-1/03-sumedha-gives-all-and-goes-to-forest/",
       "date": "2026-06-18",
-      "hash": "4dd65e68d7750eb527cb1a5dda189536750a4d4d93875d26baef77aab9d42375",
+      "hash": "8ea1ed91b200a061bb86aea03dfaf1c472b93b5c40205303f313127ccffccb03",
       "seriesKey": "story/001.불전문학/010.붓다 스토리"
     },
     "story/001.불전문학/010.붓다 스토리/index.md": {
       "id": "story-3777d2d62fba28",
       "url": "/story/buddha-story/",
       "date": "2026-10-30",
-      "hash": "ba2f38290127061ca61412590c4a31cdbd4ee737f8a6c336b514e70009e10ba0",
+      "hash": "9d61c8226eb25367c918b0efd70230e15e28e56e227ddb9e865d9ceb19084663",
       "seriesKey": "story/001.불전문학/010.붓다 스토리"
     },
     "story/001.불전문학/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md": {
       "id": "story-d6ad6b13db1441",
       "url": "/story/dhammapada-story/part-1/01-cakkhupala/",
       "date": "2026-06-26",
-      "hash": "23b578c9323cd1d002b21e6f2c8447f7e963c1b1bb5e639c47cd8062d3d4ee4f",
+      "hash": "0794b21aeec007304fbcfc65fb595c19d73e9f285f82992e6b16a0f01e3ffbfd",
       "seriesKey": "story/001.불전문학/020.담마빠다 스토리"
     },
     "story/001.불전문학/020.담마빠다 스토리/index.md": {
       "id": "story-0500c29e3f00b7",
       "url": "/story/dhammapada-story/",
       "date": "2026-10-30",
-      "hash": "09590ce63e72ccefd841161ab67d20f54bfaae30f7b368c73ec8ce71858f3b3f",
+      "hash": "787e40d9fbe705933127e49ea931061f4d04a7108589a5065344ab1150faeb6d",
       "seriesKey": "story/001.불전문학/020.담마빠다 스토리"
+    },
+    "text/media/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md": {
+      "id": "text-788ae63f1e0780",
+      "url": "/text/read/788ae63f1e0780/",
+      "date": "2026-06-21",
+      "hash": "c7d5ac6e1afabe45cb5fe2d2af9f20166004817c80601a4400aae30e3d9069b6",
+      "seriesKey": "text/media/001.보리수 인드라망 문양"
+    },
+    "text/media/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md": {
+      "id": "text-97a90ebeefaadb",
+      "url": "/text/read/97a90ebeefaadb/",
+      "date": "2026-06-21",
+      "hash": "2c4245bb909e8d654f909e557cb616be2ac587ec37bf203871bba32ad24358bd",
+      "seriesKey": "text/media/002.다양성 인드라망 문양"
+    },
+    "text/media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md": {
+      "id": "text-fc15e943236351",
+      "url": "/text/read/fc15e943236351/",
+      "date": "2026-06-04",
+      "hash": "16c397637ec9bc6c0b5c653754aaea992423ea7a553e77bb644778b5676a3fd5",
+      "seriesKey": "text/media/003.람림 삼사도 — 보리도차제론의 수행체계"
+    },
+    "text/media/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md": {
+      "id": "text-7aae6d70415806",
+      "url": "/text/read/7aae6d70415806/",
+      "date": "2026-06-21",
+      "hash": "f191ead214c3d90e79671803eedecba1da9b16e7e7db9ac44f147a00be61f0a7",
+      "seriesKey": "text/media/004.생명평화 인드라망 문양"
+    },
+    "text/media/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md": {
+      "id": "text-22e2316fc9f326",
+      "url": "/text/read/22e2316fc9f326/",
+      "date": "2026-06-21",
+      "hash": "ae4938defe3e2ff0eb2703af1c0b73f0dbf468bcb9004cba5d5e96644ec650d6",
+      "seriesKey": "text/media/005.인드라망 픽토그래프 1"
+    },
+    "text/media/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md": {
+      "id": "text-557d12d0bac979",
+      "url": "/text/read/557d12d0bac979/",
+      "date": "2026-06-21",
+      "hash": "9c562018b1cd5ec9baefe95efa206985448567264acd917c66117ff94fa1c6ba",
+      "seriesKey": "text/media/006.인드라망 픽토그래프 2"
+    },
+    "text/media/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md": {
+      "id": "text-1b6a2b94f3b00b",
+      "url": "/text/read/1b6a2b94f3b00b/",
+      "date": "2026-06-04",
+      "hash": "1161709a05841035c6e006b486a0d49fd5c45c788471cbc84ff634ba0f1cdcd5",
+      "seriesKey": "text/media/007.몸과 마음의 정화 여섯 단계"
+    },
+    "text/media/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md": {
+      "id": "text-cac235159782e8",
+      "url": "/text/read/cac235159782e8/",
+      "date": "2026-06-20",
+      "hash": "bf0f73a7d282bbc600f5e49bb2ae5ce44d586a222ef3d6dd45162a64459d1d1f",
+      "seriesKey": "text/media/008.수메다와 수밋타의 첫 만남"
+    },
+    "text/media/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md": {
+      "id": "text-cd6bd2bf1f7b10",
+      "url": "/text/read/cd6bd2bf1f7b10/",
+      "date": "2026-06-19",
+      "hash": "566a6350ff49e31a893dcd3b9afffd14197b9c5cc8d081f142c3043a13e8d581",
+      "seriesKey": "text/media/009.수밋타 프로필 이미지"
+    },
+    "text/media/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md": {
+      "id": "text-3ab0b2466d582f",
+      "url": "/text/read/3ab0b2466d582f/",
+      "date": "2026-06-11",
+      "hash": "9888979d8cdd3c011159ab73741a0b2b714f9d0b2c36622b81a83a4f9aa525f3",
+      "seriesKey": "text/media/010.불교의 세계관 — 두 가지 관점"
     }
   },
   "folders": {
@@ -545,6 +545,46 @@
     "story/001.불전문학/020.담마빠다 스토리": {
       "title": "담마빠다 스토리",
       "url": "/story/dhammapada-story/"
+    },
+    "text/media/001.보리수 인드라망 문양": {
+      "title": "보리수 인드라망 문양",
+      "url": "/text/library/2214bd1d754fec/"
+    },
+    "text/media/002.다양성 인드라망 문양": {
+      "title": "다양성 인드라망 문양",
+      "url": "/text/library/f1ce67169efa56/"
+    },
+    "text/media/003.람림 삼사도 — 보리도차제론의 수행체계": {
+      "title": "람림 삼사도 — 보리도차제론의 수행체계",
+      "url": "/text/library/32d71d116be615/"
+    },
+    "text/media/004.생명평화 인드라망 문양": {
+      "title": "생명평화 인드라망 문양",
+      "url": "/text/library/1d48c9c3c4d78d/"
+    },
+    "text/media/005.인드라망 픽토그래프 1": {
+      "title": "인드라망 픽토그래프 1",
+      "url": "/text/library/a03eb6c36c1b72/"
+    },
+    "text/media/006.인드라망 픽토그래프 2": {
+      "title": "인드라망 픽토그래프 2",
+      "url": "/text/library/2042250dc4bbfd/"
+    },
+    "text/media/007.몸과 마음의 정화 여섯 단계": {
+      "title": "몸과 마음의 정화 여섯 단계",
+      "url": "/text/library/d4bc437f339276/"
+    },
+    "text/media/008.수메다와 수밋타의 첫 만남": {
+      "title": "수메다와 수밋타의 첫 만남",
+      "url": "/text/library/7f40dda9543b08/"
+    },
+    "text/media/009.수밋타 프로필 이미지": {
+      "title": "수밋타 프로필 이미지",
+      "url": "/text/library/bfaade3f3ba8ad/"
+    },
+    "text/media/010.불교의 세계관 — 두 가지 관점": {
+      "title": "불교의 세계관 — 두 가지 관점",
+      "url": "/text/library/1ae88a9c083104/"
     }
   },
   "redirects": {
@@ -610,33 +650,33 @@
     "story/dhammapada-story/index.md": "story/001.불전문학/020.담마빠다 스토리/index.md",
     "story/dhammapada-story/part-1/01-cakkhupala.md": "story/001.불전문학/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
     "story/placeholder/index.md": "story/999.OL STORY — 준비 중/index.md",
-    "design/bodhi-tree-indramang/index.md": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+    "design/bodhi-tree-indramang/index.md": "text/media/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
     "design/bodhi-tree-indramang/assets/Bodhi-Tree-Indramang.PNG": "text/950.시각자료/001.보리수 인드라망 문양/001.자료/assets/Bodhi-Tree-Indramang.PNG",
-    "design/diversity-indramang/index.md": "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+    "design/diversity-indramang/index.md": "text/media/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
     "design/diversity-indramang/assets/Diversity-Indramang-1.PNG": "text/950.시각자료/002.다양성 인드라망 문양/001.자료/assets/Diversity-Indramang-1.PNG",
-    "design/lamrim-infographic/index.md": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+    "design/lamrim-infographic/index.md": "text/media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
     "design/lamrim-infographic/assets/lamrim-infographic.html": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.html",
     "design/lamrim-infographic/assets/lamrim-infographic.pdf": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.pdf",
     "design/lamrim-infographic/assets/preview1.jpg": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/preview1.jpg",
     "design/lamrim-infographic/assets/preview2.jpg": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/preview2.jpg",
     "design/lamrim-infographic/assets/thumb.jpg": "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/thumb.jpg",
-    "design/life-peace-indramang/index.md": "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+    "design/life-peace-indramang/index.md": "text/media/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
     "design/life-peace-indramang/assets/Life-Peace-Indramang.PNG": "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/assets/Life-Peace-Indramang.PNG",
-    "design/pictograph-indramang-1/index.md": "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+    "design/pictograph-indramang-1/index.md": "text/media/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
     "design/pictograph-indramang-1/assets/Pictograph-Indramang-1.PNG": "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/assets/Pictograph-Indramang-1.PNG",
-    "design/pictograph-indramang-2/index.md": "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+    "design/pictograph-indramang-2/index.md": "text/media/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
     "design/pictograph-indramang-2/assets/Pictograph-Indramang-2.PNG": "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/assets/Pictograph-Indramang-2.PNG",
-    "design/six-steps-body-mind-infographic/index.md": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+    "design/six-steps-body-mind-infographic/index.md": "text/media/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
     "design/six-steps-body-mind-infographic/assets/index.html": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/index.html",
     "design/six-steps-body-mind-infographic/assets/preview1.jpg": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/preview1.jpg",
     "design/six-steps-body-mind-infographic/assets/preview2.jpg": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/preview2.jpg",
     "design/six-steps-body-mind-infographic/assets/six-steps-infographic.pdf": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/six-steps-infographic.pdf",
     "design/six-steps-body-mind-infographic/assets/thumb.jpg": "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/assets/thumb.jpg",
-    "design/sumedha-sumitta-first-meeting/index.md": "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+    "design/sumedha-sumitta-first-meeting/index.md": "text/media/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
     "design/sumedha-sumitta-first-meeting/assets/sumedha-sumitta.png": "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/assets/sumedha-sumitta.png",
-    "design/sumitta-profile/index.md": "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+    "design/sumitta-profile/index.md": "text/media/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
     "design/sumitta-profile/assets/profile.jpg": "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/assets/profile.jpg",
-    "design/two-perspectives/index.md": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
+    "design/two-perspectives/index.md": "text/media/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
     "design/two-perspectives/assets/index.html": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/assets/index.html",
     "design/two-perspectives/assets/preview1.png": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/assets/preview1.png",
     "design/two-perspectives/assets/thumb.jpg": "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/assets/thumb.jpg",
@@ -663,6 +703,16 @@
     "story/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md": "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/003.수메다, 모든 것을 베풀고 숲으로 가다.md",
     "story/010.붓다 스토리/index.md": "story/001.불전문학/010.붓다 스토리/index.md",
     "story/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md": "story/001.불전문학/020.담마빠다 스토리/010.1장 - 쌍품/001.The Story about the Elder Cakkhupāla.md",
-    "story/020.담마빠다 스토리/index.md": "story/001.불전문학/020.담마빠다 스토리/index.md"
+    "story/020.담마빠다 스토리/index.md": "story/001.불전문학/020.담마빠다 스토리/index.md",
+    "text/950.시각자료/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md": "text/media/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+    "text/950.시각자료/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md": "text/media/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+    "text/950.시각자료/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md": "text/media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+    "text/950.시각자료/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md": "text/media/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+    "text/950.시각자료/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md": "text/media/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+    "text/950.시각자료/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md": "text/media/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+    "text/950.시각자료/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md": "text/media/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+    "text/950.시각자료/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md": "text/media/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+    "text/950.시각자료/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md": "text/media/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+    "text/950.시각자료/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md": "text/media/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md"
   }
 }

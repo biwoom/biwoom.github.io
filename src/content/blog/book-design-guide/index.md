@@ -1,13 +1,7 @@
 ---
 description: 완결된 BOOK HTML과 DESIGN 이미지를 홈페이지에 등록하는 방법. 메타데이터와 실제 파일을 분리하는 이유와 구체적인 절차를 설명합니다.
 date: 2026-05-28T00:00:00.000Z
-tags:
-  - project/book
-  - project/design
-  - topic/파일관리
-  - kind/blog
-  - topic/file-management
-  - topic/metadata
+tags: ["book","design","파일관리","blog","file-management","metadata"]
 ---
 
 # BOOK과 DESIGN 파일 저장 구조 — 메타데이터 분리 전략

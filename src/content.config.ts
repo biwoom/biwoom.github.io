@@ -15,7 +15,8 @@ import { prepare } from "../scripts/prepare-content.mjs";
 const schema = z.object({
   title: z.string().min(1),
   description: z.string(),
-  tags: z.array(z.string()),
+  tags: z.array(z.string().trim().min(1).refine((tag) => !tag.includes("/"), "Use plain tag names without prefixes"))
+    .transform((tags) => [...new Set(tags)]),
   published: z.boolean(),
   date: z.coerce.date(),
   readingTime: z.number(),

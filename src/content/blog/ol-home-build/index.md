@@ -1,14 +1,7 @@
 ---
 description: Astro 6 기반 정적 사이트를 세 단계에 걸쳐 구축한 과정. 온톨로지 설계, WORKS/BOOK 분리, 모바일 대응, Pagefind 검색까지의 핵심 결정들.
 date: 2026-05-30T00:00:00.000Z
-tags:
-  - topic/개발
-  - framework/astro
-  - topic/검색
-  - kind/blog
-  - project/ol-home
-  - topic/development
-  - feature/search
+tags: ["개발","astro","검색","blog","ol-home","development","search"]
 ---
 
 # BORIDO HOME 구축기 — Phase 1~3, 온톨로지에서 검색까지

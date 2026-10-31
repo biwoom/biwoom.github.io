@@ -16,8 +16,8 @@ body[data-accent-theme] {
     var(--ol-border)
   );
 }
-body[data-accent-theme]
-  :is(.ol-hero, .ol-story-series-hero, .ol-story-doc-hero) {
+body[data-site-section="home"] .ol-hero,
+body[data-accent-theme] .ol-library-menu-hero {
   background-image:
     radial-gradient(
       ellipse at 12% 8%,
@@ -83,4 +83,43 @@ body[data-accent-theme] .ol-prose a {
 body[data-accent-theme] :is(button, a):focus-visible {
   outline: 2px solid var(--ol-accent);
   outline-offset: 3px;
+}
+
+/* Series/document heroes stay neutral; menu roots and categories have their own backgrounds. */
+body:is([data-site-section="text"], [data-site-section="story"])
+  :is(.ol-hero:not(.ol-library-menu-hero):not(.ol-library-category-hero), .ol-story-series-hero, .ol-story-doc-hero) {
+  background: none;
+}
+body:is([data-site-section="text"], [data-site-section="story"])
+  :is(.ol-hero, .ol-story-series-hero, .ol-story-doc-hero) h1 {
+  font-size: 40px;
+  line-height: 1.2;
+}
+.ol-library-index-page .ol-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 32px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.ol-library-index-page .ol-hero .ol-lead {
+  margin-left: 0;
+  margin-right: 0;
+  text-align: left;
+}
+@media (max-width: 900px) {
+  body:is([data-site-section="text"], [data-site-section="story"])
+    :is(.ol-hero, .ol-story-series-hero, .ol-story-doc-hero) h1 {
+    font-size: 30px;
+  }
+}
+
+body[data-accent-theme] .ol-story-series-hero {
+  padding: 24px 20px 20px;
+  margin-bottom: 32px;
+}
+.ol-story-series-hero h1,
+.ol-story-series-hero p { margin-top: 12px; }
+@media (max-width: 900px) {
+  body[data-accent-theme] .ol-story-series-hero { padding: 20px 20px 16px; }
 }

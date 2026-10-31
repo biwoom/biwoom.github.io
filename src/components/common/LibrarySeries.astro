@@ -1,6 +1,4 @@
 ---
-import OLTagResultsModal from "./OLTagResultsModal.astro";
-import { getPublicTags, groupTagsByPrefix } from "../../lib/tags";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { categoryUrl } from "../../lib/library";
 import { url } from "../../lib/url";
@@ -11,9 +9,6 @@ interface Props {
 }
 const { series, section } = Astro.props;
 const label = section.toUpperCase();
-const tagGroups = groupTagsByPrefix(
-  series.entries.flatMap((entry) => getPublicTags(entry.data.tags)),
-);
 ---
 
 <BaseLayout
@@ -32,60 +27,6 @@ const tagGroups = groupTagsByPrefix(
       </span>
       <h1 class="ol-kr">{series.label}</h1>
       {series.description && <p class="ol-kr">{series.description}</p>}
-      {tagGroups.length > 0 && (
-        <div class="ol-story-tag-area" data-tag-results-index>
-          <div class="ol-story-tag-row">
-            {tagGroups.map((group) => (
-              <div class="ol-story-tag-menu">
-                <button
-                  class="ol-story-tag-menu-trigger"
-                  type="button"
-                  aria-expanded="false"
-                  data-tag-menu-trigger
-                >
-                  {group.prefix}
-                </button>
-                <div class="ol-story-tag-menu-panel">
-                  {group.tags.map((tag) => (
-                    <button
-                      type="button"
-                      data-tag-select
-                      data-tag-value={tag.tag}
-                      data-tag-label={tag.label}
-                    >
-                      {tag.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          <OLTagResultsModal
-            variant={section}
-            emptyText="선택한 태그에 해당하는 자료가 없습니다."
-          >
-            {series.parts.map((part) => (
-              <section class="ol-tag-results-section" data-tag-result-part>
-                <h3>{part.label}</h3>
-                <div class="ol-tag-results-group" data-tag-result-group>
-                  <ol>
-                    {part.entries.map((entry) => (
-                      <li
-                        data-tag-result-entry
-                        data-tags={JSON.stringify(
-                          getPublicTags(entry.data.tags),
-                        )}
-                      >
-                        <a href={entry.data.url}>{entry.data.title}</a>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </section>
-            ))}
-          </OLTagResultsModal>
-        </div>
-      )}
     </section>
     {series.parts.length > 0 && (
       <nav
@@ -183,11 +124,6 @@ const tagGroups = groupTagsByPrefix(
     </section>
   </main>
 </BaseLayout>
-
-<script>
-  import { initTagResultIndexes } from "../../lib/client/content-filters";
-  initTagResultIndexes();
-</script>
 
 <style>
   .ol-library-breadcrumb { justify-content: center; margin-bottom: 16px; }

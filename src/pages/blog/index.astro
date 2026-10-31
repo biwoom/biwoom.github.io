@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getBlogThumbnailUrl } from "../../lib/assets";
+import { getBlogTags } from "../../lib/tags";
 
 const posts = await getCollection("blog", (e) => e.data.published);
 posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -12,9 +13,7 @@ const thumbnails = Object.fromEntries(
 
 const PAGE_SIZE = 6;
 
-const categories = [
-  ...new Set(posts.map((p) => p.data.category).filter(Boolean)),
-] as string[];
+const tagFilters = getBlogTags(posts.map((post) => ({ tags: post.data.tags })));
 
 const archiveYears = [
   ...new Set(posts.map((p) => p.data.date.getFullYear())),
@@ -48,20 +47,18 @@ const archiveYears = [
     <section class="ol-section-tight">
       <div class="ol-container">
         <div class="ol-row ol-blog-chip-row">
-          <div class="ol-chips" id="blog-chips">
-            <button class="ol-chip active" data-category="all">
+          <div class="ol-chips ol-blog-tag-chips" id="blog-chips" role="group" aria-label="태그로 글 분류">
+            <button type="button" class="ol-chip active" data-blog-tag="" aria-pressed="true">
               전체 <span class="count">{posts.length}</span>
             </button>
-            {categories.map((cat) => {
-              const count = posts.filter((p) => p.data.category === cat).length;
-              return (
-                <button class="ol-chip" data-category={cat}>
-                  {cat} <span class="count">{count}</span>
-                </button>
-              );
-            })}
+            {tagFilters.map(({ tag, count }) => (
+              <button type="button" class="ol-chip" data-blog-tag={tag} aria-pressed="false">
+                {tag} <span class="count">{count}</span>
+              </button>
+            ))}
           </div>
         </div>
+        <p class="ol-blog-filter-status" id="blog-filter-status" role="status" aria-live="polite">{posts.length}개 글</p>
 
         <div class="ol-section-grid-sidebar">
           <div>
@@ -77,7 +74,7 @@ const archiveYears = [
                         "ol-post",
                         { "ol-post--text-only": !hasThumbnail },
                       ]}
-                      data-category={post.data.category ?? ""}
+                      data-tags={JSON.stringify(post.data.tags)}
                       data-year={post.data.date.getFullYear()}
                       data-index={i}
                       hidden={i >= PAGE_SIZE}
@@ -173,12 +170,12 @@ const archiveYears = [
             <div class="ol-card ol-blog-archive-card">
               <div class="ol-meta-label">ARCHIVE</div>
               <div class="ol-blog-archive-list" id="blog-archive">
-                <button class="ol-blog-archive-btn active" data-year="all">
+                <button type="button" class="ol-blog-archive-btn active" data-year="all" aria-pressed="true">
                   <span class="ol-kr">전체</span>
                   <span class="ol-blog-archive-count">{posts.length}</span>
                 </button>
                 {archiveYears.map((year) => (
-                  <button class="ol-blog-archive-btn" data-year={String(year)}>
+                  <button type="button" class="ol-blog-archive-btn" data-year={String(year)} aria-pressed="false">
                     <span class="ol-kr">{year}년</span>
                     <span class="ol-blog-archive-count">
                       {
@@ -199,68 +196,59 @@ const archiveYears = [
 
 <script>
   import { createPaginator } from "../../lib/client/paginated-list";
+  import { matchesBlogFilters } from "../../lib/tags";
 
-  const PAGE_SIZE = 6;
-  let activeCategory = "all";
+  let activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
   let activeYear = "all";
-
-  const posts = Array.from(
-    document.querySelectorAll<HTMLElement>("#blog-posts .ol-post"),
-  );
+  const posts = [...document.querySelectorAll<HTMLElement>("#blog-posts .ol-post")];
+  const tagButtons = [...document.querySelectorAll<HTMLButtonElement>("#blog-chips [data-blog-tag]")];
+  const yearButtons = [...document.querySelectorAll<HTMLButtonElement>(".ol-blog-archive-btn")];
   const noResults = document.getElementById("blog-no-results")!;
-  const loadmoreWrap = document.getElementById("blog-loadmore-wrap");
-  const loadmoreBtn =
-    document.querySelector<HTMLButtonElement>("#blog-loadmore-btn");
-  const loadmoreRemaining = document.getElementById("blog-loadmore-remaining");
+  const status = document.getElementById("blog-filter-status")!;
   const paginator = createPaginator({
     allItems: posts,
-    pageSize: PAGE_SIZE,
-    loadMoreWrap: loadmoreWrap,
-    loadMoreButton: loadmoreBtn,
-    loadMoreRemaining: loadmoreRemaining,
+    pageSize: 6,
+    loadMoreWrap: document.getElementById("blog-loadmore-wrap"),
+    loadMoreButton: document.querySelector<HTMLButtonElement>("#blog-loadmore-btn"),
+    loadMoreRemaining: document.getElementById("blog-loadmore-remaining"),
     onRender: ({ matchedItems }) => {
       noResults.hidden = matchedItems.length !== 0;
+      status.textContent = `${matchedItems.length}개 글`;
     },
   });
 
-  function matchPost(el: HTMLElement): boolean {
-    if (activeCategory !== "all" && el.dataset.category !== activeCategory)
-      return false;
-    if (activeYear !== "all" && el.dataset.year !== activeYear) return false;
-    return true;
-  }
-
   function applyFilters() {
-    const matched = posts.filter(matchPost);
-    paginator.reset(matched);
+    for (const button of tagButtons) {
+      const selected = (button.dataset.blogTag ?? "") === activeTag;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
+    for (const button of yearButtons) {
+      const selected = button.dataset.year === activeYear;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
+    paginator.reset(posts.filter((post) => matchesBlogFilters({
+      tags: JSON.parse(post.dataset.tags ?? "[]") as string[],
+      year: post.dataset.year ?? "",
+    }, activeTag, activeYear)));
   }
 
-  document
-    .querySelectorAll<HTMLButtonElement>("#blog-chips .ol-chip")
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        activeCategory = btn.dataset.category ?? "all";
-        document
-          .querySelectorAll<HTMLElement>("#blog-chips .ol-chip")
-          .forEach((b) => {
-            b.classList.toggle("active", b === btn);
-          });
-        applyFilters();
-      });
-    });
-
-  document
-    .querySelectorAll<HTMLButtonElement>(".ol-blog-archive-btn")
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        activeYear = btn.dataset.year ?? "all";
-        document
-          .querySelectorAll<HTMLElement>(".ol-blog-archive-btn")
-          .forEach((b) => {
-            b.classList.toggle("active", b === btn);
-          });
-        applyFilters();
-      });
-    });
+  for (const button of tagButtons) button.addEventListener("click", () => {
+    activeTag = button.dataset.blogTag ?? "";
+    const href = new URL(window.location.href);
+    if (activeTag) href.searchParams.set("tag", activeTag);
+    else href.searchParams.delete("tag");
+    window.history.replaceState(null, "", href);
+    applyFilters();
+  });
+  for (const button of yearButtons) button.addEventListener("click", () => {
+    activeYear = button.dataset.year ?? "all";
+    applyFilters();
+  });
+  window.addEventListener("popstate", () => {
+    activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+    applyFilters();
+  });
   applyFilters();
 </script>

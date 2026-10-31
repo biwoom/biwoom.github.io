@@ -1,0 +1,215 @@
+{
+  "date": "2026-10-31",
+  "images": [
+    {
+      "source": "media/001.보리수 인드라망 문양/001.자료/assets/Bodhi-Tree-Indramang.PNG",
+      "target": "media/Bodhi-Tree-Indramang.PNG",
+      "sha256": "d2a5cec8a57559895f75f346b71b33bdf1d43612b2868104992d0fdc732d4b9a"
+    },
+    {
+      "source": "media/002.다양성 인드라망 문양/001.자료/assets/Diversity-Indramang-1.PNG",
+      "target": "media/Diversity-Indramang-1.PNG",
+      "sha256": "0935df48862be4e3677fb3380e31ad20f33675519d5481bad673153e9f408b59"
+    },
+    {
+      "source": "media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/preview1.jpg",
+      "target": "media/lamrim-preview1.jpg",
+      "sha256": "1a02c83cf51e8eb1ff726492c0fb40cb0f0d416eb1c68accba7ffc234328f120"
+    },
+    {
+      "source": "media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/preview2.jpg",
+      "target": "media/lamrim-preview2.jpg",
+      "sha256": "811827f8c52c17338aa5b21d9cfd7d0bd6f8d83c5002e7c510c19f244280f761"
+    },
+    {
+      "source": "media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/thumb.jpg",
+      "target": "media/lamrim-thumb.jpg",
+      "sha256": "0f3561c356dfda0a6fc66a04cdbfcdba29c4cd94d6eb5499b84455abb5c3bb62"
+    },
+    {
+      "source": "media/004.생명평화 인드라망 문양/001.자료/assets/Life-Peace-Indramang.PNG",
+      "target": "media/Life-Peace-Indramang.PNG",
+      "sha256": "503e1416db6975f164c164dd3ed7b725d5b02d737a327116be040aef37b7e903"
+    },
+    {
+      "source": "media/005.인드라망 픽토그래프 1/001.자료/assets/Pictograph-Indramang-1.PNG",
+      "target": "media/Pictograph-Indramang-1.PNG",
+      "sha256": "b0713913903ebcdc5e6728222347b258b4ce7132a9455a9286b6c0251cfe7078"
+    },
+    {
+      "source": "media/006.인드라망 픽토그래프 2/001.자료/assets/Pictograph-Indramang-2.PNG",
+      "target": "media/Pictograph-Indramang-2.PNG",
+      "sha256": "77aaade02429334582eda38dd4d3923f664252004e0488a3a9da06e515db1d2e"
+    },
+    {
+      "source": "media/007.몸과 마음의 정화 여섯 단계/001.자료/assets/preview1.jpg",
+      "target": "media/six-steps-preview1.jpg",
+      "sha256": "060074e2adabbcb2ee58b0ceaa9a21f1e019e8d71855236233da56ae8ffd7cbd"
+    },
+    {
+      "source": "media/007.몸과 마음의 정화 여섯 단계/001.자료/assets/preview2.jpg",
+      "target": "media/six-steps-preview2.jpg",
+      "sha256": "2def2a964590ee67a7711d7eae99ddf808347feda9fde88df992707148306bd6"
+    },
+    {
+      "source": "media/007.몸과 마음의 정화 여섯 단계/001.자료/assets/thumb.jpg",
+      "target": "media/six-steps-thumb.jpg",
+      "sha256": "22d257505c3dc3b386c8ad18360547a59d226df8c2ef52afcc1e6ab9418cea74"
+    },
+    {
+      "source": "media/008.수메다와 수밋타의 첫 만남/001.자료/assets/sumedha-sumitta.png",
+      "target": "media/sumedha-sumitta.png",
+      "sha256": "09ca39b1f94dfc6ee56b0533a67bb8d9396d9b8023a69b62ecc4e579598aaa54"
+    },
+    {
+      "source": "media/009.수밋타 프로필 이미지/001.자료/assets/profile.jpg",
+      "target": "media/sumitta-profile.jpg",
+      "sha256": "99fe7ada717791cc430f1809c91ee31d67f2d4ca580819fdabfe5d0501bb7dde"
+    },
+    {
+      "source": "media/010.불교의 세계관 — 두 가지 관점/001.자료/assets/preview1.png",
+      "target": "media/buddhist-worldview-preview1.png",
+      "sha256": "6970d39bc76d0188d327d283f4f38b93716dfa0ca0f53e7133f13ca462681855"
+    },
+    {
+      "source": "media/010.불교의 세계관 — 두 가지 관점/001.자료/assets/thumb.jpg",
+      "target": "media/buddhist-worldview-thumb.jpg",
+      "sha256": "9bb3141521e3e275b97c340e3a414837feb084a5d9e34342208e01100181a18a"
+    }
+  ],
+  "archived": [
+    {
+      "source": "media/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+      "target": ".agents/archive/media-originals/001.보리수 인드라망 문양/001.자료/001.보리수 인드라망 문양.md",
+      "sha256": "e0cebbe1810131e894a1521adc26cffef4895473f200a70eb65d850cb7f08307"
+    },
+    {
+      "source": "media/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+      "target": ".agents/archive/media-originals/002.다양성 인드라망 문양/001.자료/001.다양성 인드라망 문양.md",
+      "sha256": "66bf0b85b2a4393cbeb0984dcee03e8a7533eb0e2e65aba4baab46128db577e3"
+    },
+    {
+      "source": "media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+      "target": ".agents/archive/media-originals/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/001.람림 삼사도 — 보리도차제론의 수행체계.md",
+      "sha256": "e52976af4f9df216376ea1ee6942878d9caee8d4d234ff704a7a5c9daeb9cf5d"
+    },
+    {
+      "source": "media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.html",
+      "target": ".agents/archive/media-originals/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.html",
+      "sha256": "641fa88865900249482f21a986fea1898b8cba410449046b5bdc49788a4f86ea"
+    },
+    {
+      "source": "media/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.pdf",
+      "target": ".agents/archive/media-originals/003.람림 삼사도 — 보리도차제론의 수행체계/001.자료/assets/lamrim-infographic.pdf",
+      "sha256": "16f3f921a6b8e3ca170dd7936dd72eb7e779e7a5327bcb8eee45194701df9535"
+    },
+    {
+      "source": "media/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+      "target": ".agents/archive/media-originals/004.생명평화 인드라망 문양/001.자료/001.생명평화 인드라망 문양.md",
+      "sha256": "46cf7aa43e2eb9f4cdf297c1e8dda7d0ea6d6032be3891f55328a007f1db8d83"
+    },
+    {
+      "source": "media/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+      "target": ".agents/archive/media-originals/005.인드라망 픽토그래프 1/001.자료/001.인드라망 픽토그래프 1.md",
+      "sha256": "d6ee9d0fec427d841ee39045725bbc0860c2e8b5d1fc215fcc002b66c6a57eec"
+    },
+    {
+      "source": "media/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+      "target": ".agents/archive/media-originals/006.인드라망 픽토그래프 2/001.자료/001.인드라망 픽토그래프 2.md",
+      "sha256": "2f05e9c8bee1b1b1a6f5f03a0d1f8a9f491126cb02d241ad58550109ecaa8bdb"
+    },
+    {
+      "source": "media/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+      "target": ".agents/archive/media-originals/007.몸과 마음의 정화 여섯 단계/001.자료/001.몸과 마음의 정화 여섯 단계.md",
+      "sha256": "60a076fe9ac977b36db96835afd7c86f6428967e59d062439f94c3ba173c3c5c"
+    },
+    {
+      "source": "media/007.몸과 마음의 정화 여섯 단계/001.자료/assets/index.html",
+      "target": ".agents/archive/media-originals/007.몸과 마음의 정화 여섯 단계/001.자료/assets/index.html",
+      "sha256": "cac83697a91ba0b5560a7b0709a298fa2f17782229e3da11aee04b974e6240a0"
+    },
+    {
+      "source": "media/007.몸과 마음의 정화 여섯 단계/001.자료/assets/six-steps-infographic.pdf",
+      "target": ".agents/archive/media-originals/007.몸과 마음의 정화 여섯 단계/001.자료/assets/six-steps-infographic.pdf",
+      "sha256": "12c1915d7b054265a55a02d4d293e3485a9dae4e8a50f725cbf800f46808af58"
+    },
+    {
+      "source": "media/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+      "target": ".agents/archive/media-originals/008.수메다와 수밋타의 첫 만남/001.자료/001.수메다와 수밋타의 첫 만남.md",
+      "sha256": "a682d7233f7aed82aa6c80c1219f2f757dfab5dfa2d0e5b82a43f071ef1b554b"
+    },
+    {
+      "source": "media/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+      "target": ".agents/archive/media-originals/009.수밋타 프로필 이미지/001.자료/001.수밋타 프로필 이미지.md",
+      "sha256": "11c41c6fa71838044de0cf9679683fc19130e172d577ad38dc89a5f86bcb3e4b"
+    },
+    {
+      "source": "media/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
+      "target": ".agents/archive/media-originals/010.불교의 세계관 — 두 가지 관점/001.자료/001.불교의 세계관 — 두 가지 관점.md",
+      "sha256": "c0fd790a188ef6592d652c2ae2f1d9ff5fb3a4af335da2c00250cb98dcede83d"
+    },
+    {
+      "source": "media/010.불교의 세계관 — 두 가지 관점/001.자료/assets/index.html",
+      "target": ".agents/archive/media-originals/010.불교의 세계관 — 두 가지 관점/001.자료/assets/index.html",
+      "sha256": "cf103946e375dd78385c8b39618ea1280a3575e9080b4c8f870dc34a6609d846"
+    }
+  ],
+  "documents": [
+    {
+      "source": "blog/body-mind-transformation-infographic/index.md",
+      "links": [
+        {
+          "from": "./preview2.jpg",
+          "to": "../../media/six-steps-preview2.jpg"
+        },
+        {
+          "from": "./preview1.jpg",
+          "to": "../../media/six-steps-preview1.jpg"
+        }
+      ],
+      "beforeSha256": "7ea76788eb72c4ccc614429f31cf4b308ba0ff8aa415f8842d73fc863498ad50",
+      "afterSha256": "fa3d3bf0e2e6bbd8aeb48ce1257fea16fb4894a570f94d16d296ecf5c7279bbd"
+    },
+    {
+      "source": "blog/buddhist-worldview-two-perspectives/index.md",
+      "links": [
+        {
+          "from": "./preview1.png",
+          "to": "../../media/buddhist-worldview-preview1.png"
+        }
+      ],
+      "beforeSha256": "6aa266334dbbb16235401bee3528be9b67f0b3ec1fea2bede526fa6c8d3902d5",
+      "afterSha256": "c8abdefd7269061a9308f8a24b8074147adac535ab7e318d36a3cd6184bd92a6"
+    },
+    {
+      "source": "blog/lamrim-infographic-making/index.md",
+      "links": [
+        {
+          "from": "./preview2.jpg",
+          "to": "../../media/lamrim-preview2.jpg"
+        },
+        {
+          "from": "./preview1.jpg",
+          "to": "../../media/lamrim-preview1.jpg"
+        }
+      ],
+      "beforeSha256": "f6721a7899a05403b0f9b0157459ac799922769124b2af8c23ae97b6cb357e6f",
+      "afterSha256": "2020df506860850fa115d9ca17a1b871e7e2f64e792a64cde323a6c6c158e05d"
+    },
+    {
+      "source": "blog/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+      "links": [
+        {
+          "from": "./assets/basic-meditation/preview2.jpg",
+          "to": "../media/six-steps-preview2.jpg"
+        },
+        {
+          "from": "./assets/basic-meditation/preview1.jpg",
+          "to": "../media/six-steps-preview1.jpg"
+        }
+      ],
+      "beforeSha256": "561be4f46f061add4a88bcfcca40ac715196dd126ce4278908caa5502ca2367f",
+      "afterSha256": "0229995aeff748a239eb9ba5e6b74751eb8994f019ecd90b2f986a5e7e0fdeb4"
+    }
+  ]
+}

@@ -31,6 +31,7 @@ description: Maintain BORIDO (OL 코어) manuals, brand documents, AGENTS.md, RE
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `src/content.config.ts` defines normalized data; `scripts/lib/content.mjs` shares source interpretation with validation.
 - `content-registry.json` is committed source metadata for stable URLs/dates/paths. `public/generated/content/` is derived output and is not committed.
+- Shared images live flat in `src/content/media/`; sync them as public assets without menu/search/document records. Nonimage migration originals are archived under `.agents/archive/media-originals/`.
 - Shared settings: `site-config.mjs`, app entry `src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
 - Deploy workflow: `.github/workflows/deploy.yml`. Upload requests stop after requested push.
 - TEXT reuses STORY series links and expandable lists; no real tab switching.
@@ -51,7 +52,7 @@ description: Maintain BORIDO (OL 코어) manuals, brand documents, AGENTS.md, RE
 - Avoid stale references to project-page URLs such as `/ol-home` or `/biwoom` unless documenting history.
 - When describing generated files, say not to commit `dist/`, `.astro/`, `node_modules/`, or `public/generated/`.
 - Use ordinary relative attachment links. Do not introduce DESIGN asset keys or generated URLs as authoring requirements.
-- Shared UI behavior should be documented at the component/system level when it has been unified, for example the shared TEXT/STORY tag-results modal layer.
+- Shared UI behavior should be documented at the component/system level when it has been unified, for example shared document tag badges and BLOG tag/year filtering with common pagination. The series tag modal has been retired.
 
 ## Validation
 

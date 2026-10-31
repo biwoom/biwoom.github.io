@@ -1,13 +1,7 @@
 ---
 description: 듀얼 런타임 폐기에서 독서뷰 완성까지. 6개 버전에 걸친 ATLAS(OL 코어 도구)의 핵심 설계 결정과 구현 과정을 기록합니다.
 date: 2026-05-27T00:00:00.000Z
-tags:
-  - project/atlas
-  - topic/개발
-  - topic/단일HTML
-  - kind/blog
-  - topic/development
-  - format/single-html
+tags: ["atlas","개발","단일HTML","blog","development","single-html"]
 ---
 
 # ATLAS(OL 코어 도구) 개발기 — v0.0.1에서 v0.0.6까지, 단일 HTML의 진화

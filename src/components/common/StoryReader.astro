@@ -11,7 +11,7 @@ import {
   type Library,
   type Section,
 } from "../../lib/library";
-import { parsePrefixTag } from "../../lib/tags";
+import DocumentTags from "./DocumentTags.astro";
 import { url } from "../../lib/url";
 interface Props {
   entry: Entry;
@@ -90,6 +90,7 @@ const hasToc = headings.some(
       </div>
 
       <h1 class="ol-kr">{entry.data.title}</h1>
+      <DocumentTags tags={entry.data.tags} />
       {entry.data.description && <p class="ol-kr">{entry.data.description}</p>}
     </section>
 
@@ -277,20 +278,6 @@ const hasToc = headings.some(
               </span>
             </div>
           </div>
-
-          {entry.data.tags.length > 0 && (
-            <div class="ol-story-active-doc-tags">
-              {entry.data.tags.map((tag) => {
-                const parsed = parsePrefixTag(tag);
-                return (
-                  <span class="ol-text-tag">
-                    <span>{parsed.prefix}</span>
-                    <strong>{parsed.label}</strong>
-                  </span>
-                );
-              })}
-            </div>
-          )}
 
           <div class="ol-story-chapter active">
             <div class="ol-prose ol-kr">

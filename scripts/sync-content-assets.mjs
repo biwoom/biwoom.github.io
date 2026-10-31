@@ -10,7 +10,7 @@ export function syncAssets(root = process.cwd()) {
   const registry = readRegistry(root);
   fs.mkdirSync(target, { recursive: true });
   const expected = new Set();
-  for (const collection of ["text", "story", "blog", "pages"]) {
+  for (const collection of ["text", "story", "blog", "pages", "media"]) {
     for (const file of walk(`${base}/${collection}`, { assets: true })) {
       if (markdownPattern.test(file)) continue;
       const source = path.relative(base, file).split(path.sep).join("/");

@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import DocumentTags from "../../components/common/DocumentTags.astro";
 import ContentRights from "../../components/common/ContentRights.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { url } from "../../lib/url";
@@ -41,6 +42,7 @@ const pagefindBreadcrumb = ["BLOG", entry.data.category]
             <span class="ol-badge">{entry.data.category}</span>
           )}
           <h1 class="ol-kr ol-blog-detail-title">{entry.data.title}</h1>
+          <DocumentTags tags={entry.data.tags} blogLinks />
           <div class="ol-blog-detail-meta">
             <span>{entry.data.date.toLocaleDateString("ko-KR")}</span>
             {entry.data.readingTime && (

@@ -1,5 +1,42 @@
 # Decisions
 
+## 2026-10-31 — Flat Shared Media Assets
+
+- Keep shared images flat in src/content/media with unique descriptive names, qualifying generic preview/thumbnail/profile names when necessary. Do not add a media menu, Astro collection, series, document metadata or search pages.
+- Use ordinary document-relative Markdown links; reuse the existing resolver and asset sync under /generated/content/media/. Shared media is public independently of referencing draft documents, with hidden/draft/Markdown exclusion retained.
+- Preserve image bytes and archive displaced Markdown/HTML/PDF originals outside the published tree. Record checksums and path/link mappings. Keep document-specific private attachment rules unchanged.
+
+## 2026-10-31 — Plain Optional Tags and BLOG Classification
+
+- Author plain optional arrays with tags, not singular tag or prefix/name labels. Flatten existing prefixes and deduplicate without rewriting bodies, rights, dates or URLs. Never inherit series tags into documents.
+- Share DocumentTags under individual TEXT/STORY/BLOG titles; omit the whole area without tags. Retire series tag menus, result modals and prefix-filter helpers. Series hero keeps its background/alignment but uses 24px/20px padding (20px/16px mobile), 12px title/description spacing and 32px bottom gap.
+- BLOG uses exact-match single-tag buttons with per-post counts and existing year archives/pagination. All includes untagged posts; changing a filter resets pagination. Tag links use ?tag=; encode values safely and support keyboard pressed state.
+
+## 2026-10-31 — Shared Library List Tint
+
+- Reuse the category hero’s theme-aware 4% menu-accent tint on TEXT/STORY category cards and series rows; increase to 8% for hover and keyboard focus. Keep text colors, card/row geometry, separators and existing focus outlines.
+- Centralize the 4%/8% values as library-scoped custom properties; respect reduced motion for both item types.
+
+## 2026-10-31 — Compact Category and Document Heroes
+
+- Category-detail heroes use a solid 4% menu-accent tint blended with the theme background, retaining their bottom divider. Top/bottom padding: 40px/28px desktop, 28px/20px at <=900px.
+- Document heroes remain transparent with 20px/16px padding (16px/12px mobile), 8–12px title/description spacing and 20px bottom margin. Remove the old negative part-nav top margin on documents. Preserve 40px/30px title sizes and menu-root/series layouts.
+
+## 2026-10-31 — Distinct Category and Series Lists
+
+- Keep menu-root categories as three-column cards; category details show series as single-column linked rows with thin separators, numbers, titles, optional descriptions, material/part metadata and arrows.
+- Label root lists 카테고리 목록 and category-detail lists 시리즈 목록 at the upper left. Add a hero bottom divider on category details only.
+- Make each row one link; use subtle menu-accent hover/keyboard focus states, compact mobile spacing and existing pagination/empty states. Preserve category, series and document URLs.
+
+## 2026-10-31 — Menu-root Hero Background Restoration
+
+- Restore the earlier accent gradient/grid background only on the TEXT/STORY menu roots. Keep category-detail, series and document heroes transparent; keep 40px/30px titles and category container sizing/alignment.
+
+## 2026-10-31 — Neutral Reading Heroes
+
+- Remove background colors/gradients from TEXT/STORY category, series and document heroes; retain menu accent controls and the HOME gradient. Hero H1 sizes are 40px desktop and 30px at the existing <=900px mobile breakpoint.
+- Category roots and category-specific series lists share a max-width 1200px container, 32px horizontal padding at all widths and left-aligned titles/descriptions.
+
 ## 2026-10-31 — Content Engine Reload Verification
 
 - Restart the entire development process after changing native content parser/preparation modules. A config touch or successful build does not prove a running server has dropped cached native modules.
