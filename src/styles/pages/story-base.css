@@ -88,13 +88,6 @@
   text-decoration: none;
 }
 
-.ol-story-part-nav .ol-story-part-home {
-  width: 38px;
-  min-width: 38px;
-  justify-content: center;
-  padding: 0;
-}
-
 .ol-story-part-nav a:hover {
   border-color: var(--ol-border-strong);
   color: var(--ol-ink);
