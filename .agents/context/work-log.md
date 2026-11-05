@@ -2,6 +2,61 @@
 
 This file records concise date-based work summaries for continuity across Codex sessions.
 
+## 2026-11-05
+
+### Reader Improvements Blog and Local Commit Checkpoint
+
+- Added BLOG reader-tools-and-markdown-improvements.md summarizing footnote navigation, shared font sizing/mobile positioning, drawer motion, CJK emphasis and italic synthesis, default-rights suppression, and random manifest accents. Distinguish automated/live HTTP checks from unavailable browser visual QA and local commits from deployment.
+- Include this session's reader/parser/home changes, tests, authoring guidance, prepared registry and the user's related prose/style/plan edits in the local checkpoint. Mark the implemented manifest task complete; leave domain/source-layout/email plans pending.
+- Final checkpoint verification passed: 42 fixtures, zero-diagnostic typecheck, build, built links across 63 pages/21 redirects and UI checks for 27 documents. Verified the new BLOG detail, RSS/sitemap inclusion and default-rights omission; registry preparation is stable. Commit the prepared registry with source changes and verify check:registry after the local commit. Browser visual QA remains unverified. No push requested.
+
+### Random Landing Manifest Accent
+
+- Choose a HOME/TEXT/STORY accent or BLOG monochrome background at browser load, before manifest text is painted; reselect on bfcache return. Reuse the existing menu tokens, preserve authored copy and use dark text on bright variants in both themes. No persistent selection or timed changes.
+- Passed 42 fixtures, zero-diagnostic typecheck, build and built link/UI checks. Deterministically checked all four choices and bfcache behavior, plus emitted CSS tokens, script-before-content placement and live local HTML. Browser visual QA remains unavailable under the existing access restriction.
+
+### CJK-Friendly Markdown Emphasis
+
+- Added pinned remark-cjk-friendly 2.3.4 parse-only integration. Share scripts/lib/markdown.mjs between Astro's Markdown/MDX plugin configuration and content parsing so punctuation with attached Korean particles produces em/strong consistently without modifying content.
+- Added parser/render regressions for the reported examples, Unicode punctuation, nested emphasis, code/escapes, ordinary GFM, links/tables/headings/footnotes and metadata interpretation. Updated authoring manual v2.7 and continuity guidance. User's existing source and registry edits are preserved.
+- Passed 42 fixtures, zero-diagnostic typecheck, build and built link/UI checks. Confirmed both reported phrases render em/strong in actual STORY output, every vault file and complete registry match task-start bytes, and RSS/sitemap/robots retain root URLs. check:registry fails solely because its HEAD comparison sees the pre-existing uncommitted STORY hash edit; preparation itself makes no changes. Restarted the stale development process using the installed Astro CLI on 127.0.0.1:4321 (npm dev launcher was denied by command policy after shutdown); live HTTP confirms both emphasis examples. Vault and registry remain unchanged after restart. No commit/upload.
+
+### Suppress Automatic Default Rights Line
+
+- Shared ContentRights no longer renders the default 비움 · CC0 line or an empty rights container on TEXT/STORY/BLOG documents. Keep normalized/source rights data unchanged and retain document-specific licenses/holders/URLs and copyright notices.
+- Passed 38 fixtures, zero-diagnostic typecheck, build and generated link/UI checks. Inspected all 26 document outputs: default rights absent on 25, the external-source rights exception preserved on 1.
+
+### Font Panel Reset and Mobile Anchoring
+
+- Use a single-column grid for the font popover so reset stays below the full-width slider. Preserve the user's shortened 초기화 label and other style edits.
+- On mobile, keep horizontal viewport centering and derive the top edge from the font trigger's bottom plus 8px. Track scroll/resize, constrain available panel height and prevent slider focus from moving the viewport.
+- Passed 38 fixtures, zero-diagnostic typecheck, build and generated link/UI checks, including trigger-relative positioning and compiled single-column/mobile styles. Browser visual QA remains unavailable under the existing access restriction.
+
+### Footnote Number and Text Alignment
+
+- Keep each top-level drawer footnote in a baseline-aligned flex row so its generated number and clickable text start on the same line. Allow the text column to shrink/wrap and remove its first block's top margin; retain nested content and return navigation.
+- Passed 38 fixtures, zero-diagnostic typecheck, build and generated links/UI checks; confirmed the compiled top-level footnote flex rule. Browser visual QA remains unavailable under the existing access restriction.
+
+### Reader Footnote Navigation and Mobile Font Panel
+
+- Replaced the footnote toolbar icon with a document-note glyph and added a desktop 각주 label. A TEXT/STORY-only rehype transform removes generated backreference arrows during build and makes note text focusable/clickable without changing source Markdown or authored links/nested content.
+- Note click/Enter returns to the last body reference used to open that note, defaulting to its first reference when opened from the toolbar. Highlight the active reference with a contrasting accent badge, bold number and outline; preserve ordinary links inside notes.
+- Center the mobile font slider panel in the viewport while retaining the desktop placement below its trigger.
+- Passed 38 fixtures, zero-diagnostic typecheck, build, generated link/UI contracts across 62 pages/21 redirects and registry validation. Verified all 40 built note-text controls point to existing body references; RSS/sitemap/robots retain root deployment URLs. BLOG and series-introduction footnotes retain their original behavior. Browser visual/interaction QA remains unavailable under the existing access restriction. No upload.
+
+### Reader Drawer Motion Fix
+
+- Replaced the shared 180ms CSS slide plus delayed class toggle with one Web Animations controller for TOC and footnotes: 360ms entrance, 280ms exit, gentle easing and backdrop fade. Resting panels stay in place so native modal autofocus does not scroll an offscreen panel. Close waits for actual animation completion; interrupted entrances close from their current position. Reduced motion remains immediate.
+- Reserve the reader scrollbar gutter to prevent horizontal shifts during body scroll locking. Selecting a footnote scrolls only its internal list instead of calling scrollIntoView on an animating drawer.
+- Passed 36 fixtures (including interrupted entrance/exit completion and internal-only note scrolling), zero-diagnostic typecheck, build, generated link/UI contracts across 62 pages/21 redirects, and registry validation. Browser interaction QA remains unavailable under the existing browser-tool access restriction. No upload.
+
+### Reader Footnotes and Shared Font Slider
+
+- Added toolbar footnote/font icons to shared TEXT/STORY readers. Build-time ReaderBody slot rendering extracts the generated footnote section into one native-dialog drawer, preserving rich markup, IDs and backreferences. References select the note; backreferences close and return to the source. No-note documents keep the button disabled; copy output retains footnotes.
+- Added one 80–150% font slider below its icon, live percentage, reset and browser-local persistence shared by both collections. Capture the existing computed type sizes and scale them together, remeasuring responsive sizes on resize. Page intro/navigation are excluded; storage failures leave controls usable.
+- Passed 35 fixtures, typecheck (zero errors/warnings), build, generated link/UI contracts across 62 HTML pages/21 redirects, and committed-registry validation. New tests exercise font persistence/reset/dismissal, storage failure and footnote open/back/Escape/backdrop behavior; generated contracts enforce one slider and one build-rendered footnote destination.
+- Actual browser visual/interaction QA remains unverified: browser host unavailable and native Chrome access was denied by the tool. No source content/Obsidian state changes, commit or upload.
+
 ## 2026-10-31
 
 ### Flat Shared Media Assets

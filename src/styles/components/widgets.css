@@ -35,8 +35,19 @@ html.dark .ol-manifest {
   --ol-manifest-mark: rgba(255,255,255,0.03);
   border: 1px solid var(--ol-border);
 }
+:root .ol-manifest[data-manifest-accent="home"] { --ol-manifest-bg: var(--ol-accent-home); }
+:root .ol-manifest[data-manifest-accent="text"] { --ol-manifest-bg: var(--ol-accent-text); }
+:root .ol-manifest[data-manifest-accent="story"] { --ol-manifest-bg: var(--ol-accent-story); }
+/* BLOG retains the existing monochrome treatment in either color mode. */
+:root .ol-manifest:is([data-manifest-accent="home"], [data-manifest-accent="text"], [data-manifest-accent="story"]) {
+  --ol-manifest-fg: #0a0a0a;
+  --ol-manifest-subtle: rgb(0 0 0 / 65%);
+  --ol-manifest-muted: rgb(0 0 0 / 78%);
+  --ol-manifest-mark: rgb(0 0 0 / 6%);
+  border-color: rgb(0 0 0 / 12%);
+}
 .ol-manifest::before {
-  content: "OL";
+  content: "BORIDO";
   position: absolute;
   font-size: 480px;
   font-weight: 800;

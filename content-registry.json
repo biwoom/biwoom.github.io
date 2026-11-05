@@ -243,7 +243,7 @@
       "id": "text-7cf400fafeb771",
       "url": "/text/read/7cf400fafeb771/",
       "date": "2026-10-30",
-      "hash": "156e800d3186702d4b6d3ad6fe1749a51e0cddd9cf676026fe1c12834b6726e3",
+      "hash": "35a7397064f73af157ec7f262e72bf65b236eddce9a6ab51faff6a9e82ddfec9",
       "seriesKey": "text/001.중관부/001.대승현론"
     },
     "text/001.중관부/001.대승현론/02.연구/001.대승현론 제1권 연구.md": {
@@ -355,7 +355,7 @@
       "id": "story-95f5f8336bc028",
       "url": "/story/buddha-story/part-1/01-sumedha-begins-to-ask/",
       "date": "2026-06-18",
-      "hash": "c7c7706b72f4b988518783dada662777d67ffe08de85121aa27bb1951831f752",
+      "hash": "00628d0aa2d34e8f120de057b42371d8ec84f72a9835ee97877b638f105e5dc5",
       "seriesKey": "story/001.불전문학/010.붓다 스토리"
     },
     "story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/002.수메다, 새로운 길을 찾다.md": {
@@ -462,6 +462,13 @@
       "date": "2026-06-11",
       "hash": "9888979d8cdd3c011159ab73741a0b2b714f9d0b2c36622b81a83a4f9aa525f3",
       "seriesKey": "text/media/010.불교의 세계관 — 두 가지 관점"
+    },
+    "blog/reader-tools-and-markdown-improvements.md": {
+      "id": "blog-06feb0b8e9e818",
+      "url": "/blog/read/06feb0b8e9e818/",
+      "date": "2026-11-05",
+      "seriesKey": "blog/standalone",
+      "hash": "c4e718f95d6acbd980640ff681cdd3947c26298caf3ceada9154783746129dd2"
     }
   },
   "folders": {

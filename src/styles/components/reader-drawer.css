@@ -1,4 +1,6 @@
-/* Individual TEXT/STORY readers share a full-width shell and one TOC drawer. */
+/* Individual TEXT/STORY readers share a full-width shell and reader drawers. */
+/* Modal scroll locking must not shift the article and toolbar horizontally. */
+:root:has(.ol-story-doc-page) { scrollbar-gutter: stable; }
 .ol-story-reader-page.ol-story-doc-page {
   width: 100%;
   max-width: none;
@@ -32,6 +34,7 @@
 .ol-reader-toc:not([open]) { display: none; }
 .ol-reader-toc::backdrop {
   background: rgb(0 0 0 / 30%);
+  animation: ol-reader-backdrop-in 360ms ease both;
 }
 .ol-reader-toc-panel {
   display: flex;
@@ -42,10 +45,11 @@
   background: var(--ol-surface);
   border-left: 1px solid var(--ol-border);
   box-shadow: -12px 0 36px rgb(0 0 0 / 12%);
-  transform: translateX(100%);
-  transition: transform 180ms ease;
+  transform: translateX(0);
 }
-.ol-reader-toc.is-open .ol-reader-toc-panel { transform: translateX(0); }
+.ol-reader-toc.is-closing::backdrop { animation: ol-reader-backdrop-out 280ms ease both; }
+@keyframes ol-reader-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ol-reader-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
 .ol-reader-toc-head {
   display: flex;
   flex: 0 0 auto;
@@ -91,7 +95,7 @@
   .ol-story-doc-page .ol-story-mobile-chapters-panel { left: 0; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ol-reader-toc-panel { transition: none; }
+  .ol-reader-toc::backdrop { animation: none; }
 }
 
 .ol-story-doc-page .ol-reader-toolbar {
@@ -155,4 +159,66 @@
   .ol-story-reader-page.ol-story-doc-page .ol-story-doc-hero { padding: 16px 20px 12px; }
   .ol-story-doc-page .ol-story-doc-hero h1,
   .ol-story-doc-page .ol-story-doc-hero p { margin-top: 8px; }
+}
+
+/* Shared document tools: footnote drawer and reading-size popover. */
+.ol-reader-font { position: relative; }
+.ol-reader-font-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  width: min(260px, calc(100vw - 48px));
+  padding: 18px;
+  border: 1px solid var(--ol-border);
+  border-radius: 10px;
+  background: var(--ol-surface);
+  color: var(--ol-ink);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 16%);
+}
+.ol-reader-font-panel[hidden] { display: none; }
+.ol-reader-font-panel label { display: flex; justify-content: space-between; gap: 20px; font-size: 14px; }
+/* .ol-reader-font-panel input { display: block; width: 100%; margin: 18px 0; accent-color: var(--ol-accent); } */
+.ol-reader-font-panel [data-reader-font-size] { display: block; width: 100%; margin: 0; }
+.ol-reader-font-panel button { justify-self: start; font-size: 12px; }
+.ol-reader-font-panel :is(button,input):focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.ol-story-doc-page [data-reader-scalable] { font-size: calc(var(--ol-reader-base-font) * var(--ol-reader-font-scale, 1)); }
+.ol-reader-footnotes-content { overflow-y: auto; padding: 20px; overscroll-behavior: contain; }
+.ol-reader-footnotes-content .footnotes { margin: 0; padding: 0; border: 0; }
+.ol-reader-footnotes-content .footnotes li { display: block; overflow-wrap: anywhere; }
+.ol-reader-footnotes-content .footnotes > ol > li { display: flex; align-items: baseline; }
+.ol-reader-footnotes-content .footnotes li[data-active-note] { background: var(--ol-surface-2); outline: 2px solid var(--ol-accent); outline-offset: 2px; }
+.ol-reader-footnotes-content .footnotes li:focus-visible { outline: 2px solid currentColor; }
+.ol-story-part-tools .ol-text-tool-btn:disabled { opacity: .4; cursor: default; }
+
+.ol-reader-footnotes-label { display: none; }
+@media (min-width: 981px) {
+  .ol-reader-footnotes-label { display: inline; }
+}
+.ol-footnote-return { flex: 1; min-width: 0; cursor: pointer; border-radius: 4px; }
+.ol-footnote-return > :first-child { margin-top: 0; }
+.ol-footnote-return:hover { background: var(--ol-surface-2); }
+.ol-footnote-return:focus-visible { outline: 2px solid var(--ol-ink); outline-offset: 4px; }
+.ol-story-doc-page .ol-prose sup a[data-footnote-ref][data-active-footnote-ref] {
+  color: #0a0a0a;
+  background: var(--ol-accent, #f0b100);
+  font-weight: 800;
+  border-radius: 3px;
+  padding: 2px 5px;
+  /* outline: 2px solid var(--ol-ink); */
+  outline-offset: 2px;
+}
+@media (max-width: 980px) {
+  .ol-reader-font-panel {
+    position: fixed;
+    top: var(--ol-reader-font-top, 0px);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-height: max(0px, calc(100dvh - var(--ol-reader-font-top, 0px) - 16px));
+    overflow-y: auto;
+  }
 }

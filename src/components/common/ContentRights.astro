@@ -1,10 +1,16 @@
 ---
+import { CONTENT_DEFAULTS } from "../../lib/site-config";
+
 interface Props {
   data: { rightsHolder: string; license: string; licenseUrl?: string; copyrightNotice?: string };
 }
 const { data } = Astro.props;
+const hasCustomLicense = data.rightsHolder !== CONTENT_DEFAULTS.author ||
+  data.license !== CONTENT_DEFAULTS.license || Boolean(data.licenseUrl);
 ---
+{(hasCustomLicense || data.copyrightNotice) && (
 <div class="ol-text-rights ol-kr" data-content-rights>
-  <span>{data.rightsHolder} · {data.licenseUrl ? <a href={data.licenseUrl} target="_blank" rel="noopener noreferrer">{data.license}</a> : data.license}</span>
+  {hasCustomLicense && <span>{data.rightsHolder} · {data.licenseUrl ? <a href={data.licenseUrl} target="_blank" rel="noopener noreferrer">{data.license}</a> : data.license}</span>}
   {data.copyrightNotice && <span>{data.copyrightNotice}</span>}
 </div>
+)}

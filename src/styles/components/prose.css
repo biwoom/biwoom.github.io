@@ -154,7 +154,7 @@
 
 /* ── Strong / Em ── */
 .ol-prose strong { color: var(--ol-ink); font-weight: 600; }
-.ol-prose em { font-style: italic; }
+.ol-prose em { font-style: italic; font-synthesis: style; }
 
 /* ── Footnotes ── */
 .ol-prose .footnotes {
@@ -189,7 +189,8 @@
   gap: 0;
 }
 .ol-prose .footnotes li::before {
-  content: "[" counter(footnote-counter) "]";
+  /* content: "[" counter(footnote-counter) "]"; */
+  content: counter(footnote-counter);
   font-family: inherit;
   font-size: 11px;
   color: var(--ol-muted);

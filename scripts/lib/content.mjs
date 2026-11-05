@@ -2,9 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import * as yaml from "js-yaml";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkGfm from "remark-gfm";
+import { markdownTree } from "./markdown.mjs";
+export { markdownTree } from "./markdown.mjs";
 import { CONTENT_DEFAULTS } from "../../site-config.mjs";
 
 export const collections = ["text", "story", "blog", "pages"];
@@ -94,7 +93,6 @@ export function validateInput(data) {
     } else if (typeof value !== "string") throw new Error(`${key} must be a string`);
   }
 }
-export const markdownTree = body => unified().use(remarkParse).use(remarkGfm).parse(body);
 export const textOf = node => node.type === "image" ? (node.alt ?? "") : (node.value ?? node.children?.map(textOf).join("") ?? "");
 export function firstHeading(body) {
   return markdownTree(body).children.find(n => n.type === "heading" && n.depth === 1);

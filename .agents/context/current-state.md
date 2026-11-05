@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-10-31
+Last updated: 2026-11-05
 
 ## Brand
 
@@ -17,6 +17,8 @@ Last updated: 2026-10-31
 
 ## Menu Accents
 
+- Landing ol-manifest randomly chooses HOME/TEXT/STORY accent backgrounds or BLOG's existing monochrome treatment on each page load (also on bfcache return). An inline script runs before the card content; bright variants use dark text in both modes. Colors reuse existing tokens; no timed cycling or stored selection.
+
 - HOME #00d3f3, TEXT #f0b100, STORY #7ccf00; BLOG retains its existing palette.
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
 
@@ -30,7 +32,13 @@ Last updated: 2026-10-31
 - TEXT/STORY share series links and expandable lists, not actual tab panels. Both individual document views now use the same `StoryReader` and STORY styling by explicit user request. Breadcrumbs/search section/category/URLs remain collection-specific; TEXT displays material-section/item labels. The unused TEXT-only reader/layout have been removed. BLOG retains its dedicated original list/detail templates.
 - TEXT/STORY document part navigation starts with a home-icon link back to the current series/library page.
 - TEXT/STORY individual readers span the available viewport width with a left document list and a wide article; prose is capped at 1200px. The article toolbar aligns to the right of the document header, whose title is capped at 1200px, and stays sticky below the desktop site/part navigation and shows a desktop 목차 label beside its icon. It opens one right-edge TOC drawer on desktop/mobile; no right TOC column or separate mobile TOC remains. Native dialog handles focus containment, with close/Escape/backdrop dismissal and active H2/H3 indication.
+- TEXT/STORY reader toolbars include a footnote drawer using the TOC dialog pattern. Build-time slot rendering moves the generated Markdown footnotes into one drawer, preserving IDs and rich markup; no-note documents disable the button. A document-note icon gains a desktop 각주 label. Build-time rehype removes separate backreference arrows; clickable/keyboard-accessible note text returns to the last clicked reference (first reference by default), preserving authored links. The active body reference gets a high-contrast accent badge.
+- TOC/footnote drawers share an explicit Web Animations controller (360ms entrance, 280ms exit) instead of rAF-triggered CSS transitions/fixed close timers. Keep resting panels untransformed to avoid native-dialog focus/scroll jumps, reserve the reader scrollbar gutter, scroll only the internal footnote list, and honor reduced motion.
+- One font popover slider scales reading-area title/headings/body together from 80–150%, with live percentage, reset and local browser persistence. Existing computed typography proportions and responsive rules are retained; site navigation and page introduction are excluded. Storage failure falls back to in-memory controls. At mobile widths the size panel is horizontally centered in the viewport and positioned 8px below its trigger, tracking scroll/resize. A single-column panel keeps reset below the slider.
+- Shared ContentRights omits the automatically supplied default author/license line (비움 · CC0) on individual TEXT/STORY/BLOG documents. Preserve stored rights metadata and display document-specific rights holders/licenses/URLs and copyright notices.
 - Optional tags use plain arrays (`tags: [수메다, 수밋따]`), without classification prefixes or inheritance. TEXT/STORY/BLOG detail titles are followed by tags only when present. BLOG supplies tag-count chips combined with year filters/pagination and ?tag links; untagged posts remain in All. Series tag menus/modals and prefix-filter code are removed. Series heroes keep their background/alignment with compact 24px/20px padding (20px/16px mobile), 12px description gap and 32px bottom margin.
+- Prose em elements allow font-synthesis: style so the loaded upright Pretendard faces can display italic emphasis despite the global synthesis prohibition.
+- CJK-friendly emphasis is enabled through remark-cjk-friendly/parseOnly in scripts/lib/markdown.mjs. Astro/MDX rendering and shared content parsing use the same GFM + emphasis plugin list, so punctuation adjacent to Korean particles works in body/headings/links/tables/footnotes without source rewrites. Code and escaped markers retain their literal meaning. Restart dev after parser changes.
 - YAML-free Markdown is supported. Title priority: optional title override → first H1 → descriptive filename. Summary and reading time are computed.
 - `scripts/lib/content.mjs` provides shared parsing/normalization, with `src/content.config.ts` defining normalized schema and loaders.
 - `content-registry.json` is committed, auto-maintained source metadata for stable URLs/dates/previous paths. `scripts/prepare-content.mjs` updates it.

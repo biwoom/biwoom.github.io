@@ -1,8 +1,9 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-import remarkGfm from "remark-gfm";
+import { markdownRemarkPlugins } from "./scripts/lib/markdown.mjs";
 import remarkContent from "./scripts/remark-content.mjs";
+import rehypeReaderFootnotes from "./scripts/rehype-reader-footnotes.mjs";
 import contentDevelopment from "./scripts/dev-content.mjs";
 import { readRegistry } from "./scripts/lib/content.mjs";
 import { SITE_URL } from "./site-config.mjs";
@@ -15,7 +16,8 @@ export default defineConfig({
   site: SITE_URL,
 
   markdown: {
-    remarkPlugins: [remarkGfm, remarkContent],
+    remarkPlugins: [...markdownRemarkPlugins, remarkContent],
+    rehypePlugins: [rehypeReaderFootnotes],
     remarkRehype: {
       footnoteLabel: "각주",
       footnoteBackLabel: "본문으로 돌아가기",

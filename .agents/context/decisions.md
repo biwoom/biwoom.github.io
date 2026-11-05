@@ -1,5 +1,18 @@
 # Decisions
 
+## 2026-11-05 — CJK-Friendly Emphasis
+
+- Use the pinned remark-cjk-friendly parser extension for emphasis beside punctuation and Korean particles, retaining source Markdown and normal code/escape rules. Share the GFM + emphasis plugin list through scripts/lib/markdown.mjs between Astro rendering and metadata/link analysis. Do not rewrite authored text or rendered HTML to repair emphasis.
+
+## 2026-11-05 — Default Rights Display
+
+- Hide the automatically supplied default author/license line on document pages; retain source metadata and separately specified rights exceptions/notices. Apply through the shared ContentRights component.
+
+## 2026-11-05 — Reader Footnotes and Reading Size
+
+- Render Markdown footnotes into a single drawer during the build, keeping generated IDs and backreferences intact. Use the existing TOC modal pattern; reference clicks select a note; note-text click/Enter returns to the last clicked source reference (first by default). Strip generated arrow controls in a TEXT/STORY-only rehype plugin and highlight the active body reference. Disable the toolbar button when there are no rendered notes.
+- Use one 80–150% slider for reading-area title, headings and body together, preserving their existing relative sizes. Keep browser-local settings across TEXT/STORY, provide reset, and exclude the page introduction/navigation.
+
 ## 2026-10-31 — Auxiliary Media Gallery
 
 - Add /media/ as an auxiliary gallery linked by home media statistics and footer, excluding desktop/mobile main navigation. Keep shared assets outside Astro document collections and create no individual image pages.

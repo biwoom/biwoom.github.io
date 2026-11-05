@@ -56,10 +56,18 @@ rule(".ol-post", /display:grid/);
 rule(".ol-story-reader-page.ol-story-doc-page", /width:100%/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /max-width:1200px/);
 rule(".ol-reader-toc:not([open])", /display:none/);
-rule(".ol-reader-toc-panel", /transform:translate(?:X)?\(100%\)/);
+rule(".ol-reader-toc-panel", /transform:translate(?:X)?\(0\)/);
+rule(":root:has(.ol-story-doc-page)", /scrollbar-gutter:stable/);
+rule(".ol-reader-toc::backdrop", /animation:[^;]*ol-reader-backdrop-in/);
 rule(".ol-story-doc-page .ol-reader-toolbar", /position:sticky/);
 rule(".ol-story-doc-page .ol-story-reader-shell", /overflow:clip/);
 rule(".ol-story-doc-page .ol-story-part-content-head h2", /max-width:1200px/);
+rule(".ol-reader-font-panel", /position:fixed/);
+rule(".ol-reader-font-panel", /transform:translate(?:X)?\(-50%(?:,0)?\)/);
+rule(".ol-reader-font-panel", /grid-template-columns:minmax\(0,1fr\)/);
+rule(".ol-reader-font-panel", /top:var\(--ol-reader-font-top/);
+rule(".ol-reader-footnotes-label", /display:inline/);
+rule("[data-active-footnote-ref]", /font-weight:800/);
 const registry = readRegistry();
 let count = 0;
 const publishedBlogTags = [];
@@ -107,6 +115,26 @@ for (const [source, record] of Object.entries(registry.files)) {
     : ["ol-blog-detail-header", "ol-blog-detail-title", "ol-blog-detail-meta"];
   classes(html, [...expected, "ol-prose"], record.url);
   if (isLibrary) {
+    assert.match(html, /data-reader-footnotes-trigger/);
+    assert.match(html, /class="ol-text-tool-label ol-reader-footnotes-label">각주<\/span>/);
+    assert.equal((html.match(/type="range"/g) ?? []).length, 1, `${record.url}: one shared reading slider`);
+    assert.match(html, /min="80" max="150" step="5" value="100"/);
+    assert.match(html, /id="ol-reader-font-panel"[^>]*hidden/);
+    const notesDialog = html.match(/<dialog[^>]*id="ol-reader-footnotes"[^>]*>([\s\S]*?)<\/dialog>/)?.[0];
+    const notesCount = (html.match(/<section[^>]*data-footnotes/g) ?? []).length;
+    assert.equal(notesCount, notesDialog ? 1 : 0, `${record.url}: notes exist only in their built drawer`);
+    if (notesDialog) {
+      assert.ok(!/<dialog[^>]*\sopen(?:\s|=|>)/.test(notesDialog));
+      assert.match(notesDialog, /data-reader-footnotes-close/);
+      assert.match(notesDialog, /data-footnotes/);
+      assert.ok(!notesDialog.includes('data-footnote-backref'), `${record.url}: no separate backreference controls`);
+      const controls = [...notesDialog.matchAll(/data-footnote-return="#([^"]+)"/g)];
+      assert.ok(controls.length > 0, `${record.url}: clickable note text`);
+      for (const [, id] of controls) {
+        assert.ok(html.includes(`id="${id}"`), `${record.url}: note return destination`);
+      }
+    }
+
     assert.ok(!hasClass(html, "ol-doc-side-stack--story"), `${record.url}: obsolete right TOC column`);
     assert.ok(!html.includes("data-story-mobile-toc"), `${record.url}: duplicate mobile TOC`);
     const drawer = html.match(/<dialog[^>]*id="ol-reader-toc"[^>]*>/)?.[0];

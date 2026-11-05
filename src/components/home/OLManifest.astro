@@ -3,6 +3,21 @@
 <section class="ol-section-tight">
   <div class="ol-container">
     <div class="ol-manifest">
+      <script is:inline>
+        (() => {
+          const manifest = document.currentScript?.parentElement;
+          if (!manifest) return;
+          const accents = ["home", "text", "story", "blog"];
+          const chooseAccent = () => {
+            manifest.dataset.manifestAccent = accents[Math.floor(Math.random() * accents.length)];
+          };
+          // Choose before the content is painted, rather than at static build time.
+          chooseAccent();
+          window.addEventListener("pageshow", (event) => {
+            if (event.persisted) chooseAccent();
+          });
+        })();
+      </script>
       <span class="ol-section-label">BORIDO · 보리도</span>
       <h3 class="ol-kr">"읽고, 사유하고, 실천하는 길"</h3>
       <div class="ol-kr">

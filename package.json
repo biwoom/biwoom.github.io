@@ -7,7 +7,7 @@
   },
   "scripts": {
     "check:content": "node scripts/check-content.mjs",
-    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs scripts/check-transition-fixtures.mjs scripts/check-tags-fixtures.mjs scripts/check-media-fixtures.mjs",
+    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs scripts/check-transition-fixtures.mjs scripts/check-tags-fixtures.mjs scripts/check-media-fixtures.mjs scripts/check-reader-fixtures.mjs scripts/check-markdown-fixtures.mjs",
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node scripts/sync-content-assets.mjs && node scripts/sync-media-gallery.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",
@@ -30,6 +30,7 @@
     "astro": "^6.3.8",
     "basecoat-css": "^0.3.11",
     "js-yaml": "^5.5.0",
+    "remark-cjk-friendly": "2.3.4",
     "remark-footnotes": "^4.0.1",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",

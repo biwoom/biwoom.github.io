@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ContentRights from "./ContentRights.astro";
 import MaterialBody from "./MaterialBody.astro";
+import ReaderBody from "./ReaderBody.astro";
 import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import {
@@ -170,6 +171,27 @@ const hasToc = headings.some(
                   <span class="ol-text-tool-label ol-reader-toc-label">목차</span>
                 </button>
               )}
+              <button class="ol-text-tool-btn" type="button" disabled
+                aria-label="각주 없음" title="각주 없음" aria-haspopup="dialog"
+                aria-expanded="false" aria-controls="ol-reader-footnotes" data-reader-footnotes-trigger>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8M8 16h5" />
+                </svg>
+                <span class="ol-text-tool-label ol-reader-footnotes-label">각주</span>
+              </button>
+              <div class="ol-reader-font" data-reader-font>
+                <button class="ol-text-tool-btn" type="button" aria-label="글자 크기 조절" title="글자 크기 조절"
+                  aria-expanded="false" aria-controls="ol-reader-font-panel" data-reader-font-trigger>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m3 20 6-16 6 16M5 15h8m3 5 4-10 4 10m-7-3h6" />
+                  </svg>
+                </button>
+                <div id="ol-reader-font-panel" class="ol-reader-font-panel" hidden>
+                  <label for="ol-reader-font-size">글자 크기 <output for="ol-reader-font-size" data-reader-font-value>100%</output></label>
+                  <input id="ol-reader-font-size" type="range" min="80" max="150" step="5" value="100" data-reader-font-size />
+                  <button type="button" class="ol-text-tool-btn" data-reader-font-reset>초기화</button>
+                </div>
+              </div>
               <div
                 class="ol-copy-dropdown"
                 data-copy-dropdown
@@ -280,11 +302,11 @@ const hasToc = headings.some(
           </div>
 
           <div class="ol-story-chapter active">
-            <div class="ol-prose ol-kr">
+            <ReaderBody>
               <MaterialBody entry={entry}>
                 {Content && <Content />}
               </MaterialBody>
-            </div>
+            </ReaderBody>
           </div>
 
           <ContentRights data={entry.data} />
@@ -340,6 +362,8 @@ const hasToc = headings.some(
 </BaseLayout>
 
 <script>
+  import { createReaderDrawer } from "../../lib/client/reader-drawer";
+  import { initReaderTools } from "../../lib/client/reader-tools";
   const normalizeMarkdown = (value: string) =>
     value
       .replace(/\n{3,}/g, "\n\n")
@@ -348,7 +372,8 @@ const hasToc = headings.some(
 
   const getStoryMarkdown = (title: string) => {
     const source = document.querySelector<HTMLElement>(".ol-prose");
-    const body = normalizeMarkdown(source?.innerText ?? "");
+    const notes = document.querySelector<HTMLElement>(".ol-reader-footnotes-content .footnotes");
+    const body = normalizeMarkdown([source?.innerText, notes?.innerText].filter(Boolean).join("\n\n"));
     return normalizeMarkdown(`# ${title}\n\n${body}`);
   };
 
@@ -359,37 +384,16 @@ const hasToc = headings.some(
     const links = Array.from(drawer.querySelectorAll<HTMLAnchorElement>("[data-story-toc-list] a"));
     const headings = links.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
       .filter((heading): heading is HTMLElement => heading !== null);
-    let closing = false;
-    let previousOverflow = "";
-    const closeDrawer = (destination?: HTMLElement) => {
-      if (!drawer.open || closing) return;
-      closing = true;
-      drawer.classList.remove("is-open");
-      trigger.setAttribute("aria-expanded", "false");
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      window.setTimeout(() => {
-        drawer.close();
-        document.body.style.overflow = previousOverflow;
-        closing = false;
-        trigger.focus({ preventScroll: true });
-        if (destination) {
-          window.location.hash = encodeURIComponent(destination.id);
-          destination.scrollIntoView({ block: "start" });
-        }
-      }, reducedMotion ? 0 : 200);
-    };
-    trigger.addEventListener("click", () => {
-      if (drawer.open) { closeDrawer(); return; }
-      previousOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      drawer.showModal();
-      trigger.setAttribute("aria-expanded", "true");
-      requestAnimationFrame(() => requestAnimationFrame(() => drawer.classList.add("is-open")));
+    const controller = createReaderDrawer(drawer, trigger, drawer.querySelector("[data-reader-toc-close]"));
+    const closeDrawer = (destination?: HTMLElement) => controller.close(() => {
+      if (destination) {
+        window.location.hash = encodeURIComponent(destination.id);
+        destination.scrollIntoView({ block: "start" });
+      }
     });
-    drawer.querySelector("[data-reader-toc-close]")?.addEventListener("click", () => closeDrawer());
-    drawer.addEventListener("cancel", (event) => { event.preventDefault(); closeDrawer(); });
-    drawer.addEventListener("click", (event) => {
-      if (event.target === drawer) closeDrawer();
+    trigger.addEventListener("click", () => {
+      if (drawer.open) closeDrawer();
+      else controller.open();
     });
     links.forEach((link) => link.addEventListener("click", (event) => {
       const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
@@ -474,4 +478,5 @@ const hasToc = headings.some(
   });
 
   initToc();
+  initReaderTools();
 </script>
