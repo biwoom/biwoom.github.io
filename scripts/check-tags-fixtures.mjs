@@ -51,13 +51,14 @@ class Element {
 }
 
 test('blog UI combines tag/year filters, resets pagination, keeps untagged posts in All, and supports tag links', () => {
-  const post = (tags, year) => new Element({ tags: JSON.stringify(tags), year });
+  const post = (tags, year, category = '일지') => new Element({ tags: JSON.stringify(tags), year, category });
   const posts = [
     ...Array.from({ length: 7 }, () => post(['수메다'], '2026')),
-    post(['수메다'], '2025'), post([], '2026'), post(['수메다보살'], '2026'),
-    post(['all'], '2026'), post(['가, 나', '인용 "태그"'], '2026'),
+    post(['수메다'], '2025', '교학'), post([], '2026', '수행'), post(['수메다보살'], '2026', '교학'),
+    post(['all'], '2026'), post(['가, 나', '인용 "태그"'], '2026', '교학'),
   ];
   const tagButtons = ['', '수메다', '수메다보살', 'all', '가, 나', '인용 "태그"'].map(blogTag => new Element({ blogTag }));
+  const categoryButtons = ['', '교학', '수행', '일지'].map(blogCategory => new Element({ blogCategory }));
   const yearButtons = ['all', '2026', '2025'].map(year => new Element({ year }));
   const ids = Object.fromEntries(['blog-no-results', 'blog-filter-status', 'blog-loadmore-wrap', 'blog-loadmore-remaining'].map(id => [id, new Element()]));
   const more = new Element();
@@ -72,6 +73,7 @@ test('blog UI combines tag/year filters, resets pagination, keeps untagged posts
     querySelectorAll(selector) {
       if (selector === '#blog-posts .ol-post') return posts;
       if (selector === '#blog-chips [data-blog-tag]') return tagButtons;
+      if (selector === '#blog-categories [data-blog-category]') return categoryButtons;
       if (selector === '.ol-blog-archive-btn') return yearButtons;
       throw new Error(selector);
     },
@@ -102,4 +104,33 @@ test('blog UI combines tag/year filters, resets pagination, keeps untagged posts
   location.search = '?tag=' + encodeURIComponent('없는 태그'); listeners.popstate();
   assert.equal(visible(), 0); assert.equal(status(), '0개 글');
   tagButton('').click(); assert.equal(visible(), 6); assert.equal(new URL(location.href).searchParams.has('tag'), false);
+  const categoryButton = value => categoryButtons.find(button => button.dataset.blogCategory === value);
+  categoryButton('교학').click(); assert.equal(visible(), 3); assert.equal(status(), '3개 글');
+  assert.equal(categoryButton('교학').attributes['aria-pressed'], 'true');
+  assert.equal(new URL(location.href).searchParams.get('category'), '교학');
+  categoryButton('일지').click(); assert.equal(visible(), 6); more.click(); assert.equal(visible(), 8);
+  categoryButton('수행').click(); assert.equal(visible(), 1); assert.equal(posts[8].hidden, false);
+  tagButton('수메다').click(); assert.equal(visible(), 0); assert.equal(ids['blog-no-results'].hidden, false);
+  assert.equal(new URL(location.href).searchParams.get('category'), '수행');
+  assert.equal(new URL(location.href).searchParams.get('tag'), '수메다');
+  location.search = '?category=' + encodeURIComponent('교학') + '&tag=' + encodeURIComponent('수메다'); listeners.popstate();
+  assert.equal(visible(), 1); assert.equal(posts[7].hidden, false);
+  yearButton('2026').click(); assert.equal(visible(), 0);
+  yearButton('all').click(); assert.equal(visible(), 1);
+  categoryButton('').click(); assert.equal(visible(), 6); assert.equal(status(), '8개 글');
+  assert.equal(new URL(location.href).searchParams.has('category'), false);
+
+});
+
+
+test('blog categories count published input posts, sort by folder order and retain uncategorized posts', () => {
+  const result=JSON.parse(JSON.stringify(tags.getBlogCategories([
+    {category:'일지',categoryOrder:6}, {category:'교학',categoryOrder:1},
+    {category:'일지',categoryOrder:6}, {category:'수행',categoryOrder:2},
+    {category:'',categoryOrder:Number.MAX_SAFE_INTEGER},
+  ])));
+  assert.deepEqual(result,[{category:'교학',count:1},{category:'수행',count:1},{category:'일지',count:2},{category:'미분류',count:1}]);
+  assert.equal(tags.matchesBlogFilters({tags:['수메다'],year:'2026',category:'교학'},'수메다','2026','교학'),true);
+  assert.equal(tags.matchesBlogFilters({tags:['수메다'],year:'2026',category:'교학 연구'},'수메다','2026','교학'),false);
+  assert.equal(tags.matchesBlogFilters({tags:[],year:'2026',category:''},'','all','미분류'),true);
 });

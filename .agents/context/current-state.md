@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-11-05
+Last updated: 2026-11-06
 
 ## Brand
 
@@ -25,6 +25,7 @@ Last updated: 2026-11-05
 ## Current Architecture
 
 - `src/content/` is the user's Obsidian vault and content source. Vault CMS/Front Matter/Decap CMS are not used.
+- BLOG source posts now occupy six numbered top-level category folders: 교학 (3), 수행 (1), 인포그래픽 (3), 디자인 (1), 보리도 (2), 일지 (11). Per-post directories and 11 image attachments moved together; shared-media links were rebased in five documents. Existing IDs/URLs/dates/rights remain intact. BLOG normalized category/categoryOrder now derive from the first folder while keeping blog/standalone registry grouping. The BLOG index shows ordered category/count buttons above tags; category, exact tag and year filters intersect and reset pagination. Category/tag selection uses ?category=/tag= with popstate support. Uncategorized loose posts use 미분류. Existing category badges/search metadata now display folder labels; document URLs/dates remain unchanged.
 - Public content menus: TEXT/STORY/BLOG. HOME remains the landing page and `pages` contains the brand document.
 - TEXT path: category/work/material-section/item. STORY path: category/series/part/item. `index.md` is an optional introduction.
 - TEXT/STORY menu roots display top-level folders as three-column category cards, linking to category-specific single-column series rows (number, title, optional description, material/part metadata and arrow), separated by thin rules rather than cards. List areas display 카테고리 목록 on roots and 시리즈 목록 on category details; only category-detail heroes have a bottom divider. Empty folders remain visible; `.gitkeep` retains empty categories in Git. Category routes use ASCII hashes; document/series registry URLs and dates remain unchanged.

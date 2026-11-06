@@ -183,6 +183,9 @@ export function categoryFolders(collection, root = process.cwd()) {
 export function folderParts(relative) {
   const [collection, ...segments] = relative.split("/");
   const dirs = segments.slice(0, -1);
+  if (collection === "blog") return {
+    collection, category: dirs[0] ?? "", seriesPath: "blog/standalone", part: "",
+  };
   if (["text", "story"].includes(collection) && dirs.length >= 3)
     return {
       collection,

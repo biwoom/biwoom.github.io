@@ -2,6 +2,21 @@
 
 This file records concise date-based work summaries for continuity across Codex sessions.
 
+## 2026-11-06
+
+### BLOG Category Buttons
+
+- Derive BLOG category/categoryOrder from its first folder while retaining standalone registry identity. Add ordered category/count buttons above tags; category/tag/year filters intersect and reset shared pagination. Preserve category/tag query parameters, pressed states, no-results feedback and loose-post 미분류 fallback. Existing category badges/search metadata now use folder labels.
+- Extend actual BLOG script tests for combined filters, pagination reset, URL/popstate and untagged posts, plus folder normalization/identity and generated markup/count contracts. Updated manual v2.9 and continuity guidance.
+- Passed 44 fixtures, zero-diagnostic typecheck, build and generated links/UI checks. Verified a fresh temporary dev server returns the ordered seven buttons above tags and all 21 correct per-post categories; temporary server stopped afterward. Browser visual/click QA remains unavailable under the existing access restriction. No commit/upload requested.
+
+### BLOG Category Folder Migration
+
+- Moved 21 posts into six numbered category folders (교학 3 / 수행 1 / 인포그래픽 3 / 디자인 1 / 보리도 2 / 일지 11), including existing post directories and 11 attachment images. Preserve the ignored historical generated directory without publishing or restoring archives.
+- Batch-linked moved registry entries with shared linkMove before preparation, then rebased Markdown destinations in five documents. Existing IDs/URLs/dates/publication flags/rights/frontmatter and attachment bytes are preserved. Category metadata/filter UI is deferred; this step organizes source folders only. No commit or upload requested.
+- Updated AGENTS, manual v2.8 and continuity guidance.
+- Passed 42 fixtures, zero-diagnostic typecheck, build and generated link/UI checks across 63 pages/21 redirects and 27 documents. Audited all 21 post IDs/URLs/dates/rights/frontmatter and unchanged prose outside rebased URLs; all local Markdown targets remain equivalent. All 11 attachment hashes match both moved source and generated assets, original post routes still build, and registry preparation is stable.
+
 ## 2026-11-05
 
 ### Reader Improvements Blog and Local Commit Checkpoint

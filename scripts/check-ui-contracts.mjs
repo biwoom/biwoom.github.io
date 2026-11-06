@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import {
   readRegistry,
+  nameInfo,
   categoryFolders,
   normalize,
   walk,
@@ -71,6 +72,7 @@ rule("[data-active-footnote-ref]", /font-weight:800/);
 const registry = readRegistry();
 let count = 0;
 const publishedBlogTags = [];
+const publishedBlogCategories = [];
 const drawerCounts = { text: 0, story: 0 };
 for (const [source, record] of Object.entries(registry.files)) {
   const collection = source.split("/")[0],
@@ -101,7 +103,12 @@ for (const [source, record] of Object.entries(registry.files)) {
     assert.ok(html.indexOf("data-document-tags") > html.indexOf("</h1>"), `${record.url}: tag placement`);
     assert.ok(html.indexOf("data-document-tags") < html.indexOf('class="ol-prose'), `${record.url}: tags belong above body`);
   }
-  if (collection === "blog") publishedBlogTags.push(expectedTags);
+  if (collection === "blog") {
+    publishedBlogTags.push(expectedTags);
+    const category = source.split("/").length > 2 ? nameInfo(source.split("/")[1]) : { label: "", order: Number.MAX_SAFE_INTEGER };
+    assert.equal(data.category, category.label, `${source}: BLOG category must come from first folder`);
+    publishedBlogCategories.push({ category: category.label || "미분류", order: category.order });
+  }
   overlay(html, "ol-search-overlay", record.url);
   overlay(html, "ol-mobile-overlay", record.url);
   const isLibrary = collection === "text" || collection === "story";
@@ -218,6 +225,18 @@ const blog = fs.readFileSync("dist/blog/index.html", "utf8");
 const decode = (value) => value.replace(/&(?:quot|#34|#x22);/g, '"').replace(/&(?:apos|#39|#x27);/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 const buttons = [...blog.matchAll(/<button[^>]*data-blog-tag="([^"]*)"[^>]*>/g)].map(([, value]) => decode(value));
 assert.deepEqual(buttons.slice().sort(), ["", ...new Set(publishedBlogTags.flat())].sort(), "BLOG filter buttons must reflect only published post tags");
+const categoryGroups = new Map();
+for (const item of publishedBlogCategories) {
+  const group = categoryGroups.get(item.category) ?? { ...item, count: 0 };
+  group.count++; categoryGroups.set(item.category, group);
+}
+const expectedCategories = [...categoryGroups.values()].sort((a, b) => a.order - b.order || a.category.localeCompare(b.category, "ko"));
+const categoryButtons = [...blog.matchAll(/<button[^>]*data-blog-category="([^"]*)"[^>]*>([\s\S]*?)<\/button>/g)];
+assert.deepEqual(categoryButtons.map(([, category]) => decode(category)), ["", ...expectedCategories.map(x => x.category)], "BLOG categories follow source folder order");
+assert.deepEqual(categoryButtons.map(([, , body]) => Number(body.match(/class="count">(\d+)/)?.[1])), [publishedBlogCategories.length, ...expectedCategories.map(x => x.count)], "BLOG category counts");
+assert.ok(blog.indexOf('id="blog-categories"') < blog.indexOf('id="blog-chips"'), "Categories must precede tags");
+const renderedCategories = [...blog.matchAll(/<article[^>]*data-category="([^"]*)"/g)].map(([, category]) => decode(category));
+assert.deepEqual(renderedCategories.sort(), publishedBlogCategories.map(x => x.category).sort(), "BLOG per-post category data");
 const postTags = [...blog.matchAll(/<article[^>]*data-tags="([^"]*)"[^>]*>/g)].map(([, value]) => JSON.parse(decode(value)));
 const tagSignatures = (posts) => posts.map((tags) => JSON.stringify([...tags].sort())).sort();
 assert.deepEqual(tagSignatures(postTags), tagSignatures(publishedBlogTags), "BLOG filter data must match each post's tags");

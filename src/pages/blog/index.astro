@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getBlogThumbnailUrl } from "../../lib/assets";
-import { getBlogTags } from "../../lib/tags";
+import { getBlogTags, getBlogCategories } from "../../lib/tags";
 
 const posts = await getCollection("blog", (e) => e.data.published);
 posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -12,6 +12,8 @@ const thumbnails = Object.fromEntries(
 );
 
 const PAGE_SIZE = 6;
+
+const categoryFilters = getBlogCategories(posts.map((post) => post.data));
 
 const tagFilters = getBlogTags(posts.map((post) => ({ tags: post.data.tags })));
 
@@ -43,6 +45,18 @@ const archiveYears = [
     <!-- Filter + posts -->
     <section class="ol-section-tight">
       <div class="ol-container">
+        <div class="ol-blog-category-row">
+          <div class="ol-chips ol-blog-category-chips" id="blog-categories" role="group" aria-label="카테고리로 글 분류">
+            <button type="button" class="ol-chip active" data-blog-category="" aria-pressed="true">
+              전체 <span class="count">{posts.length}</span>
+            </button>
+            {categoryFilters.map(({ category, count }) => (
+              <button type="button" class="ol-chip" data-blog-category={category} aria-pressed="false">
+                {category} <span class="count">{count}</span>
+              </button>
+            ))}
+          </div>
+        </div>
         <div class="ol-row ol-blog-chip-row">
           <div class="ol-chips ol-blog-tag-chips" id="blog-chips" role="group" aria-label="태그로 글 분류">
             <button type="button" class="ol-chip active" data-blog-tag="" aria-pressed="true">
@@ -71,6 +85,7 @@ const archiveYears = [
                         "ol-post",
                         { "ol-post--text-only": !hasThumbnail },
                       ]}
+                      data-category={post.data.category || "미분류"}
                       data-tags={JSON.stringify(post.data.tags)}
                       data-year={post.data.date.getFullYear()}
                       data-index={i}
@@ -196,8 +211,10 @@ const archiveYears = [
   import { matchesBlogFilters } from "../../lib/tags";
 
   let activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+  let activeCategory = new URLSearchParams(window.location.search).get("category") ?? "";
   let activeYear = "all";
   const posts = [...document.querySelectorAll<HTMLElement>("#blog-posts .ol-post")];
+  const categoryButtons = [...document.querySelectorAll<HTMLButtonElement>("#blog-categories [data-blog-category]")];
   const tagButtons = [...document.querySelectorAll<HTMLButtonElement>("#blog-chips [data-blog-tag]")];
   const yearButtons = [...document.querySelectorAll<HTMLButtonElement>(".ol-blog-archive-btn")];
   const noResults = document.getElementById("blog-no-results")!;
@@ -215,6 +232,11 @@ const archiveYears = [
   });
 
   function applyFilters() {
+    for (const button of categoryButtons) {
+      const selected = (button.dataset.blogCategory ?? "") === activeCategory;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
     for (const button of tagButtons) {
       const selected = (button.dataset.blogTag ?? "") === activeTag;
       button.classList.toggle("active", selected);
@@ -228,15 +250,26 @@ const archiveYears = [
     paginator.reset(posts.filter((post) => matchesBlogFilters({
       tags: JSON.parse(post.dataset.tags ?? "[]") as string[],
       year: post.dataset.year ?? "",
-    }, activeTag, activeYear)));
+      category: post.dataset.category ?? "",
+    }, activeTag, activeYear, activeCategory)));
   }
 
-  for (const button of tagButtons) button.addEventListener("click", () => {
-    activeTag = button.dataset.blogTag ?? "";
+  function syncFilterUrl() {
     const href = new URL(window.location.href);
     if (activeTag) href.searchParams.set("tag", activeTag);
     else href.searchParams.delete("tag");
+    if (activeCategory) href.searchParams.set("category", activeCategory);
+    else href.searchParams.delete("category");
     window.history.replaceState(null, "", href);
+  }
+  for (const button of categoryButtons) button.addEventListener("click", () => {
+    activeCategory = button.dataset.blogCategory ?? "";
+    syncFilterUrl();
+    applyFilters();
+  });
+  for (const button of tagButtons) button.addEventListener("click", () => {
+    activeTag = button.dataset.blogTag ?? "";
+    syncFilterUrl();
     applyFilters();
   });
   for (const button of yearButtons) button.addEventListener("click", () => {
@@ -245,6 +278,7 @@ const archiveYears = [
   });
   window.addEventListener("popstate", () => {
     activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+    activeCategory = new URLSearchParams(window.location.search).get("category") ?? "";
     applyFilters();
   });
   applyFilters();

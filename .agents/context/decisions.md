@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-06 — BLOG Source Categories
+
+- Organize BLOG by one primary purpose: 교학, 수행, 인포그래픽, 디자인, 보리도, 일지, ordered with 001–006 folder prefixes. Distinguish explanatory doctrine/practice articles from visual-production records; use tags for overlapping subjects.
+- Retain loose Markdown or existing per-post index/attachment folders inside each category, without category introductions/frontmatter. Preserve registry identities and dates; explicitly link moved records before preparing edited relative links. BLOG normalized category/categoryOrder derive from the first folder without changing standalone registry grouping or URLs. Display published-post category counts above tags; category/tag/year filters intersect and reset pagination. Persist category/tag selection in query parameters and retain loose posts under 미분류.
+
 ## 2026-11-05 — CJK-Friendly Emphasis
 
 - Use the pinned remark-cjk-friendly parser extension for emphasis beside punctuation and Korean particles, retaining source Markdown and normal code/escape rules. Share the GFM + emphasis plugin list through scripts/lib/markdown.mjs between Astro rendering and metadata/link analysis. Do not rewrite authored text or rendered HTML to repair emphasis.

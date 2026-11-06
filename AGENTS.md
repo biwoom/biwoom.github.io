@@ -13,6 +13,7 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - TEXT/STORY menu roots show top-level categories as `ol-grid-3` cards; category pages list their series. Empty category folders remain visible (track `.gitkeep` when needed).
 - TEXT uses the current STORY series link/expand behavior. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT and STORY individual documents both use `StoryReader.astro` and STORY document styling. Pass the correct collection for breadcrumbs/search; do not restore the old TEXT-only document layout. BLOG retains its dedicated list/detail layout.
+- BLOG posts are organized under `001.교학`, `002.수행`, `003.인포그래픽`, `004.디자인`, `005.보리도`, and `006.일지` within `src/content/blog/`. Keep per-post folders/attachments together; preserve registry identity and rebase relative links when moving.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
 ## Content Rules
@@ -55,6 +56,10 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-06
+
+- Added the six BLOG source category folders and URL-preserving move guidance.
 
 ### 2026-10-31
 

@@ -212,3 +212,23 @@ test("STORY requires category/series/part/document and keeps private series hidd
     write(root, "story/010.옛시리즈/010.파트/001.이전 구조.md", "# 이전 구조");
     assert.ok(validate(root).some((error) => error.includes("expected category/work/section/document")));
   }));
+
+
+test('BLOG category derives from the first folder without changing standalone identity or index kind', () => fixture(root => {
+  const old='blog/001.교학/guide/index.md';
+  const source='# 교학 글\n\n본문';
+  fs.mkdirSync(path.join(root,'src/content',path.dirname(old)),{recursive:true});
+  fs.writeFileSync(path.join(root,'src/content',old),source);
+  const before=prepare(root), record={...before.files[old]};
+  let data=normalize(old,source,before,root);
+  assert.equal(data.category,'교학'); assert.equal(data.categoryOrder,1);
+  assert.equal(data.kind,'document'); assert.equal(data.seriesKey,'blog/standalone');
+  const next='blog/002.수행/guide/index.md';
+  fs.mkdirSync(path.join(root,'src/content/blog/002.수행'),{recursive:true});
+  fs.renameSync(path.join(root,'src/content/blog/001.교학/guide'),path.join(root,'src/content/blog/002.수행/guide'));
+  const after=prepare(root);data=normalize(next,source,after,root);
+  assert.equal(data.category,'수행'); assert.equal(data.categoryOrder,2);
+  assert.equal(data.url,record.url); assert.equal(data.date.toISOString().slice(0,10),record.date);
+  assert.equal(after.files[next].id,record.id);
+  assert.equal(folderParts('blog/loose.md').category,'');
+}));

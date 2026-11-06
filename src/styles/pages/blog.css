@@ -183,3 +183,8 @@
 .ol-blog-filter-status { margin: 0 0 16px; color: var(--ol-muted); font-size: 13px; }
 
 .ol-post[hidden] { display: none; }
+
+/* Source-folder categories stay above the independent tag strip. */
+.ol-blog-category-row { margin-bottom: 12px; }
+.ol-blog-category-chips { flex-wrap: wrap; }
+.ol-blog-category-chips .ol-chip { white-space: nowrap; }
