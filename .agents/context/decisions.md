@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-07 — Academic TEXT Workspaces
+
+- User explicitly supersedes shared STORY presentation for TEXT work/document pages. Use separate academic templates while sharing toolbar/body/parser/footnote/size/copy/dialog behavior. Keep ordinary material links, stable URLs, one font slider and click-note-text return; no extra backreference arrows.
+- Adopt sample slate blue on work/document pages and keep gold only for TEXT menu/category views and document footnote emphasis. Selectively load Noto Serif KR 400/600 there, retain sans UI. Use sample tool symbols and focus mode restoring prior panels; both document side panels start closed; opening them gives a desktop three-column dock, converting to compact modals using the same actual nodes. On document scroll, site header/work/part navigation scroll away and tools/opened aids stick at viewport top. Bibliography comes only from explicit labelled prose, without schema/frontmatter requirements or guessed authors/dates.
+
 ## 2026-11-06 — BLOG Source Categories
 
 - Organize BLOG by one primary purpose: 교학, 수행, 인포그래픽, 디자인, 보리도, 일지, ordered with 001–006 folder prefixes. Distinguish explanatory doctrine/practice articles from visual-production records; use tags for overlapping subjects.

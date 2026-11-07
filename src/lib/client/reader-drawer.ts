@@ -9,40 +9,64 @@ export function createReaderDrawer(
   let animation: Animation | undefined;
   let closing = false;
   let previousOverflow = "";
+  let locked = false;
+  const docked = () => drawer.dataset?.docked === "true";
+  const notify = () => {
+    if (docked()) drawer.dispatchEvent(new CustomEvent("reader:panel", { bubbles: true }));
+  };
   let returnFocus: HTMLElement = trigger;
   const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const finishClose = (afterClose?: () => void) => {
+  const finishClose = (afterClose?: () => void, restoreFocus = true) => {
     animation = undefined;
     drawer.close();
+    trigger.setAttribute("aria-expanded", "false");
     drawer.classList.remove("is-open", "is-closing");
-    document.body.style.overflow = previousOverflow;
+    if (locked) document.body.style.overflow = previousOverflow;
+    locked = false;
     closing = false;
-    returnFocus.focus({ preventScroll: true });
+    if (restoreFocus) returnFocus.focus({ preventScroll: true });
+    notify();
     afterClose?.();
   };
-  const close = (afterClose?: () => void) => {
+  const close = (afterClose?: () => void, restoreFocus = true) => {
     if (!drawer.open || closing) return;
     closing = true;
     trigger.setAttribute("aria-expanded", "false");
+    if (docked()) { finishClose(afterClose, restoreFocus); return; }
     drawer.classList.add("is-closing");
     // Preserve the current position if dismissed while the entrance is running.
     const from = panel ? getComputedStyle(panel).transform : "none";
     animation?.cancel();
-    if (!panel || reducedMotion()) { finishClose(afterClose); return; }
+    if (!panel || reducedMotion()) { finishClose(afterClose, restoreFocus); return; }
     animation = panel.animate([
       { transform: from }, { transform: "translateX(100%)" },
     ], { duration: 280, easing: "cubic-bezier(0.25, 0.1, 0.25, 1)", fill: "forwards" });
-    animation.finished.then(() => {
-      const completed = animation;
+    const exitAnimation = animation;
+    exitAnimation.finished.then(() => {
+      if (animation !== exitAnimation) return;
       // Hide the dialog before dropping the animation's final offscreen frame.
-      finishClose(afterClose);
-      completed?.cancel();
+      finishClose(afterClose, restoreFocus);
+      exitAnimation.cancel();
     }, () => { /* A superseded animation must never close a newly opened drawer. */ });
   };
   const open = (source: HTMLElement = trigger) => {
     if (closing) return false;
     if (drawer.open) return true;
     returnFocus = source;
+    if (docked()) {
+      drawer.parentElement?.querySelectorAll<HTMLDialogElement>("dialog[open]").forEach(other => {
+        if (other !== drawer) other.dispatchEvent(new Event("reader:close"));
+      });
+      drawer.closest<HTMLElement>("[data-text-workspace]")?.removeAttribute("data-text-right-hidden");
+      const active = document.activeElement;
+      drawer.show();
+      if (active instanceof HTMLElement) active.focus({ preventScroll: true });
+      drawer.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+      notify();
+      return true;
+    }
+    locked = true;
     previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     drawer.showModal();
@@ -57,6 +81,12 @@ export function createReaderDrawer(
     }
     return true;
   };
+  drawer.addEventListener("reader:open", () => open());
+  drawer.addEventListener("reader:close", () => close(undefined, false));
+  drawer.addEventListener("reader:reset", () => {
+    animation?.cancel();
+    if (drawer.open) finishClose(undefined, false);
+  });
   closeButton?.addEventListener("click", () => close());
   drawer.addEventListener("cancel", event => { event.preventDefault(); close(); });
   drawer.addEventListener("click", event => { if (event.target === drawer) close(); });

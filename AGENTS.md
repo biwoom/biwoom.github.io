@@ -11,8 +11,8 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT/STORY menu roots show top-level categories as `ol-grid-3` cards; category pages list their series. Empty category folders remain visible (track `.gitkeep` when needed).
-- TEXT uses the current STORY series link/expand behavior. Material buttons navigate to the first item; do not add actual tab-panel switching.
-- TEXT and STORY individual documents both use `StoryReader.astro` and STORY document styling. Pass the correct collection for breadcrumbs/search; do not restore the old TEXT-only document layout. BLOG retains its dedicated list/detail layout.
+- TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
+- TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and aid panels start closed; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - BLOG posts are organized under `001.교학`, `002.수행`, `003.인포그래픽`, `004.디자인`, `005.보리도`, and `006.일지` within `src/content/blog/`. Keep per-post folders/attachments together; preserve registry identity and rebase relative links when moving.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
@@ -56,6 +56,10 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-07
+
+- Added academic TEXT work/document layouts and shared reader behavior, slate-blue accents, desktop docking/mobile modals and focus mode.
 
 ### 2026-11-06
 

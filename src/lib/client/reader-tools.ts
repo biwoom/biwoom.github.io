@@ -15,14 +15,16 @@ export function initReaderTools() {
       reference.setAttribute("data-active-footnote-ref", "");
     };
     const controller = createReaderDrawer(drawer, trigger, drawer.querySelector("[data-reader-footnotes-close]"));
-    const close = (destination?: HTMLElement) => controller.close(() => {
-      if (destination) {
+    const close = (destination?: HTMLElement) => {
+      const navigate = () => {
+        if (!destination) return;
         history.replaceState(null, "", `#${encodeURIComponent(destination.id)}`);
         destination.scrollIntoView({ block: "center" });
         destination.focus({ preventScroll: true });
         markReference(destination);
-      }
-    });
+      };
+      controller.close(navigate);
+    };
     const open = (source: HTMLElement, note?: HTMLElement) => {
       if (!controller.open(source)) return;
       drawer.querySelectorAll("[data-active-note]").forEach(el => el.removeAttribute("data-active-note"));
@@ -91,7 +93,7 @@ export function initReaderTools() {
   } catch { /* Reading controls also work when storage is unavailable. */ }
   // Measure the existing cascade, including responsive heading/table/code sizes.
   const targets = Array.from(reader.querySelectorAll<HTMLElement>(
-    ".ol-story-part-content-head h2, .ol-story-chapter > .ol-prose, .ol-story-chapter > .ol-prose :is(h1,h2,h3,h4,h5,h6,pre code,table,th), .ol-reader-footnotes-content, .ol-reader-footnotes-content .footnotes",
+    ".ol-story-part-content-head :is(h1,h2), .ol-story-chapter > .ol-prose, .ol-story-chapter > .ol-prose :is(h1,h2,h3,h4,h5,h6,pre code,table,th), .ol-reader-footnotes-content, .ol-reader-footnotes-content .footnotes",
   ));
   const measure = () => {
     targets.forEach(el => el.removeAttribute("data-reader-scalable"));

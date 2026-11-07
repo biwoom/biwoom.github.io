@@ -1,8 +1,8 @@
 ---
 import { render } from "astro:content";
 import { getLibrary } from "../../lib/library";
-import LibrarySeries from "../../components/common/LibrarySeries.astro";
-import StoryReader from "../../components/common/StoryReader.astro";
+import TextLibrary from "../../components/common/TextLibrary.astro";
+import TextReader from "../../components/common/TextReader.astro";
 export async function getStaticPaths() {
   const library = await getLibrary("text");
   return library.flatMap((series) => [
@@ -28,13 +28,13 @@ const Intro =
 ---
 
 {entry ? (
-  <StoryReader entry={entry} series={series} section="text" />
+  <TextReader entry={entry} series={series} />
 ) : (
-  <LibrarySeries series={series} section="text">
+  <TextLibrary series={series}>
     {Intro && (
       <div class="ol-prose">
         <Intro />
       </div>
     )}
-  </LibrarySeries>
+  </TextLibrary>
 )}

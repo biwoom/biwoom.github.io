@@ -1,0 +1,77 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReaderToolbar from './ReaderToolbar.astro';
+import ReaderBody from './ReaderBody.astro';
+import MaterialBody from './MaterialBody.astro';
+import ContentRights from './ContentRights.astro';
+import DocumentTags from './DocumentTags.astro';
+import { categoryUrl, type Entry, type Library } from '../../lib/library';
+import { readTextBibliography } from '../../lib/text-bibliography';
+interface Props { entry: Entry; series: Library; }
+const { entry, series } = Astro.props;
+const rendered = entry.data.format ? undefined : await render(entry as CollectionEntry<'text'>);
+const Content = rendered?.Content;
+const headings = (rendered?.headings ?? []).filter(heading => heading.depth === 2 || heading.depth === 3);
+const currentPart = series.parts.find(part => part.key === entry.data.partKey);
+const index = currentPart?.entries.findIndex(item => item.id === entry.id) ?? 0;
+const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index + 1];
+const fields = readTextBibliography('body' in entry ? entry.body : '');
+---
+<BaseLayout title={`${entry.data.title} — ${series.label} · BORIDO TEXT`} description={entry.data.description} lang={entry.data.lang} academic
+  pagefindMeta={{ title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
+  <main class="ol-story-reader-page ol-story-doc-page ol-text-academic ol-text-reader" data-reader-section="text" data-text-workspace data-text-left-hidden data-text-right-hidden>
+    <header class="ol-story-doc-hero ol-text-document-head">
+      <nav class="ol-text-crumb" aria-label="현재 위치"><a href="/text/">TEXT</a>{series.category && <><span>/</span><a href={categoryUrl(series.categoryKey)}>{series.category}</a></>}<span>/</span><a href={series.url}>{series.label}</a><span>/</span><span>{entry.data.part}</span></nav>
+      <a class="ol-text-work-name" href={series.url}>{series.label}</a>
+    </header>
+    <nav class="ol-story-part-nav ol-text-parts" aria-label={`${series.label} 자료 구분 바로가기`}>
+      <a href={series.url} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌 목차</strong></a>
+      {series.parts.map((part, i) => <a href={part.entries[0].data.url} class:list={{ active: part.key === currentPart?.key }} aria-current={part.key === currentPart?.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
+    </nav>
+    <div class="ol-text-workspace-grid">
+      <aside class="ol-story-part-sidebar ol-text-document-list" id="text-document-list" aria-label="문헌 자료 목록" data-pagefind-ignore>
+        <div data-text-list-content>
+          <!-- <div class="ol-text-section-head">
+            <h2>문헌 목차</h2>
+            <button class="ol-text-list-close" type="button" aria-label="문헌 목차 닫기" data-text-list-close>닫기</button>
+          </div> -->
+          <a class="ol-text-work-name" href={series.url}>{series.label}</a>
+          <p class="ol-text-list-part">{currentPart?.label} · {currentPart?.entries.length ?? 0}개 자료</p>
+          <nav aria-label={`${currentPart?.label ?? entry.data.part} 자료 목록`}>{currentPart?.entries.map((item, i) => <a href={item.data.url} class:list={{ active: item.id === entry.id }} aria-current={item.id === entry.id ? 'page' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{item.data.title}</strong></a>)}</nav>
+          <a class="ol-text-all-materials" href={series.url}>← 전체 자료 목록</a>
+        </div>
+      </aside>
+      <article class="ol-story-part-content ol-text-document" data-pagefind-body>
+        <ReaderToolbar hasToc={headings.length > 0} currentUrl={entry.data.url} title={entry.data.title} currentPart={currentPart} academic />
+        <div class="ol-text-reading-column">
+          <header class="ol-story-part-content-head"><div><span class="ol-text-eyebrow">{entry.data.part} · 자료 {String(index + 1).padStart(2, '0')}</span><h1>{entry.data.title}</h1><DocumentTags tags={entry.data.tags} /></div></header>
+          <div class="ol-text-document-metadata">
+            {fields.length > 0 && <dl>{fields.map(field => <><dt>{field.label}</dt><dd>{field.value}</dd></>)}</dl>}
+            <p>공개일 <time datetime={entry.data.date.toISOString()}>{entry.data.date.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'})}</time></p>
+          </div>
+          <div class="ol-story-chapter active"><ReaderBody><MaterialBody entry={entry}>{Content && <Content />}</MaterialBody></ReaderBody></div>
+          <div data-text-print-notes></div>
+          <ContentRights data={entry.data} />
+          <nav class="ol-text-document-next" aria-label="자료 탐색"><a href={series.url}>← 문헌 목차</a>{prev && <a href={prev.data.url}>이전 {entry.data.part} 자료</a>}{next && <a href={next.data.url}>다음 {entry.data.part} 자료 →</a>}</nav>
+        </div>
+      </article>
+      <aside class="ol-text-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
+        <div class="ol-text-panel-tabs" role="group" aria-label="보조 패널 선택">
+          <button type="button" data-text-panel="toc" aria-pressed="false" disabled={!headings.length}>문서 목차</button>
+          <button type="button" data-text-panel="footnotes" aria-pressed="false" disabled>각주</button>
+        </div>
+        <div data-text-panel-slot></div>
+        {!headings.length && <p class="ol-text-panel-empty">문서 목차가 없습니다. 각주가 있으면 각주 도구에서 확인할 수 있습니다.</p>}
+      </aside>
+    </div>
+    <dialog id="text-list-dialog" class="ol-text-list-dialog" aria-label="문헌 목차" data-pagefind-ignore><div data-text-mobile-list-slot></div></dialog>
+    {headings.length > 0 && <dialog id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore><section class="ol-reader-toc-panel"><header class="ol-reader-toc-head"><h2 id="ol-reader-toc-title">문서 목차</h2><button class="ol-text-tool-btn" type="button" aria-label="목차 닫기" data-reader-toc-close autofocus>닫기 ×</button></header><nav aria-label="문서 내 제목"><ul data-story-toc-list>{headings.map(heading => <li><a href={`#${heading.slug}`} data-level={heading.depth}>{heading.text}</a></li>)}</ul></nav></section></dialog>}
+  </main>
+</BaseLayout>
+<script>
+  import { initDocumentReader } from '../../lib/client/document-reader';
+  import { initTextWorkspace } from '../../lib/client/text-workspace';
+  initDocumentReader();
+  initTextWorkspace();
+</script>

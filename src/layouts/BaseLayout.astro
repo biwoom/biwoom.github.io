@@ -13,6 +13,7 @@ interface Props {
   lang?: string;
   pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
   pagefindBody?: boolean;
+  academic?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   lang = 'ko',
   pagefindMeta = {},
   pagefindBody = true,
+  academic = false,
 } = Astro.props;
 
 const sectionPath = Astro.url.pathname;
@@ -72,6 +74,11 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <link rel="icon" href={url('/favicon.ico')} />
   <link rel="apple-touch-icon" sizes="180x180" href={url('/apple-touch-icon.png')} />
 
+  {academic && <>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet" />
+  </>}
   <!-- Fonts -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link

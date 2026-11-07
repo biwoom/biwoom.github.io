@@ -69,6 +69,15 @@ rule(".ol-reader-font-panel", /grid-template-columns:minmax\(0,1fr\)/);
 rule(".ol-reader-font-panel", /top:var\(--ol-reader-font-top/);
 rule(".ol-reader-footnotes-label", /display:inline/);
 rule("[data-active-footnote-ref]", /font-weight:800/);
+rule("body:has(.ol-text-academic)", /--ol-accent:#274e65/);
+rule("body:has(.ol-text-reader) .ol-header", /position:relative/);
+rule(".ol-text-reader .ol-text-parts", /position:static/);
+rule(".ol-text-reader .ol-reader-toolbar", /top:0/);
+rule(".ol-text-reader [data-text-focus]", /display:none/);
+rule(".ol-text-reader .ol-text-list-label-compact", /display:inline/);
+rule(".ol-text-workspace-grid", /grid-template-columns:240px minmax\(0,1fr\) 300px/);
+rule(".ol-text-reading-column", /width:/);
+rule(".ol-text-reader.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
 const registry = readRegistry();
 let count = 0;
 const publishedBlogTags = [];
@@ -121,6 +130,15 @@ for (const [source, record] of Object.entries(registry.files)) {
       ]
     : ["ol-blog-detail-header", "ol-blog-detail-title", "ol-blog-detail-meta"];
   classes(html, [...expected, "ol-prose"], record.url);
+  if (collection === "text") {
+    classes(html, ["ol-text-academic", "ol-text-workspace-grid", "ol-text-reader-rail"], record.url);
+    assert.match(html, /<main[^>]*data-text-left-hidden[^>]*data-text-right-hidden/);
+    assert.match(html, /data-text-focus/);
+    assert.match(html, /data-text-left-toggle/);
+    assert.match(html, /class="ol-text-list-label-compact">문헌<\/span>/);
+    assert.match(html, /id="text-list-dialog"/);
+    assert.ok(!html.includes('class="ol-story-mobile-controls"'), `${record.url}: TEXT has one responsive left navigation`);
+  }
   if (isLibrary) {
     assert.match(html, /data-reader-footnotes-trigger/);
     assert.match(html, /class="ol-text-tool-label ol-reader-footnotes-label">각주<\/span>/);
@@ -170,7 +188,7 @@ for (const [source, record] of Object.entries(registry.files)) {
   }
   const titleClass = isLibrary ? "ol-story-doc-hero" : "ol-blog-detail-header";
   const titleTag = isLibrary ? "section" : "header";
-  const titleArea =
+  const titleArea = collection === "text" ? html :
     html.match(
       new RegExp(
         `<${titleTag}[^>]*class="[^"]*${titleClass}[^"]*"[^>]*>([\\s\\S]*?)</${titleTag}>`,

@@ -1,0 +1,135 @@
+---
+import { entryUrl } from "../../lib/library";
+import { url } from "../../lib/url";
+import type { Library } from "../../lib/library";
+interface Props { hasToc: boolean; currentUrl: string; title: string; currentPart?: Library["parts"][number]; academic?: boolean; }
+const { hasToc, currentUrl, title, currentPart, academic = false } = Astro.props;
+const groups = [{ label: "", entries: currentPart?.entries ?? [] }];
+---
+          <div class="ol-reader-toolbar">
+            {academic && <button class="ol-text-tool-btn ol-text-list-trigger" type="button" data-text-left-toggle aria-expanded="false" aria-controls="text-document-list"><span class="ol-text-tool-symbol" aria-hidden="true">☷</span><span class="ol-text-list-label-wide">문헌 목차</span><span class="ol-text-list-label-compact">문헌</span></button>}
+            <div class="ol-story-part-tools">
+              {hasToc && (
+                <button class="ol-text-tool-btn ol-reader-toc-trigger" type="button"
+                  aria-label="문서 목차 열기" title="문서 목차" aria-haspopup="dialog"
+                  aria-expanded="false" aria-controls="ol-reader-toc" data-reader-toc-trigger>
+                  {academic ? <span class="ol-text-tool-symbol" aria-hidden="true">≡</span> : (<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1" />
+                  </svg>)}
+                  <span class="ol-text-tool-label ol-reader-toc-label">목차</span>
+                </button>
+              )}
+              <button class="ol-text-tool-btn" type="button" disabled
+                aria-label="각주 없음" title="각주 없음" aria-haspopup="dialog"
+                aria-expanded="false" aria-controls="ol-reader-footnotes" data-reader-footnotes-trigger>
+                {academic ? <span class="ol-text-tool-symbol" aria-hidden="true">:</span> : (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8M8 16h5" />
+                </svg>)}
+                <span class="ol-text-tool-label ol-reader-footnotes-label">각주</span>
+              </button>
+              <div class="ol-reader-font" data-reader-font>
+                <button class="ol-text-tool-btn" type="button" aria-label="글자 크기 조절" title="글자 크기 조절"
+                  aria-expanded="false" aria-controls="ol-reader-font-panel" data-reader-font-trigger>
+                  {academic ? <span class="ol-text-tool-symbol" aria-hidden="true">Aa</span> : (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="m3 20 6-16 6 16M5 15h8m3 5 4-10 4 10m-7-3h6" />
+                  </svg>)}
+                  {academic && <span class="ol-text-tool-label">글자</span>}
+                </button>
+                <div id="ol-reader-font-panel" class="ol-reader-font-panel" hidden>
+                  <label for="ol-reader-font-size">글자 크기 <output for="ol-reader-font-size" data-reader-font-value>100%</output></label>
+                  <input id="ol-reader-font-size" type="range" min="80" max="150" step="5" value="100" data-reader-font-size />
+                  <button type="button" class="ol-text-tool-btn" data-reader-font-reset>초기화</button>
+                </div>
+              </div>
+              <div
+                class="ol-copy-dropdown"
+                data-copy-dropdown
+                data-copy-url={currentUrl}
+                data-copy-title={title}
+              >
+                <button
+                  class="ol-text-tool-btn"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  {academic ? <span class="ol-text-tool-symbol" aria-hidden="true">⧉</span> : (<svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>)}
+                  <span class="ol-text-tool-label">{academic ? "복사" : "Copy"}</span>
+                </button>
+                <div class="ol-copy-panel">
+                  <button type="button" data-copy-kind="link">
+                    링크 복사
+                  </button>
+                  <button type="button" data-copy-kind="markdown">
+                    마크다운 복사
+                  </button>
+                  {academic && <>
+                    <button type="button" data-copy-kind="section">현재 절 링크 복사</button>
+                    <button type="button" data-copy-kind="citation">선택문 인용 복사</button>
+                  </>}
+                </div>
+              </div>
+              {academic && <button class="ol-text-tool-btn" type="button" data-text-focus aria-pressed="false"><span class="ol-text-tool-symbol" aria-hidden="true">⛶</span><span data-text-focus-label>집중</span></button>}
+            </div>
+
+            {!academic && <div class="ol-story-mobile-controls" data-story-mobile-controls>
+              <div class="ol-story-mobile-chapters" data-story-mobile-chapters>
+                <button
+                  class="ol-text-tool-btn"
+                  type="button"
+                  aria-expanded="false"
+                >
+                  {academic ? <span class="ol-text-tool-symbol" aria-hidden="true">☷</span> : (<svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
+                  </svg>)}
+                  <span class="sr-only">목록</span>
+                </button>
+                <div class="ol-story-mobile-chapters-panel">
+                  <div class="ol-story-mobile-info-links">
+                    {groups.map((group) => (
+                      <>
+                        {group.label && <h3 class="ol-kr">{group.label}</h3>}
+                        {group.entries.map((item, itemIndex) => (
+                          <a
+                            href={url(entryUrl(item))}
+                            class:list={{ active: item.data.url === currentUrl }}
+                          >
+                            <span>
+                              {String(itemIndex + 1).padStart(2, "0")}
+                            </span>
+                            <strong class="ol-kr">{item.data.title}</strong>
+                          </a>
+                        ))}
+                      </>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>}
+          </div>
+
+<p class="ol-reader-feedback" role="status" aria-live="polite" data-reader-feedback></p>

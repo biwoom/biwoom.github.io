@@ -2,6 +2,19 @@
 
 This file records concise date-based work summaries for continuity across Codex sessions.
 
+## 2026-11-07
+
+### Academic TEXT Work and Document UI
+
+- Added TextLibrary/TextReader academic templates with slate-blue work/document accents, selective serif reading fonts, explicit-only bibliography, title/description material search, persistent material links and per-section document traversal. TEXT menu/category gold and STORY presentation remain distinct; gold on TEXT documents is limited to footnote emphasis.
+- Extracted ReaderToolbar/document-reader so TEXT/STORY share parsing, footnote IDs/return behavior, font slider/persistence and copy logic. TEXT uses sample toolbar symbols, desktop nonmodal aid docking/mobile native dialogs with original nodes, focus-state restoration, measured sticky offsets, section/citation copy and print footnotes that restore after printing.
+- Latest user steering: both TEXT document side panels start closed; toolbar actions open them, and focus mode restores that actual previous state.
+- Latest scroll steering: on TEXT documents the site/work/part headers scroll away naturally, while reader tools and opened side panels stick at viewport top; anchor offsets follow actual toolbar height. Work-library/STORY header behavior remains unchanged.
+- Latest mobile steering: hide the TEXT focus control at <=980px and show 문헌 on the list button; desktop keeps 문헌 목차 and focus controls.
+- Latest mobile row steering: remove the <=420px full-row tool group and prevent toolbar/group wrapping so 문헌 and document tools share one row. Keep existing labels and controls. Passed 53 fixtures, zero-diagnostic typecheck, build and generated link/UI checks; compiled toolbar/group nowrap rules verified.
+- Updated operating rules/manual v3.0/refactor guide v0.9/README and new TEXT regression tests. Preserve the user's renamed planning directory/deleted old plan and original sample. No content-body rewrite, commit or upload requested.
+- Passed 53 fixtures, zero-diagnostic typecheck, build, links across 63 pages/21 redirects and UI contracts for 27 documents, plus check:registry. Live HTTP verified both TEXT documents (one title, unique IDs, 40/0 notes, default-closed sides, sample symbols), work bibliography and STORY/font isolation. Compiled CSS verifies mobile focus hiding/compact 문헌 label, viewport-top tools and stronger font-scaling rule. Source content and registry unchanged; browser visual QA remains unavailable under the existing access restriction.
+
 ## 2026-11-06
 
 ### BLOG Category Buttons

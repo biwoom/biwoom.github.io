@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TextBibliography from './TextBibliography.astro';
+import { categoryUrl, type Library } from '../../lib/library';
+interface Props { series: Library; }
+const { series } = Astro.props;
+const first = series.entries[0];
+const intro = await Astro.slots.render("default");
+const hasIntro = !!intro.replace(/<[^>]*>/g, "").trim();
+---
+<BaseLayout title={`${series.label} — BORIDO TEXT`} description={series.description} pagefindBody={false} academic>
+  <main class="ol-text-academic ol-text-library">
+    <header class="ol-text-work-head">
+      <nav class="ol-text-crumb" aria-label="현재 위치"><a href="/text/">TEXT</a>{series.category && <><span>/</span><a href={categoryUrl(series.categoryKey)}>{series.category}</a></>}</nav>
+      <div class="ol-text-work-title"><div><span class="ol-text-eyebrow">BORIDO TEXT · 문헌</span><h1>{series.label}</h1>{series.description && <p>{series.description}</p>}</div>
+        {first && <a class="ol-text-primary" href={first.data.url}>{series.parts[0]?.label} 읽기 <span aria-hidden="true">→</span></a>}
+      </div>
+      <nav class="ol-text-parts" aria-label="자료 구분">{series.parts.map((part, i) => <a href={part.entries[0].data.url}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}</nav>
+    </header>
+    <div class="ol-text-library-grid">
+      <aside class="ol-text-library-nav" aria-label="문헌 안내"><h2>문헌 안내</h2><a href="#text-materials">자료 목록</a>{hasIntro && <a href="#text-intro">문헌 소개</a>}
+        <h3>자료 구분</h3>{series.parts.map((part, i) => <a href={`#text-group-${i}`}>{part.label}<small>{part.entries.length}개</small></a>)}
+        <p>번역과 연구는 독립된 자료입니다. 각 자료의 목차를 따라 읽어 보세요.</p>
+      </aside>
+      <section class="ol-text-library-main" id="text-materials">
+        <div class="ol-text-section-head"><h2>자료 목록</h2><span>{series.count}개 자료</span></div>
+        {series.count > 0 && <div class="ol-text-filter"><label for="text-material-search">자료 찾기</label><div><input type="search" id="text-material-search" placeholder="자료 제목·설명 검색" autocomplete="off" /><button type="button" data-text-search-reset>초기화</button></div><p class="ol-text-search-status" role="status" aria-live="polite" data-text-search-status>{series.count}개 자료</p></div>}
+        {series.parts.map((part, i) => <details class="ol-text-material-group" id={`text-group-${i}`} open data-text-material-group>
+          <summary><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small data-text-group-count>{part.entries.length}개 자료</small></summary>
+          <ol>{part.entries.map((entry, j) => <li data-text-material-item data-search-text={`${entry.data.title} ${entry.data.description}`}><a href={entry.data.url}><span class="ol-text-row-num">{String(j + 1).padStart(2, '0')}</span><div><strong>{entry.data.title}</strong>{entry.data.description && <p>{entry.data.description}</p>}{entry.data.format && <small>{entry.data.format}</small>}</div><span aria-hidden="true">→</span></a></li>)}</ol>
+        </details>)}
+        <p class="ol-text-search-empty" data-text-search-empty hidden>일치하는 자료가 없습니다.</p>
+        {series.count === 0 && <p>아직 공개된 자료가 없습니다.</p>}
+        {hasIntro && <section class="ol-text-intro" id="text-intro"><h2>문헌 소개</h2><Fragment set:html={intro} /></section>}
+      </section>
+      <TextBibliography series={series} />
+    </div>
+  </main>
+</BaseLayout>
+<script>
+  import { initTextLibrary } from '../../lib/client/text-library';
+  initTextLibrary();
+</script>
