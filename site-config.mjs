@@ -4,7 +4,7 @@ export function normalizeBaseUrl(value = "") {
 export const SITE_URL = "https://borido.org";
 export const BRAND = {
   name: "BORIDO",
-  nameKo: "보리도",
+  nameKo: "열린불교",
   logoGold: "/brand/borido-mark-gold.png",
   logoMonochrome: "/brand/borido-mark-monochrome.png",
   tagline: "열린 불교 콘텐츠",

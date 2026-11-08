@@ -84,9 +84,13 @@ rule(".ol-text-reader [data-text-focus]", /display:none/);
 rule(".ol-text-reader .ol-text-list-label-compact", /display:inline/);
 rule(".ol-text-workspace-grid", /grid-template-columns:240px minmax\(0,1fr\) 300px/);
 rule(".ol-text-reading-column", /width:/);
-rule(".ol-text-reader.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
+rule(".ol-text-reader:not([data-text-ready]) .ol-text-workspace-grid", /grid-template-columns:minmax\(0,1fr\)/);
 rule(".ol-story-reader-rail", /background:var\(--ol-surface\)/);
 rule(".ol-story-reader-rail", /position:sticky/);
+rule(".ol-story-doc-page:not(.ol-text-reader) .ol-story-part-nav", /position:static/);
+rule(".ol-story-doc-page .ol-reader-toolbar", /top:0(?:;|$)/);
+rule(".ol-story-doc-page:not(.ol-text-reader) .ol-story-part-sidebar", /(?=.*(?:^|;)top:0(?:;|$))(?=.*(?:^|;)height:100dvh(?:;|$))/);
+rule(".ol-story-reader-rail", /(?=.*(?:^|;)top:0(?:;|$))(?=.*(?:^|;)height:100dvh(?:;|$))/);
 rule(".ol-story-doc-page .ol-reader-toc[data-docked=", /position:static/);
 const registry = readRegistry();
 let count = 0;
@@ -141,6 +145,10 @@ for (const [source, record] of Object.entries(registry.files)) {
     : ["ol-blog-detail-header", "ol-blog-detail-title", "ol-blog-detail-meta"];
   classes(html, [...expected, "ol-prose"], record.url);
   if (collection === "story") {
+    assert.match(html, /<div class="ol-reader-toolbar">\s*<button[^>]*data-story-left-toggle/);
+    assert.equal((html.match(/data-story-list-content/g) ?? []).length, 1);
+    assert.match(html, /id="story-list-dialog"/);
+    assert.ok(!html.includes('data-story-mobile-chapters'), `${record.url}: one responsive chapter list`);
     classes(html, ["ol-story-reader-rail", "ol-text-panel-tabs"], record.url);
     assert.match(html, /data-story-workspace/);
     assert.equal((html.match(/data-reader-panel-slot/g) ?? []).length, 1);
@@ -149,7 +157,8 @@ for (const [source, record] of Object.entries(registry.files)) {
   }
   if (collection === "text") {
     classes(html, ["ol-text-academic", "ol-text-workspace-grid", "ol-text-reader-rail"], record.url);
-    assert.match(html, /<main[^>]*data-text-left-hidden[^>]*data-text-right-hidden/);
+    assert.match(html, /<main[^>]*data-text-workspace/);
+    assert.ok(!/<main[^>]*data-text-left-hidden/.test(html), `${record.url}: wide initial layout is rendered without a closed-panel flash`);
     assert.match(html, /data-text-focus/);
     assert.match(html, /data-text-left-toggle/);
     assert.match(html, /class="ol-text-list-label-compact">문헌<\/span>/);

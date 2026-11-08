@@ -13,7 +13,6 @@
 @import "./pages/partners.css";
 @import "./pages/blog.css";
 @import "./pages/story-base.css";
-@import "./pages/story-mobile-controls.css";
 @import "./pages/story-shell.css";
 @import "./pages/story-biblio.css";
 @import "./pages/story-reader.css";
@@ -24,6 +23,7 @@
 @import "./components/menu-accents.css";
 
 @import "./components/reader-drawer.css";
+@import "./components/reader-layout.css";
 
 @import "./components/library-list.css";
 

@@ -4,6 +4,38 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-11-08
 
+### Local commit summary
+
+- Bundle donation content/copy button, collapsed public revision histories, STORY chapter navigation/toolbar/scroll behavior and reader CSS cleanup into one local commit. Include the user's existing Korean display label 열린불교 and TEXT 문헌정보 link label edits. Prepared registry and continuity records accompany the source changes; generated output and personal Obsidian state remain excluded. No push requested.
+
+### Reader CSS cleanup and initial layout
+
+- Preserve the user's current spacing/border choices while removing 12 disabled CSS comments, 100 retired mobile-dropdown/Entity selectors and the unused mobile stylesheet. Separate shared reader-layout.css from drawer controls; put shared docking/list-modal styles in reader-drawer.css and retain one shared typography scaling rule.
+- Remove the old floating toolbar/sticky navigation overrides. TEXT's first HTML/CSS layout now matches desktop-open/compact-closed defaults; data-text-ready hands state to the existing controller after setup, preventing the initial closed-to-open width change.
+- Validation: 64 fixtures, zero-error typecheck (existing unused TextReader field hint), build and built checks passed. A temporary PostCSS/selector cascade audit compared key document/library styles across 96 width/theme/focus/sidebar configurations with no changed values; initial and initialized TEXT grid/sidebar/rail defaults match at 390/768/1200/1440px. This is a static cascade audit, not browser rendering. Browser host was unavailable and native Chrome access was denied, so refresh/visual QA could not run.
+
+### STORY scrolling part navigation
+
+- Let STORY part navigation scroll away; place reader tools and desktop chapter/aid panels at viewport top with full-height panels. Remove the unused navigation-height observer.
+- Validation: 64 fixtures, typecheck (zero errors; existing TextReader hint), build and built checks passed. Compiled CSS checks verify static part navigation and viewport-top toolbar/panels.
+
+### STORY chapter toggle and unified toolbar
+
+- Add the shared TEXT-style 문헌 목차 button to STORY's full-width toolbar, opposite the document tools; match the article surface background. Toggle the desktop chapter sidebar and move the original list into a native modal at <=980px, replacing the duplicate mobile dropdown and obsolete handlers.
+- Preserve sidebar choice across focus mode, aid-panel behavior and responsive scroll/focus restoration. Cover desktop toggling, focus-state retention, modal Escape/backdrop/close and resizing without auto-opening.
+- Validation: 64 fixtures, typecheck (zero errors; existing TextReader hint), build and built checks passed. All four STORY documents have the toolbar toggle, one original chapter list and one mobile modal; TEXT's existing behavior tests pass. Browser visual QA was not performed.
+
+### Public document changelogs
+
+- Wrapped the brand/support revision histories in native details, closed initially. Shared page styles show a right arrow when closed and a down arrow when expanded, with keyboard focus styling. Existing history and support metadata are preserved.
+- Validation: 63 fixtures, typecheck, build and built checks passed. Both actual pages contain a closed details block with an arrow and correctly rendered Markdown history.
+
+### Donation guide
+
+- Added pages/support.md with 보리도후원 introduction, service/content uses, user-provided Kakao Bank account and nonfinancial participation guidance. Linked it below 기여 및 협력단체 in the footer using its public registry URL; prepared the new registry record.
+- Added an adjacent copy button that reads the displayed bank/account text, announces success or manual-copy guidance on failure and prevents repeated clicks while copying. Account remains authored once in Markdown.
+- Validation: 63 fixtures, typecheck (zero errors; existing TextReader hint), build and built checks passed. Actual HTML confirms account/content, relative brand link and footer link order. No upload requested or performed.
+
 ### Shared reader back-to-top control
 
 - Add one accessible arrow button to TEXT/STORY readers, revealed after 240px scroll. It tracks the prose column’s right edge on scroll/resize/sidebar changes and returns to page top; honor reduced-motion preferences and hide it in print.

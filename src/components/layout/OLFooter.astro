@@ -1,8 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import { url } from '../../lib/url';
 import { BRAND } from "../../lib/site-config";
 import { site } from '../../lib/site';
 const currentYear = new Date().getFullYear();
+const supportPage = (await getCollection('pages', (entry) => entry.data.published))
+  .find((entry) => entry.data.source === 'pages/support.md');
 ---
 
 <footer class="ol-footer" data-pagefind-ignore>
@@ -47,6 +50,7 @@ const currentYear = new Date().getFullYear();
         <a href={url('/blog')}>BLOG · 일지</a>
         <a href={url('/pages/brand')}>보리도 소개</a>
         <a href={url('/partners')}>기여 및 협력단체</a>
+        {supportPage && <a href={url(supportPage.data.url)}>보리도 후원</a>}
       </div>
 
       <!-- Open -->

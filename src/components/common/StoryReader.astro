@@ -135,7 +135,9 @@ const hasToc = headings.some(
     <section class="ol-story-reader-shell">
       <div class="ol-story-part-layout">
         <aside class="ol-story-part-sidebar" id="story-document-list" data-pagefind-ignore>
+          <div data-story-list-content>
           <div class="ol-story-part-sidebar-head">
+            <!-- <button class="ol-text-list-close" type="button" data-story-list-close aria-label="문헌 목차 닫기">닫기</button> -->
             <span>{section === "text" ? "자료 구분" : "PART"}</span>
             <strong class="ol-kr">
               {currentPart?.label ?? entry.data.part}
@@ -157,6 +159,7 @@ const hasToc = headings.some(
               </section>
             ))}
           </nav>
+          </div>
         </aside>
 
         <article class="ol-story-part-content" data-pagefind-body>
@@ -234,6 +237,7 @@ const hasToc = headings.some(
         </aside>
       </div>
     </section>
+    <dialog id="story-list-dialog" class="ol-text-list-dialog" aria-label="문헌 목차" data-pagefind-ignore><div data-story-mobile-list-slot></div></dialog>
     {hasToc && (
       <dialog id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore>
         <section class="ol-reader-toc-panel">

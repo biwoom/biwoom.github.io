@@ -157,7 +157,7 @@ test('STORY focus toggles its chapter sidebar layout and restores the default mo
 });
 
 
-function storyWorkspace(wideScreen = true) {
+function storyWorkspace(wideScreen = true, withList = false) {
   const root=new El(),slot=new El(),empty=new El(),body=new El(),wide=new El();
   wide.matches=wideScreen;
   const dialogs=['toc','footnotes'].map(type=>{const dialog=new El();dialog.id=`ol-reader-${type}`;dialog.parentElement=root;return dialog;});
@@ -167,14 +167,17 @@ function storyWorkspace(wideScreen = true) {
   slot.querySelectorAll=()=>dialogs.filter(dialog=>dialog.parentElement===slot && dialog.open);
   const document={body,querySelector:()=>root,createComment:()=>new El()};
   const Event=class{constructor(type,options){this.type=type;Object.assign(this,options);}};
-  const window={matchMedia:query=>query.includes('1360')?wide:{matches:true}};
+  const narrow=new El(),left=new El(),list=new El(),mobile=new El(),mobileSlot=new El(),leftBtn=new El(),closeBtn=new El();
+  narrow.matches=!wideScreen;
+  if(withList) Object.assign(root.select,{'[data-story-left-toggle]':leftBtn,'#story-document-list':left,'[data-story-list-content]':list,'#story-list-dialog':mobile,'[data-story-mobile-list-slot]':mobileSlot,'[data-story-list-close]':closeBtn});
+  const window={matchMedia:query=>query.includes('1360')?wide:narrow};
   const drawer=evaluate('src/lib/client/reader-drawer.ts',{document,window,Event,CustomEvent:Event});
   const controllers=dialogs.map(dialog=>{
     dialog.addEventListener('reader:panel',()=>root.fire('reader:panel'));
     return drawer.createReaderDrawer(dialog,new El(),null);
   });
   evaluate('src/lib/client/story-workspace.ts',{document,window,Event}).initStoryWorkspace();
-  return {root,slot,empty,body,wide,dialogs,buttons,controllers};
+  return {root,slot,empty,body,wide,dialogs,buttons,controllers,narrow,left,list,mobile,mobileSlot,leftBtn,closeBtn};
 }
 test('STORY desktop keeps one original aid open, switches tabs and preserves footnote return callbacks',()=>{
   const h=storyWorkspace();const [toc,notes]=h.dialogs;
@@ -203,4 +206,29 @@ test('STORY focus hides both aids and restores the selected desktop tab',()=>{
   assert.equal(h.dialogs.some(dialog=>dialog.open),false);
   h.root.removeAttribute('data-story-focus');h.root.fire('reader:focus');
   assert.ok(h.dialogs[1].open);assert.equal(h.dialogs[0].open,false);
+});
+
+
+test('STORY chapter toggle preserves desktop choice through focus and uses one modal list on mobile',()=>{
+  const h=storyWorkspace(true,true);
+  assert.equal(h.list.parentElement,h.left);
+  assert.equal(h.leftBtn.attrs['aria-expanded'],'true');
+  h.leftBtn.fire('click');
+  assert.ok(h.root.hasAttribute('data-story-left-hidden'));
+  assert.equal(h.leftBtn.attrs['aria-expanded'],'false');
+  h.root.setAttribute('data-story-focus','');h.root.fire('reader:focus');
+  h.root.removeAttribute('data-story-focus');h.root.fire('reader:focus');
+  assert.equal(h.leftBtn.attrs['aria-expanded'],'false');
+  h.leftBtn.fire('click');assert.equal(h.leftBtn.attrs['aria-expanded'],'true');
+  h.narrow.matches=true;h.narrow.fire('change');
+  assert.equal(h.list.parentElement,h.mobileSlot);
+  assert.equal(h.leftBtn.attrs['aria-controls'],'story-list-dialog');
+  assert.equal(h.mobile.open,false);
+  h.leftBtn.fire('click');assert.ok(h.mobile.open);assert.equal(h.body.style.overflow,'hidden');
+  h.mobile.fire('cancel');assert.equal(h.mobile.open,false);assert.equal(h.body.style.overflow,'');assert.ok(h.leftBtn.focused);
+  h.leftBtn.fire('click');h.closeBtn.fire('click');assert.equal(h.mobile.open,false);
+  h.leftBtn.fire('click');h.mobile.fire('click');assert.equal(h.mobile.open,false);
+  h.leftBtn.fire('click');h.narrow.matches=false;h.narrow.fire('change');
+  assert.equal(h.list.parentElement,h.left);assert.equal(h.mobile.open,false);assert.equal(h.body.style.overflow,'');
+  assert.equal(h.leftBtn.attrs['aria-expanded'],'true');
 });

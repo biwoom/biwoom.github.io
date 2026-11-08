@@ -1,13 +1,10 @@
 ---
-import { entryUrl } from "../../lib/library";
-import { url } from "../../lib/url";
 import type { Library } from "../../lib/library";
 interface Props { hasToc: boolean; currentUrl: string; title: string; currentPart?: Library["parts"][number]; academic?: boolean; }
-const { hasToc, currentUrl, title, currentPart, academic = false } = Astro.props;
-const groups = [{ label: "", entries: currentPart?.entries ?? [] }];
+const { hasToc, currentUrl, title, academic = false } = Astro.props;
 ---
           <div class="ol-reader-toolbar">
-            {academic && <button class="ol-text-tool-btn ol-text-list-trigger" type="button" data-text-left-toggle aria-expanded="false" aria-controls="text-document-list"><span class="ol-text-tool-symbol" aria-hidden="true">☷</span><span class="ol-text-list-label-wide">문헌 목차</span><span class="ol-text-list-label-compact">문헌</span></button>}
+            <button class="ol-text-tool-btn ol-text-list-trigger" type="button" data-text-left-toggle={academic ? true : undefined} data-story-left-toggle={!academic ? true : undefined} aria-expanded="false" aria-controls={academic ? "text-document-list" : "story-document-list"}><span class="ol-text-tool-symbol" aria-hidden="true">☷</span><span class="ol-text-list-label-wide">문헌 목차</span><span class="ol-text-list-label-compact">문헌</span></button>
             <div class="ol-story-part-tools">
               {hasToc && (
                 <button class="ol-text-tool-btn ol-reader-toc-trigger" type="button"
@@ -65,38 +62,6 @@ const groups = [{ label: "", entries: currentPart?.entries ?? [] }];
               <button class="ol-text-tool-btn" type="button" data-text-focus={academic ? true : undefined} data-story-focus={!academic ? true : undefined} aria-pressed="false" aria-label={!academic ? "집중 모드" : undefined} title={!academic ? "집중 모드" : undefined} aria-controls={!academic ? "story-document-list" : undefined}><span class="ol-text-tool-symbol" aria-hidden="true">⛶</span><span data-text-focus-label>집중</span></button>
             </div>
 
-            {!academic && <div class="ol-story-mobile-controls" data-story-mobile-controls>
-              <div class="ol-story-mobile-chapters" data-story-mobile-chapters>
-                <button
-                  class="ol-text-tool-btn"
-                  type="button"
-                  aria-expanded="false"
-                >
-                  <span class="ol-text-tool-symbol" aria-hidden="true">☷</span>
-                  <span class="sr-only">목록</span>
-                </button>
-                <div class="ol-story-mobile-chapters-panel">
-                  <div class="ol-story-mobile-info-links">
-                    {groups.map((group) => (
-                      <>
-                        {group.label && <h3 class="ol-kr">{group.label}</h3>}
-                        {group.entries.map((item, itemIndex) => (
-                          <a
-                            href={url(entryUrl(item))}
-                            class:list={{ active: item.data.url === currentUrl }}
-                          >
-                            <span>
-                              {String(itemIndex + 1).padStart(2, "0")}
-                            </span>
-                            <strong class="ol-kr">{item.data.title}</strong>
-                          </a>
-                        ))}
-                      </>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>}
           </div>
 
 <p class="ol-reader-feedback" role="status" aria-live="polite" data-reader-feedback></p>

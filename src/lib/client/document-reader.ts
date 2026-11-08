@@ -14,18 +14,6 @@ export function initDocumentReader() {
     if (label) label.textContent = focused ? "기본" : "집중";
     story!.dispatchEvent(new Event("reader:focus"));
   });
-  const partNav = story?.querySelector<HTMLElement>(".ol-story-part-nav");
-  if (story && partNav) {
-    const measurePartNav = () => {
-      story.style.setProperty("--ol-story-sticky-nav", `${partNav.getBoundingClientRect().height}px`);
-    };
-    if (typeof ResizeObserver !== "undefined") new ResizeObserver(measurePartNav).observe(partNav);
-    window.addEventListener("resize", measurePartNav);
-    measurePartNav();
-  }
-
-
-
   const readerBoundary = () => (document.querySelector<HTMLElement>(".ol-reader-toolbar")?.getBoundingClientRect().bottom ?? 144) + 16;
   const normalizeMarkdown = (value: string) =>
     value
@@ -85,16 +73,6 @@ export function initDocumentReader() {
     }, { passive: true });
     syncActiveLinks();
   };
-
-  const closeMobilePanels = () => {
-    document.querySelector<HTMLButtonElement>("[data-story-mobile-chapters] > button")
-      ?.setAttribute("aria-expanded", "false");
-  };
-  const chapterTrigger = document.querySelector<HTMLButtonElement>("[data-story-mobile-chapters] > button");
-  chapterTrigger?.addEventListener("click", (event) => {
-    event.stopPropagation();
-    chapterTrigger.setAttribute("aria-expanded", String(chapterTrigger.getAttribute("aria-expanded") !== "true"));
-  });
 
   document
     .querySelectorAll<HTMLElement>("[data-copy-dropdown]")
@@ -166,7 +144,6 @@ export function initDocumentReader() {
       .forEach((button) => {
         button.setAttribute("aria-expanded", "false");
       });
-    closeMobilePanels();
   });
 
   initToc();

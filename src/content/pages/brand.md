@@ -227,7 +227,8 @@ description: 보리도(BORIDO)의 소개. 보리도 철학과 콘텐츠 운영 �
 
 ---
 
-## 수정 변경사항
+<details class="document-changelog">
+<summary><span class="document-changelog-arrow" aria-hidden="true">›</span> 수정 변경사항</summary>
 
 ### 2026-11-08 — v1.15
 
@@ -312,3 +313,5 @@ description: 보리도(BORIDO)의 소개. 보리도 철학과 콘텐츠 운영 �
 ### 2026-05 · v1.0
 
 - 보리도 브랜드명, 이름의 의미 구조, 존재 이유, 브랜드 철학, 디자인 철학을 정리했습니다.
+
+</details>

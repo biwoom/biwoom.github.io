@@ -44,3 +44,72 @@ const { Content } = await render(entry);
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-donation-account]').forEach((account) => {
+    const button = account.querySelector<HTMLButtonElement>('[data-copy-account]');
+    const text = account.querySelector<HTMLElement>('[data-account-text]');
+    const status = account.querySelector<HTMLElement>('[data-account-status]');
+    if (!button || !text || !status) return;
+
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      status.textContent = '';
+      try {
+        await navigator.clipboard.writeText(text.textContent?.trim() ?? '');
+        status.textContent = '복사했습니다.';
+      } catch {
+        status.textContent = '복사하지 못했습니다. 계좌를 선택해 직접 복사해 주세요.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  :global(.document-changelog > summary) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+  }
+
+  :global(.document-changelog > summary::-webkit-details-marker) {
+    display: none;
+  }
+
+  :global(.document-changelog > summary:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  :global(.document-changelog-arrow) {
+    display: inline-block;
+    font-size: 1.5em;
+    line-height: 1;
+  }
+
+  :global(.document-changelog[open] > summary .document-changelog-arrow) {
+    transform: rotate(90deg);
+  }
+
+  :global(.donation-account) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-block: 1.25em;
+  }
+
+  :global(.donation-account-status) {
+    flex-basis: 100%;
+    font-size: 0.875em;
+  }
+
+  :global(.donation-account-status:empty) {
+    display: none;
+  }
+</style>

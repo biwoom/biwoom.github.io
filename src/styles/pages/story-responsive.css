@@ -16,54 +16,6 @@
     margin-top: -18px;
   }
 
-  .ol-story-mobile-controls {
-    display: flex;
-    position: relative;
-    gap: 25px;
-    justify-content: center;
-  }
-
-  .ol-story-mobile-chapters,
-  .ol-story-mobile-tags,
-  .ol-story-mobile-toc,
-  .ol-story-mobile-copy,
-  .ol-story-mobile-info {
-    display: inline-flex;
-    margin-top: 0;
-  }
-
-  .ol-story-mobile-controls .ol-text-tool-btn {
-    /* min-height: 36px; */
-    border-radius: 7px;
-  }
-
-  .ol-story-mobile-chapters .ol-text-tool-btn,
-  .ol-story-mobile-toc .ol-text-tool-btn,
-  .ol-story-mobile-copy .ol-text-tool-btn {
-    width: 40px;
-    padding: 0;
-  }
-
-  .ol-story-mobile-tags,
-  .ol-story-mobile-chapters,
-  .ol-story-mobile-toc,
-  .ol-story-mobile-copy,
-  .ol-story-mobile-info {
-    position: static;
-  }
-
-  .ol-story-mobile-chapters-panel,
-  .ol-story-mobile-tags-panel,
-  .ol-story-mobile-toc-panel,
-  .ol-story-mobile-copy-panel,
-  .ol-story-mobile-info-panel {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
   .ol-story-tag-area {
     width: 100%;
   }
@@ -99,10 +51,6 @@
     min-height: auto;
   }
 
-  .ol-story-doc-page .ol-doc-side-stack {
-    display: none;
-  }
-
   .ol-story-part-sidebar {
     border-right: none;
     border-bottom: 1px solid var(--ol-border);
@@ -131,13 +79,6 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: 14px;
-  }
-
-  .ol-story-doc-page .ol-story-mobile-controls {
-    justify-self: end;
-    justify-content: flex-end;
-    gap: 15px;
-    margin: 2px 0 0;
   }
 
   .ol-story-part-tools {

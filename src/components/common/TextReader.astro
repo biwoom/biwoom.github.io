@@ -20,13 +20,13 @@ const fields = readTextBibliography('body' in entry ? entry.body : '');
 ---
 <BaseLayout title={`${entry.data.title} — ${series.label} · BORIDO TEXT`} description={entry.data.description} lang={entry.data.lang} academic
   pagefindMeta={{ title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
-  <main class="ol-story-reader-page ol-story-doc-page ol-text-academic ol-text-reader" data-reader-section="text" data-text-workspace data-text-left-hidden data-text-right-hidden>
+  <main class="ol-story-reader-page ol-story-doc-page ol-text-academic ol-text-reader" data-reader-section="text" data-text-workspace data-text-right-hidden={headings.length === 0 ? true : undefined}>
     <header class="ol-story-doc-hero ol-text-document-head">
       <nav class="ol-text-crumb" aria-label="현재 위치"><a href="/text/">TEXT</a>{series.category && <><span>/</span><a href={categoryUrl(series.categoryKey)}>{series.category}</a></>}<span>/</span><a href={series.url}>{series.label}</a><span>/</span><span>{entry.data.part}</span></nav>
       <a class="ol-text-work-name" href={series.url}>{series.label}</a>
     </header>
     <nav class="ol-story-part-nav ol-text-parts" aria-label={`${series.label} 자료 구분 바로가기`}>
-      <a href={series.url} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌 목차</strong></a>
+      <a href={series.url} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌정보</strong></a>
       {series.parts.map((part, i) => <a href={part.entries[0].data.url} class:list={{ active: part.key === currentPart?.key }} aria-current={part.key === currentPart?.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
     </nav>
     <div class="ol-text-workspace-grid">

@@ -149,4 +149,5 @@ export function initTextWorkspace() {
   setLeft(!wide.matches);
   root.toggleAttribute('data-text-right-hidden', !wide.matches || !dialogs.some(dialog => dialog.id === 'ol-reader-toc'));
   layout();
+  root.setAttribute('data-text-ready', '');
 }

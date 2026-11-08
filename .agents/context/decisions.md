@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-11-08 — Reader CSS cleanup
+
+- Keep the author's disabled declarations removed; do not revive the old article padding or decorative borders. Give shared reader layout, drawer controls and typography separate CSS files, with TEXT/STORY variants after the shared rules. Retired mobile dropdown/Entity selectors have no public markup and are removed.
+- Render TEXT's wide default workspace open in HTML/CSS and use CSS for compact initial defaults until `data-text-ready` is set. The controller then owns user toggles, avoiding a first-paint closed layout followed by desktop expansion.
+
+## 2026-11-08 — STORY chapter toolbar
+
+- STORY part navigation scrolls away with the document; pin only the reader toolbar and desktop side panels at viewport top. Do not reserve offsets for the scrolled-away navigation.
+- Use the shared ReaderToolbar's TEXT-style chapter icon and labels on STORY, with left navigation and right document tools in one full-width toolbar matching the article background. At <=980px move the original chapter-list nodes into a native modal; desktop toggles the sidebar, preserving its selection through focus mode. Remove the separate mobile chapter dropdown.
+
 ## 2026-11-08 — STORY desktop reading aids
 
 - At >=1360px use TEXT-style docked original TOC/footnote nodes and an always-visible right rail; default to TOC, allow tab switching and keep rail/panel background equal to the article surface. Below the breakpoint restore the same native-modal nodes, closed on transition. STORY focus hides both sides and restores the selected aid on exit. Share drawer/docked styling and note navigation rather than duplicating Markdown or IDs.
