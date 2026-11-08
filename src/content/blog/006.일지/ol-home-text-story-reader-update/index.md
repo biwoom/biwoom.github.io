@@ -6,6 +6,8 @@ tags: ["개발","text","story","콘텐츠 구조","blog","ol-home","development"
 
 # TEXT와 STORY 리더 개편 — 시리즈 구조, 태그 인덱스, 문서 탐색
 
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 현재 브랜드는 **Biwoom - 비움**, 공개 주소는 https://biwoom.github.io/ 입니다.
+
 오늘 작업의 중심은 BORIDO HOME의 TEXT와 STORY 페이지를 단순 목록에서 "시리즈 단위로 읽고 탐색하는 콘텐츠 리더"로 바꾸는 것이었다. 동시에 DESIGN 콘텐츠도 `src/content`를 원본으로 삼고 빌드 시 `public/generated`로 복사하는 흐름 안에 새 항목을 추가했다.
 
 ## TEXT — 메인 페이지와 시리즈 페이지 분리

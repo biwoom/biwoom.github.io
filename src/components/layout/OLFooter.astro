@@ -19,7 +19,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
           <!-- <span class="ol-footer-tagline">{site.tagline}</span> -->
         </div>
         <p class="ol-footer-copy ol-kr">
-          보리도 • 열린 불교 콘텐츠
+          {BRAND.nameKo} • {BRAND.tagline}
         </p>
         <div class="ol-footer-social">
           <a href={site.github} class="ol-btn ol-btn-sm ol-btn-icon" aria-label="GitHub" target="_blank" rel="noopener">
@@ -48,9 +48,9 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
       <div>
         <h4>READ</h4>
         <a href={url('/blog')}>BLOG · 일지</a>
-        <a href={url('/pages/brand')}>보리도 소개</a>
+        <a href={url('/pages/brand')}>{BRAND.nameKo} 소개</a>
         <a href={url('/partners')}>기여 및 협력단체</a>
-        {supportPage && <a href={url(supportPage.data.url)}>보리도 후원</a>}
+        {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원</a>}
       </div>
 
       <!-- Open -->
@@ -63,8 +63,8 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
     </div>
 
     <div class="ol-footer-bottom">
-      <span>© {currentYear} {site.name} · 제작자 담진(DAMJIN)</span>
-      <span>{site.nameKo} · {site.tagline}</span>
+      <span>© {currentYear} {site.name} </span>
+      <span>열린불교 콘텐츠 프로젝트</span>
     </div>
   </div>
 </footer>

@@ -6,6 +6,8 @@ tags: ["개발","astro","검색","blog","ol-home","development","search"]
 
 # BORIDO HOME 구축기 — Phase 1~3, 온톨로지에서 검색까지
 
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 현재 브랜드는 **Biwoom - 비움**, 공개 주소는 https://biwoom.github.io/ 입니다.
+
 BORIDO HOME은 단순 랜딩 페이지가 아니라, 온톨로지 기반 불교 콘텐츠 포털이다. Astro 6 + GitHub Pages 위에서 세 단계에 걸쳐 구축했다.
 
 ## Phase 1 — 기초 구조와 온톨로지

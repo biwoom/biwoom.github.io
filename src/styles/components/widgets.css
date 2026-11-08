@@ -47,7 +47,7 @@ html.dark .ol-manifest {
   border-color: rgb(0 0 0 / 12%);
 }
 .ol-manifest::before {
-  content: "BORIDO";
+  content: "Biwoom";
   position: absolute;
   font-size: 480px;
   font-weight: 800;

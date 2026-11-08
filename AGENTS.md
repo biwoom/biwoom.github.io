@@ -2,7 +2,7 @@
 
 ## Project
 
-BORIDO (보리도) is a static Astro site built on the OL core at `https://borido.org/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
+Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
 
 ## Current Architecture
 
@@ -14,7 +14,7 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://borid
 - TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and document TOC default open at >=1360px and closed below that width; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - STORY document aids use the shared TEXT-style dock at >=1360px: one persistent right panel with 본문 목차/각주 switching and the same background as the article. Below that width, move the original nodes back to native modals; do not duplicate IDs or auto-open a modal on resize. STORY focus hides both the left chapter list and right aid rail, then restores the selected aid.
-- BLOG posts are organized under `001.교학`, `002.수행`, `003.인포그래픽`, `004.디자인`, `005.보리도`, and `006.일지` within `src/content/blog/`. Keep per-post folders/attachments together; preserve registry identity and rebase relative links when moving.
+- BLOG posts are organized under `001.교학`, `002.수행`, `003.인포그래픽`, `004.디자인`, `005.비움`, and `006.일지` within `src/content/blog/`. Keep per-post folders/attachments together; preserve registry identity and rebase relative links when moving.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
 ## Content Rules
@@ -58,6 +58,13 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://borid
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-09 — Biwoom - 비움
+
+- Brand: `Biwoom - 비움` (English: Biwoom, Korean: 비움). Production target: `https://biwoom.github.io/`; preserve the repository, root routes and no Astro base.
+- BLOG brand category is `005.비움`; preserve document identities/dates and historical BORIDO records. Existing symbols remain, with `biwoom-mark-*` filenames.
+- GitHub Pages Custom domain must be empty for the default domain; local code changes do not update hosting settings.
+
 
 ### 2026-11-08 — EBOOK
 

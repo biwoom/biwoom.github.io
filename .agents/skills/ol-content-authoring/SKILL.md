@@ -1,6 +1,6 @@
 ---
 name: ol-content-authoring
-description: Create or revise BORIDO (OL 코어) Markdown and content assets in the Obsidian vault under src/content.
+description: Create or revise Biwoom (OL 코어) Markdown and content assets in the Obsidian vault under src/content.
 ---
 
 # OL Content Authoring
@@ -21,6 +21,11 @@ Latest update: 2026-10-31.
 12. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
 ## 수정 변경사항
+
+### 2026-11-09
+
+- Current brand is Biwoom - 비움; production target is `https://biwoom.github.io/`.
+
 
 ### 2026-10-31
 

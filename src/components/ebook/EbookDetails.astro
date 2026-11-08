@@ -3,8 +3,8 @@ import { getEbooks, formatEbookSize, ebookLicense } from '../../../scripts/lib/e
 interface Props { book: ReturnType<typeof getEbooks>[number]; }
 const { book } = Astro.props;
 ---
-<div class="ol-ebook-detail-cover">{book.coverUrl ? <img src={book.coverUrl} alt={`${book.title} 표지`} /> : <div class="ol-ebook-placeholder"><span>BORIDO EBOOK</span><strong>{book.title}</strong><span>보리도</span></div>}</div>
-<div class="ol-ebook-detail-info"><p class="ol-section-label">BORIDO EBOOK</p><h2 id="ebook-dialog-title">{book.title}</h2>
+<div class="ol-ebook-detail-cover">{book.coverUrl ? <img src={book.coverUrl} alt={`${book.title} 표지`} /> : <div class="ol-ebook-placeholder"><span>Biwoom EBOOK</span><strong>{book.title}</strong><span>비움</span></div>}</div>
+<div class="ol-ebook-detail-info"><p class="ol-section-label">Biwoom EBOOK</p><h2 id="ebook-dialog-title">{book.title}</h2>
   {book.bibliography.length > 0 && <dl>{book.bibliography.map(item => <div><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl>}
   {book.description && <p class="ol-ebook-description">{book.description}</p>}
   <div class="ol-ebook-downloads">{book.downloads.map(file => <a class="ol-btn ol-btn-primary" href={file.url} download={file.name}>{file.format} 다운로드 <span>{formatEbookSize(file.bytes)}</span></a>)}</div>

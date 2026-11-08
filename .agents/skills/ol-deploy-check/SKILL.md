@@ -1,6 +1,6 @@
 ---
 name: ol-deploy-check
-description: Verify BORIDO (OL 코어) build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, root/base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing 404s and broken links on https://borido.org/.
+description: Verify Biwoom (OL 코어) build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, root/base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing 404s and broken links on https://biwoom.github.io/.
 ---
 
 # OL Deploy Check
@@ -15,11 +15,11 @@ git status --short --branch
 ```
 
 2. Confirm root GitHub Pages configuration:
-   - `astro.config.mjs` should set `site: SITE_URL`, imported from `site-config.mjs` (https://borido.org).
+   - `astro.config.mjs` should set `site: SITE_URL`, imported from `site-config.mjs` (https://biwoom.github.io).
    - `astro.config.mjs` should not set `base`.
-   - Production is `https://borido.org`; repository remains `biwoom/biwoom.github.io`. Custom GitHub Actions deployment does not require or use a CNAME file.
-   - Verify DNS and HTTPS separately from local build output; a local URL change cannot fix DNS or certificate issuance.
-   - `public/robots.txt` should point to `https://borido.org/sitemap-index.xml`.
+   - Production is `https://biwoom.github.io`; repository remains `biwoom/biwoom.github.io`. The default GitHub Pages domain requires no CNAME file; GitHub Pages Custom domain must be empty.
+   - Local URL changes do not clear GitHub Pages Custom domain. For default-domain deployment, remove any existing custom domain in repository Settings → Pages; this is separate from build validation.
+   - `public/robots.txt` should point to `https://biwoom.github.io/sitemap-index.xml`.
    - `src/pages/rss.xml.ts` should not hardcode `/ol-home` or `/biwoom`.
 
 3. Search for stale deployment paths:
@@ -48,16 +48,16 @@ sed -n '1,80p' dist/rss.xml
 6. If checking the live site, use HTTP headers first:
 
 ```sh
-curl -I -L https://borido.org/
-curl -I -L https://borido.org/sitemap-index.xml
+curl -I -L https://biwoom.github.io/
+curl -I -L https://biwoom.github.io/sitemap-index.xml
 ```
 
 ## Expected Results
 
 - Build succeeds.
 - Generated routes are root-relative, for example `/blog/`, not `/biwoom/blog/`.
-- Sitemap URLs start with `https://borido.org/`.
-- RSS item links start with `https://borido.org/`.
+- Sitemap URLs start with `https://biwoom.github.io/`.
+- RSS item links start with `https://biwoom.github.io/`.
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.

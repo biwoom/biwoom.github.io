@@ -8,11 +8,11 @@ const first = series.entries[0];
 const intro = await Astro.slots.render("default");
 const hasIntro = !!intro.replace(/<[^>]*>/g, "").trim();
 ---
-<BaseLayout title={`${series.label} — BORIDO TEXT`} description={series.description} pagefindBody={false} academic>
+<BaseLayout title={`${series.label} — Biwoom TEXT`} description={series.description} pagefindBody={false} academic>
   <main class="ol-text-academic ol-text-library">
     <header class="ol-text-work-head">
       <nav class="ol-text-crumb" aria-label="현재 위치"><a href="/text/">TEXT</a>{series.category && <><span>/</span><a href={categoryUrl(series.categoryKey)}>{series.category}</a></>}</nav>
-      <div class="ol-text-work-title"><div><span class="ol-text-eyebrow">BORIDO TEXT · 문헌</span><h1>{series.label}</h1>{series.description && <p>{series.description}</p>}</div>
+      <div class="ol-text-work-title"><div><span class="ol-text-eyebrow">Biwoom TEXT · 문헌</span><h1>{series.label}</h1>{series.description && <p>{series.description}</p>}</div>
         {first && <a class="ol-text-primary" href={first.data.url}>{series.parts[0]?.label} 읽기 <span aria-hidden="true">→</span></a>}
       </div>
       <nav class="ol-text-parts" aria-label="자료 구분">{series.parts.map((part, i) => <a href={part.entries[0].data.url}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}</nav>

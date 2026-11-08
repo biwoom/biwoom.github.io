@@ -1,9 +1,9 @@
-# BORIDO Obsidian 기반 콘텐츠 구조 개편 개발 가이드
+# Biwoom Obsidian 기반 콘텐츠 구조 개편 개발 가이드
 
-- 문서 버전: v0.10
-- 최신 수정일: 2026-11-08
-- 대상 프로젝트: BORIDO (OL 코어) (`biwoom/biwoom.github.io`)
-- 운영 URL: https://borido.org/
+- 문서 버전: v0.11
+- 최신 수정일: 2026-11-09
+- 대상 프로젝트: Biwoom (OL 코어) (`biwoom/biwoom.github.io`)
+- 운영 URL: https://biwoom.github.io/
 - 상태: 2026-10-30 로컬 구현. 아래 계획의 기준 시점과 현재 적용 결과를 구분하며, GitHub 업로드·운영 배포는 수행하지 않았다.
 - 목적: 사용자가 Obsidian에서 제목과 본문을 작성하고 폴더를 관리하면, Astro가 사이트에 필요한 정보를 자동으로 해석하도록 전환한다.
 
@@ -261,6 +261,11 @@ src/content/
 - `npm run check:built`는 링크와 정적 UI 마크업·CSS 회귀를 검사한다. 브라우저의 실제 표시·조작 확인과는 별개다.
 
 ## 수정 변경사항
+
+### 2026-11-09 — v0.11
+
+- 공개 브랜드를 Biwoom - 비움, 운영 주소를 `https://biwoom.github.io/`, BLOG 브랜드 카테고리를 `005.비움`으로 갱신했습니다. 기존 문서 URL·발행일과 과거 기록은 보존합니다.
+
 
 ### 2026-11-08
 

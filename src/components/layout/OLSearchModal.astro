@@ -127,14 +127,14 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
       ]
         .filter(Boolean)
         .join(" · ");
-    return breadcrumb || "BORIDO";
+    return breadcrumb || "Biwoom";
   }
 
   function resultSection(result: any) {
     const section = String(
-      result.meta?.section ?? result.meta?.sectionLabel ?? "BORIDO",
+      result.meta?.section ?? result.meta?.sectionLabel ?? "Biwoom",
     ).toUpperCase();
-    return section || "BORIDO";
+    return section || "Biwoom";
   }
 
   function sectionCounts(results: any[]) {
@@ -194,7 +194,7 @@ const pagefindPath = `${base}pagefind/pagefind.js`;
     const resultList = filteredResults
       .map((r: any, i: number) => {
         const meta = r.meta ?? {};
-        const section = meta.sectionLabel || meta.section || "BORIDO";
+        const section = meta.sectionLabel || meta.section || "Biwoom";
         const title = meta.title || "제목 없음";
         const path = displayPath(r.url);
         const kicker = resultKicker(r);

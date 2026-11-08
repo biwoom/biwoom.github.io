@@ -10,7 +10,7 @@ import { syncMediaGallery, getMediaCategories, uncategorizedKey } from './lib/me
 import { hash } from './lib/content.mjs';
 
 async function fixture(fn) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'borido-gallery-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'biwoom-gallery-'));
   const image = async (source, width, height, color = 'red') => {
     const file = path.join(root, 'src/content/media', source);
     fs.mkdirSync(path.dirname(file), { recursive: true });

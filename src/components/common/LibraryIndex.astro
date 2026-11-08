@@ -14,7 +14,7 @@ const label = section.toUpperCase();
 ---
 
 <BaseLayout
-  title={category ? `${category.label} — BORIDO ${label}` : `BORIDO ${label}`}
+  title={category ? `${category.label} — Biwoom ${label}` : `Biwoom ${label}`}
   description={category
     ? `${category.label}의 ${section === "text" ? "문헌" : "이야기"} 시리즈`
     : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "불교의 인물과 가르침을 만나는 이야기"}
@@ -31,7 +31,7 @@ const label = section.toUpperCase();
           <nav class="ol-text-breadcrumb" aria-label="현재 위치">
             <a href={url(`/${section}/`)}>{label}</a><span>/</span><span>{category.label}</span>
           </nav>
-        ) : <span class="ol-section-label">BORIDO {label}</span>}
+        ) : <span class="ol-section-label">Biwoom {label}</span>}
         <h1 class="ol-kr">{category?.label ?? (section === "text" ? "불교 문헌을 읽고 연구하다." : "이야기로 만나는 불교.")}</h1>
         <p class="ol-lead ol-kr">
           {category ? `${category.series.length}개 시리즈 · ${category.count}개 자료`

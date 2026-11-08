@@ -17,7 +17,7 @@ interface Props {
 }
 
 const {
-  title = `${BRAND.name} · ${BRAND.nameKo} — ${BRAND.tagline}`,
+  title = `${BRAND.displayName} — ${BRAND.tagline}`,
   description = BRAND.description,
   ogImage,
   lang = 'ko',
@@ -55,7 +55,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImageUrl} />
-  <meta property="og:site_name" content={`${BRAND.name} · ${BRAND.nameKo}`} />
+  <meta property="og:site_name" content={BRAND.displayName} />
   <meta property="og:locale" content="ko_KR" />
 
   {pagefindMetaEntries.map(([key, value]) => (

@@ -1,13 +1,15 @@
-# BORIDO (보리도)
+# Biwoom - 비움
+
+문서 버전: v1.1 · 최종 업데이트: 2026-11-09 · 대상: Biwoom (OL 코어)
 
 불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
 
-- 사이트: https://borido.org/
+- 사이트: https://biwoom.github.io/
 - 저장소: `biwoom/biwoom.github.io`
 - Node.js: 22.12 이상
 - 배포: GitHub Actions → GitHub Pages 루트
 
-공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 현재 Actions 배포는 CNAME 파일이 필요하지 않으며, 도메인 연결·DNS·HTTPS는 GitHub Pages와 DNS 제공자에서 관리합니다.
+공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 기본 GitHub Pages 도메인을 사용하므로 CNAME 파일과 사용자 도메인용 DNS 설정은 필요하지 않습니다. 기존 사용자 도메인이 연결되어 있으면 저장소 Settings → Pages → Custom domain에서 제거해야 합니다. [GitHub 공식 안내](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#removing-a-custom-domain)를 참고하세요.
 
 ## 집필
 
@@ -91,8 +93,14 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 ## 브랜드 자산
 
-BORIDO(보리도)의 공식 로고는 `public/brand/borido-mark-monochrome.png`(제공 원본 004)와 `borido-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. OL은 내부 코어 이름이며 현재 사이트 주소는 유지합니다.
+Biwoom - 비움의 심볼은 `public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. 기존 심볼의 모양은 유지하며 공유 이미지의 영문 표기는 Biwoom입니다. 영문명은 Biwoom, 한글명은 비움이며 함께 쓸 때는 `Biwoom - 비움`으로 표기합니다. OL은 내부 코어 이름입니다.
 
 ## 전자책
 
 `src/content/ebook/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
+
+## 수정 변경사항
+
+### 2026-11-09
+
+- 브랜드명·기본 도메인·심볼 경로와 GitHub Pages 사용자 도메인 해제 절차를 갱신했습니다.

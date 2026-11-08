@@ -26,7 +26,7 @@
       "id": "pages-53dfbb7cee6fb5",
       "url": "/pages/brand/",
       "date": "2026-10-30",
-      "hash": "459f6dc51b67fffd34fc183426fa8e89696a05938b743042eef5f8aff030f15b",
+      "hash": "80fe659f82cae23698bb4f5e2095c39d76c10af686476905c5e2ab42d07a3b51",
       "seriesKey": "pages/standalone"
     },
     "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md": {
@@ -369,7 +369,7 @@
       "id": "blog-7e5c5458d494c9",
       "url": "/blog/indramang-life-peace-patterns/",
       "date": "2026-06-21",
-      "hash": "7d23cfb180c9c073f381abbca92767dc017ceef3af274c8161f3370f92055119",
+      "hash": "47c99aa87d86c5c43baa54374e1f862ace271230452d2e5e711558c45199bf40",
       "seriesKey": "blog/standalone"
     },
     "blog/004.디자인/indramang-life-peace-patterns/thumb.jpg": {
@@ -379,88 +379,74 @@
       "hash": "13b25639d8cbcb6721089d98f1212d234405f3485b5c1e881cda58a6cf1a5860",
       "seriesKey": "blog/standalone"
     },
-    "blog/005.보리도/ol-why/index.md": {
-      "id": "blog-56a140a591ce16",
-      "url": "/blog/ol-why/",
-      "date": "2026-05-23",
-      "hash": "4ae04bdc723d5114bb930a1db5b679e86e74bea3182be727c408f69abb3f1b27",
-      "seriesKey": "blog/standalone"
-    },
-    "blog/005.보리도/ol-brand-design/index.md": {
-      "id": "blog-9b9c8c6df4dfd1",
-      "url": "/blog/ol-brand-design/",
-      "date": "2026-05-25",
-      "hash": "8675099bc81dd502bfe78c3fb69c65a3fba35d22252652da6d3187a6e1d66b06",
-      "seriesKey": "blog/standalone"
-    },
     "blog/006.일지/atlas-dev-journey/index.md": {
       "id": "blog-a99c35106d0edf",
       "url": "/blog/atlas-dev-journey/",
       "date": "2026-05-27",
-      "hash": "bc3a89cd7343dd979c8964a5f02d01a78760477e8f8823698fbdc85129b01729",
+      "hash": "555b8356f2a955bb32683b823d0c5cf36013c97970183919b886cd54f5abe8dc",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/atlas-footnotes/index.md": {
       "id": "blog-7e2b2385c139bf",
       "url": "/blog/atlas-footnotes/",
       "date": "2026-05-31",
-      "hash": "81b3c56d05accbef6572676bd173ed77e4ecc7be105c99f1b097e45482bc462f",
+      "hash": "5068ec807fd235377a997d71250dc90f5cc279db52c64c882a71f805fe24d00a",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/blog-atlas-code-restructuring/index.md": {
       "id": "blog-13fe94521f7eff",
       "url": "/blog/blog-atlas-code-restructuring/",
       "date": "2026-06-01",
-      "hash": "dfe513b9d678634b219af044606c77f68d836d394580758fa29e910d9eafe83d",
+      "hash": "b87cc7bf9c3f1dc6659ad05d01d3506cb371a977589e7d37987427a74a8aa4e8",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/book-design-guide/index.md": {
       "id": "blog-836c67c8dbca96",
       "url": "/blog/book-design-guide/",
       "date": "2026-05-28",
-      "hash": "e77db658829a9367933b891081ff9401bf55a4cc8af55e57c2963e08f657c172",
+      "hash": "176703ef4e232f2559aaa8974f55044d2cb4f763c8bd17206ab6bbd71cf14d7e",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/net-menu-name-card-phase1/index.md": {
       "id": "blog-640fb779bf3084",
       "url": "/blog/net-menu-name-card-phase1/",
       "date": "2026-06-20",
-      "hash": "6ca9305e056e8a3cfb40b42c008e3d99214d4ec3a897d4f01bcd2a413f69bf93",
+      "hash": "38ea917a5d5fda64ca5de2d2cdc57a0dd955e5ba66d7d291e3ae476bf49f8cbe",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/ol-design-works-library-shift/index.md": {
       "id": "blog-628965f4ca7f5b",
       "url": "/blog/ol-design-works-library-shift/",
       "date": "2026-06-04",
-      "hash": "befe6e1ae0735880dc6392c5843883850a88e51b2ded5f5cc04c43b2c0aedf3d",
+      "hash": "9e959a3f7f3f27dc856ce01caaf2dc114bad9270cc5e5d93f414b451b5bbfbe1",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/ol-home-build/index.md": {
       "id": "blog-af2e99eea31e5e",
       "url": "/blog/ol-home-build/",
       "date": "2026-05-30",
-      "hash": "3bc551d4d0a999bab809c61f29219f5d01bc551b1612f1a3ffff92d736be28b6",
+      "hash": "633bdc66d60e03fbd6c9f9ee5522764b80036abdaa5edf0d01b1c62bf511fc37",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/ol-home-phase4/index.md": {
       "id": "blog-32ddbb1546caed",
       "url": "/blog/ol-home-phase4/",
       "date": "2026-05-31",
-      "hash": "bb339ec031a05dded55879052d95135f3ef18e5db8c900665a5394c44cc96197",
+      "hash": "87b570cd476e9f4a16304d0e740423ba2ac13f6bbf19d9fa76abf679569fab87",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/ol-home-refactoring-and-pagination/index.md": {
       "id": "blog-225ca115c1c287",
       "url": "/blog/ol-home-refactoring-and-pagination/",
       "date": "2026-06-26",
-      "hash": "dac3d05eee93ca616d4998b70bd77255293b59916a65532296e899f95c193d19",
+      "hash": "bc51c5446782d2bd2966d529ac4deff37cd009206fc5f6cfaa078a0f826fd09b",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/ol-home-text-story-reader-update/index.md": {
       "id": "blog-0077606ed3487b",
       "url": "/blog/ol-home-text-story-reader-update/",
       "date": "2026-06-11",
-      "hash": "0fadeb3ea031d3dfbd5b42f610bca9abece8fbd285b6985c6fd4531f1a17049e",
+      "hash": "0e3f17696d7a4e471b64fab68053c396aef6a6fc3c6a3a4d3569c9b6061973e1",
       "seriesKey": "blog/standalone"
     },
     "blog/006.일지/reader-tools-and-markdown-improvements.md": {
@@ -468,14 +454,28 @@
       "url": "/blog/read/06feb0b8e9e818/",
       "date": "2026-11-05",
       "seriesKey": "blog/standalone",
-      "hash": "c4e718f95d6acbd980640ff681cdd3947c26298caf3ceada9154783746129dd2"
+      "hash": "07e75e275ea3e292a87850935aa7a1b540d7baba67d084d18de6a623e87c67ce"
     },
     "pages/support.md": {
       "id": "pages-f214c0451bad22",
       "url": "/pages/f214c0451bad22/",
       "date": "2026-11-08",
       "seriesKey": "pages/standalone",
-      "hash": "5911d265bfc069a86e651ed394e42fbd7a96afc25cf58e98463d4248fa18939b"
+      "hash": "995193326c80814161773ec83ac4f2ee6c0628fea2fd568706c58418a41f1bae"
+    },
+    "blog/005.비움/ol-brand-design/index.md": {
+      "id": "blog-9b9c8c6df4dfd1",
+      "url": "/blog/ol-brand-design/",
+      "date": "2026-05-25",
+      "hash": "2a1dfd7b6b0ce434fa28f4ba714a84c6aad60cf2a859e5eafa2320834e5518d2",
+      "seriesKey": "blog/standalone"
+    },
+    "blog/005.비움/ol-why/index.md": {
+      "id": "blog-56a140a591ce16",
+      "url": "/blog/ol-why/",
+      "date": "2026-05-23",
+      "hash": "cde4239f0dae4115a709dabbb9a0ff066479904d77429b0d0be175fc80e64eb8",
+      "seriesKey": "blog/standalone"
     }
   },
   "folders": {
@@ -745,8 +745,8 @@
     "blog/lamrim-infographic-making/thumb.jpg": "blog/003.인포그래픽/lamrim-infographic-making/thumb.jpg",
     "blog/indramang-life-peace-patterns/index.md": "blog/004.디자인/indramang-life-peace-patterns/index.md",
     "blog/indramang-life-peace-patterns/thumb.jpg": "blog/004.디자인/indramang-life-peace-patterns/thumb.jpg",
-    "blog/ol-why/index.md": "blog/005.보리도/ol-why/index.md",
-    "blog/ol-brand-design/index.md": "blog/005.보리도/ol-brand-design/index.md",
+    "blog/ol-why/index.md": "blog/005.비움/ol-why/index.md",
+    "blog/ol-brand-design/index.md": "blog/005.비움/ol-brand-design/index.md",
     "blog/atlas-dev-journey/index.md": "blog/006.일지/atlas-dev-journey/index.md",
     "blog/atlas-footnotes/index.md": "blog/006.일지/atlas-footnotes/index.md",
     "blog/blog-atlas-code-restructuring/index.md": "blog/006.일지/blog-atlas-code-restructuring/index.md",
@@ -757,6 +757,8 @@
     "blog/ol-home-phase4/index.md": "blog/006.일지/ol-home-phase4/index.md",
     "blog/ol-home-refactoring-and-pagination/index.md": "blog/006.일지/ol-home-refactoring-and-pagination/index.md",
     "blog/ol-home-text-story-reader-update/index.md": "blog/006.일지/ol-home-text-story-reader-update/index.md",
-    "blog/reader-tools-and-markdown-improvements.md": "blog/006.일지/reader-tools-and-markdown-improvements.md"
+    "blog/reader-tools-and-markdown-improvements.md": "blog/006.일지/reader-tools-and-markdown-improvements.md",
+    "blog/005.보리도/ol-brand-design/index.md": "blog/005.비움/ol-brand-design/index.md",
+    "blog/005.보리도/ol-why/index.md": "blog/005.비움/ol-why/index.md"
   }
 }

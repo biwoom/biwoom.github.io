@@ -19,7 +19,7 @@ const index = currentPart?.entries.findIndex(item => item.id === entry.id) ?? 0;
 const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index + 1];
 const fields = readTextBibliography('body' in entry ? entry.body : '');
 ---
-<BaseLayout title={`${entry.data.title} — ${series.label} · BORIDO TEXT`} description={entry.data.description} lang={entry.data.lang} academic
+<BaseLayout title={`${entry.data.title} — ${series.label} · Biwoom TEXT`} description={entry.data.description} lang={entry.data.lang} academic
   pagefindMeta={{ title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
   <main class="ol-story-reader-page ol-story-doc-page ol-text-academic ol-text-reader" data-reader-section="text" data-text-workspace data-text-right-hidden={headings.length === 0 ? true : undefined}>
     <header class="ol-story-doc-hero ol-text-document-head">

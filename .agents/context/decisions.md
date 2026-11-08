@@ -1,5 +1,11 @@
 # Decisions
 
+## 2026-11-09 — Biwoom brand and default domain
+
+- Supersede the 2026-11-08 custom-domain choice: use `https://biwoom.github.io` as SITE_URL and `Biwoom - 비움` as the public brand. English name: Biwoom; Korean name: 비움. Keep OL internals, repository, root paths and existing registry identities/dates.
+- Retain existing symbol artwork under biwoom-mark filenames and regenerate branded sharing art. Rename BLOG category to `005.비움` by identity-preserving preparation. Preserve historical work prose and completed ebook files with current-brand notices; preserve Buddhist terminology such as 보리도차제론.
+- Default-domain hosting requires an empty GitHub Pages Custom domain setting; code updates, push and hosting changes are separate actions. No push/hosting mutation was requested with this source change.
+
 ## 2026-11-08 — TEXT original passages
 
 - Original font sizing belongs entirely to CSS: 18px base on the pre element and a CSS multiplier for the shared reader scale. Exclude original descendants from JavaScript's per-element font measurement/inline base-size assignment.

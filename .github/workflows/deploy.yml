@@ -1,4 +1,4 @@
-name: Deploy OL HOME to GitHub Pages
+name: Deploy Biwoom to GitHub Pages
 
 on:
   push:

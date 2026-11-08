@@ -971,6 +971,6 @@ a { color: inherit; }
   color: var(--ol-ink);
 }
 
-/* BORIDO identity; OL remains the CSS namespace. */
+/* Biwoom identity; OL remains the CSS namespace. */
 .ol-brand-symbol { display: block; width: 38px; height: 38px; flex: 0 0 38px; object-fit: contain; }
 .ol-brand-symbol--monochrome { background: #191919; border-radius: 8px; padding: 3px; }

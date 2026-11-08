@@ -1,17 +1,18 @@
 # Current State
 
-Last updated: 2026-11-08
+Last updated: 2026-11-09
 
 ## Brand
 
-- Public brand: BORIDO (보리도). OL is the source-code core name.
-- Official logo originals: public/brand/borido-mark-monochrome.png (004) and borido-mark-gold.png (006). Header/footer use monochrome inside dark rounded boxes; favicon/apple/sharing assets use monochrome. Gold remains an available source asset. Rebuild derived icons with npm run brand:assets.
-- docs/ legacy plans carry historical-status notices; current structure remains TEXT/STORY/BLOG.
-- Production domain: `https://borido.org/`. User configured the Pages custom domain; local URL metadata is updated. Deployment of these local changes is not performed. On 2026-11-08 DNS resolved the apex to 115.68.216.239 and HTTPS failed hostname verification; DNS/Pages certificate completion remains external follow-up.
+- Public brand: Biwoom - 비움 (English: Biwoom; Korean: 비움). OL remains the source-code core name. Name/description live in site-config.mjs.
+- Existing symbol shapes are retained under public/brand/biwoom-mark-monochrome.png and biwoom-mark-gold.png; derived icons and the Biwoom sharing image use npm run brand:assets.
+- Production target: `https://biwoom.github.io/`, with root routes and no Astro base. Local source/metadata/docs now target this URL; no push, hosting setting change or live deployment verification is included in this change. GitHub Pages Custom domain must be empty before using the default domain.
+- Previous borido.org DNS/TLS investigation is historical context, not a current migration goal.
+- Historical BLOG articles and the completed BORIDO ebook sample retain authored titles/assets with current-brand notices. Public brand/support pages and the active manifesto describe Biwoom - 비움.
 
 ## Project
 
-- BORIDO (보리도), powered by the OL core: `https://borido.org/`, repository `biwoom/biwoom.github.io`.
+- Biwoom - 비움, powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
 - Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
 - Refactor commit `f70b680` was pushed to `origin/main` on 2026-10-30. Production deployment completion has not been verified.
 
@@ -33,8 +34,8 @@ Last updated: 2026-11-08
 - EBOOK `/ebook/` is a footer-only auxiliary library below MEDIA. One direct ebook folder holds optional index.md prose bibliography, cover and completed EPUB/PDF downloads, uniformly CC0. Cards open native dialogs (no individual route/registry), search intersects format filters, and ?book=folder-hash opens a shared modal. Only selected covers/nonempty downloads from public packages are copied; drafts/private metadata and other attachments are excluded. Folder rename changes sharing/file URLs. A user-requested CC0 sample package is now present in ebook/001.보리도 전자책 샘플: cover, optional bibliography index, a real EPUB3 with navigation, a 3-page Korean PDF and private auxiliary source Markdown. It is clearly marked as a testing guide rather than a translated/research work.
 
 - `src/content/` is the user's Obsidian vault and content source. Vault CMS/Front Matter/Decap CMS are not used.
-- BLOG source posts now occupy six numbered top-level category folders: 교학 (3), 수행 (1), 인포그래픽 (3), 디자인 (1), 보리도 (2), 일지 (11). Per-post directories and 11 image attachments moved together; shared-media links were rebased in five documents. Existing IDs/URLs/dates/rights remain intact. BLOG normalized category/categoryOrder now derive from the first folder while keeping blog/standalone registry grouping. The BLOG index shows ordered category/count buttons above posts and tag/count filters in a default-closed sidebar panel below the year archive; category, exact tag and year filters intersect and reset pagination. Category/tag selection uses ?category=/tag= with popstate support. Uncategorized loose posts use 미분류. Existing category badges/search metadata now display folder labels; document URLs/dates remain unchanged.
-- Public content menus: TEXT/STORY/BLOG. HOME remains the landing page; `pages` contains the brand document and `support.md` donation guide. The footer links 보리도후원 below 기여 및 협력단체 using the public page's registry URL.
+- BLOG source posts now occupy six numbered top-level category folders: 교학 (3), 수행 (1), 인포그래픽 (3), 디자인 (1), 비움 (2), 일지 (11). Per-post directories and 11 image attachments moved together; shared-media links were rebased in five documents. Existing IDs/URLs/dates/rights remain intact. BLOG normalized category/categoryOrder now derive from the first folder while keeping blog/standalone registry grouping. The BLOG index shows ordered category/count buttons above posts and tag/count filters in a default-closed sidebar panel below the year archive; category, exact tag and year filters intersect and reset pagination. Category/tag selection uses ?category=/tag= with popstate support. Uncategorized loose posts use 미분류. Existing category badges/search metadata now display folder labels; document URLs/dates remain unchanged.
+- Public content menus: TEXT/STORY/BLOG. HOME remains the landing page; `pages` contains the brand document and `support.md` donation guide. The footer links 비움 후원 below 기여 및 협력단체 using the public page's registry URL.
 - TEXT path: category/work/material-section/item. STORY path: category/series/part/item. `index.md` is an optional introduction.
 - TEXT/STORY menu roots display top-level folders as three-column category cards, linking to category-specific single-column series rows (number, title, optional description, material/part metadata and arrow), separated by thin rules rather than cards. List areas display 카테고리 목록 on roots and 시리즈 목록 on category details; only category-detail heroes have a bottom divider. Empty folders remain visible; `.gitkeep` retains empty categories in Git. Category routes use ASCII hashes; document/series registry URLs and dates remain unchanged.
 - Numeric name prefixes determine order and are hidden in labels. Translation and research are independent.

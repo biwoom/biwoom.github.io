@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import sharp from "sharp";
-const iconSource = "public/brand/borido-mark-monochrome.png";
+import { BRAND } from "../site-config.mjs";
+const iconSource = `public${BRAND.logoMonochrome}`;
 for (const [file, size] of [
   ["favicon.png", 256],
   ["favicon-16.png", 16],
@@ -23,17 +24,17 @@ header.writeUInt16LE(32, 12);
 header.writeUInt32LE(png.length, 14);
 header.writeUInt32LE(22, 18);
 await fs.writeFile("public/favicon.ico", Buffer.concat([header, png]));
-const logo = await sharp("public/brand/borido-mark-monochrome.png")
+const logo = await sharp(`public${BRAND.logoMonochrome}`)
   .resize(240, 240)
   .png()
   .toBuffer();
 const text = Buffer.from(
-  `<svg width="1200" height="630"><rect width="1200" height="630" fill="#191919"/><text x="600" y="430" text-anchor="middle" font-family="sans-serif" font-size="64" font-weight="700" fill="white">BORIDO</text><text x="600" y="490" text-anchor="middle" font-family="sans-serif" font-size="25" fill="#cccccc">Open Buddhist Content</text></svg>`,
+  `<svg width="1200" height="630"><rect width="1200" height="630" fill="#191919"/><text x="600" y="430" text-anchor="middle" font-family="sans-serif" font-size="64" font-weight="700" fill="white">${BRAND.name}</text><text x="600" y="490" text-anchor="middle" font-family="sans-serif" font-size="25" fill="#cccccc">Open Buddhist Content</text></svg>`,
 );
 await sharp(text)
   .composite([{ input: logo, left: 480, top: 100 }])
   .png()
   .toFile("public/og-image.png");
 console.log(
-  "BORIDO icons and sharing image generated from the supplied logo originals.",
+  `${BRAND.name} icons and sharing image generated from the supplied logo originals.`,
 );

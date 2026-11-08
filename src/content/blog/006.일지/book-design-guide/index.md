@@ -6,6 +6,8 @@ tags: ["book","design","파일관리","blog","file-management","metadata"]
 
 # BOOK과 DESIGN 파일 저장 구조 — 메타데이터 분리 전략
 
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 현재 브랜드는 **Biwoom - 비움**, 공개 주소는 https://biwoom.github.io/ 입니다.
+
 BORIDO HOME에 완결 HTML 자료나 DESIGN 이미지를 등록하려면 메타데이터(md)와 실제 자산(HTML/이미지)을 분리해 둔다.
 
 ## HTML 자산 등록 절차

@@ -1,4 +1,4 @@
 interface:
-  display_name: "BORIDO GitHub Upload"
-  short_description: "Push BORIDO changes without work-log coupling or deploy checks."
-  default_prompt: "Use $ol-github-upload-log to push BORIDO changes only."
+  display_name: "Biwoom GitHub Upload"
+  short_description: "Push Biwoom changes without work-log coupling or deploy checks."
+  default_prompt: "Use $ol-github-upload-log to push Biwoom changes only."

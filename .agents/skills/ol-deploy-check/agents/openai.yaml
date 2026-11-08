@@ -1,4 +1,4 @@
 interface:
-  display_name: "BORIDO Deploy Check"
-  short_description: "Verify BORIDO GitHub Pages deploys"
-  default_prompt: "Use $ol-deploy-check to verify BORIDO build and GitHub Pages readiness."
+  display_name: "Biwoom Deploy Check"
+  short_description: "Verify Biwoom GitHub Pages deploys"
+  default_prompt: "Use $ol-deploy-check to verify Biwoom build and GitHub Pages readiness."

@@ -120,7 +120,7 @@ export function initDocumentReader() {
         const selected = selection?.toString().trim() ?? "";
         const source = selection?.anchorNode?.parentElement?.closest(".ol-story-chapter");
         if (!selected || !source) { tell("본문에서 인용할 문장을 먼저 선택해 주세요."); return; }
-        value = `${selected}\n\n${title} — BORIDO TEXT\n${href}`;
+        value = `${selected}\n\n${title} — Biwoom TEXT\n${href}`;
       }
       try {
         if (!navigator.clipboard) throw new Error("Clipboard unavailable");

@@ -1,4 +1,4 @@
 interface:
-  display_name: "BORIDO Content Authoring"
-  short_description: "Create and update BORIDO content"
-  default_prompt: "Use $ol-content-authoring to add or revise BORIDO content."
+  display_name: "Biwoom Content Authoring"
+  short_description: "Create and update Biwoom content"
+  default_prompt: "Use $ol-content-authoring to add or revise Biwoom content."

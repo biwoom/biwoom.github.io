@@ -5,10 +5,10 @@ import { getEbooks, ebookLicense } from '../../../scripts/lib/ebooks.mjs';
 import '../../styles/pages/ebook.css';
 const books = getEbooks();
 ---
-<BaseLayout title="전자책 — BORIDO" description="보리도의 불교 문헌과 이야기를 EPUB과 PDF 전자책으로 내려받으세요." pagefindBody={false}>
+<BaseLayout title="전자책 — Biwoom" description="비움의 불교 문헌과 이야기를 EPUB과 PDF 전자책으로 내려받으세요." pagefindBody={false}>
   <main class="ol-ebook-page" data-ebook-library>
     <section class="ol-ebook-hero"><div class="ol-container">
-      <span class="ol-section-label">BORIDO EBOOK</span><h1>전자책</h1>
+      <span class="ol-section-label">Biwoom EBOOK</span><h1>전자책</h1>
       <p>불교 문헌과 이야기를 한 권의 책으로 만납니다.<br />EPUB과 PDF로 내려받아 원하는 곳에서 읽어보세요.</p>
     </div></section>
     <section class="ol-ebook-content"><div class="ol-container">
@@ -22,7 +22,7 @@ const books = getEbooks();
       <div class="ol-ebook-grid">
         {books.map(book => <article class="ol-ebook-card" data-ebook-item data-ebook-id={book.id} data-ebook-search-text={`${book.title} ${book.bibliography.map(item => item.value).join(' ')}`} data-ebook-formats={book.downloads.map(file => file.format).join(' ')}>
           <button class="ol-ebook-open" type="button" data-ebook-open aria-haspopup="dialog" aria-controls="ebook-dialog" aria-label={`${book.title} 서지정보와 다운로드`}>
-            <span class="ol-ebook-cover">{book.coverUrl ? <img src={book.coverUrl} alt="" loading="lazy" decoding="async" /> : <span class="ol-ebook-placeholder"><span>BORIDO EBOOK</span><strong>{book.title}</strong><span>보리도</span></span>}</span>
+            <span class="ol-ebook-cover">{book.coverUrl ? <img src={book.coverUrl} alt="" loading="lazy" decoding="async" /> : <span class="ol-ebook-placeholder"><span>Biwoom EBOOK</span><strong>{book.title}</strong><span>비움</span></span>}</span>
             <span class="ol-ebook-caption"><strong>{book.title}</strong><span>{book.bibliography.filter(item => ['저자', '원저자', '번역자'].includes(item.label)).map(item => `${item.value} ${item.label}`).join(' · ')}</span><span class="ol-ebook-formats">{[...new Set(book.downloads.map(file => file.format))].join(' · ')}<span>서지정보 · 다운로드 ↗</span></span></span>
           </button>
           <template data-ebook-detail>
@@ -30,7 +30,7 @@ const books = getEbooks();
           </template>
         </article>)}
       </div>
-      <div class="ol-ebook-empty" data-ebook-empty hidden={books.length > 0}><span aria-hidden="true">▤</span><h2>{books.length ? '조건에 맞는 전자책이 없습니다.' : '전자책을 준비하고 있습니다.'}</h2><p>{books.length ? '다른 검색어나 파일 형식을 선택해 보세요.' : '보리도의 문헌과 이야기를 전자책으로 차례로 소개하겠습니다.'}</p></div>
+      <div class="ol-ebook-empty" data-ebook-empty hidden={books.length > 0}><span aria-hidden="true">▤</span><h2>{books.length ? '조건에 맞는 전자책이 없습니다.' : '전자책을 준비하고 있습니다.'}</h2><p>{books.length ? '다른 검색어나 파일 형식을 선택해 보세요.' : '비움의 문헌과 이야기를 전자책으로 차례로 소개하겠습니다.'}</p></div>
       <p class="ol-ebook-policy">모든 전자책은 <a href={ebookLicense.url} target="_blank" rel="noopener">CC0</a>로 제공합니다.</p>
       <noscript><p>서지정보와 다운로드 버튼을 열려면 JavaScript를 활성화해 주세요.</p></noscript>
     </div></section>

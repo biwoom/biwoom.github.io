@@ -9,7 +9,7 @@ import { getEbooks } from './lib/ebooks.mjs';
 import { syncAssets } from './sync-content-assets.mjs';
 
 function fixture(fn) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'borido-ebook-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'biwoom-ebook-'));
   const write = (name, text = 'download bytes') => { const file = path.join(root, 'src/content', name); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, text); return file; };
   fs.writeFileSync(path.join(root, 'content-registry.json'), JSON.stringify({ version: 1, files: {}, folders: {}, redirects: {} }));
   try { fn(root, write); } finally { fs.rmSync(root, { recursive: true, force: true }); }
@@ -64,7 +64,7 @@ class Element {
   close() { this.open = false; this.emit('close'); }
   getBoundingClientRect() { return {left: 10, right: 500, top: 10, bottom: 500}; }
 }
-function clientFixture(initial = 'https://borido.org/ebook/') {
+function clientFixture(initial = 'https://biwoom.github.io/ebook/') {
   const items = [new Element({ebookId: 'one', ebookSearchText: '문헌 길장', ebookFormats: 'EPUB PDF'}), new Element({ebookId: 'two', ebookSearchText: '이야기 비움', ebookFormats: 'PDF'})];
   const buttons = items.map(item => { const button = new Element(); button.parent = item; item.querySelector = selector => selector === '[data-ebook-open]' ? button : {content: {cloneNode: () => ({title: item.dataset.ebookSearchText})}}; return button; });
   const filters = ['', 'EPUB', 'PDF'].map(ebookFilter => new Element({ebookFilter}));
@@ -88,6 +88,6 @@ test('ebook search intersects format filters and modal restores focus/scroll and
   f.dialog.emit('click', {target: f.dialog, clientX: 100, clientY: 100}); assert.equal(f.dialog.open, true);
   f.dialog.emit('click', {target: f.dialog, clientX: 0, clientY: 0}); assert.equal(f.dialog.open, false); assert.equal(f.body.style.overflow, 'auto'); assert.equal(f.buttons[1].focused, true); assert.equal(f.content.children.length, 0);
   assert.equal(new URL(f.browser.location.href).searchParams.has('book'), false);
-  const shared = clientFixture('https://borido.org/ebook/?book=one'); assert.equal(shared.dialog.open, true);
-  shared.browser.location.href = 'https://borido.org/ebook/'; shared.browser.popstate(); assert.equal(shared.dialog.open, false);
+  const shared = clientFixture('https://biwoom.github.io/ebook/?book=one'); assert.equal(shared.dialog.open, true);
+  shared.browser.location.href = 'https://biwoom.github.io/ebook/'; shared.browser.popstate(); assert.equal(shared.dialog.open, false);
 } );

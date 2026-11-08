@@ -109,7 +109,7 @@ test('shared document copy tools copy the selected quote with provenance, sectio
     await document.handlers.click[0]({target:{closest:()=>button},stopPropagation(){}});
   };
   await click('citation');assert.equal(copied.length,0);assert.match(feedback.textContent,/먼저 선택/);
-  selected='선택한 문장';await click('citation');assert.equal(copied.at(-1),'선택한 문장\n\n문서 제목 — BORIDO TEXT\nhttps://example.test/text/read/example/');
+  selected='선택한 문장';await click('citation');assert.equal(copied.at(-1),'선택한 문장\n\n문서 제목 — Biwoom TEXT\nhttps://example.test/text/read/example/');
   await click('section');assert.equal(new URL(copied.at(-1)).hash,`#${encodeURIComponent('현재-절')}`);
   await click('markdown');assert.equal(copied.at(-1),'# 문서 제목\n\n본문 단락\n\n각주 설명');
   clipboardFails=true;await click('link');assert.match(feedback.textContent,/복사할 수 없습니다/);

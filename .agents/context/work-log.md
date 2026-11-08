@@ -1217,3 +1217,12 @@ This file records concise date-based work summaries for continuity across Codex 
 
 - Override the old mobile 20px chapter title with a 28px mobile serif title while preserving the desktop 34px title (body H2 remains 25px). Keep 1.6 line height and a stronger scaling rule so the shared font slider preserves the hierarchy.
 - Validation: 55 fixtures, typecheck (zero errors; existing TEXT hint), build and built checks passed. Compiled CSS verifies mobile title 28px versus body H2 25px and the stronger slider rule.
+
+
+## 2026-11-09 — Biwoom - 비움 / default GitHub Pages domain
+
+- Set common SITE_URL to https://biwoom.github.io and brand to Biwoom - 비움. Updated shared metadata, home/navigation/footer, reader citations, library/blog/media/ebook/partner labels, RSS, robots and workflow display name. Preserved root deployment without Astro base.
+- Retained symbol artwork under biwoom-mark filenames and rebuilt icons/sharing art; visually inspected the Biwoom sharing image. Revised brand name meaning, support page, active manifesto, README, AGENTS, manuals and local skill guidance. Preserved existing user edits and historical investigation records.
+- Renamed BLOG 005.보리도 to 005.비움 before editing, with prepared registry aliases. All 68 prior registry IDs, URLs, dates and series keys remain unchanged; folder/redirect maps unchanged. Historical articles and completed sample ebook retain original prose/assets with current-brand notices; Buddhist 보리도차제론 terminology stays intact.
+- Validation: npm run check (67 fixtures), typecheck (zero errors, one existing unused-fields hint), build (64 routes), check:built (65 HTML files/21 redirects, 27 document UI contracts, 215 production URLs) passed. HTTP preview on isolated port 4322 verified 9 main pages, new brand/category/meaning, symbols, OG and feeds. Port 4321 belongs to a pre-existing stale server and was left untouched; restart it to load the new SITE_URL. Browser QA was unavailable because the browser access host was unavailable.
+- Registry preparation is stable; npm run check:registry fails only its HEAD comparison until the changed registry is committed with content. No commit, push, hosting/DNS mutation or live deployment verification performed. Deployment must clear GitHub Pages Custom domain to use the default github.io domain; README links GitHub's official removal procedure.

@@ -1,4 +1,4 @@
 interface:
-  display_name: "BORIDO Doc Maintenance"
-  short_description: "Maintain BORIDO manuals and docs"
-  default_prompt: "Use $ol-doc-maintenance to update BORIDO project documents."
+  display_name: "Biwoom Doc Maintenance"
+  short_description: "Maintain Biwoom manuals and docs"
+  default_prompt: "Use $ol-doc-maintenance to update Biwoom project documents."
