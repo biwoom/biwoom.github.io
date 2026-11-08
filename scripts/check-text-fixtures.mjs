@@ -46,16 +46,17 @@ test('docked document panels are nonmodal, do not lock body scroll, and close wi
   const document={body:new El(),activeElement:active};document.body.style.overflow='scroll';
   const Event=class{constructor(type,options){this.type=type;Object.assign(this,options);}};
   const api=evaluate('src/lib/client/reader-drawer.ts',{document,window:{matchMedia:()=>({matches:false})},HTMLElement:El,Event,CustomEvent:Event});
-  const controller=api.createReaderDrawer(dialog,trigger,null);controller.open();assert.ok(dialog.open);assert.equal(document.body.style.overflow,'scroll');assert.ok(active.focused);assert.equal(trigger.attrs['aria-expanded'],'true');
+  dialog.show=()=>{throw new Error('Docked panels must not invoke dialog autofocus');};
+  const controller=api.createReaderDrawer(dialog,trigger,null);controller.open();assert.ok(dialog.open);assert.equal(document.body.style.overflow,'scroll');assert.equal(active.focused,undefined);assert.equal(trigger.attrs['aria-expanded'],'true');
   let returned=false;controller.close(()=>returned=true);assert.equal(dialog.open,false);assert.ok(returned);assert.equal(document.body.style.overflow,'scroll');
 });
-function workspace({ opened = true, initialNote = false } = {}) {
+function workspace({ opened = true, initialNote = false, wideScreen = true } = {}) {
   const root=new El(),slot=new El(),printSlot=new El(),left=new El(),list=new El(),mobile=new El(),mobileSlot=new El(),leftBtn=new El(),focusBtn=new El(),focusLabel=new El();
   const toc=new El(),notes=new El();toc.id='ol-reader-toc';notes.id='ol-reader-footnotes';
   if (!opened) { root.setAttribute('data-text-left-hidden',''); root.setAttribute('data-text-right-hidden',''); }
   toc.parentElement=root;notes.parentElement=root;notes.open=initialNote;
   const dialogs=[toc,notes],tabs=['toc','footnotes'].map(type=>{const e=new El();e.dataset.textPanel=type;return e;});
-  const wide=new El(),narrow=new El();wide.matches=true;narrow.matches=false;
+  const wide=new El(),narrow=new El();wide.matches=wideScreen;narrow.matches=false;
   root.select={'[data-text-panel-slot]':slot,'[data-text-print-notes]':printSlot,'#text-document-list':left,'[data-text-list-content]':list,'#text-list-dialog':mobile,'[data-text-left-toggle]':leftBtn,'[data-text-focus]':focusBtn,'[data-text-focus-label]':focusLabel,'[data-text-list-close]':new El()};
   root.lists={'.ol-reader-toc':dialogs,'[data-text-panel]':tabs};mobile.select={'[data-text-mobile-list-slot]':mobileSlot};
   for(const dialog of dialogs){
@@ -115,8 +116,8 @@ test('shared document copy tools copy the selected quote with provenance, sectio
 });
 
 
-test('TEXT starts with both sides closed and opens into two/three columns only when requested',()=>{
-  const h=workspace({opened:false});
+test('TEXT below 1360px starts closed and allows manual opening',()=>{
+  const h=workspace({opened:false,wideScreen:false});
   assert.equal(h.toc.open,false);assert.equal(h.notes.open,false);
   assert.ok(h.root.hasAttribute('data-text-left-hidden'));assert.ok(h.root.hasAttribute('data-text-right-hidden'));
   assert.equal(h.leftBtn.attrs['aria-expanded'],'false');
@@ -126,6 +127,31 @@ test('TEXT starts with both sides closed and opens into two/three columns only w
 
 
 test('an explicit incoming footnote link may open its aid without opening the document list',()=>{
-  const h=workspace({opened:false,initialNote:true});
+  const h=workspace({opened:false,initialNote:true,wideScreen:false});
   assert.ok(h.notes.open);assert.equal(h.toc.open,false);assert.ok(h.root.hasAttribute('data-text-left-hidden'));
+});
+
+
+test('TEXT at 1360px and above starts with document list and TOC docked open',()=>{
+  const h=workspace({opened:false});
+  assert.ok(h.toc.open);assert.equal(h.notes.open,false);
+  assert.equal(h.root.hasAttribute('data-text-left-hidden'),false);
+  assert.equal(h.root.hasAttribute('data-text-right-hidden'),false);
+  assert.equal(h.leftBtn.attrs['aria-expanded'],'true');
+  h.leftBtn.fire('click');h.focusBtn.fire('click');h.focusBtn.fire('click');
+  assert.ok(h.root.hasAttribute('data-text-left-hidden'));
+});
+
+
+test('STORY focus toggles its chapter sidebar layout and restores the default mode',()=>{
+  const root=new El(),button=new El(),label=new El(),document=new El();
+  root.select={'[data-story-focus]':button};button.select={'[data-text-focus-label]':label};
+  document.select={'.ol-story-doc-page:not(.ol-text-reader)':root};
+  const window={addEventListener(){}};
+  evaluate('src/lib/client/document-reader.ts',{document,window},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}}}).initDocumentReader();
+  assert.equal(root.hasAttribute('data-story-focus'),false);
+  button.fire('click');assert.ok(root.hasAttribute('data-story-focus'));
+  assert.equal(button.attrs['aria-pressed'],'true');assert.equal(label.textContent,'기본');
+  button.fire('click');assert.equal(root.hasAttribute('data-story-focus'),false);
+  assert.equal(button.attrs['aria-pressed'],'false');assert.equal(label.textContent,'집중');
 });

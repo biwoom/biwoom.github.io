@@ -11,9 +11,6 @@
 .ol-story-doc-page .ol-story-part-layout {
   grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
 }
-.ol-story-doc-page .ol-story-part-content .ol-prose {
-  max-width: 1200px;
-}
 .ol-story-doc-page .ol-story-part-content-head > :first-child {
   min-width: 0;
 }
@@ -139,7 +136,7 @@
 }
 @media (max-width: 980px) {
   .ol-story-doc-page .ol-story-part-content { display: flex; flex-direction: column; }
-  .ol-story-doc-page .ol-story-part-content-head { order: -1; margin-bottom: 0; }
+  .ol-story-doc-page .ol-story-part-content-head { margin-bottom: 0; }
   .ol-story-doc-page .ol-reader-toolbar .ol-story-mobile-controls {
     order: -1;
     margin-right: auto;
@@ -221,4 +218,48 @@
     max-height: max(0px, calc(100dvh - var(--ol-reader-font-top, 0px) - 16px));
     overflow-y: auto;
   }
+}
+
+/* Individual readers let the site navigation scroll away above their tools. */
+body:has(.ol-story-doc-page) .ol-header { position: relative; top: auto; }
+.ol-story-reader-page.ol-story-doc-page:not(.ol-text-reader) { overflow: visible; }
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-part-nav { position: static; top: auto; }
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-reader-shell { overflow: clip; }
+.ol-story-doc-page:not(.ol-text-reader) .ol-reader-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 44;
+  background: var(--ol-bg);
+}
+@media (min-width: 981px) {
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-nav {
+    position: sticky;
+    top: 0;
+  }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-reader-toolbar {
+    top: calc(var(--ol-story-sticky-nav, 58px) + 8px);
+  }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-sidebar {
+    top: calc(var(--ol-story-sticky-nav, 58px) + 18px);
+    height: calc(100dvh - var(--ol-story-sticky-nav, 58px) - 34px);
+  }
+}
+@media (max-width: 980px) {
+  /* Keep tools first in normal flow, above the title, and sticky on scroll. */
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content { padding-top: 0; }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-reader-toolbar { flex-shrink: 0; order: -1; float: none; width: 100%; }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-tools { min-width: 0; gap: 4px; }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-reader-toolbar .ol-text-tool-btn {
+    width: auto;
+    min-width: 38px;
+    padding: 6px 8px;
+  }
+}
+
+/* STORY focus expands the article into the space used by its chapter list. */
+.ol-story-doc-page[data-story-focus] .ol-story-part-sidebar { display: none; }
+.ol-story-doc-page[data-story-focus] .ol-story-part-layout { grid-template-columns: minmax(0, 1fr); }
+.ol-story-doc-page [data-story-focus][aria-pressed="true"] { color: var(--ol-accent); background: var(--ol-surface-2); }
+@media (max-width: 980px) {
+  .ol-story-doc-page button[data-story-focus] { display: none; }
 }

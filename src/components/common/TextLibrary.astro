@@ -18,7 +18,7 @@ const hasIntro = !!intro.replace(/<[^>]*>/g, "").trim();
       <nav class="ol-text-parts" aria-label="자료 구분">{series.parts.map((part, i) => <a href={part.entries[0].data.url}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}</nav>
     </header>
     <div class="ol-text-library-grid">
-      <aside class="ol-text-library-nav" aria-label="문헌 안내"><h2>문헌 안내</h2><a href="#text-materials">자료 목록</a>{hasIntro && <a href="#text-intro">문헌 소개</a>}
+      <aside class="ol-text-library-nav" aria-label="문헌 안내"><h2>문헌 안내</h2><a href="#text-materials">자료 목록</a>{hasIntro && <a href="#text-intro">서지정보</a>}
         <h3>자료 구분</h3>{series.parts.map((part, i) => <a href={`#text-group-${i}`}>{part.label}<small>{part.entries.length}개</small></a>)}
         <p>번역과 연구는 독립된 자료입니다. 각 자료의 목차를 따라 읽어 보세요.</p>
       </aside>
@@ -31,9 +31,8 @@ const hasIntro = !!intro.replace(/<[^>]*>/g, "").trim();
         </details>)}
         <p class="ol-text-search-empty" data-text-search-empty hidden>일치하는 자료가 없습니다.</p>
         {series.count === 0 && <p>아직 공개된 자료가 없습니다.</p>}
-        {hasIntro && <section class="ol-text-intro" id="text-intro"><h2>문헌 소개</h2><Fragment set:html={intro} /></section>}
       </section>
-      <TextBibliography series={series} />
+      <TextBibliography series={series}><Fragment set:html={intro} /></TextBibliography>
     </div>
   </main>
 </BaseLayout>

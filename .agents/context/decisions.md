@@ -5,10 +5,14 @@
 - Use `https://borido.org` as the common production SITE_URL. Preserve repository `biwoom/biwoom.github.io`, root-relative routes, registry identities/dates and historical deployment records. Keep Astro without base.
 - Existing custom Actions deployment does not require a CNAME file. DNS and GitHub Pages HTTPS provisioning are separate from local metadata/build validation.
 
+## 2026-11-08 — Shared reading typography
+
+- TEXT/STORY document bodies share Noto Serif KR, 17px/1.95 typography, heading/paragraph spacing and a centered 780px prose cap. Keep collection-specific menus, toolbar/theme and focus behavior. STORY document routes load the same serif faces; BLOG and STORY libraries keep their existing typography.
+
 ## 2026-11-07 — Academic TEXT Workspaces
 
 - User explicitly supersedes shared STORY presentation for TEXT work/document pages. Use separate academic templates while sharing toolbar/body/parser/footnote/size/copy/dialog behavior. Keep ordinary material links, stable URLs, one font slider and click-note-text return; no extra backreference arrows.
-- Adopt sample slate blue on work/document pages and keep gold only for TEXT menu/category views and document footnote emphasis. Selectively load Noto Serif KR 400/600 there, retain sans UI. Use sample tool symbols and focus mode restoring prior panels; both document side panels start closed; opening them gives a desktop three-column dock, converting to compact modals using the same actual nodes. On document scroll, site header/work/part navigation scroll away and tools/opened aids stick at viewport top. Bibliography comes only from explicit labelled prose, without schema/frontmatter requirements or guessed authors/dates.
+- Adopt sample slate blue on work/document pages and keep gold only for TEXT menu/category views and document footnote emphasis. Selectively load Noto Serif KR 400/600 there, retain sans UI. Use sample tool symbols and focus mode restoring prior panels; document list and document TOC default open at >=1360px and closed below that width; opening them gives a desktop three-column dock, converting to compact modals using the same actual nodes. On document scroll, site header/work/part navigation scroll away and tools/opened aids stick at viewport top. Document bibliography comes only from explicit labelled prose. The library rail renders only work index.md body as authored Markdown under 서지정보, including original-reading links; omit the per-material bibliography list; do not extract its fields, duplicate it in the center, add metadata fields or guess authors/dates.
 
 ## 2026-11-06 — BLOG Source Categories
 

@@ -145,5 +145,8 @@ export function initTextWorkspace() {
     }
     window.addEventListener("resize", measureOffsets); measureOffsets();
   }
+  // Initial defaults follow the same breakpoint as the three-column dock.
+  setLeft(!wide.matches);
+  root.toggleAttribute('data-text-right-hidden', !wide.matches || !dialogs.some(dialog => dialog.id === 'ol-reader-toc'));
   layout();
 }

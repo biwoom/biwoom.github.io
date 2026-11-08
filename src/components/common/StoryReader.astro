@@ -34,6 +34,7 @@ const documentParts = series.parts.map((part) => ({
 }));
 const currentPartSlug = entry.data.partKey;
 const currentPart = documentParts.find((part) => part.slug === currentPartSlug);
+const heroTitle = [series.label, currentPart?.label ?? entry.data.part].filter(Boolean).join(" · ");
 const chapterNumber =
   (currentPart?.entries.findIndex((item) => item.id === entry.id) ?? 0) + 1;
 const currentIndex = series.entries.findIndex((item) => item.id === entry.id);
@@ -55,6 +56,7 @@ const hasToc = headings.some(
 ---
 
 <BaseLayout
+  academic
   title={`${entry.data.title} — ${series?.label ?? entry.data.series ?? `BORIDO ${sectionLabel}`}`}
   lang={entry.data.lang}
   description={entry.data.description}
@@ -91,9 +93,7 @@ const hasToc = headings.some(
         )}
       </div>
 
-      <h1 class="ol-kr">{entry.data.title}</h1>
-      <DocumentTags tags={entry.data.tags} />
-      {entry.data.description && <p class="ol-kr">{entry.data.description}</p>}
+      <h1 class="ol-kr">{heroTitle}</h1>
     </section>
 
     {documentParts.length > 0 && (
@@ -133,7 +133,7 @@ const hasToc = headings.some(
 
     <section class="ol-story-reader-shell">
       <div class="ol-story-part-layout">
-        <aside class="ol-story-part-sidebar" data-pagefind-ignore>
+        <aside class="ol-story-part-sidebar" id="story-document-list" data-pagefind-ignore>
           <div class="ol-story-part-sidebar-head">
             <span>{section === "text" ? "자료 구분" : "PART"}</span>
             <strong class="ol-kr">
@@ -169,6 +169,8 @@ const hasToc = headings.some(
                 {String(chapterNumber).padStart(2, "0")}
               </span>
               <h2 class="ol-kr">{entry.data.title}</h2>
+              <DocumentTags tags={entry.data.tags} />
+              {entry.data.description && <p class="ol-kr ol-story-doc-description">{entry.data.description}</p>}
             </div>
           </header>
 

@@ -1,20 +1,15 @@
 ---
 import type { Library } from '../../lib/library';
-import { readTextBibliography } from '../../lib/text-bibliography';
 interface Props { series: Library; }
 const { series } = Astro.props;
-const intro = series.meta && 'body' in series.meta ? series.meta.body : '';
-const fields = readTextBibliography(intro);
-const sources = series.entries.map(entry => ({ entry, fields: readTextBibliography('body' in entry ? entry.body : '') })).filter(item => item.fields.length);
+const intro = await Astro.slots.render("default");
+const hasIntro = !!intro.replace(/<[^>]*>/g, "").trim();
 ---
 <aside class="ol-text-bibliography" aria-label="문헌 정보">
   <h2>문헌 정보</h2>
   <dl><dt>문헌</dt><dd>{series.label}</dd>
     {series.category && <><dt>분류</dt><dd>{series.category}</dd></>}
     <dt>공개 자료</dt><dd>{series.count}개</dd>
-    {fields.map(field => <><dt>{field.label}</dt><dd>{field.value}</dd></>)}
   </dl>
-  {sources.length > 0 && <section class="ol-text-source-list"><h3>자료별 서지 표기</h3>
-    {sources.map(({ entry, fields }) => <section><a href={entry.data.url}>{entry.data.title}</a><dl>{fields.map(field => <><dt>{field.label}</dt><dd>{field.value}</dd></>)}</dl></section>)}
-  </section>}
+  {hasIntro && <section class="ol-text-work-notes" id="text-intro"><h3>서지정보</h3><Fragment set:html={intro} /></section>}
 </aside>

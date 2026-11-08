@@ -1050,3 +1050,94 @@ This file records concise date-based work summaries for continuity across Codex 
   - desktop TOC behavior now defaults to collapsed state with heading counts and scroll-spy highlighting
 - Local validation:
   - `npm run build` passed.
+
+
+## 2026-11-08 — STORY document toolbar and scrolling
+
+- Shared TEXT toolbar symbols with STORY (TOC, notes, font size, copy and mobile chapter list), retaining STORY layout, colors and tools.
+- STORY document header/part navigation now scroll away; tools stick at viewport top on desktop/mobile. Removed mobile ancestor overflow that blocked sticky positioning; desktop chapter sidebar uses viewport-top offsets.
+- Passed `npm run check` (53 tests), `npm run typecheck`, `npm run build`, and `npm run check:built` (63 pages, 21 redirects). Browser interaction verification unavailable because browser access host was unavailable.
+
+
+### STORY desktop sticky part navigation follow-up
+
+- Restored sticky part navigation at viewport top for STORY documents at >=981px. Tools and chapter sidebar sit below its measured height; mobile behavior remains as implemented.
+- Validation: `npm run check` (53 tests), `npm run typecheck`, `npm run build`, and `npm run check:built` passed.
+
+
+### TEXT responsive initial panel defaults
+
+- Use the existing 1360px three-column breakpoint: initial document list/TOC open at >=1360px, closed below it. Manual toggles and focus restoration remain available.
+- Validation: 54 fixtures, zero-diagnostic typecheck, build and built-page checks passed.
+
+
+### TEXT body TOC wording and close control
+
+- Renamed TEXT document TOC to 본문 목차 across toolbar, panel title/tab and accessible labels. Unified its close control with the footnotes X SVG.
+- Docked aids open without invoking native dialog autofocus, keeping the automatically opened TOC close button unselected and preserving current keyboard focus. Modal opening retains native focus behavior.
+- Validation: 54 fixtures, typecheck (zero diagnostics), build and built-page checks passed.
+
+
+### TEXT work index prose in library bibliography rail
+
+- Render work index.md body once as authored Markdown below per-material bibliography, including original-reading URLs, without extracting its fields or duplicating it in the center. Empty bodies omit the panel; description and folder/H1 title rules remain unchanged.
+- Preserved the user's 대승현론 index.md edits; normal content preparation records its updated hash with identity/date unchanged.
+- Validation: 54 fixtures, typecheck (zero diagnostics), build and built checks passed. Inspected 대승현론 dist library HTML: authored bibliography below 자료별 서지 표기, CBETA T1853 clickable once, unique text-intro anchor.
+
+
+### TEXT library bibliography simplification
+
+- Removed the per-material bibliography list from the library rail; renamed work notes and navigation to 서지정보. 대승현론 index uses a labelled CBETA 원문 열람 ↗ Markdown link instead of showing the URL.
+- Validation: 54 fixtures, zero-diagnostic typecheck, build and built checks passed; actual 대승현론 library HTML confirms removed list, renamed title and labelled CBETA link without visible URL.
+
+
+### BLOG sidebar tag panel
+
+- Moved post tag/count chips from above the list into a native, default-closed details panel below the sidebar archive. Tags wrap within the panel, with internal scrolling for long tag lists.
+- Reuse existing exact-tag/category/year intersection, URL query and pagination reset behavior.
+- Validation: 54 fixtures, typecheck (zero errors; existing unused TEXT fields hint), build and built checks passed. Built UI contracts verify sidebar placement below archive and closed initial state; existing tag/category/year/pagination interaction fixtures pass.
+
+
+### STORY reader focus control
+
+- Added the shared ⛶ 집중/기본 control to STORY desktop document tools. Toggle hides/restores its chapter sidebar and expands/restores the article grid, preserving prose width and sticky part/tools behavior. Hide the control on mobile where the sidebar is already absent, matching TEXT.
+- Added interaction coverage for toggling and accessible pressed state/labels.
+- Validation: 55 fixtures, typecheck (zero errors; existing unused TEXT fields hint), build and built checks passed. Actual STORY HTML contains the shared focus symbol, default unpressed state and matching sidebar control target across four documents.
+
+
+### Shared TEXT/STORY reading typography
+
+- Extracted shared body/heading typography: Noto Serif KR, 17px body, 1.95 line height and 780px centered prose. STORY loads the same font faces while retaining its theme, navigation and toolbar. Existing paragraph spacing is shared already.
+- Kept the single font slider cascade above shared base sizes.
+- Validation: 55 fixtures, typecheck (zero errors; pre-existing unused TEXT fields hint), build and built checks passed. Compiled CSS contracts verify shared 780px/17px/1.95 font rules and slider precedence; all four STORY documents load serif faces and retain STORY theme/focus markup. Browser visual verification remains unavailable.
+
+
+### STORY heading and metadata alignment
+
+- Centered the document heading and date/actions containers at the same 780px maximum width as prose, retaining responsive width and sticky toolbar behavior. Clear the floating desktop toolbar before these containers so their horizontal alignment uses the full reading column.
+- Validation: 55 fixtures, typecheck (zero errors; existing TEXT hint), build and built checks passed; compiled CSS confirms common 780px width, auto inline margins and float clearance.
+
+
+### STORY hero hierarchy
+
+- Replaced the repeated chapter title in the hero with folder-derived series · part labels; use TEXT’s 22px/1.6 serif work-title scale.
+- Keep the chapter title, tags and description together in the centered body header. Show the chapter title on mobile now that it no longer appears in the hero. Preserve routes, search/page title and original content.
+- Validation: 55 fixtures, typecheck (zero errors; existing TEXT hint), build and built checks passed. All four STORY pages have folder-derived series · part hero titles and separate body chapter headers.
+
+
+### STORY chapter title font
+
+- Set the body chapter heading to the shared Noto Serif KR reading font; retain its size, layout and font slider behavior.
+- Validation: 55 fixtures, typecheck (zero errors; existing TEXT hint), build and built checks passed; compiled title rule uses the shared serif token.
+
+
+### STORY mobile toolbar placement
+
+- Place mobile tools first in normal document flow, immediately after part navigation and before the chapter heading. Remove the old heading-first flex order and article top padding; retain viewport-top sticky tools and their reserved row height.
+- Validation: 55 fixtures, typecheck (zero errors; existing TEXT hint), build and built checks passed. Compiled mobile CSS confirms toolbar-first order, full-width reserved row and article top padding removal.
+
+
+### STORY mobile chapter title hierarchy
+
+- Override the old mobile 20px chapter title with a 28px mobile serif title while preserving the desktop 34px title (body H2 remains 25px). Keep 1.6 line height and a stronger scaling rule so the shared font slider preserves the hierarchy.
+- Validation: 55 fixtures, typecheck (zero errors; existing TEXT hint), build and built checks passed. Compiled CSS verifies mobile title 28px versus body H2 25px and the stronger slider rule.

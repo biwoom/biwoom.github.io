@@ -58,9 +58,9 @@ export function createReaderDrawer(
         if (other !== drawer) other.dispatchEvent(new Event("reader:close"));
       });
       drawer.closest<HTMLElement>("[data-text-workspace]")?.removeAttribute("data-text-right-hidden");
-      const active = document.activeElement;
-      drawer.show();
-      if (active instanceof HTMLElement) active.focus({ preventScroll: true });
+      // Docked aids are page content: avoid native dialog opening autofocus,
+      // especially when the TOC opens automatically on initial page load.
+      drawer.open = true;
       drawer.classList.add("is-open");
       trigger.setAttribute("aria-expanded", "true");
       notify();

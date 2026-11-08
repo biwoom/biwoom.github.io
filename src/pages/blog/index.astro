@@ -57,18 +57,6 @@ const archiveYears = [
             ))}
           </div>
         </div>
-        <div class="ol-row ol-blog-chip-row">
-          <div class="ol-chips ol-blog-tag-chips" id="blog-chips" role="group" aria-label="태그로 글 분류">
-            <button type="button" class="ol-chip active" data-blog-tag="" aria-pressed="true">
-              전체 <span class="count">{posts.length}</span>
-            </button>
-            {tagFilters.map(({ tag, count }) => (
-              <button type="button" class="ol-chip" data-blog-tag={tag} aria-pressed="false">
-                {tag} <span class="count">{count}</span>
-              </button>
-            ))}
-          </div>
-        </div>
         <p class="ol-blog-filter-status" id="blog-filter-status" role="status" aria-live="polite">{posts.length}개 글</p>
 
         <div class="ol-section-grid-sidebar">
@@ -199,6 +187,19 @@ const archiveYears = [
                 ))}
               </div>
             </div>
+            <details class="ol-card ol-blog-tag-panel">
+              <summary><span>태그</span><span class="ol-blog-tag-chevron" aria-hidden="true">⌄</span></summary>
+              <div class="ol-chips ol-blog-tag-chips" id="blog-chips" role="group" aria-label="태그로 글 분류">
+                <button type="button" class="ol-chip active" data-blog-tag="" aria-pressed="true">
+                  전체 <span class="count">{posts.length}</span>
+                </button>
+                {tagFilters.map(({ tag, count }) => (
+                  <button type="button" class="ol-chip" data-blog-tag={tag} aria-pressed="false">
+                    {tag} <span class="count">{count}</span>
+                  </button>
+                ))}
+              </div>
+            </details>
           </aside>
         </div>
       </div>

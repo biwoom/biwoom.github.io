@@ -1,0 +1,38 @@
+/* TEXT and STORY share reading typography; navigation keeps its own theme. */
+.ol-story-doc-page { --ol-reader-serif: 'Noto Serif KR', 'Batang', 'Songti SC', serif; }
+.ol-story-doc-page .ol-story-part-content .ol-prose { max-width: 780px; margin-inline: auto; font-family: var(--ol-reader-serif); font-size: 17px; line-height: 1.95; word-break: keep-all; overflow-wrap: anywhere; }
+.ol-story-doc-page .ol-prose h2 { font-family: var(--ol-reader-serif); font-size: 25px; line-height: 1.7; margin: 42px 0 20px; }
+.ol-story-doc-page .ol-prose h3 { font-family: var(--ol-reader-serif); font-size: 21px; line-height: 1.8; margin: 32px 0 16px; }
+.ol-story-doc-page .ol-prose h4 { font-size: 18px; line-height: 1.8; }
+/* Keep the shared size slider stronger than the base typography rules. */
+.ol-story-reader-page.ol-story-doc-page [data-reader-scalable] { font-size: calc(var(--ol-reader-base-font) * var(--ol-reader-font-scale, 1)); }
+
+/* Align STORY document headings and metadata with the centered reading body. */
+.ol-story-doc-page:not(.ol-text-reader) :is(.ol-story-part-content-head, .ol-story-active-doc-actions) {
+  clear: both;
+  width: 100%;
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+/* STORY hero gives work/part context; the chapter title belongs to the body. */
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero h1 {
+  font: 600 22px/1.6 var(--ol-reader-serif);
+  margin-top: 12px;
+}
+/* The chapter title stays larger than the shared 25px body H2 on mobile. */
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2 {
+  display: block;
+  font-family: var(--ol-reader-serif);
+  font-size: 34px;
+  line-height: 1.6;
+}
+/* Preserve the font slider above the more specific chapter-title base rule. */
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2[data-reader-scalable] {
+  font-size: calc(var(--ol-reader-base-font) * var(--ol-reader-font-scale, 1));
+}
+.ol-story-doc-description { margin-top: 12px; font-size: 14px; line-height: 1.8; color: var(--ol-muted); }
+
+@media (max-width: 980px) {
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2 { font-size: 28px; }
+}

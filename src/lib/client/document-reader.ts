@@ -2,6 +2,26 @@ import { createReaderDrawer } from "./reader-drawer";
 import { initReaderTools } from "./reader-tools";
 
 export function initDocumentReader() {
+  const story = document.querySelector<HTMLElement>(".ol-story-doc-page:not(.ol-text-reader)");
+  const focusButton = story?.querySelector<HTMLButtonElement>("[data-story-focus]");
+  focusButton?.addEventListener("click", () => {
+    const focused = !story!.hasAttribute("data-story-focus");
+    story!.toggleAttribute("data-story-focus", focused);
+    focusButton.setAttribute("aria-pressed", String(focused));
+    focusButton.setAttribute("aria-label", focused ? "기본 모드" : "집중 모드");
+    focusButton.title = focused ? "기본 모드" : "집중 모드";
+    const label = focusButton.querySelector<HTMLElement>("[data-text-focus-label]");
+    if (label) label.textContent = focused ? "기본" : "집중";
+  });
+  const partNav = story?.querySelector<HTMLElement>(".ol-story-part-nav");
+  if (story && partNav) {
+    const measurePartNav = () => {
+      story.style.setProperty("--ol-story-sticky-nav", `${partNav.getBoundingClientRect().height}px`);
+    };
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(measurePartNav).observe(partNav);
+    window.addEventListener("resize", measurePartNav);
+    measurePartNav();
+  }
 
 
 
