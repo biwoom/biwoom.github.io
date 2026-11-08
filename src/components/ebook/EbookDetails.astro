@@ -1,0 +1,13 @@
+---
+import { getEbooks, formatEbookSize, ebookLicense } from '../../../scripts/lib/ebooks.mjs';
+interface Props { book: ReturnType<typeof getEbooks>[number]; }
+const { book } = Astro.props;
+---
+<div class="ol-ebook-detail-cover">{book.coverUrl ? <img src={book.coverUrl} alt={`${book.title} 표지`} /> : <div class="ol-ebook-placeholder"><span>BORIDO EBOOK</span><strong>{book.title}</strong><span>보리도</span></div>}</div>
+<div class="ol-ebook-detail-info"><p class="ol-section-label">BORIDO EBOOK</p><h2 id="ebook-dialog-title">{book.title}</h2>
+  {book.bibliography.length > 0 && <dl>{book.bibliography.map(item => <div><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl>}
+  {book.description && <p class="ol-ebook-description">{book.description}</p>}
+  <div class="ol-ebook-downloads">{book.downloads.map(file => <a class="ol-btn ol-btn-primary" href={file.url} download={file.name}>{file.format} 다운로드 <span>{formatEbookSize(file.bytes)}</span></a>)}</div>
+  <p class="ol-ebook-license"><a href={ebookLicense.url} target="_blank" rel="noopener">{ebookLicense.label}</a> · 자유롭게 이용하고 나눌 수 있습니다.</p>
+  {book.originals.length > 0 && <div class="ol-ebook-originals"><h3>온라인에서 읽기</h3>{book.originals.map(original => <a href={original.url}>{original.title || '원문 읽기'} →</a>)}</div>}
+</div>

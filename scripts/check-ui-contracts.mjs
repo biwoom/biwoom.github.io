@@ -60,6 +60,9 @@ rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-size:17px/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /line-height:1.95/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-family:var\(--ol-reader-serif\)/);
 rule(".ol-story-reader-page.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
+rule(".ol-ebook-dialog", /position:fixed/);
+rule(".ol-ebook-dialog", /inset:0/);
+rule(".ol-ebook-dialog", /margin:auto/);
 rule(".ol-reader-toc:not([open])", /display:none/);
 rule(".ol-reader-toc-panel", /transform:translate(?:X)?\(0\)/);
 rule(":root:has(.ol-story-doc-page)", /scrollbar-gutter:stable/);
@@ -305,3 +308,16 @@ rule(".ol-media-dialog:not([open])", /display:none/);
 console.log(
   `UI markup/CSS regression checks passed for ${count} documents and BLOG index (not a browser interaction test).`,
 );
+
+// Auxiliary ebook navigation and generated package controls must agree with source packages.
+const { getEbooks } = await import("./lib/ebooks.mjs");
+const ebooks = getEbooks();
+const ebookHtml = fs.readFileSync("dist/ebook/index.html", "utf8");
+assert.equal([...ebookHtml.matchAll(/data-ebook-item(?=[\s>])/g)].length, ebooks.length);
+assert.equal([...ebookHtml.matchAll(/download="/g)].length, ebooks.reduce((count, book) => count + book.downloads.length, 0));
+assert.ok(ebookHtml.includes('id="ebook-dialog"'));
+assert.ok(ebookHtml.includes('CC0'));
+assert.match(ebookHtml, /<footer[\s\S]*?>MEDIA<\/a>\s*<a href="\/ebook\/">EBOOK<\/a>/);
+assert.ok(!ebookHtml.split("</header>")[0].includes('>EBOOK<'));
+assert.ok(fs.readFileSync("dist/sitemap-0.xml", "utf8").includes('/ebook/'));
+console.log(`EBOOK controls and footer navigation verified for ${ebooks.length} books.`);

@@ -1,5 +1,11 @@
 # Decisions
 
+## 2026-11-08 — EBOOK Library
+
+- Provide completed EPUB/PDF packages in src/content/ebook, with optional ordinary Markdown bibliography. Use CC0 for every ebook per user instruction. Do not generate ebooks from TEXT/STORY in this phase.
+- Reuse MEDIA visual conventions but use an aligned book-cover grid and native bibliography/download modal. Link EBOOK directly below MEDIA in the footer; do not add it to the main/mobile menus. No individual document routes or registry records; publish only actual selected covers/downloads of public complete packages.
+
+
 ## 2026-11-08 — Custom Domain
 
 - Use `https://borido.org` as the common production SITE_URL. Preserve repository `biwoom/biwoom.github.io`, root-relative routes, registry identities/dates and historical deployment records. Keep Astro without base.

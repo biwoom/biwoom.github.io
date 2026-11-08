@@ -92,3 +92,7 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 ## 브랜드 자산
 
 BORIDO(보리도)의 공식 로고는 `public/brand/borido-mark-monochrome.png`(제공 원본 004)와 `borido-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. OL은 내부 코어 이름이며 현재 사이트 주소는 유지합니다.
+
+## 전자책
+
+`src/content/ebook/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.

@@ -4,6 +4,21 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-11-08
 
+### EBOOK modal centering fix
+
+- Explicitly fix the ebook dialog to the viewport with inset:0 and margin:auto so CSS resets cannot leave it at the top left. Retain responsive viewport gutters, max height and internal scrolling. Added compiled CSS centering contracts. Passed 59 fixtures, typecheck (zero errors; existing TextReader hint), build and built-page checks. Browser visual QA remains unavailable.
+
+### EBOOK User Test Sample
+
+- Added user-requested ebook/001.보리도 전자책 샘플 with an original slate-blue cover, ordinary Markdown bibliography, real EPUB3 navigation/cover and 3-page embedded-Korean-font PDF. Clearly label it as a CC0 test guide, not a source translation/research work. Keep editable body Markdown under _assets; only cover/EPUB/PDF deploy.
+- Visually reviewed all three PDF pages via rendered PNGs; verified Korean extraction and EPUB ZIP/mimetype/manifest/spine/navigation resources. Passed 59 fixtures, typecheck (existing TextReader hint only), build, generated link/UI/EBOOK/domain checks and check:registry. Built card/bibliography/buttons and byte-identical deployed downloads verified. Existing documents/registry unchanged; no commit/upload.
+
+### EBOOK Auxiliary Library
+
+- Added /ebook/ with MEDIA-inspired aligned cover grid, combined title/author search and format filters, native bibliography/download modal, URL-shared modal selection and keyboard/focus/scroll restoration. Every ebook uses CC0. EBOOK appears only immediately below MEDIA in the footer; primary/mobile navigation is unchanged.
+- Read direct src/content/ebook book folders with optional index.md H1/plain-prose bibliography, cover fallback, public original TEXT/STORY links and actual nonempty EPUB/PDF files. Selected covers/downloads alone enter generated assets; exclude private/draft/incomplete packages and remove stale outputs. No ebook conversion, individual routes or registry records. Added an empty source folder and authoring manual v3.2.
+- Passed all 59 fixtures, typecheck (0 errors/warnings; existing TextReader unused-fields hint), build, check:registry, built links across 64 pages/21 redirects, UI/EBOOK/footer contracts and 211 production-domain URLs. A temporary populated package build verified both rendered download buttons, bibliography/template markup and byte-identical deployed files, then was removed and the empty final library rebuilt; no QA assets remain. Browser visual QA was not performed. Registry/source document identities and body content remain unchanged. Preserve user's independently modified planning file. No commit/upload requested or performed.
+
 ### Custom Domain Local Configuration
 
 - Set common SITE_URL and robots sitemap to https://borido.org; normal canonical/OG/RSS/sitemap inherit it, and legacy redirect canonicals now use absolute production targets. Preserve root routes/no base and existing Actions workflow; CNAME is unnecessary for custom Actions deployment per GitHub documentation.

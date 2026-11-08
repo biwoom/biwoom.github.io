@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { walk, markdownPattern, readRegistry, isPublicSource } from "./lib/content.mjs";
+import { getEbooks } from "./lib/ebooks.mjs";
 function allFiles(dir) {
   return fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? allFiles(path.join(dir,e.name)) : [path.join(dir,e.name)]);
 }
@@ -24,6 +25,15 @@ export function syncAssets(root = process.cwd()) {
         !fs.readFileSync(file).equals(fs.readFileSync(output))
       )
         fs.copyFileSync(file, output);
+    }
+  }
+  // Publish only selected covers and complete public ebook downloads; never copy metadata/drafts.
+  for (const book of getEbooks(root)) {
+    for (const source of [book.coverSource, ...book.downloads.map(file => file.source)].filter(Boolean)) {
+      const file = path.join(base, source), output = path.join(target, source);
+      expected.add(path.resolve(output));
+      fs.mkdirSync(path.dirname(output), { recursive: true });
+      if (!fs.existsSync(output) || !fs.readFileSync(file).equals(fs.readFileSync(output))) fs.copyFileSync(file, output);
     }
   }
   for (const file of allFiles(target))
