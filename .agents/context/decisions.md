@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-08 — STORY desktop reading aids
+
+- At >=1360px use TEXT-style docked original TOC/footnote nodes and an always-visible right rail; default to TOC, allow tab switching and keep rail/panel background equal to the article surface. Below the breakpoint restore the same native-modal nodes, closed on transition. STORY focus hides both sides and restores the selected aid on exit. Share drawer/docked styling and note navigation rather than duplicating Markdown or IDs.
+
 ## 2026-11-08 — EBOOK Library
 
 - Provide completed EPUB/PDF packages in src/content/ebook, with optional ordinary Markdown bibliography. Use CC0 for every ebook per user instruction. Do not generate ebooks from TEXT/STORY in this phase.

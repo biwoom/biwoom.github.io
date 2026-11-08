@@ -11,7 +11,7 @@ const groups = [{ label: "", entries: currentPart?.entries ?? [] }];
             <div class="ol-story-part-tools">
               {hasToc && (
                 <button class="ol-text-tool-btn ol-reader-toc-trigger" type="button"
-                  aria-label={academic ? "본문 목차 열기" : "문서 목차 열기"} title={academic ? "본문 목차" : "문서 목차"} aria-haspopup="dialog"
+                  aria-label="본문 목차 열기" title="본문 목차" aria-haspopup="dialog"
                   aria-expanded="false" aria-controls="ol-reader-toc" data-reader-toc-trigger>
                   <span class="ol-text-tool-symbol" aria-hidden="true">≡</span>
                   <span class="ol-text-tool-label ol-reader-toc-label">{academic ? "본문 목차" : "목차"}</span>
@@ -100,3 +100,7 @@ const groups = [{ label: "", entries: currentPart?.entries ?? [] }];
           </div>
 
 <p class="ol-reader-feedback" role="status" aria-live="polite" data-reader-feedback></p>
+
+<button class="ol-reader-back-to-top" type="button" data-reader-back-to-top aria-label="맨 위로 이동" title="맨 위로 이동" hidden>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7" /></svg>
+</button>

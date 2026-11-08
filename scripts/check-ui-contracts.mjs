@@ -85,6 +85,9 @@ rule(".ol-text-reader .ol-text-list-label-compact", /display:inline/);
 rule(".ol-text-workspace-grid", /grid-template-columns:240px minmax\(0,1fr\) 300px/);
 rule(".ol-text-reading-column", /width:/);
 rule(".ol-text-reader.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
+rule(".ol-story-reader-rail", /background:var\(--ol-surface\)/);
+rule(".ol-story-reader-rail", /position:sticky/);
+rule(".ol-story-doc-page .ol-reader-toc[data-docked=", /position:static/);
 const registry = readRegistry();
 let count = 0;
 const publishedBlogTags = [];
@@ -137,6 +140,13 @@ for (const [source, record] of Object.entries(registry.files)) {
       ]
     : ["ol-blog-detail-header", "ol-blog-detail-title", "ol-blog-detail-meta"];
   classes(html, [...expected, "ol-prose"], record.url);
+  if (collection === "story") {
+    classes(html, ["ol-story-reader-rail", "ol-text-panel-tabs"], record.url);
+    assert.match(html, /data-story-workspace/);
+    assert.equal((html.match(/data-reader-panel-slot/g) ?? []).length, 1);
+    assert.match(html, /data-reader-panel="toc"/);
+    assert.match(html, /data-reader-panel="footnotes"/);
+  }
   if (collection === "text") {
     classes(html, ["ol-text-academic", "ol-text-workspace-grid", "ol-text-reader-rail"], record.url);
     assert.match(html, /<main[^>]*data-text-left-hidden[^>]*data-text-right-hidden/);
@@ -147,6 +157,8 @@ for (const [source, record] of Object.entries(registry.files)) {
     assert.ok(!html.includes('class="ol-story-mobile-controls"'), `${record.url}: TEXT has one responsive left navigation`);
   }
   if (isLibrary) {
+    assert.equal((html.match(/data-reader-back-to-top/g) ?? []).length, 1, `${record.url}: one back-to-top control`);
+    assert.match(html, /<button[^>]*data-reader-back-to-top[^>]*hidden/);
     assert.match(html, /data-reader-footnotes-trigger/);
     assert.match(html, /class="ol-text-tool-label ol-reader-footnotes-label">각주<\/span>/);
     assert.equal((html.match(/type="range"/g) ?? []).length, 1, `${record.url}: one shared reading slider`);

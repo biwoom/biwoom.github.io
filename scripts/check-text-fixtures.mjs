@@ -148,10 +148,59 @@ test('STORY focus toggles its chapter sidebar layout and restores the default mo
   root.select={'[data-story-focus]':button};button.select={'[data-text-focus-label]':label};
   document.select={'.ol-story-doc-page:not(.ol-text-reader)':root};
   const window={addEventListener(){}};
-  evaluate('src/lib/client/document-reader.ts',{document,window},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}}}).initDocumentReader();
+  evaluate('src/lib/client/document-reader.ts',{document,window,Event:class{constructor(type){this.type=type;}}},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}}}).initDocumentReader();
   assert.equal(root.hasAttribute('data-story-focus'),false);
   button.fire('click');assert.ok(root.hasAttribute('data-story-focus'));
   assert.equal(button.attrs['aria-pressed'],'true');assert.equal(label.textContent,'기본');
   button.fire('click');assert.equal(root.hasAttribute('data-story-focus'),false);
   assert.equal(button.attrs['aria-pressed'],'false');assert.equal(label.textContent,'집중');
+});
+
+
+function storyWorkspace(wideScreen = true) {
+  const root=new El(),slot=new El(),empty=new El(),body=new El(),wide=new El();
+  wide.matches=wideScreen;
+  const dialogs=['toc','footnotes'].map(type=>{const dialog=new El();dialog.id=`ol-reader-${type}`;dialog.parentElement=root;return dialog;});
+  const buttons=['toc','footnotes'].map(type=>{const button=new El();button.dataset.readerPanel=type;return button;});
+  root.select={'[data-reader-panel-slot]':slot,'[data-reader-panel-empty]':empty};
+  root.lists={'.ol-reader-toc':dialogs,'[data-reader-panel]':buttons};
+  slot.querySelectorAll=()=>dialogs.filter(dialog=>dialog.parentElement===slot && dialog.open);
+  const document={body,querySelector:()=>root,createComment:()=>new El()};
+  const Event=class{constructor(type,options){this.type=type;Object.assign(this,options);}};
+  const window={matchMedia:query=>query.includes('1360')?wide:{matches:true}};
+  const drawer=evaluate('src/lib/client/reader-drawer.ts',{document,window,Event,CustomEvent:Event});
+  const controllers=dialogs.map(dialog=>{
+    dialog.addEventListener('reader:panel',()=>root.fire('reader:panel'));
+    return drawer.createReaderDrawer(dialog,new El(),null);
+  });
+  evaluate('src/lib/client/story-workspace.ts',{document,window,Event}).initStoryWorkspace();
+  return {root,slot,empty,body,wide,dialogs,buttons,controllers};
+}
+test('STORY desktop keeps one original aid open, switches tabs and preserves footnote return callbacks',()=>{
+  const h=storyWorkspace();const [toc,notes]=h.dialogs;
+  assert.ok(toc.open);assert.equal(toc.parentElement,h.slot);assert.equal(toc.dataset.persistent,'true');
+  assert.equal(h.body.style.overflow,'');
+  h.buttons[1].fire('click');assert.ok(notes.open);assert.equal(toc.open,false);
+  assert.equal(h.buttons[1].attrs['aria-pressed'],'true');
+  let returned=false;h.controllers[1].close(()=>returned=true);
+  assert.ok(returned);assert.ok(notes.open);
+  h.buttons[0].fire('click');assert.ok(toc.open);assert.equal(notes.open,false);
+});
+test('STORY resize restores original modal nodes without opening or locking the compact screen',()=>{
+  const h=storyWorkspace();const [toc,notes]=h.dialogs;
+  h.wide.matches=false;h.wide.fire('change');
+  for(const dialog of h.dialogs){assert.equal(dialog.open,false);assert.equal(dialog.parentElement,h.root);assert.equal(dialog.dataset.docked,undefined);}
+  h.controllers[1].open();assert.ok(notes.open);assert.equal(h.body.style.overflow,'hidden');
+  h.wide.matches=true;h.wide.fire('change');
+  assert.ok(notes.open);assert.equal(toc.open,false);assert.equal(notes.parentElement,h.slot);assert.equal(h.body.style.overflow,'');
+  const compact=storyWorkspace(false);assert.equal(compact.dialogs.some(dialog=>dialog.open),false);
+});
+
+
+test('STORY focus hides both aids and restores the selected desktop tab',()=>{
+  const h=storyWorkspace();h.buttons[1].fire('click');
+  h.root.setAttribute('data-story-focus','');h.root.fire('reader:focus');
+  assert.equal(h.dialogs.some(dialog=>dialog.open),false);
+  h.root.removeAttribute('data-story-focus');h.root.fire('reader:focus');
+  assert.ok(h.dialogs[1].open);assert.equal(h.dialogs[0].open,false);
 });

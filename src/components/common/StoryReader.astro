@@ -73,6 +73,7 @@ const hasToc = headings.some(
   <main
     class="ol-story-reader-page ol-story-doc-page"
     data-reader-section={section}
+    data-story-workspace
   >
     <section class="ol-story-doc-hero">
       <div class="ol-text-breadcrumb">
@@ -223,14 +224,22 @@ const hasToc = headings.some(
             </nav>
           )}
         </article>
+        <aside class="ol-story-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
+          <div class="ol-text-panel-tabs" role="group" aria-label="보조 패널 선택">
+            <button type="button" data-reader-panel="toc" aria-pressed="false" disabled={!hasToc}>본문 목차</button>
+            <button type="button" data-reader-panel="footnotes" aria-pressed="false" disabled>각주</button>
+          </div>
+          <div data-reader-panel-slot></div>
+          <p class="ol-text-panel-empty" data-reader-panel-empty hidden>본문 목차와 각주가 없습니다.</p>
+        </aside>
       </div>
     </section>
     {hasToc && (
       <dialog id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore>
         <section class="ol-reader-toc-panel">
           <header class="ol-reader-toc-head">
-            <h2 id="ol-reader-toc-title">문서 목차</h2>
-            <button type="button" class="ol-text-tool-btn" aria-label="목차 닫기" data-reader-toc-close autofocus>
+            <h2 id="ol-reader-toc-title">본문 목차</h2>
+            <button type="button" class="ol-text-tool-btn" aria-label="본문 목차 닫기" data-reader-toc-close autofocus>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="m6 6 12 12M6 18 18 6" />
               </svg>
@@ -249,5 +258,7 @@ const hasToc = headings.some(
 
 <script>
   import { initDocumentReader } from "../../lib/client/document-reader";
+  import { initStoryWorkspace } from "../../lib/client/story-workspace";
   initDocumentReader();
+  initStoryWorkspace();
 </script>

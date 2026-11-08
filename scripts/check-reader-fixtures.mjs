@@ -24,7 +24,7 @@ class Element {
   showModal() { this.open = true; }
   close() { this.open = false; }
 }
-function setup({ saved='100', unavailable=false } = {}) {
+function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMotion=true } = {}) {
   const reader=new Element(), font=new Element(), trigger=new Element(), panel=new Element(), slider=new Element(), output=new Element(), reset=new Element();
   const drawer=new Element(), noteTrigger=new Element(), close=new Element(), reference=new Element(), note=new Element(), back=new Element();
   const secondReference=new Element(); secondReference.id='ref2'; secondReference.hash='#note';
@@ -42,7 +42,10 @@ function setup({ saved='100', unavailable=false } = {}) {
   font.children=[trigger,panel,slider,reset];
   trigger.getBoundingClientRect=()=>({bottom:120});
   const doc=new Element(); doc.body=new Element(); doc.querySelector=()=>reader; doc.getElementById=id=>({ref:reference,ref2:secondReference,note}[id] ?? null);
-  const win=new Element(); win.matchMedia=()=>({matches:true}); win.setTimeout=fn=>fn();
+  const win=new Element(); win.matchMedia=query=>({matches:query.includes('prefers-reduced-motion')?reducedMotion:true}); win.setTimeout=fn=>fn();
+  const backToTop=new Element();win.scrollY=0;win.innerWidth=1200;win.scrollTo=options=>win.lastScroll=options;
+  body.getBoundingClientRect=()=>({right:1000});
+  if(withBackToTop){reader.select['[data-reader-back-to-top]']=backToTop;reader.select['.ol-story-chapter > .ol-prose']=body;}
   const store = {getItem:()=>{if(unavailable) throw Error(); return saved;},setItem:(_k,v)=>{if(unavailable) throw Error(); saved=v;}};
   const module={exports:{}};
   const source=ts.transpileModule(fs.readFileSync('src/lib/client/reader-tools.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
@@ -52,7 +55,7 @@ function setup({ saved='100', unavailable=false } = {}) {
   vm.runInNewContext(drawerSource,{module:drawerModule,exports:drawerModule.exports,...globals});
   vm.runInNewContext(source,{module,exports:module.exports,require:name=>{assert.equal(name,'./reader-drawer');return drawerModule.exports;},...globals});
   module.exports.initReaderTools();
-  return {reader,font,trigger,panel,slider,output,reset,title,body,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference};
+  return {reader,font,trigger,panel,slider,output,reset,title,body,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference,backToTop};
 }
 test('single reading slider scales title/body together, restores saved size, resets and dismisses',()=>{
   const h=setup({saved:'125'});
@@ -160,4 +163,15 @@ test('note text returns to the last clicked repeated reference and preserves aut
   assert.ok(h.secondReference.focused);
   assert.equal(h.reference.getAttribute('data-active-footnote-ref'),undefined);
   assert.equal(h.secondReference.getAttribute('data-active-footnote-ref'),'');
+});
+
+
+test('shared back-to-top follows the prose edge, reveals on scroll and respects reduced motion',()=>{
+  const h=setup({withBackToTop:true});
+  assert.equal(h.backToTop.hidden,true);assert.equal(h.backToTop.props['--ol-reader-top-right'],'208px');
+  h.win.scrollY=300;h.win.fire('scroll');assert.equal(h.backToTop.hidden,false);
+  h.backToTop.fire('click');assert.equal(h.win.lastScroll.top,0);assert.equal(h.win.lastScroll.behavior,'instant');
+  h.win.innerWidth=1400;h.win.fire('resize');assert.equal(h.backToTop.props['--ol-reader-top-right'],'408px');
+  h.win.scrollY=0;h.win.fire('scroll');assert.equal(h.backToTop.hidden,true);
+  const smooth=setup({withBackToTop:true,reducedMotion:false});smooth.backToTop.fire('click');assert.equal(smooth.win.lastScroll.behavior,'smooth');
 });

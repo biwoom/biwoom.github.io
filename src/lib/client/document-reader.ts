@@ -12,6 +12,7 @@ export function initDocumentReader() {
     focusButton.title = focused ? "기본 모드" : "집중 모드";
     const label = focusButton.querySelector<HTMLElement>("[data-text-focus-label]");
     if (label) label.textContent = focused ? "기본" : "집중";
+    story!.dispatchEvent(new Event("reader:focus"));
   });
   const partNav = story?.querySelector<HTMLElement>(".ol-story-part-nav");
   if (story && partNav) {

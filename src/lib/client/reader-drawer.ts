@@ -30,6 +30,11 @@ export function createReaderDrawer(
   };
   const close = (afterClose?: () => void, restoreFocus = true) => {
     if (!drawer.open || closing) return;
+    // STORY keeps its desktop aid visible; programmatic tab/reset closes still work.
+    if (docked() && drawer.dataset.persistent === "true" && restoreFocus) {
+      afterClose?.();
+      return;
+    }
     closing = true;
     trigger.setAttribute("aria-expanded", "false");
     if (docked()) { finishClose(afterClose, restoreFocus); return; }

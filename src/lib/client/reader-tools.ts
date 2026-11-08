@@ -3,6 +3,35 @@ import { createReaderDrawer } from "./reader-drawer";
 export function initReaderTools() {
   const reader = document.querySelector<HTMLElement>(".ol-story-doc-page");
   if (!reader) return;
+  const backToTop = reader.querySelector<HTMLButtonElement>("[data-reader-back-to-top]");
+  if (backToTop) {
+    const prose = reader.querySelector<HTMLElement>(".ol-story-chapter > .ol-prose");
+    const updateBackToTop = () => {
+      backToTop.hidden = window.scrollY < 240;
+      if (prose) {
+        const right = Math.max(16, window.innerWidth - prose.getBoundingClientRect().right + 8);
+        backToTop.style.setProperty("--ol-reader-top-right", `${right}px`);
+      }
+    };
+    let scheduled = false;
+    const scheduleBackToTop = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => { scheduled = false; updateBackToTop(); });
+    };
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    });
+    window.addEventListener("scroll", scheduleBackToTop, { passive: true });
+    window.addEventListener("resize", scheduleBackToTop);
+    if (prose && typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(scheduleBackToTop);
+      observer.observe(prose);
+      const article = prose.closest("article");
+      if (article) observer.observe(article);
+    }
+    updateBackToTop();
+  }
   const drawer = reader.querySelector<HTMLDialogElement>("#ol-reader-footnotes");
   const trigger = reader.querySelector<HTMLButtonElement>("[data-reader-footnotes-trigger]");
   if (drawer && trigger) {

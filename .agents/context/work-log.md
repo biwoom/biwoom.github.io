@@ -4,6 +4,18 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-11-08
 
+### Shared reader back-to-top control
+
+- Add one accessible arrow button to TEXT/STORY readers, revealed after 240px scroll. It tracks the prose column’s right edge on scroll/resize/sidebar changes and returns to page top; honor reduced-motion preferences and hide it in print.
+- Validation: 63 fixtures, typecheck (zero errors; existing TextReader hint), build and built checks passed. Interaction coverage verifies reveal/hide, prose-edge positioning and smooth/reduced-motion scrolling; built markup verifies one initially hidden control per TEXT/STORY document.
+
+### STORY desktop TOC and footnote dock
+
+- Add TEXT-style tabs and a persistent 300px right aid rail at >=1360px, using the same surface background as STORY prose. Default to body TOC with notes fallback/empty messaging; STORY focus hides both sides and restores the selected aid on exit.
+- Move original dialog nodes between the rail and their modal origins; share drawer behavior/docked CSS, preserve IDs and footnote return callbacks, and close rather than automatically show a modal when shrinking the viewport.
+- Cover persistent selection, tab switching, note return callbacks, original-node restoration and scroll-lock release across responsive transitions. Focus hides both sides and restores the previously selected aid.
+- Validation: 62 fixtures, typecheck (zero errors; existing TextReader hint), build and built-page checks passed. All four STORY documents have one aid slot, matching tabs and unique IDs; compiled CSS verifies article-surface background, docking and full-width focus. No source content/registry changes. Browser visual QA unavailable.
+
 ### EBOOK modal centering fix
 
 - Explicitly fix the ebook dialog to the viewport with inset:0 and margin:auto so CSS resets cannot leave it at the top left. Retain responsive viewport gutters, max height and internal scrolling. Added compiled CSS centering contracts. Passed 59 fixtures, typecheck (zero errors; existing TextReader hint), build and built-page checks. Browser visual QA remains unavailable.

@@ -263,3 +263,26 @@ body:has(.ol-story-doc-page) .ol-header { position: relative; top: auto; }
 @media (max-width: 980px) {
   .ol-story-doc-page button[data-story-focus] { display: none; }
 }
+
+/* One shared control follows the reading column through sidebar/focus changes. */
+.ol-reader-back-to-top {
+  position: fixed;
+  right: var(--ol-reader-top-right, 24px);
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 43;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--ol-border-strong);
+  border-radius: 50%;
+  background: var(--ol-surface);
+  color: var(--ol-ink);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+  cursor: pointer;
+}
+.ol-reader-back-to-top:hover { color: var(--ol-accent); background: var(--ol-surface-2); }
+.ol-reader-back-to-top:focus-visible { outline: 2px solid var(--ol-accent); outline-offset: 3px; }
+.ol-reader-back-to-top[hidden] { display: none; }
+@media print { .ol-reader-back-to-top { display: none; } }
