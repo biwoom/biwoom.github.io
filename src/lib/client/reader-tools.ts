@@ -123,7 +123,7 @@ export function initReaderTools() {
   // Measure the existing cascade, including responsive heading/table/code sizes.
   const targets = Array.from(reader.querySelectorAll<HTMLElement>(
     ".ol-story-part-content-head :is(h1,h2), .ol-story-chapter > .ol-prose, .ol-story-chapter > .ol-prose :is(h1,h2,h3,h4,h5,h6,pre code,table,th), .ol-reader-footnotes-content, .ol-reader-footnotes-content .footnotes",
-  ));
+  )).filter(el => !el.closest('[data-reader-original]'));
   const measure = () => {
     targets.forEach(el => el.removeAttribute("data-reader-scalable"));
     const sizes = targets.map(el => getComputedStyle(el).fontSize);

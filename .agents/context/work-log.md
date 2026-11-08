@@ -4,6 +4,23 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-11-08
 
+### CSS-owned original font size
+
+- Set original passages to an 18px CSS base and apply the shared slider multiplier in CSS. Exclude original descendants from the JavaScript font-measurement targets, eliminating per-original inline base-font variables and scalable attributes.
+- Add 16px above the original wrapper to separate it from the preceding translation; the generic prose first-child reset on pre no longer eliminates this gap.
+- Validation: 67 fixtures, typecheck, build and built checks passed. Regression coverage confirms slider/resize retain the shared scale without assigning inline sizing to original elements; compiled CSS verifies the 18px base and multiplier.
+
+### Original passage background
+
+- Match original blocks to the TEXT side-panel --ol-text-soft background in both themes, with theme-aware ink. Override only these blocks' syntax-highlighter inline colors so light-mode contrast remains readable.
+- Validation: 66 fixtures, typecheck, build and built checks passed; compiled CSS verifies the targeted background/text-color overrides.
+
+### TEXT original passages
+
+- Mark four existing user-fenced Chinese passages in 대승현론 1권 with original, preserving text and the user's pending edits. Shared Markdown rendering emits a dedicated literal-text wrapper; ordinary/inline code is unchanged. Registry hash updated with identity/URL/date unchanged.
+- Add original hide/show beside the TEXT chapter button only on marked documents, default visible. Mobile <=980px shows eye/slashed-eye icons alone, with accessible labels/state and controlled passage IDs. Originals use 19px serif, 1.95 line spacing, wrapping and the shared font slider. Document the syntax in authoring manual v3.3.
+- Validation: 66 fixtures, typecheck, build and built checks passed. Tests cover literal escaping, nested code examples, ordinary/inline exclusions and toggle state/labels. Actual HTML contains four passages and one toggle, with all Chinese lines preserved; compiled CSS verifies larger type/wrapping and mobile icon-only labels. No commit or upload requested.
+
 ### Local commit summary
 
 - Bundle donation content/copy button, collapsed public revision histories, STORY chapter navigation/toolbar/scroll behavior and reader CSS cleanup into one local commit. Include the user's existing Korean display label 열린불교 and TEXT 문헌정보 link label edits. Prepared registry and continuity records accompany the source changes; generated output and personal Obsidian state remain excluded. No push requested.

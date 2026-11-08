@@ -24,6 +24,8 @@ Last updated: 2026-11-08
 
 ## Current Architecture
 
+- TEXT documents recognize explicitly fenced `original` passages via the shared remark pipeline. Their toolbar shows 원문 숨기기/원문 보기 beside the chapter list when present (eye/slashed-eye icons only at <=980px), initially visible, with accessible labels/state. Only original passages toggle; ordinary code/inline code stays unchanged. Originals use the same --ol-text-soft background as TEXT side panels, theme-aware ink, 18px serif, 1.95 line height and wrapping; shared font slider scales them. Four user-authored source fences in 대승현론 1권 now carry the marker, with text/identity/dates preserved.
+
 - Reader CSS ownership: `reader-layout.css` contains common shell/toolbar positioning; `reader-drawer.css` owns modals, docked aids and common tools; `reader-typography.css` owns shared reading typography/scaling; `text-academic.css` and `story-workspace.css` contain their respective variants. Disabled CSS declarations and retired mobile/Entity selectors were removed, preserving the user's current spacing. TEXT's initial CSS now matches the >=1360px open / smaller closed workspace defaults before JS initializes, avoiding the closed-to-open width flash.
 
 - STORY document toolbar now contains a TEXT-style left 문헌 목차 toggle and right tools on the article surface background. Part navigation scrolls away; toolbar and desktop side panels stick at viewport top, with full-height side panels. Desktop toggles the chapter sidebar independently; <=980px moves the original chapter list into a native modal, replacing the duplicated mobile dropdown. Focus preserves the prior sidebar choice; modal resize/Escape/backdrop/close restore scroll and button state.

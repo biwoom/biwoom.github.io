@@ -8,6 +8,7 @@ import ContentRights from './ContentRights.astro';
 import DocumentTags from './DocumentTags.astro';
 import { categoryUrl, type Entry, type Library } from '../../lib/library';
 import { readTextBibliography } from '../../lib/text-bibliography';
+import { hasOriginalBlocks } from '../../../scripts/lib/markdown.mjs';
 interface Props { entry: Entry; series: Library; }
 const { entry, series } = Astro.props;
 const rendered = entry.data.format ? undefined : await render(entry as CollectionEntry<'text'>);
@@ -43,7 +44,7 @@ const fields = readTextBibliography('body' in entry ? entry.body : '');
         </div>
       </aside>
       <article class="ol-story-part-content ol-text-document" data-pagefind-body>
-        <ReaderToolbar hasToc={headings.length > 0} currentUrl={entry.data.url} title={entry.data.title} currentPart={currentPart} academic />
+        <ReaderToolbar hasToc={headings.length > 0} hasOriginal={hasOriginalBlocks('body' in entry ? entry.body ?? '' : '')} currentUrl={entry.data.url} title={entry.data.title} currentPart={currentPart} academic />
         <div class="ol-text-reading-column">
           <header class="ol-story-part-content-head"><div><span class="ol-text-eyebrow">{entry.data.part} · 자료 {String(index + 1).padStart(2, '0')}</span><h1>{entry.data.title}</h1><DocumentTags tags={entry.data.tags} /></div></header>
           <!-- <div class="ol-text-document-metadata">

@@ -1,7 +1,9 @@
 import { createReaderDrawer } from "./reader-drawer";
 import { initReaderTools } from "./reader-tools";
+import { initOriginalToggle } from "./reader-original";
 
 export function initDocumentReader() {
+  initOriginalToggle();
   const story = document.querySelector<HTMLElement>(".ol-story-doc-page:not(.ol-text-reader)");
   const focusButton = story?.querySelector<HTMLButtonElement>("[data-story-focus]");
   focusButton?.addEventListener("click", () => {

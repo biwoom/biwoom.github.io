@@ -102,7 +102,7 @@ test('shared document copy tools copy the selected quote with provenance, sectio
   const copied=[];let selected='',clipboardFails=false;
   const navigator={clipboard:{async writeText(text){if(clipboardFails)throw Error('denied');copied.push(text);}}};
   const window={location:{pathname:'/text/read/example/',origin:'https://example.test'},addEventListener(){},setTimeout(){},getSelection:()=>({toString:()=>selected,anchorNode:{parentElement:{closest:()=>selected?{}:null}}})};
-  evaluate('src/lib/client/document-reader.ts',{document,window,navigator,URL},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}}}).initDocumentReader();
+  evaluate('src/lib/client/document-reader.ts',{document,window,navigator,URL},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}},'./reader-original':{initOriginalToggle(){}}}).initDocumentReader();
   const dropdown={dataset:{copyTitle:'문서 제목',copyUrl:'/text/read/example/'},querySelector:()=>new El()};
   const click=async kind=>{
     const button=new El();button.dataset.copyKind=kind;button.closest=()=>dropdown;
@@ -148,7 +148,7 @@ test('STORY focus toggles its chapter sidebar layout and restores the default mo
   root.select={'[data-story-focus]':button};button.select={'[data-text-focus-label]':label};
   document.select={'.ol-story-doc-page:not(.ol-text-reader)':root};
   const window={addEventListener(){}};
-  evaluate('src/lib/client/document-reader.ts',{document,window,Event:class{constructor(type){this.type=type;}}},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}}}).initDocumentReader();
+  evaluate('src/lib/client/document-reader.ts',{document,window,Event:class{constructor(type){this.type=type;}}},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}},'./reader-original':{initOriginalToggle(){}}}).initDocumentReader();
   assert.equal(root.hasAttribute('data-story-focus'),false);
   button.fire('click');assert.ok(root.hasAttribute('data-story-focus'));
   assert.equal(button.attrs['aria-pressed'],'true');assert.equal(label.textContent,'기본');
@@ -231,4 +231,20 @@ test('STORY chapter toggle preserves desktop choice through focus and uses one m
   h.leftBtn.fire('click');h.narrow.matches=false;h.narrow.fire('change');
   assert.equal(h.list.parentElement,h.left);assert.equal(h.mobile.open,false);assert.equal(h.body.style.overflow,'');
   assert.equal(h.leftBtn.attrs['aria-expanded'],'true');
+});
+
+
+test('TEXT original toggle hides only marked passages and keeps accessible action/state in sync',()=>{
+  const reader=new El(),button=new El(),label=new El(),blocks=[new El(),new El()],ordinary=new El();
+  reader.select={'[data-original-toggle]':button};
+  reader.lists={'.ol-story-chapter > .ol-prose [data-reader-original]':blocks};
+  button.select={'[data-original-label]':label};
+  evaluate('src/lib/client/reader-original.ts',{document:{querySelector:()=>reader}}).initOriginalToggle();
+  assert.equal(button.attrs['aria-controls'],'ol-reader-original-1 ol-reader-original-2');
+  assert.equal(blocks[0].hidden,false);
+  button.fire('click');assert.ok(blocks.every(block=>block.hidden));assert.equal(ordinary.hidden,false);
+  assert.equal(button.attrs['aria-pressed'],'true');assert.equal(button.attrs['aria-label'],'원문 보기');assert.equal(label.textContent,'원문 보기');
+  button.fire('click');assert.ok(blocks.every(block=>!block.hidden));
+  assert.equal(button.attrs['aria-pressed'],'false');assert.equal(button.title,'원문 숨기기');assert.equal(label.textContent,'원문 숨기기');
+  reader.lists={};evaluate('src/lib/client/reader-original.ts',{document:{querySelector:()=>reader}}).initOriginalToggle();assert.ok(button.hidden);
 });

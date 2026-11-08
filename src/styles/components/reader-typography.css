@@ -4,6 +4,25 @@
 .ol-story-doc-page .ol-prose h2 { font-family: var(--ol-reader-serif); font-size: 25px; line-height: 1.7; margin: 42px 0 20px; }
 .ol-story-doc-page .ol-prose h3 { font-family: var(--ol-reader-serif); font-size: 21px; line-height: 1.8; margin: 32px 0 16px; }
 .ol-story-doc-page .ol-prose h4 { font-size: 18px; line-height: 1.8; }
+/* Original passages are readable prose, not small monospace program listings. */
+.ol-text-reader [data-reader-original] { margin-top: 16px; }
+.ol-text-reader [data-reader-original] pre {
+  /* Override the syntax highlighter's inline colors only for source passages. */
+  background-color: var(--ol-text-soft) !important;
+  color: var(--ol-ink) !important;
+  font-family: var(--ol-reader-serif);
+  font-size: 18px;
+  line-height: 1.95;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.ol-text-reader [data-reader-original] pre code {
+  font-family: inherit;
+  font-size: calc(1em * var(--ol-reader-font-scale, 1));
+  line-height: inherit;
+  white-space: inherit;
+}
 /* Keep the shared size slider stronger than the base typography rules. */
 .ol-story-reader-page.ol-story-doc-page [data-reader-scalable] { font-size: calc(var(--ol-reader-base-font) * var(--ol-reader-font-scale, 1)); }
 

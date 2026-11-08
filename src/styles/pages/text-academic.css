@@ -111,6 +111,11 @@ body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px
 .ol-text-reader .ol-story-part-tools { flex-wrap: wrap; justify-content: flex-end; gap: 2px; }
 .ol-text-reader .ol-text-tool-btn { min-height: 38px; padding: 6px 8px; font-size: 12px; gap: 6px; border-radius: 4px; }
 .ol-text-reader .ol-text-tool-btn:hover { background: var(--ol-text-selected); }
+.ol-original-toggle [data-original-slash] { display: none; }
+.ol-original-toggle[aria-pressed="true"] [data-original-slash] { display: block; }
+@media (max-width: 980px) {
+  .ol-original-toggle [data-original-label] { display: none; }
+}
 .ol-text-reader :is(.ol-reader-toc-label,.ol-reader-footnotes-label) { display: inline; }
 .ol-text-reading-column { width: min(780px, calc(100% - 64px)); margin: 0 auto; padding: 38px 0 64px; }
 .ol-text-reader .ol-story-part-content-head { display: block; margin: 0; }

@@ -5,6 +5,8 @@ import { markdownRemarkPlugins, markdownTree } from './lib/markdown.mjs';
 import { textOf, firstHeading, excerpt } from './lib/content.mjs';
 import rehypeReaderFootnotes from './rehype-reader-footnotes.mjs';
 import path from 'node:path';
+import remarkContent from './remark-content.mjs';
+import { hasOriginalBlocks } from './lib/markdown.mjs';
 
 const processor = await createMarkdownProcessor({
   remarkPlugins: markdownRemarkPlugins,
@@ -54,4 +56,17 @@ test('links, headings, tables and footnotes retain CJK emphasis and metadata agr
   assert.match(note, /data-footnote-return/);
   assert.ok(!note.includes('data-footnote-backref'));
   assert.match(await html('~~취소~~와 **일반 강조**다'), /<del>취소<\/del>와 <strong>일반 강조<\/strong>다/);
+});
+
+
+test('marked TEXT originals preserve literal source text while ordinary code and inline code stay separate',async()=>{
+  const renderer=await createMarkdownProcessor({remarkPlugins:[...markdownRemarkPlugins,remarkContent],rehypePlugins:[rehypeReaderFootnotes]});
+  const source='# 번역\n\n번역문입니다.\n\n```original\n一切法 <原文> & **文字**\n第二行\n```\n\n```text\nordinary code\n```\n\n`inline original`';
+  const result=(await renderer.render(source,{fileURL:new URL(`file://${path.resolve('src/content/text/category/work/part/example.md')}`)})).code;
+  assert.equal((result.match(/data-reader-original/g)??[]).length,1);
+  assert.match(result,/一切法 (?:&lt;|&#x3C;)原文(?:&gt;|>) (?:&#x26;|&amp;) \*\*文字\*\*/);
+  assert.ok(result.includes('第二行'));assert.ok(result.includes('ordinary code'));assert.ok(result.includes('<code>inline original</code>'));
+  assert.equal(hasOriginalBlocks(source),true);
+  assert.equal(hasOriginalBlocks('`original`\n\n```text\noriginal\n```'),false);
+  assert.equal(hasOriginalBlocks('````text\n```original\n例\n```\n````'),false);
 });

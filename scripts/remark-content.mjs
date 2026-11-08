@@ -2,6 +2,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { visit } from "unist-util-visit";
 import { readRegistry, referenceTarget, textOf } from "./lib/content.mjs";
+import { isOriginalBlock } from "./lib/markdown.mjs";
 export function resolveReference(source, url, registry = readRegistry(), root = process.cwd()) {
   if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(url) && !url.startsWith("content-asset:")) return url;
   const [raw, fragment] = url.split("#");
@@ -62,6 +63,17 @@ export default function remarkContent() {
     );
     if (first >= 0) tree.children.splice(first, 1);
     visit(tree, (node) => {
+      if (source.startsWith('text/') && isOriginalBlock(node)) {
+        // A dedicated wrapper survives code highlighting. HAST text nodes keep
+        // markup-like source characters literal, without HTML interpolation.
+        node.type = 'original';
+        node.data = {
+          hName: 'div', hProperties: { 'data-reader-original': '' },
+          hChildren: [{ type: 'element', tagName: 'pre', properties: {}, children: [
+            { type: 'element', tagName: 'code', properties: {}, children: [{ type: 'text', value: node.value + '\n' }] },
+          ] }],
+        };
+      }
       if (
         (node.type === "link" ||
           node.type === "image" ||

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import assert from "node:assert/strict";
+import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import {
   readRegistry,
@@ -60,6 +61,12 @@ rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-size:17px/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /line-height:1.95/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-family:var\(--ol-reader-serif\)/);
 rule(".ol-story-reader-page.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
+rule(".ol-text-reader [data-reader-original] pre", /font-size:18px/);
+rule(".ol-text-reader [data-reader-original] pre code", /font-size:calc\(1em\s*\*\s*var\(--ol-reader-font-scale,1\)\)/);
+rule(".ol-text-reader [data-reader-original] pre", /white-space:pre-wrap/);
+rule(".ol-text-reader [data-reader-original] pre", /background-color:var\(--ol-text-soft\)!important/);
+rule(".ol-text-reader [data-reader-original] pre", /color:var\(--ol-ink\)!important/);
+rule(".ol-original-toggle [data-original-label]", /display:none/);
 rule(".ol-ebook-dialog", /position:fixed/);
 rule(".ol-ebook-dialog", /inset:0/);
 rule(".ol-ebook-dialog", /margin:auto/);
@@ -145,7 +152,7 @@ for (const [source, record] of Object.entries(registry.files)) {
     : ["ol-blog-detail-header", "ol-blog-detail-title", "ol-blog-detail-meta"];
   classes(html, [...expected, "ol-prose"], record.url);
   if (collection === "story") {
-    assert.match(html, /<div class="ol-reader-toolbar">\s*<button[^>]*data-story-left-toggle/);
+    assert.match(html, /<div class="ol-reader-toolbar">\s*<div class="ol-reader-navigation-tools">\s*<button[^>]*data-story-left-toggle/);
     assert.equal((html.match(/data-story-list-content/g) ?? []).length, 1);
     assert.match(html, /id="story-list-dialog"/);
     assert.ok(!html.includes('data-story-mobile-chapters'), `${record.url}: one responsive chapter list`);
@@ -156,6 +163,13 @@ for (const [source, record] of Object.entries(registry.files)) {
     assert.match(html, /data-reader-panel="footnotes"/);
   }
   if (collection === "text") {
+    const original = hasOriginalBlocks(fs.readFileSync(file, 'utf8'));
+    assert.equal(html.includes('data-original-toggle'), original, `${record.url}: original control only for marked documents`);
+    assert.equal(html.includes('data-reader-original'), original, `${record.url}: original source wrapper rendered`);
+    if (original) {
+      assert.match(html, /data-text-left-toggle[\s\S]*data-original-toggle[\s\S]*class="ol-story-part-tools"/);
+      assert.match(html, /data-original-toggle[^>]*aria-pressed="false"[^>]*aria-label="원문 숨기기"/);
+    }
     classes(html, ["ol-text-academic", "ol-text-workspace-grid", "ol-text-reader-rail"], record.url);
     assert.match(html, /<main[^>]*data-text-workspace/);
     assert.ok(!/<main[^>]*data-text-left-hidden/.test(html), `${record.url}: wide initial layout is rendered without a closed-panel flash`);

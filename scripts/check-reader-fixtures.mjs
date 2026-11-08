@@ -35,9 +35,10 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   note.getBoundingClientRect=()=>({top:900}); note.offsetHeight=80;
   drawer.select={'[data-reader-footnotes-close]':close,'.ol-reader-footnotes-content':scroller};
   drawer.lists={'[data-footnote-return]':[back]};
-  const title=new Element(), body=new Element(); title.base='34px'; body.base='16px';
+  const title=new Element(), body=new Element(), original=new Element(); title.base='34px'; body.base='16px';
+  title.closest=()=>null;body.closest=()=>null;original.closest=()=>original;
   reader.select={'#ol-reader-footnotes':drawer,'[data-reader-footnotes-trigger]':noteTrigger,'[data-reader-font]':font};
-  reader.querySelectorAll = s => s === 'a[data-footnote-ref]' ? [reference,secondReference] : s === '[data-active-footnote-ref]' ? [reference,secondReference].filter(el=>el.getAttribute('data-active-footnote-ref') !== undefined) : [title,body];
+  reader.querySelectorAll = s => s === 'a[data-footnote-ref]' ? [reference,secondReference] : s === '[data-active-footnote-ref]' ? [reference,secondReference].filter(el=>el.getAttribute('data-active-footnote-ref') !== undefined) : [title,body,original];
   font.select={'[data-reader-font-trigger]':trigger,'.ol-reader-font-panel':panel,'[data-reader-font-size]':slider,'[data-reader-font-value]':output,'[data-reader-font-reset]':reset};
   font.children=[trigger,panel,slider,reset];
   trigger.getBoundingClientRect=()=>({bottom:120});
@@ -55,7 +56,7 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   vm.runInNewContext(drawerSource,{module:drawerModule,exports:drawerModule.exports,...globals});
   vm.runInNewContext(source,{module,exports:module.exports,require:name=>{assert.equal(name,'./reader-drawer');return drawerModule.exports;},...globals});
   module.exports.initReaderTools();
-  return {reader,font,trigger,panel,slider,output,reset,title,body,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference,backToTop};
+  return {reader,font,trigger,panel,slider,output,reset,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference,backToTop};
 }
 test('single reading slider scales title/body together, restores saved size, resets and dismisses',()=>{
   const h=setup({saved:'125'});
@@ -174,4 +175,16 @@ test('shared back-to-top follows the prose edge, reveals on scroll and respects 
   h.win.innerWidth=1400;h.win.fire('resize');assert.equal(h.backToTop.props['--ol-reader-top-right'],'408px');
   h.win.scrollY=0;h.win.fire('scroll');assert.equal(h.backToTop.hidden,true);
   const smooth=setup({withBackToTop:true,reducedMotion:false});smooth.backToTop.fire('click');assert.equal(smooth.win.lastScroll.behavior,'smooth');
+});
+
+
+test('original passage sizing remains CSS-owned while the shared slider changes its scale',()=>{
+  const h=setup({saved:'125'});
+  assert.equal(h.reader.props['--ol-reader-font-scale'],'1.25');
+  assert.equal(h.original.props['--ol-reader-base-font'],undefined);
+  assert.equal(h.original.getAttribute('data-reader-scalable'),undefined);
+  h.slider.value='150';h.slider.fire('input');h.win.fire('resize');
+  assert.equal(h.reader.props['--ol-reader-font-scale'],'1.5');
+  assert.equal(h.original.props['--ol-reader-base-font'],undefined);
+  assert.equal(h.original.getAttribute('data-reader-scalable'),undefined);
 });

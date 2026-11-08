@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-08 — TEXT original passages
+
+- Original font sizing belongs entirely to CSS: 18px base on the pre element and a CSS multiplier for the shared reader scale. Exclude original descendants from JavaScript's per-element font measurement/inline base-size assignment.
+- Use the explicit `original` fenced-code language marker to distinguish source passages from ordinary code. Transform it into an escaped-text wrapper in the existing shared remark-content pipeline; do not infer language from Han characters. TEXT reader buttons toggle marked body passages only and use icons alone on mobile. Default visible, without a persisted hidden preference; style source text at 18px serif with wrapping and shared font scaling.
+
 ## 2026-11-08 — Reader CSS cleanup
 
 - Keep the author's disabled declarations removed; do not revive the old article padding or decorative borders. Give shared reader layout, drawer controls and typography separate CSS files, with TEXT/STORY variants after the shared rules. Retired mobile dropdown/Entity selectors have no public markup and are removed.
