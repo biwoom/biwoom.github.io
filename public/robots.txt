@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://biwoom.github.io/sitemap-index.xml
+Sitemap: https://borido.org/sitemap-index.xml

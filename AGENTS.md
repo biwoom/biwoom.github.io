@@ -2,7 +2,7 @@
 
 ## Project
 
-BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
+BORIDO (보리도) is a static Astro site built on the OL core at `https://borido.org/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
 
 ## Current Architecture
 
@@ -56,6 +56,10 @@ BORIDO (보리도) is a static Astro site built on the OL core at `https://biwoo
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-08
+
+- Production is `https://borido.org/`; retain the existing repository, root routes and Actions deployment. DNS/HTTPS remain external configuration.
 
 ### 2026-11-07
 

@@ -2,10 +2,12 @@
 
 불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
 
-- 사이트: https://biwoom.github.io/
+- 사이트: https://borido.org/
 - 저장소: `biwoom/biwoom.github.io`
 - Node.js: 22.12 이상
 - 배포: GitHub Actions → GitHub Pages 루트
+
+공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 현재 Actions 배포는 CNAME 파일이 필요하지 않으며, 도메인 연결·DNS·HTTPS는 GitHub Pages와 DNS 제공자에서 관리합니다.
 
 ## 집필
 

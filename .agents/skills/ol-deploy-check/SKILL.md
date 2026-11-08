@@ -1,6 +1,6 @@
 ---
 name: ol-deploy-check
-description: Verify BORIDO (OL 코어) build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, root/base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing 404s and broken links on https://biwoom.github.io/.
+description: Verify BORIDO (OL 코어) build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, root/base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing 404s and broken links on https://borido.org/.
 ---
 
 # OL Deploy Check
@@ -15,9 +15,11 @@ git status --short --branch
 ```
 
 2. Confirm root GitHub Pages configuration:
-   - `astro.config.mjs` should set `site: SITE_URL`, imported from `site-config.mjs` (https://biwoom.github.io).
+   - `astro.config.mjs` should set `site: SITE_URL`, imported from `site-config.mjs` (https://borido.org).
    - `astro.config.mjs` should not set `base`.
-   - `public/robots.txt` should point to `https://biwoom.github.io/sitemap-index.xml`.
+   - Production is `https://borido.org`; repository remains `biwoom/biwoom.github.io`. Custom GitHub Actions deployment does not require or use a CNAME file.
+   - Verify DNS and HTTPS separately from local build output; a local URL change cannot fix DNS or certificate issuance.
+   - `public/robots.txt` should point to `https://borido.org/sitemap-index.xml`.
    - `src/pages/rss.xml.ts` should not hardcode `/ol-home` or `/biwoom`.
 
 3. Search for stale deployment paths:
@@ -46,16 +48,16 @@ sed -n '1,80p' dist/rss.xml
 6. If checking the live site, use HTTP headers first:
 
 ```sh
-curl -I -L https://biwoom.github.io/
-curl -I -L https://biwoom.github.io/sitemap-index.xml
+curl -I -L https://borido.org/
+curl -I -L https://borido.org/sitemap-index.xml
 ```
 
 ## Expected Results
 
 - Build succeeds.
 - Generated routes are root-relative, for example `/blog/`, not `/biwoom/blog/`.
-- Sitemap URLs start with `https://biwoom.github.io/`.
-- RSS item links start with `https://biwoom.github.io/`.
+- Sitemap URLs start with `https://borido.org/`.
+- RSS item links start with `https://borido.org/`.
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.

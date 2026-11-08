@@ -1,17 +1,17 @@
 # Current State
 
-Last updated: 2026-11-07
+Last updated: 2026-11-08
 
 ## Brand
 
 - Public brand: BORIDO (보리도). OL is the source-code core name.
 - Official logo originals: public/brand/borido-mark-monochrome.png (004) and borido-mark-gold.png (006). Header/footer use monochrome inside dark rounded boxes; favicon/apple/sharing assets use monochrome. Gold remains an available source asset. Rebuild derived icons with npm run brand:assets.
 - docs/ legacy plans carry historical-status notices; current structure remains TEXT/STORY/BLOG.
-- Future domain: `borido.org`; no domain migration has been performed.
+- Production domain: `https://borido.org/`. User configured the Pages custom domain; local URL metadata is updated. Deployment of these local changes is not performed. On 2026-11-08 DNS resolved the apex to 115.68.216.239 and HTTPS failed hostname verification; DNS/Pages certificate completion remains external follow-up.
 
 ## Project
 
-- BORIDO (보리도), powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
+- BORIDO (보리도), powered by the OL core: `https://borido.org/`, repository `biwoom/biwoom.github.io`.
 - Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
 - Refactor commit `f70b680` was pushed to `origin/main` on 2026-10-30. Production deployment completion has not been verified.
 

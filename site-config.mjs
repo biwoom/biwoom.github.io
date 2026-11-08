@@ -1,7 +1,7 @@
 export function normalizeBaseUrl(value = "") {
   return String(value).trim().replace(/\/+$/, "");
 }
-export const SITE_URL = "https://biwoom.github.io";
+export const SITE_URL = "https://borido.org";
 export const BRAND = {
   name: "BORIDO",
   nameKo: "보리도",

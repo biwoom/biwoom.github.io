@@ -2,6 +2,15 @@
 
 This file records concise date-based work summaries for continuity across Codex sessions.
 
+## 2026-11-08
+
+### Custom Domain Local Configuration
+
+- Set common SITE_URL and robots sitemap to https://borido.org; normal canonical/OG/RSS/sitemap inherit it, and legacy redirect canonicals now use absolute production targets. Preserve root routes/no base and existing Actions workflow; CNAME is unnecessary for custom Actions deployment per GitHub documentation.
+- Updated active operating/brand/domain guidance and current address in the BORIDO introduction post; retain historical URLs and the user-modified planning file. Prepared registry changes only two content hashes; all identities, dates, URLs and other metadata are preserved.
+- Added built-domain verification to check:built. Passed 53 fixtures, zero-diagnostic typecheck, build, generated links (63 pages/21 redirects), UI contracts and metadata/feed/sitemap/robots domain checks. Registry preparation is stable; check:registry fails only its HEAD comparison because these authorized local content/hash changes remain uncommitted. No commit or upload requested/performed.
+- External observation: borido.org A returned 115.68.216.239, www CNAME points to biwoom.github.io, old Pages host redirects to http://borido.org, and apex/www HTTPS fail hostname verification. DNS/Pages HTTPS completion is external follow-up; no DNS or GitHub settings changed.
+
 ## 2026-11-07
 
 ### Academic TEXT Work and Document UI

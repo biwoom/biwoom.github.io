@@ -18,7 +18,7 @@
     "prepare:content": "node scripts/prepare-content.mjs",
     "content:move": "node scripts/content-move.mjs",
     "typecheck": "astro check",
-    "check:built": "node scripts/check-built-links.mjs && node scripts/check-ui-contracts.mjs",
+    "check:built": "node scripts/check-built-links.mjs && node scripts/check-ui-contracts.mjs && node scripts/check-built-domain.mjs",
     "check:registry": "node scripts/check-registry.mjs",
     "check:live": "node scripts/check-content-live.mjs",
     "brand:assets": "node scripts/build-brand-assets.mjs"

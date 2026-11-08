@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-08 — Custom Domain
+
+- Use `https://borido.org` as the common production SITE_URL. Preserve repository `biwoom/biwoom.github.io`, root-relative routes, registry identities/dates and historical deployment records. Keep Astro without base.
+- Existing custom Actions deployment does not require a CNAME file. DNS and GitHub Pages HTTPS provisioning are separate from local metadata/build validation.
+
 ## 2026-11-07 — Academic TEXT Workspaces
 
 - User explicitly supersedes shared STORY presentation for TEXT work/document pages. Use separate academic templates while sharing toolbar/body/parser/footnote/size/copy/dialog behavior. Keep ordinary material links, stable URLs, one font slider and click-note-text return; no extra backreference arrows.

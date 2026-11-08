@@ -1,5 +1,6 @@
 ---
 import { url } from '../lib/url';
+import { SITE_URL } from '../lib/site-config';
 
 interface Props {
   to: string;
@@ -7,6 +8,7 @@ interface Props {
 
 const { to } = Astro.props;
 const target = url(to);
+const canonical = new URL(target, Astro.site ?? SITE_URL).href;
 ---
 
 <!DOCTYPE html>
@@ -15,7 +17,7 @@ const target = url(to);
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex" />
   <meta http-equiv="refresh" content={`0;url=${target}`} />
-  <link rel="canonical" href={target} />
+  <link rel="canonical" href={canonical} />
   <title>Redirecting...</title>
 </head>
 <body>
