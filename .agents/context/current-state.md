@@ -7,7 +7,7 @@ Last updated: 2026-11-09
 - Public brand: Biwoom - 비움 (English: Biwoom; Korean: 비움). OL remains the source-code core name. Name/description live in site-config.mjs.
 - Existing symbol shapes are retained under public/brand/biwoom-mark-monochrome.png and biwoom-mark-gold.png; derived icons and the Biwoom sharing image use npm run brand:assets.
 - Production target: `https://biwoom.github.io/`, with root routes and no Astro base. Local source/metadata/docs now target this URL; no push, hosting setting change or live deployment verification is included in this change. GitHub Pages Custom domain must be empty before using the default domain.
-- Previous borido.org DNS/TLS investigation is historical context, not a current migration goal.
+- Previous borido.org DNS/TLS investigation is historical evidence in `.agents/references/borido-https-investigation-2026-11-08.md`, not a current migration goal.
 - Historical BLOG articles and the completed BORIDO ebook sample retain authored titles/assets with current-brand notices. Public brand/support pages and the active manifesto describe Biwoom - 비움.
 
 ## Project

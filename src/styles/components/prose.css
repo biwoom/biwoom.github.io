@@ -73,7 +73,7 @@
   color: var(--ol-ink-2);
   font-style: italic;
 }
-.ol-prose blockquote p { margin: 0.5em 0; }
+/* .ol-prose blockquote p { margin: 0.5em 0; } */
 .ol-prose blockquote p:first-child { margin-top: 0; }
 
 /* ── Code ── */

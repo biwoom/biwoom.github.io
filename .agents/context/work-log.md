@@ -4,6 +4,13 @@ This file records concise date-based work summaries for continuity across Codex 
 
 ## 2026-11-08
 
+### HTTPS incident re-investigation
+
+- Rechecked parent delegation/DS, both authoritative servers over UDP/TCP, three public resolvers, Google/Cloudflare DoH, Pages settings/health, successful deployed revision and HTTP/TLS on all four Pages IPv4 addresses. Saved a dated investigation with evidence, uncertainty, reproduction commands and provider inquiry drafts.
+- Current A/CNAME responses and HTTP routing are correct; default GitHub TLS certificate remains. Completed Pages health still reports a non-Pages IP and HTTPS ineligibility while the certificate is `new`. Treat stale DNS/check state as the leading explanation, not proven internal behavior; a 202/empty health response is pending, not success.
+- Distinguish the earlier recorded non-Pages A address, temporary REFUSED/NODATA during DNS changes, current missing apex NS records on both authoritative servers, and the unresolved GitHub/external-DNS disagreement. Do not attribute the entire incident to ns1 propagation.
+- Confirm custom Actions artifact deployment ignores CNAME files. A workflow-generated dist/CNAME can preserve branch-based publishing configuration but cannot fix this repository's certificate issue. No workflow, content, DNS or Pages setting changes; no commit/push. Internal-document validation: diff review/whitespace check; local build not rerun for diagnostic documentation.
+
 ### CSS-owned original font size
 
 - Set original passages to an 18px CSS base and apply the shared slider multiplier in CSS. Exclude original descendants from the JavaScript font-measurement targets, eliminating per-original inline base-font variables and scalable attributes.
