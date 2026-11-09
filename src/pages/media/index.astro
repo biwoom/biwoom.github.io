@@ -12,6 +12,7 @@ const categories = getMediaCategories(images);
         <span class="ol-section-label">Biwoom MEDIA</span>
         <h1 class="ol-kr">미디어</h1>
         <p class="ol-kr">이미지와 시각 자료를 모아 봅니다. 이미지를 선택하면 크게 볼 수 있습니다.</p>
+        <p class="ol-kr ol-media-license">이미지는 별도 표기가 없는 한 CC0로 제공합니다. 다른 라이선스가 적용되는 경우 이미지 정보에 별도로 안내합니다.</p>
       </div>
     </section>
     <section class="ol-media-content">
@@ -27,8 +28,9 @@ const categories = getMediaCategories(images);
         <p class="ol-media-count" data-media-count role="status" aria-live="polite">{images.length}개 이미지</p>
         <div class="ol-media-masonry">
           {images.map((image) => (
+            <>
             <button type="button" class="ol-media-card"
-              data-media-item data-media-category={image.categoryKey}
+              data-media-item data-media-source={image.source} data-media-category={image.categoryKey}
               data-media-label={image.category} data-media-src={url(image.url)}
               data-media-title={image.title} data-media-filename={image.fileName}
               data-media-width={image.width} data-media-height={image.height}
@@ -39,6 +41,8 @@ const categories = getMediaCategories(images);
                 <strong>{image.title}</strong><span>{image.category}</span>
               </span>
             </button>
+            {image.informationHtml && <template data-media-info={image.source}><div set:html={image.informationHtml} /></template>}
+            </>
           ))}
         </div>
         <p class="ol-media-empty" data-media-empty hidden={images.length > 0}>표시할 이미지가 없습니다.</p>
@@ -58,9 +62,12 @@ const categories = getMediaCategories(images);
           </button>
         </div>
       </header>
-      <div class="ol-media-dialog-view" data-media-view tabindex="0" role="region" aria-label="확대 이미지">
-        <p class="ol-media-load-status" data-media-load-status role="status">이미지를 불러오는 중입니다.</p>
-        <img class="ol-media-full-image" data-media-full-image alt="" hidden />
+      <div class="ol-media-dialog-body">
+        <div class="ol-media-dialog-view" data-media-view tabindex="0" role="region" aria-label="확대 이미지">
+          <p class="ol-media-load-status" data-media-load-status role="status">이미지를 불러오는 중입니다.</p>
+          <img class="ol-media-full-image" data-media-full-image alt="" hidden />
+        </div>
+        <aside class="ol-media-information" data-media-information aria-label="이미지 정보" tabindex="0" hidden></aside>
       </div>
     </dialog>
   </main>

@@ -6,30 +6,40 @@ import { assetUrl } from '../remark-content.mjs';
 export const ebookLicense = { label: 'CC0 1.0', url: 'https://creativecommons.org/publicdomain/zero/1.0/' };
 const imagePattern = /\.(png|jpe?g|webp|avif)$/i;
 const labels = ['저자', '원저자', '번역자', '편집자', '발행일', '판본', '언어'];
-/** Read completed ebook packages, without creating individual document routes or registry entries. */
-export function getEbooks(root = process.cwd()) {
+function publicDirectories(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && !/^[._]/.test(entry.name) && entry.name !== 'assets')
+    .sort((a, b) => compareNames(a.name, b.name))
+    .filter(entry => {
+      const intro = path.join(directory, entry.name, 'index.md');
+      return !fs.existsSync(intro) || parse(fs.readFileSync(intro, 'utf8')).data.published !== false;
+    });
+}
+/** Read top-level categories and completed packages, without individual routes or registry entries. */
+export function getEbookLibrary(root = process.cwd()) {
   const base = path.join(root, 'src/content/ebook');
-  if (!fs.existsSync(base)) return [];
+  const empty = { books: [], categories: [] };
+  if (!fs.existsSync(base)) return empty;
   const registry = readRegistry(root);
   const parent = path.join(base, 'index.md');
-  if (fs.existsSync(parent) && parse(fs.readFileSync(parent, 'utf8')).data.published === false) return [];
-  return fs.readdirSync(base, { withFileTypes: true })
-    .filter(entry => entry.isDirectory() && !/^[._]/.test(entry.name) && !['assets'].includes(entry.name))
-    .sort((a, b) => compareNames(a.name, b.name)).flatMap(entry => {
-      const directory = path.join(base, entry.name);
-      const source = `ebook/${entry.name}/index.md`;
+  if (fs.existsSync(parent) && parse(fs.readFileSync(parent, 'utf8')).data.published === false) return empty;
+  const categories = publicDirectories(base).map(entry => ({ key: entry.name, label: nameInfo(entry.name).label, count: 0 }));
+  const books = categories.flatMap(category => publicDirectories(path.join(base, category.key)).flatMap(entry => {
+      const packagePath = `ebook/${category.key}/${entry.name}`;
+      const directory = path.join(root, 'src/content', packagePath);
+      const source = `${packagePath}/index.md`;
       const intro = path.join(directory, 'index.md');
       const { data, body } = fs.existsSync(intro) ? parse(fs.readFileSync(intro, 'utf8')) : { data: {}, body: '' };
       if (data.published === false) return [];
       const files = fs.readdirSync(directory, { withFileTypes: true })
         .filter(file => file.isFile() && !/^[._]/.test(file.name)).map(file => file.name).sort(compareNames);
       const downloads = files.filter(name => /\.(epub|pdf)$/i.test(name)).map(name => ({
-        name, source: `ebook/${entry.name}/${name}`, url: assetUrl(`ebook/${entry.name}/${name}`),
+        name, source: `${packagePath}/${name}`, url: assetUrl(`${packagePath}/${name}`),
         format: path.extname(name).slice(1).toUpperCase(), bytes: fs.statSync(path.join(directory, name)).size,
       })).filter(file => file.bytes > 0).sort((a, b) => a.format.localeCompare(b.format) || compareNames(a.name, b.name));
       if (!downloads.length) return [];
       const coverName = files.find(name => /^(cover|표지)\.(png|jpe?g|webp|avif)$/i.test(name)) ?? files.find(name => imagePattern.test(name));
-      const coverSource = coverName ? `ebook/${entry.name}/${coverName}` : '';
+      const coverSource = coverName ? `${packagePath}/${coverName}` : '';
       const tree = markdownTree(body);
       const heading = tree.children.find(node => node.type === 'heading' && node.depth === 1);
       const title = data.title || (heading ? textOf(heading).trim() : '') || nameInfo(entry.name).label;
@@ -52,10 +62,15 @@ export function getEbooks(root = process.cwd()) {
         node.children?.forEach(collect);
       };
       tree.children.filter(node => node.type !== 'code').forEach(collect);
-      return [{ id: shortId(`ebook/${entry.name}`), title, bibliography: bibliography.sort((a, b) => labels.indexOf(a.label) - labels.indexOf(b.label)),
+      return [{ id: shortId(packagePath), category: category.label, categoryKey: category.key, title, bibliography: bibliography.sort((a, b) => labels.indexOf(a.label) - labels.indexOf(b.label)),
         description: data.description || description.join('\n'), originals: [...new Map(originals.map(item => [item.url, item])).values()],
         coverSource, coverUrl: coverSource ? assetUrl(coverSource) : '', downloads, license: ebookLicense }];
-    });
+    }));
+  for (const category of categories) category.count = books.filter(book => book.categoryKey === category.key).length;
+  return { books, categories };
+}
+export function getEbooks(root = process.cwd()) {
+  return getEbookLibrary(root).books;
 }
 export function formatEbookSize(bytes) {
   return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;

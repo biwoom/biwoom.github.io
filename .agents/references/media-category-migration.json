@@ -1,0 +1,88 @@
+{
+  "date": "2026-11-09",
+  "description": "Classify the 15 existing shared images into top-level MEDIA categories; preserve original image bytes. Earlier shared-media-migration.json remains historical.",
+  "assets": [
+    {
+      "source": "media/Bodhi-Tree-Indramang.PNG",
+      "target": "media/002.문양/Bodhi-Tree-Indramang.PNG",
+      "sha256": "d2a5cec8a57559895f75f346b71b33bdf1d43612b2868104992d0fdc732d4b9a"
+    },
+    {
+      "source": "media/Diversity-Indramang-1.PNG",
+      "target": "media/002.문양/Diversity-Indramang-1.PNG",
+      "sha256": "0935df48862be4e3677fb3380e31ad20f33675519d5481bad673153e9f408b59"
+    },
+    {
+      "source": "media/Life-Peace-Indramang.PNG",
+      "target": "media/002.문양/Life-Peace-Indramang.PNG",
+      "sha256": "503e1416db6975f164c164dd3ed7b725d5b02d737a327116be040aef37b7e903"
+    },
+    {
+      "source": "media/Pictograph-Indramang-1.PNG",
+      "target": "media/002.문양/Pictograph-Indramang-1.PNG",
+      "sha256": "b0713913903ebcdc5e6728222347b258b4ce7132a9455a9286b6c0251cfe7078"
+    },
+    {
+      "source": "media/Pictograph-Indramang-2.PNG",
+      "target": "media/002.문양/Pictograph-Indramang-2.PNG",
+      "sha256": "77aaade02429334582eda38dd4d3923f664252004e0488a3a9da06e515db1d2e"
+    },
+    {
+      "source": "media/buddhist-worldview-preview1.png",
+      "target": "media/001.인포그래픽/buddhist-worldview-preview1.png",
+      "sha256": "6970d39bc76d0188d327d283f4f38b93716dfa0ca0f53e7133f13ca462681855"
+    },
+    {
+      "source": "media/buddhist-worldview-thumb.jpg",
+      "target": "media/001.인포그래픽/buddhist-worldview-thumb.jpg",
+      "sha256": "9bb3141521e3e275b97c340e3a414837feb084a5d9e34342208e01100181a18a"
+    },
+    {
+      "source": "media/lamrim-preview1.jpg",
+      "target": "media/001.인포그래픽/lamrim-preview1.jpg",
+      "sha256": "1a02c83cf51e8eb1ff726492c0fb40cb0f0d416eb1c68accba7ffc234328f120"
+    },
+    {
+      "source": "media/lamrim-preview2.jpg",
+      "target": "media/001.인포그래픽/lamrim-preview2.jpg",
+      "sha256": "811827f8c52c17338aa5b21d9cfd7d0bd6f8d83c5002e7c510c19f244280f761"
+    },
+    {
+      "source": "media/lamrim-thumb.jpg",
+      "target": "media/001.인포그래픽/lamrim-thumb.jpg",
+      "sha256": "0f3561c356dfda0a6fc66a04cdbfcdba29c4cd94d6eb5499b84455abb5c3bb62"
+    },
+    {
+      "source": "media/six-steps-preview1.jpg",
+      "target": "media/001.인포그래픽/six-steps-preview1.jpg",
+      "sha256": "060074e2adabbcb2ee58b0ceaa9a21f1e019e8d71855236233da56ae8ffd7cbd"
+    },
+    {
+      "source": "media/six-steps-preview2.jpg",
+      "target": "media/001.인포그래픽/six-steps-preview2.jpg",
+      "sha256": "2def2a964590ee67a7711d7eae99ddf808347feda9fde88df992707148306bd6"
+    },
+    {
+      "source": "media/six-steps-thumb.jpg",
+      "target": "media/001.인포그래픽/six-steps-thumb.jpg",
+      "sha256": "22d257505c3dc3b386c8ad18360547a59d226df8c2ef52afcc1e6ab9418cea74"
+    },
+    {
+      "source": "media/sumedha-sumitta.png",
+      "target": "media/003.일러스트/sumedha-sumitta.png",
+      "sha256": "09ca39b1f94dfc6ee56b0533a67bb8d9396d9b8023a69b62ecc4e579598aaa54"
+    },
+    {
+      "source": "media/sumitta-profile.jpg",
+      "target": "media/003.일러스트/sumitta-profile.jpg",
+      "sha256": "99fe7ada717791cc430f1809c91ee31d67f2d4ca580819fdabfe5d0501bb7dde"
+    }
+  ],
+  "updatedDocuments": [
+    "blog/002.수행/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+    "blog/003.인포그래픽/buddhist-worldview-two-perspectives/index.md",
+    "blog/003.인포그래픽/lamrim-infographic-making/index.md",
+    "blog/003.인포그래픽/body-mind-transformation-infographic/index.md",
+    "blog/004.디자인/indramang-life-peace-patterns/index.md"
+  ]
+}

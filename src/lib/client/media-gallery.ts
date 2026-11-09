@@ -4,6 +4,8 @@ export function initMediaGallery(root: Document = document): void {
   if (!gallery || !dialog || gallery.dataset.mediaReady === "true") return;
   gallery.dataset.mediaReady = "true";
   const items = [...gallery.querySelectorAll<HTMLButtonElement>("[data-media-item]")];
+  const details = new Map([...gallery.querySelectorAll<HTMLTemplateElement>("[data-media-info]")]
+    .map(template => [template.dataset.mediaInfo, template]));
   const filters = [...gallery.querySelectorAll<HTMLButtonElement>("[data-media-filter]")];
   const count = gallery.querySelector<HTMLElement>("[data-media-count]")!;
   const empty = gallery.querySelector<HTMLElement>("[data-media-empty]")!;
@@ -11,6 +13,7 @@ export function initMediaGallery(root: Document = document): void {
   const title = dialog.querySelector<HTMLElement>("#ol-media-dialog-title")!;
   const category = dialog.querySelector<HTMLElement>("[data-media-dialog-category]")!;
   const filename = dialog.querySelector<HTMLElement>("[data-media-dialog-filename]")!;
+  const information = dialog.querySelector<HTMLElement>("[data-media-information]")!;
   const status = dialog.querySelector<HTMLElement>("[data-media-load-status]")!;
   const view = dialog.querySelector<HTMLElement>("[data-media-view]")!;
   const close = dialog.querySelector<HTMLButtonElement>("[data-media-close]")!;
@@ -47,6 +50,11 @@ export function initMediaGallery(root: Document = document): void {
     title.textContent = item.dataset.mediaTitle ?? "이미지";
     category.textContent = item.dataset.mediaLabel ?? "";
     filename.textContent = item.dataset.mediaFilename ?? "";
+    const detail = details.get(item.dataset.mediaSource);
+    information.replaceChildren(...(detail ? [detail.content.cloneNode(true)] : []));
+    information.hidden = !detail;
+    information.scrollTop = 0;
+    dialog.classList.toggle("has-information", Boolean(detail));
     setZoom(false);
     image.hidden = true;
     image.alt = item.dataset.mediaTitle ?? "이미지";
@@ -87,6 +95,9 @@ export function initMediaGallery(root: Document = document): void {
     image.removeAttribute("src");
     image.hidden = true;
     setZoom(false);
+    information.replaceChildren();
+    information.hidden = true;
+    dialog.classList.toggle("has-information", false);
     opener?.focus({ preventScroll: true });
   });
 }

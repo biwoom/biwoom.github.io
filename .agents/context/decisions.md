@@ -1,5 +1,25 @@
 # Decisions
 
+## 2026-11-09 — Remove MEDIA thumbnail sources
+
+- Remove the three explicit *-thumb.jpg source assets (buddhist-worldview, lamrim, six-steps) and their index.md entries. Keep the 12 remaining originals and automatically generated gallery previews. Current category counts are 5/5/2; the earlier 15-image migration mapping remains historical and deleted thumbnails must not be restored.
+
+## 2026-11-09 — MEDIA category information indexes
+
+- Per user instruction, MEDIA images default to CC0 unless separately stated. Display the policy below the gallery introduction and put other licenses in the relevant image information; preserve existing rights exceptions.
+
+- Allow one optional category index.md to describe multiple images using H2 image-link headings. The link resolves to an existing public image in the same category; heading text overrides the displayed title and the body before the next H1/H2 renders in its modal. Reuse common Markdown plugins/relative-link resolution. Validate missing/excluded/cross-category/duplicate image targets.
+- Keep metadata outside registry/search/individual routes and raw asset copies; metadata privacy hides only information, not shared public assets. Reread index files independently of cached preview data so edits/removal reset titles/descriptions without rebuilding previews. Keep three sample indexes for all current images, with authoring guidance before entries.
+
+## 2026-11-09 — MEDIA image classification
+
+- Classify existing shared images into top-level 001.인포그래픽 (8), 002.문양 (5), and 003.일러스트 (2), using the existing first-folder gallery categories/buttons. This supersedes the historical flat-folder/preserve-root-path choice for these 15 assets. Keep names and bytes; rebase five BLOG sources and prepare registry hashes while preserving IDs, URLs and dates. Record moves/checksums in media-category-migration.json without rewriting earlier migration history.
+
+## 2026-11-09 — EBOOK categories
+
+- Use ebook/category/book folders. Derive category labels/order from top-level folder names like TEXT, with category/count buttons above the book list instead of category routes. Intersect category, search and format selections. Keep empty public categories; a private category index hides its packages and assets.
+- Retain the requested 샘플 category and existing CC0 test book at ebook/001.샘플/001.보리도 전자책 샘플. Package path changes also change download/share URLs; no registry entries or individual routes are introduced.
+
 ## 2026-11-09 — Biwoom brand and default domain
 
 - Supersede the 2026-11-08 custom-domain choice: use `https://biwoom.github.io` as SITE_URL and `Biwoom - 비움` as the public brand. English name: Biwoom; Korean name: 비움. Keep OL internals, repository, root paths and existing registry identities/dates.

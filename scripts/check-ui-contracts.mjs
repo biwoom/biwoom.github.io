@@ -317,10 +317,14 @@ assert.equal((mediaHtml.match(/data-media-item(?:\s|>|=)/g) ?? []).length, media
 const mediaDialog = mediaHtml.match(/<dialog[^>]*id="ol-media-dialog"[^>]*>/)?.[0];
 assert.ok(mediaDialog && !/\sopen(?:\s|=|>)/.test(mediaDialog), "MEDIA dialog must start closed");
 assert.match(mediaDialog, /aria-labelledby="ol-media-dialog-title"/);
+const mediaInformation = mediaHtml.match(/<aside[^>]*data-media-information[^>]*>/)?.[0];
+assert.ok(mediaInformation && /\shidden(?:\s|=|>)/.test(mediaInformation), "MEDIA information must start hidden");
+const informationSources = [...mediaHtml.matchAll(/<template[^>]*data-media-info="([^"]*)"/g)].map(([, source]) => decode(source));
+assert.deepEqual(informationSources.sort(), mediaImages.filter(item => item.informationHtml).map(item => item.source).sort());
 for (const item of mediaImages) {
   assert.ok(mediaHtml.includes(item.previewUrl), `MEDIA: missing preview ${item.source}`);
   assert.ok(fs.existsSync(path.join("dist", item.previewUrl)), `MEDIA: unpublished preview ${item.source}`);
-  assert.ok(fs.existsSync(path.join("dist", item.url)), `MEDIA: unpublished original ${item.source}`);
+  assert.ok(fs.existsSync(path.join("dist", decodeURIComponent(item.url))), `MEDIA: unpublished original ${item.source}`);
 }
 const galleryCategories = [...mediaHtml.matchAll(/<button[^>]*data-media-filter="([^"]*)"[^>]*>/g)].map(([, value]) => decode(value));
 assert.deepEqual(galleryCategories.slice().sort(), ["", ...getMediaCategories(mediaImages).map((category) => category.key)].sort(), "MEDIA category filters must match the first folder keys");
@@ -345,9 +349,15 @@ console.log(
 );
 
 // Auxiliary ebook navigation and generated package controls must agree with source packages.
-const { getEbooks } = await import("./lib/ebooks.mjs");
-const ebooks = getEbooks();
+const { getEbookLibrary } = await import("./lib/ebooks.mjs");
+const { books: ebooks, categories: ebookCategories } = getEbookLibrary();
 const ebookHtml = fs.readFileSync("dist/ebook/index.html", "utf8");
+const ebookCategoryControls = ebookHtml.match(/<div[^>]*aria-label="전자책 카테고리"[\s\S]*?<\/div>/)?.[0];
+assert.ok(ebookCategoryControls);
+assert.equal([...ebookCategoryControls.matchAll(/data-ebook-category-filter=/g)].length, ebookCategories.length + 1);
+assert.ok(ebookHtml.indexOf('aria-label="전자책 카테고리"') < ebookHtml.indexOf('class="ol-ebook-grid"'));
+for (const category of ebookCategories) assert.ok(ebookCategoryControls.includes(`data-ebook-category-filter="${category.key}"`));
+for (const book of ebooks) assert.ok(ebookHtml.includes(`data-ebook-category="${book.categoryKey}"`));
 assert.equal([...ebookHtml.matchAll(/data-ebook-item(?=[\s>])/g)].length, ebooks.length);
 assert.equal([...ebookHtml.matchAll(/download="/g)].length, ebooks.reduce((count, book) => count + book.downloads.length, 0));
 assert.ok(ebookHtml.includes('id="ebook-dialog"'));

@@ -32,8 +32,8 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Source schema/normalized data: `src/content.config.ts`. Shared interpretation: `scripts/lib/content.mjs`. Share these rules with validation instead of maintaining divergent defaults.
 - Restore a missing registry from Git; `prepare:content -- --init` is only for new vaults. Commit prepared registry changes with content; CI runs `check:registry`. First-publication preparation dates use Asia/Seoul.
 - `content-registry.json` is durable source metadata, not disposable build output. Commit it with content changes. It preserves URLs, first-publication preparation dates, previous paths and hashes.
-- EBOOK is an auxiliary `/ebook/` download library linked only below MEDIA in the footer, never the primary/mobile menu. Read one direct `src/content/ebook/` folder per book, optional index.md bibliography, cover and EPUB/PDF files. Use CC0 for every ebook, no individual routes/registry records; exclude private/draft packages and publish only selected cover/download assets.
-- `src/content/media/` is the shared public asset namespace. The auxiliary `/media/` gallery is linked from home statistics and the footer, never the primary/mobile menu. Derive image categories from the first subfolder (numeric prefixes only order); root images are 미분류. Keep original assets under `/generated/content/media/`, generated previews under `/generated/media-gallery/`, and no per-image documents/frontmatter/registry records.
+- EBOOK is an auxiliary `/ebook/` download library linked only below MEDIA in the footer, never the primary/mobile menu. Use `src/content/ebook/category/book/`: top-level folders are ordered categories and each child folder is one book with optional index.md bibliography, cover and EPUB/PDF files. Show category/count filter buttons above the ebook list, intersecting search and format filters; retain empty public categories and hide descendants of private categories. Use CC0 for every ebook, no individual routes/registry records; exclude private/draft packages and publish only selected cover/download assets.
+- `src/content/media/` is the shared public asset namespace. The auxiliary `/media/` gallery is linked from home statistics and the footer, never the primary/mobile menu. Derive image categories from the first subfolder (numeric prefixes only order); root images are 미분류. Keep original assets under `/generated/content/media/`, generated previews under `/generated/media-gallery/`, and no per-image documents/frontmatter/registry records. Optional category index.md files hold multiple `## [Image title](relative-image-path)` sections; use each section body as modal Markdown information and its title as the card/modal title. Missing information falls back to filenames; validate existing category-local image targets and duplicates. Keep metadata refresh independent of preview caching.
 - Keep source attachments inside the vault. Use relative Markdown links; the shared remark plugin resolves them. Unsupported Obsidian wikilinks/blocks must not be described as working.
 - Use `site-config.mjs` for shared fixed settings and `src/lib/site-config.ts` in app code. Do not restore retired DESIGN environment variables.
 - Use shared `DocumentTags.astro` to display only the current document’s optional tags below its title. Series tag controls/modals are retired. BLOG tag buttons filter exact tags together with year archives and shared pagination.
@@ -58,6 +58,14 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-09 — MEDIA image information
+
+- Added category-level index.md image-link sections and Markdown information in gallery modals; retain the three sample indexes as authoring references.
+
+### 2026-11-09 — EBOOK categories
+
+- Added top-level EBOOK categories, category/count buttons and combined filters. Keep the user-requested sample category and book.
 
 ### 2026-11-09 — Biwoom - 비움
 

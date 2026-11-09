@@ -5,12 +5,14 @@ export function initEbookLibrary(root: Document = document, browser: Window = wi
   library.dataset.ebookReady = 'true';
   const items = [...library.querySelectorAll<HTMLElement>('[data-ebook-item]')];
   const filters = [...library.querySelectorAll<HTMLButtonElement>('[data-ebook-filter]')];
+  const categories = [...library.querySelectorAll<HTMLButtonElement>('[data-ebook-category-filter]')];
   const search = library.querySelector<HTMLInputElement>('[data-ebook-search]')!;
   const count = library.querySelector<HTMLElement>('[data-ebook-count]')!;
   const empty = library.querySelector<HTMLElement>('[data-ebook-empty]')!;
   const content = dialog.querySelector<HTMLElement>('[data-ebook-dialog-content]')!;
   const close = dialog.querySelector<HTMLButtonElement>('[data-ebook-close]')!;
   let format = '';
+  let category = '';
   let opener: HTMLButtonElement | null = null;
   let previousOverflow = '';
   let openId = '';
@@ -24,7 +26,7 @@ export function initEbookLibrary(root: Document = document, browser: Window = wi
     const query = search.value.trim().normalize('NFC').toLocaleLowerCase('ko');
     let visible = 0;
     for (const item of items) {
-      item.hidden = Boolean((format && !item.dataset.ebookFormats?.split(' ').includes(format)) || !item.dataset.ebookSearchText?.normalize('NFC').toLocaleLowerCase('ko').includes(query));
+      item.hidden = Boolean((category && item.dataset.ebookCategory !== category) || (format && !item.dataset.ebookFormats?.split(' ').includes(format)) || !item.dataset.ebookSearchText?.normalize('NFC').toLocaleLowerCase('ko').includes(query));
       if (!item.hidden) visible++;
     }
     count.textContent = `${visible}권의 전자책`;
@@ -54,6 +56,15 @@ export function initEbookLibrary(root: Document = document, browser: Window = wi
     filterBooks();
   });
   search.addEventListener('input', filterBooks);
+  for (const button of categories) button.addEventListener('click', () => {
+    category = button.dataset.ebookCategoryFilter ?? '';
+    for (const filter of categories) {
+      const selected = filter === button;
+      filter.classList.toggle('active', selected);
+      filter.setAttribute('aria-pressed', String(selected));
+    }
+    filterBooks();
+  });
   close.addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => {
     if (event.target !== dialog) return;

@@ -32,13 +32,13 @@ export function assetUrl(relative) {
     relative.split("/").map(encodeURIComponent).join("/")
   );
 }
-export default function remarkContent() {
+export default function remarkContent({ root = process.cwd() } = {}) {
   return (tree, file) => {
     const source = path
-      .relative(path.resolve("src/content"), file.path)
+      .relative(path.join(root, "src/content"), file.path)
       .split(path.sep)
       .join("/");
-    const registry = readRegistry();
+    const registry = readRegistry(root);
     // Only remove a verified list of internal TOC links, never a heading section.
     const toc = tree.children.findIndex(node => node.type === "heading" && textOf(node).trim() === "목차");
     if (toc >= 0) {
@@ -80,7 +80,7 @@ export default function remarkContent() {
           node.type === "definition") &&
         node.url
       )
-        node.url = resolveReference(source, node.url, registry);
+        node.url = resolveReference(source, node.url, registry, root);
     });
   };
 }

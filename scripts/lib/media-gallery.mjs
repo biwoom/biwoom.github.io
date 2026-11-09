@@ -4,11 +4,11 @@ import sharp from "sharp";
 import { randomUUID } from "node:crypto";
 import { walk, compareNames, nameInfo, hash } from "./content.mjs";
 import { assetUrl } from "../remark-content.mjs";
+import { addMediaInformation, mediaImagePattern } from "./media-information.mjs";
 
-/** @typedef {{source:string,url:string,title:string,fileName:string,categoryKey:string,category:string,width:number,height:number,previewUrl:string,previewWidth:number,previewHeight:number}} MediaImage */
+/** @typedef {{source:string,url:string,title:string,fileName:string,categoryKey:string,category:string,width:number,height:number,previewUrl:string,previewWidth:number,previewHeight:number,informationHtml?:string}} MediaImage */
 export const uncategorizedKey = "__uncategorized";
 const previewVersion = 1;
-const imagePattern = /\.(png|jpe?g|webp|gif|svg|avif)$/i;
 const pending = new Map();
 
 export function mediaCategory(source) {
@@ -55,7 +55,7 @@ async function prepareGallery(root) {
   const next = { version: previewVersion, files: {} }, expected = new Set();
   /** @type {MediaImage[]} */
   const items = [];
-  for (const file of walk(path.join(base, "media"), { assets: true }).filter(file => imagePattern.test(file) && !path.relative(base, file).split(path.sep).some(part => /^[._]/.test(part)))) {
+  for (const file of walk(path.join(base, "media"), { assets: true }).filter(file => mediaImagePattern.test(file) && !path.relative(base, file).split(path.sep).some(part => /^[._]/.test(part)))) {
     const source = path.relative(base, file).split(path.sep).join("/");
     const stat = fs.statSync(file), signature = `${stat.size}:${stat.mtimeMs}`;
     const previous = cache.files[source];
@@ -101,5 +101,5 @@ async function prepareGallery(root) {
     try { fs.writeFileSync(temporary, serialized); fs.renameSync(temporary, cacheFile); }
     finally { if (fs.existsSync(temporary)) fs.unlinkSync(temporary); }
   }
-  return items;
+  return addMediaInformation(items, root);
 }
