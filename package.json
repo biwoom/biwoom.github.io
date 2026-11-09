@@ -6,22 +6,22 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "check:content": "node scripts/check-content.mjs",
-    "check:content:fixtures": "node --test scripts/check-content-fixtures.mjs scripts/check-transition-fixtures.mjs scripts/check-tags-fixtures.mjs scripts/check-media-fixtures.mjs scripts/check-reader-fixtures.mjs scripts/check-markdown-fixtures.mjs scripts/check-text-fixtures.mjs scripts/check-ebook-fixtures.mjs",
+    "check:content": "node ol-core/scripts/check-content.mjs",
+    "check:content:fixtures": "node --test ol-core/scripts/check-content-fixtures.mjs ol-core/scripts/check-transition-fixtures.mjs ol-core/scripts/check-tags-fixtures.mjs ol-core/scripts/check-media-fixtures.mjs ol-core/scripts/check-reader-fixtures.mjs ol-core/scripts/check-markdown-fixtures.mjs ol-core/scripts/check-text-fixtures.mjs ol-core/scripts/check-ebook-fixtures.mjs ol-core/scripts/check-paths-fixtures.mjs",
     "check": "npm run check:content && npm run check:content:fixtures",
-    "sync:assets": "node scripts/sync-content-assets.mjs && node scripts/sync-media-gallery.mjs",
+    "sync:assets": "node ol-core/scripts/sync-content-assets.mjs && node ol-core/scripts/sync-media-gallery.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",
     "build:site": "npm run prepare:content && npm run sync:assets && astro build && npx pagefind --site dist",
     "build": "npm run check:content && npm run build:site",
     "preview": "astro preview",
     "astro": "astro",
-    "prepare:content": "node scripts/prepare-content.mjs",
-    "content:move": "node scripts/content-move.mjs",
+    "prepare:content": "node ol-core/scripts/prepare-content.mjs",
+    "content:move": "node ol-core/scripts/content-move.mjs",
     "typecheck": "astro check",
-    "check:built": "node scripts/check-built-links.mjs && node scripts/check-ui-contracts.mjs && node scripts/check-built-domain.mjs",
-    "check:registry": "node scripts/check-registry.mjs",
-    "check:live": "node scripts/check-content-live.mjs",
-    "brand:assets": "node scripts/build-brand-assets.mjs"
+    "check:built": "node ol-core/scripts/check-built-links.mjs && node ol-core/scripts/check-ui-contracts.mjs && node ol-core/scripts/check-built-domain.mjs",
+    "check:registry": "node ol-core/scripts/check-registry.mjs",
+    "check:live": "node ol-core/scripts/check-content-live.mjs",
+    "brand:assets": "node ol-core/scripts/build-brand-assets.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.6",

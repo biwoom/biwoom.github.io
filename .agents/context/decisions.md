@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-11-09 — Restore reading size before paint
+
+- Restore the bounded reading-size preference in the head of academic layouts, using a CSS variable scoped to document readers. Supply equivalent initial sizes for the targets later managed by the shared slider; preserve unscaled base declarations and original passage sizing. Measure at a temporary 100% scale and restore synchronously so persisted scaling is applied once, including responsive resizes. Keep workspace columns and focus/panel behavior unchanged.
+
+## 2026-11-09 — Content / OL core separation
+
+- Use repository-root content/ for the existing Obsidian vault and ol-core/src, ol-core/scripts, ol-core/public for implementation. Keep Astro/npm execution at the repository root, along with config/package/site settings/registry; output stays dist with no Astro base.
+- Centralize filesystem roots in ol-core/scripts/lib/paths.mjs, anchored via import.meta.url. Preserve explicit isolated roots for fixture/CLI migration checks; glob loads from the absolute content directory. Keep every source-relative registry key, ID, URL, date, hash and history entry unchanged. Move .obsidian without editing its contents and update its ignore path.
+- Retain existing custom publication, MEDIA/EBOOK, Markdown/footnote and watch behavior. Verify content/attachment bytes, registry stability, built routes/feeds and live add/edit/rename/delete/privacy changes before completion. Previous source paths in older decisions/logs/inventories remain historical.
+
 ## 2026-11-09 — Remove MEDIA thumbnail sources
 
 - Remove the three explicit *-thumb.jpg source assets (buddhist-worldview, lamrim, six-steps) and their index.md entries. Keep the 12 remaining originals and automatically generated gallery previews. Current category counts are 5/5/2; the earlier 15-image migration mapping remains historical and deleted thumbnails must not be restored.

@@ -8,7 +8,7 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 ## Workflow
 
 1. Classify the document:
-   - Public permanent document: `src/content/pages/{slug}.md`.
+   - Public permanent document: `content/pages/{slug}.md`.
    - Internal Codex reference: `.agents/references/{name}.md`.
    - Repository operating rule: `AGENTS.md`.
    - Contributor overview: `README.md`.
@@ -26,23 +26,23 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 ## Current Biwoom (OL 코어) Facts
 
 - Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
-- `src/content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
+- `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item; both menu roots show category cards before series lists; order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
-- `src/content.config.ts` defines normalized data; `scripts/lib/content.mjs` shares source interpretation with validation.
-- `content-registry.json` is committed source metadata for stable URLs/dates/paths. `public/generated/content/` is derived output and is not committed.
-- Shared images live in `src/content/media/`; first subfolders supply categories for the auxiliary /media/ masonry gallery. Home statistics/footer link to it, without main-menu entries or per-image document records. Originals and generated previews are separate; respect user-deleted historical archives.
-- Shared settings: `site-config.mjs`, app entry `src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
+- `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
+- `content-registry.json` is committed source metadata for stable URLs/dates/paths. `ol-core/public/generated/content/` is derived output and is not committed.
+- Shared images live in `content/media/`; first subfolders supply categories for the auxiliary /media/ masonry gallery. Home statistics/footer link to it, without main-menu entries or per-image document records. Originals and generated previews are separate; respect user-deleted historical archives.
+- Shared settings: `site-config.mjs`, app entry `ol-core/src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
 - Deploy workflow: `.github/workflows/deploy.yml`. Upload requests stop after requested push.
 - TEXT reuses STORY series links and expandable lists; no real tab switching.
 
 ## Document Placement
 
-- Brand definition: `src/content/pages/brand.md`.
+- Brand definition: `content/pages/brand.md`.
 - Content management manual: `.agents/references/ol-home-content-management-manual.md`.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
-- `src/content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
+- `content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
 
 ## Style
 
@@ -50,7 +50,7 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 - Keep code and internal guide filenames ASCII. Korean author-facing content filenames are allowed; public routes use registry URLs.
 - Keep operational instructions concrete: paths, commands, expected routes.
 - Avoid stale references to project-page URLs such as `/ol-home` or `/biwoom` unless documenting history.
-- When describing generated files, say not to commit `dist/`, `.astro/`, `node_modules/`, or `public/generated/`.
+- When describing generated files, say not to commit `dist/`, `.astro/`, `node_modules/`, or `ol-core/public/generated/`.
 - Use ordinary relative attachment links. Do not introduce DESIGN asset keys or generated URLs as authoring requirements.
 - Shared UI behavior should be documented at the component/system level when it has been unified, for example shared document tag badges and BLOG tag/year filtering with common pagination. The series tag modal has been retired.
 
@@ -61,10 +61,14 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 - Search for stale deployment paths when updating deployment docs:
 
 ```sh
-rg "ol-home|/biwoom|base:" astro.config.mjs public src README.md AGENTS.md .agents
+rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md AGENTS.md .agents
 ```
 
 ## 수정 변경사항
+
+### 2026-11-09 — Content / OL core separation
+
+- Authoring uses content/ and implementation uses ol-core/; retain root npm commands, registry, configuration and dist output.
 
 ### 2026-11-09
 

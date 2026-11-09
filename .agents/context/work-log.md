@@ -1262,3 +1262,29 @@ This file records concise date-based work summaries for continuity across Codex 
 
 - Deleted buddhist-worldview-thumb.jpg, lamrim-thumb.jpg and six-steps-thumb.jpg from 001.인포그래픽 and removed their sections from its index.md. No active content references required rebasing. Keep all 12 remaining image bytes and their information entries; retain generated gallery previews. Updated current counts (5/5/2), README, manual and decisions; earlier migration records remain historical.
 - Validation: check (73 fixtures), typecheck (zero errors; existing TextReader hint), build (64 routes) and check:built passed. Verified 12 cards/information entries, unchanged remaining originals, live preview files, removal of the three source/deployed thumbnail copies and cleanup of their unused generated previews. No commit or push.
+
+## 2026-11-09 — Content / OL core separation
+
+- Moved the entire Obsidian vault from src/content to repository-root content, including unchanged personal state. Moved implementation to ol-core/src, ol-core/scripts and ol-core/public. Kept root Astro/npm configuration, package files, site-config, registry and dist output. All 105 vault files, nine fixed public assets and the complete registry match the pre-move snapshot byte-for-byte; 65 HTML paths and RSS/sitemap/robots hashes are unchanged.
+- Added module-anchored projectPaths/isMainModule helpers and absolute glob bases. Updated normalization, registry preparation/moves, Markdown/footnote resolution, MEDIA/EBOOK, attachment/preview/brand generation, watchers, verification scripts and isolated fixtures. Explicit CLI --root supports test vaults without changing defaults based on cwd. Root npm command names remain unchanged. TypeScript excludes authored content/static assets.
+- Updated generated-asset cache path/key, .gitignore, AGENTS, README, authoring/refactor manuals, local skills and continuity notes. Preserve registry-relative source keys and prior deleted assets; no content/body/link rewrites were required. Reopen content/ as the existing Obsidian vault.
+- Validation: npm run check (75 fixtures), typecheck (zero errors; one existing TextReader unused-fields hint), build (64 generated routes), check:built (65 HTML files/21 redirects; 27 reader contracts; 215 production URLs), check:registry, expanded check:live and isolated brand generation all passed. Live verification covers TEXT/STORY hierarchy/privacy/document/PDF refresh, BLOG rights, MEDIA metadata/add/rename/delete, and EBOOK privacy/restore/private-file removal. New tests cover cwd-independent readers/CLI and an isolated Korean/space-containing vault root. Generated assets/personal state remain ignored.
+- Stopped the pre-existing Astro dev process on 4321 before moving files to avoid stale-path writes. Restart via npm run dev was rejected by automatic command approval: .codex/rules/default.rules requires a prompt while this session's approval policy is Never. The development server remains stopped; the user must run npm run dev at the repository root. No approval-rule edits, commit, push or deployment inspection were performed. Browser visual QA was not performed.
+
+## 2026-11-09 — TEXT/STORY reading-size navigation flash
+
+- User clarified that the flash changes text size rather than column width. The saved slider percentage was applied only when the deferred reader module initialized, leaving initial HTML at the 100% base size. Restore bounded 80–150% preference in the academic layout head and apply matching initial CSS to reader prose/headings/titles/code/tables; original passages inherit the same saved scale. Navigation, menus and workspace columns retain their existing sizes/behavior.
+- Measure slider base sizes at a temporary 100% scale and restore synchronously, avoiding double scaling at startup and after repeated responsive resizes. Added tests for pre-body preference initialization, invalid/unavailable storage and repeated 150% resize measurements; added built head/CSS contracts for TEXT/STORY.
+- Validation: check (77 fixtures), typecheck (zero errors; existing TextReader hint), build (64 routes), check:built and check:registry passed. Actual HTTP responses for TEXT and consecutive STORY documents contain head initialization and initial scale CSS. Chrome browser access host was unavailable and native Chrome access was rejected at tool approval, so direct visual reproduction was not performed. The user's existing dev server on 4321 remains running. No commit or push.
+
+## 2026-11-09 — Mobile TEXT TOC label
+
+- Split the TEXT toolbar's 본문 prefix into an inline span and hide it only within the existing <=980px TEXT breakpoint. Mobile reads 목차, desktop retains 본문 목차; the button, accessible name, dialog heading and STORY behavior are preserved. Updated the authoring manual/state note.
+- Validation: check (77 fixtures), typecheck (zero errors; existing TextReader hint), build and check:built passed. Verified built labels for both TEXT documents and the mobile-only prefix rule. No commit or push.
+
+
+## 2026-11-09 — 로컬 커밋 정리
+
+- 이전 커밋 ac1e892의 EBOOK 카테고리·MEDIA 카테고리/이미지 정보·기본 CC0·썸네일 정리를 유지한다. 이번 커밋 범위는 content/와 ol-core/ 분리, 실행 위치에 독립적인 경로 처리, 배포 캐시/제외 규칙, 읽기 크기 초기 표시와 모바일 TEXT 목차 문구 수정이다.
+- README·운영 매뉴얼·프로젝트 규칙·스킬·현재 상태와 결정 기록을 현행 구조에 맞췄다. 사용자 계획 체크리스트 변경과 불필요한 .env.example 삭제도 함께 보관한다. 보관함의 추적 파일 65개와 고정 자산 9개, 레지스트리는 기존 내용을 유지하며 생성물·Obsidian 개인 상태는 커밋하지 않는다.
+- 최신 검증은 check 77개, typecheck, build 64개 경로, check:built, check:registry 통과다. 분리 작업의 확장된 check:live도 통과했으며, 브라우저 시각 검사는 도구 접근 거부로 미수행이다. 요청 범위는 로컬 커밋까지이며 원격 push는 수행하지 않는다.

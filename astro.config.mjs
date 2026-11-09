@@ -1,19 +1,24 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-import { markdownRemarkPlugins } from "./scripts/lib/markdown.mjs";
-import remarkContent from "./scripts/remark-content.mjs";
-import rehypeReaderFootnotes from "./scripts/rehype-reader-footnotes.mjs";
-import contentDevelopment from "./scripts/dev-content.mjs";
-import { readRegistry } from "./scripts/lib/content.mjs";
+import { markdownRemarkPlugins } from "./ol-core/scripts/lib/markdown.mjs";
+import remarkContent from "./ol-core/scripts/remark-content.mjs";
+import rehypeReaderFootnotes from "./ol-core/scripts/rehype-reader-footnotes.mjs";
+import contentDevelopment from "./ol-core/scripts/dev-content.mjs";
+import { readRegistry } from "./ol-core/scripts/lib/content.mjs";
+import { projectPaths } from "./ol-core/scripts/lib/paths.mjs";
 import { SITE_URL } from "./site-config.mjs";
 
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
+const paths = projectPaths();
 
 export default defineConfig({
   // GitHub Pages root URL
   site: SITE_URL,
+  srcDir: paths.src,
+  publicDir: paths.public,
+  outDir: paths.dist,
 
   markdown: {
     remarkPlugins: [...markdownRemarkPlugins, remarkContent],

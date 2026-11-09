@@ -19,13 +19,13 @@ git status --short --branch
    - `astro.config.mjs` should not set `base`.
    - Production is `https://biwoom.github.io`; repository remains `biwoom/biwoom.github.io`. The default GitHub Pages domain requires no CNAME file; GitHub Pages Custom domain must be empty.
    - Local URL changes do not clear GitHub Pages Custom domain. For default-domain deployment, remove any existing custom domain in repository Settings → Pages; this is separate from build validation.
-   - `public/robots.txt` should point to `https://biwoom.github.io/sitemap-index.xml`.
-   - `src/pages/rss.xml.ts` should not hardcode `/ol-home` or `/biwoom`.
+   - `ol-core/public/robots.txt` should point to `https://biwoom.github.io/sitemap-index.xml`.
+   - `ol-core/src/pages/rss.xml.ts` should not hardcode `/ol-home` or `/biwoom`.
 
 3. Search for stale deployment paths:
 
 ```sh
-rg "biwoom.github.io/(ol-home|biwoom)|/ol-home|/biwoom|base:" astro.config.mjs public src README.md AGENTS.md .agents
+rg "biwoom.github.io/(ol-home|biwoom)|/ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md AGENTS.md .agents
 ```
 
 4. Build locally:

@@ -1,6 +1,6 @@
 # Biwoom - 비움
 
-문서 버전: v1.4 · 최종 업데이트: 2026-11-09 · 대상: Biwoom (OL 코어)
+문서 버전: v1.5 · 최종 업데이트: 2026-11-09 · 대상: Biwoom (OL 코어)
 
 불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
 
@@ -11,12 +11,28 @@
 
 공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 기본 GitHub Pages 도메인을 사용하므로 CNAME 파일과 사용자 도메인용 DNS 설정은 필요하지 않습니다. 기존 사용자 도메인이 연결되어 있으면 저장소 Settings → Pages → Custom domain에서 제거해야 합니다. [GitHub 공식 안내](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#removing-a-custom-domain)를 참고하세요.
 
-## 집필
-
-Obsidian에서 `src/content/`를 보관함으로 엽니다. Vault CMS나 다른 CMS는 필요하지 않습니다.
+## 폴더 구조
 
 ```text
-src/content/
+content/                 # Obsidian 보관함·문서·원본 첨부
+ol-core/
+├── src/                 # Astro 페이지·컴포넌트·스타일·content.config.ts
+├── scripts/             # 콘텐츠 처리·자산 동기화·검사
+└── public/              # 고정 자산과 generated/ 파생 자산
+astro.config.mjs         # 루트 Astro 설정
+package.json             # 루트 개발·빌드 명령
+site-config.mjs          # 브랜드·운영 URL·기본값
+content-registry.json    # 문서 식별자·주소·날짜·이력
+```
+
+저장소 루트에서 기존 `npm run dev`, `npm run build` 명령을 그대로 사용합니다. 빌드 결과는 `dist/`에 생성됩니다. 경로 기준은 `ol-core/scripts/lib/paths.mjs`에서 관리합니다. 기존 Obsidian 보관함은 위치만 `content/`로 옮겼으므로 해당 폴더를 보관함으로 다시 열어 사용합니다. `.obsidian` 내용은 유지하며 Git에서는 제외합니다.
+
+## 집필
+
+Obsidian에서 `content/`를 보관함으로 엽니다. Vault CMS나 다른 CMS는 필요하지 않습니다.
+
+```text
+content/
 ├── text/001.중관부/001.대승현론/
 │   ├── 01.번역/001.1권.md
 │   └── 02.연구/001.대승현론 제1권 연구.md
@@ -48,7 +64,7 @@ src/content/
 - 공개용 메뉴 폴더의 문서는 기본 공개 대상입니다. 로컬 편집 내용은 업로드·배포 후 실제 사이트에 반영됩니다.
 - 기존 `published: false`는 유지됩니다. 시리즈의 `index.md`가 비공개이면 하위 문서도 숨깁니다.
 - 개별 자료로 보여줄 PDF·이미지·HTML은 자료 구분 폴더에 직접 둡니다.
-- 여러 문서에서 쓰는 이미지는 `src/content/media/`에 보관합니다. 최상위 폴더가 미디어 카테고리가 됩니다. 현재 이미지는 `001.인포그래픽`(5개), `002.문양`(5개), `003.일러스트`(2개)에 분류되어 있습니다. 숫자는 정렬에만 쓰며, 루트에 직접 놓은 이미지는 미분류로 표시됩니다. `blog/기록.md`에서는 `![설명](../media/001.인포그래픽/lamrim-preview1.jpg)`처럼 일반 Markdown 상대 링크로 참조합니다. 상단 메뉴에는 표시하지 않으며 홈의 미디어 통계와 푸터에서 `/media/` 모음으로 이동할 수 있습니다. 카테고리 버튼으로 masonry 목록을 분류하고 이미지를 누르면 같은 페이지의 모달에서 원본을 확대합니다. 카테고리의 `index.md`에 `## [이미지 제목](파일명)`과 설명을 여러 항목으로 작성하면 각 이미지 모달에 표시됩니다. 세 카테고리의 index.md를 작성 예시로 참고할 수 있습니다. 자산별 상세 문서·검색 항목은 생성하지 않습니다.
+- 여러 문서에서 쓰는 이미지는 `content/media/`에 보관합니다. 최상위 폴더가 미디어 카테고리가 됩니다. 현재 이미지는 `001.인포그래픽`(5개), `002.문양`(5개), `003.일러스트`(2개)에 분류되어 있습니다. 숫자는 정렬에만 쓰며, 루트에 직접 놓은 이미지는 미분류로 표시됩니다. `blog/기록.md`에서는 `![설명](../media/001.인포그래픽/lamrim-preview1.jpg)`처럼 일반 Markdown 상대 링크로 참조합니다. 상단 메뉴에는 표시하지 않으며 홈의 미디어 통계와 푸터에서 `/media/` 모음으로 이동할 수 있습니다. 카테고리 버튼으로 masonry 목록을 분류하고 이미지를 누르면 같은 페이지의 모달에서 원본을 확대합니다. 카테고리의 `index.md`에 `## [이미지 제목](파일명)`과 설명을 여러 항목으로 작성하면 각 이미지 모달에 표시됩니다. 세 카테고리의 index.md를 작성 예시로 참고할 수 있습니다. 자산별 상세 문서·검색 항목은 생성하지 않습니다.
 - 문서 전용 보조 파일은 문서 옆 `assets/`에 두고 일반 Markdown 상대 링크로 연결합니다.
 - YAML은 선택 사항입니다. 날짜·권리·설명 등의 예외에만 사용합니다. 위키링크·Obsidian 블록 임베드는 현재 지원하지 않으므로 일반 Markdown 링크를 사용하세요.
 
@@ -79,13 +95,13 @@ npm run build
 npm run check:built
 ```
 
-- `scripts/lib/content.mjs`: 이름·본문·경로의 공통 해석
-- `src/content.config.ts`: 정규화된 데이터 스키마와 로더
-- `scripts/prepare-content.mjs`: 고정 주소·날짜 색인 관리
-- `src/lib/library.ts`: 공통 계층과 자료 목록
-- `scripts/remark-content.mjs`: 제목 중복 방지·내부 링크 변환
-- `scripts/sync-content-assets.mjs`: 일반 첨부파일 동기화
-- `public/generated/content/`: 파생 자산. 직접 수정하거나 커밋하지 않음
+- `ol-core/scripts/lib/content.mjs`: 이름·본문·경로의 공통 해석
+- `ol-core/src/content.config.ts`: 정규화된 데이터 스키마와 로더
+- `ol-core/scripts/prepare-content.mjs`: 고정 주소·날짜 색인 관리
+- `ol-core/src/lib/library.ts`: 공통 계층과 자료 목록
+- `ol-core/scripts/remark-content.mjs`: 제목 중복 방지·내부 링크 변환
+- `ol-core/scripts/sync-content-assets.mjs`: 일반 첨부파일 동기화
+- `ol-core/public/generated/content/`: 파생 자산. 직접 수정하거나 커밋하지 않음
 
 DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 설명은 일반 자료로 이관한 뒤 사용자 요청으로 일부 삭제되었습니다. 삭제 자료는 복원하지 않으며 현재 공개 목적지가 존재하는 과거 주소만 안내합니다. 이전 ATLAS HTML은 `.agents/archive/atlas/`에 보존하며 배포하지 않습니다.
 
@@ -93,13 +109,17 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 ## 브랜드 자산
 
-Biwoom - 비움의 심볼은 `public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. 기존 심볼의 모양은 유지하며 공유 이미지의 영문 표기는 Biwoom입니다. 영문명은 Biwoom, 한글명은 비움이며 함께 쓸 때는 `Biwoom - 비움`으로 표기합니다. OL은 내부 코어 이름입니다.
+Biwoom - 비움의 심볼은 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. 기존 심볼의 모양은 유지하며 공유 이미지의 영문 표기는 Biwoom입니다. 영문명은 Biwoom, 한글명은 비움이며 함께 쓸 때는 `Biwoom - 비움`으로 표기합니다. OL은 내부 코어 이름입니다.
 
 ## 전자책
 
-`src/content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
+`content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
 
 ## 수정 변경사항
+
+### 2026-11-09 — v1.5
+
+- 콘텐츠를 content/, 구현을 ol-core/로 분리했습니다. 루트 실행 명령·레지스트리·배포 URL은 유지하고 경로·보관함 안내를 갱신했습니다.
 
 ### 2026-11-09 — v1.4
 

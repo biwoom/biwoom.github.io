@@ -33,10 +33,10 @@ jobs:
       - name: Restore generated asset cache
         uses: actions/cache@v4
         with:
-          path: public/generated
-          key: generated-assets-${{ github.sha }}
+          path: ol-core/public/generated
+          key: generated-assets-core-v1-${{ github.sha }}
           restore-keys: |
-            generated-assets-
+            generated-assets-core-v1-
 
       - name: Check content
         run: npm run check

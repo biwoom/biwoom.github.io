@@ -1,0 +1,72 @@
+/* TEXT and STORY share reading typography; navigation keeps its own theme. */
+.ol-story-doc-page { --ol-reader-serif: 'Noto Serif KR', 'Batang', 'Songti SC', serif; --ol-reader-font-scale: var(--ol-reader-initial-scale, 1); }
+.ol-story-doc-page .ol-story-part-content .ol-prose { max-width: 780px; margin-inline: auto; font-family: var(--ol-reader-serif); font-size: 17px; line-height: 1.95; word-break: keep-all; overflow-wrap: anywhere; }
+.ol-story-doc-page .ol-prose h2 { font-family: var(--ol-reader-serif); font-size: 25px; line-height: 1.7; margin: 42px 0 20px; }
+.ol-story-doc-page .ol-prose h3 { font-family: var(--ol-reader-serif); font-size: 21px; line-height: 1.8; margin: 32px 0 16px; }
+.ol-story-doc-page .ol-prose h4 { font-size: 18px; line-height: 1.8; }
+/* Original passages are readable prose, not small monospace program listings. */
+.ol-text-reader [data-reader-original] { margin-top: 16px; }
+.ol-text-reader [data-reader-original] pre {
+  /* Override the syntax highlighter's inline colors only for source passages. */
+  background-color: var(--ol-text-soft) !important;
+  color: var(--ol-ink) !important;
+  font-family: var(--ol-reader-serif);
+  font-size: 18px;
+  line-height: 1.95;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.ol-text-reader [data-reader-original] pre code {
+  font-family: inherit;
+  font-size: calc(1em * var(--ol-reader-font-scale, 1));
+  line-height: inherit;
+  white-space: inherit;
+}
+/* Keep the shared size slider stronger than the base typography rules. */
+.ol-story-reader-page.ol-story-doc-page [data-reader-scalable] { font-size: calc(var(--ol-reader-base-font) * var(--ol-reader-font-scale, 1)); }
+
+/* Align STORY document headings and metadata with the centered reading body. */
+.ol-story-doc-page:not(.ol-text-reader) :is(.ol-story-part-content-head, .ol-story-active-doc-actions) {
+  clear: both;
+  width: 100%;
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+/* STORY hero gives work/part context; the chapter title belongs to the body. */
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero h1 {
+  font: 600 22px/1.6 var(--ol-reader-serif);
+  margin-top: 12px;
+}
+/* The chapter title stays larger than the shared 25px body H2 on mobile. */
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2 {
+  display: block;
+  font-family: var(--ol-reader-serif);
+  font-size: 34px;
+  line-height: 1.6;
+}
+/* Preserve the font slider above the more specific chapter-title base rule. */
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2[data-reader-scalable] {
+  font-size: calc(var(--ol-reader-base-font) * var(--ol-reader-font-scale, 1));
+}
+.ol-story-doc-description { margin-top: 12px; font-size: 14px; line-height: 1.8; color: var(--ol-muted); }
+
+@media (max-width: 980px) {
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2 { font-size: 28px; }
+}
+
+/* Use the saved size before the reader module measures and takes over sizing. */
+.ol-story-doc-page .ol-story-chapter > .ol-prose:not([data-reader-scalable]) { font-size: calc(17px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose h1:not([data-reader-scalable]) { font-size: calc(28px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose h2:not([data-reader-scalable]) { font-size: calc(25px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose h3:not([data-reader-scalable]) { font-size: calc(21px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose h4:not([data-reader-scalable]) { font-size: calc(18px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose pre code:not([data-reader-scalable]):not([data-reader-original] *) { font-size: calc(13.5px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose table:not([data-reader-scalable]) { font-size: calc(14px * var(--ol-reader-font-scale)); }
+.ol-story-doc-page .ol-story-chapter > .ol-prose th:not([data-reader-scalable]) { font-size: calc(12px * var(--ol-reader-font-scale)); }
+.ol-text-reader .ol-story-part-content-head h1:not([data-reader-scalable]) { font-size: calc(clamp(26px, 2.2vw, 34px) * var(--ol-reader-font-scale)); }
+.ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2:not([data-reader-scalable]) { font-size: calc(34px * var(--ol-reader-font-scale)); }
+@media (max-width: 980px) {
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2:not([data-reader-scalable]) { font-size: calc(28px * var(--ol-reader-font-scale)); }
+}
