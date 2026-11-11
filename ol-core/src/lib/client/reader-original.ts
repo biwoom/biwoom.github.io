@@ -1,6 +1,6 @@
-/** Only explicitly marked TEXT source passages participate in this toggle. */
+/** Only explicitly marked TEXT/STORY source passages participate in this toggle. */
 export function initOriginalToggle() {
-  const reader = document.querySelector<HTMLElement>('[data-text-workspace]');
+  const reader = document.querySelector<HTMLElement>('.ol-story-doc-page');
   const button = reader?.querySelector<HTMLButtonElement>('[data-original-toggle]');
   if (!reader || !button) return;
   const blocks = [...reader.querySelectorAll<HTMLElement>('.ol-story-chapter > .ol-prose [data-reader-original]')];

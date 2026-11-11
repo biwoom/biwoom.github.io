@@ -5,10 +5,10 @@
 .ol-story-doc-page .ol-prose h3 { font-family: var(--ol-reader-serif); font-size: 21px; line-height: 1.8; margin: 32px 0 16px; }
 .ol-story-doc-page .ol-prose h4 { font-size: 18px; line-height: 1.8; }
 /* Original passages are readable prose, not small monospace program listings. */
-.ol-text-reader [data-reader-original] { margin-top: 16px; }
-.ol-text-reader [data-reader-original] pre {
+.ol-story-doc-page [data-reader-original] { margin-top: 16px; }
+.ol-story-doc-page [data-reader-original] pre {
   /* Override the syntax highlighter's inline colors only for source passages. */
-  background-color: var(--ol-text-soft) !important;
+  background-color: var(--ol-text-soft, var(--ol-surface-2)) !important;
   color: var(--ol-ink) !important;
   font-family: var(--ol-reader-serif);
   font-size: 18px;
@@ -17,7 +17,7 @@
   overflow-wrap: anywhere;
   word-break: normal;
 }
-.ol-text-reader [data-reader-original] pre code {
+.ol-story-doc-page [data-reader-original] pre code {
   font-family: inherit;
   font-size: calc(1em * var(--ol-reader-font-scale, 1));
   line-height: inherit;

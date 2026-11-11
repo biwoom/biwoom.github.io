@@ -1,6 +1,11 @@
 /* Shared reader shell and toolbar layout; TEXT and STORY variants follow in their own files. */
 :root:has(.ol-story-doc-page) { scrollbar-gutter: stable; }
 .ol-reader-navigation-tools { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.ol-original-toggle [data-original-slash] { display: none; }
+.ol-original-toggle[aria-pressed="true"] [data-original-slash] { display: block; }
+@media (max-width: 980px) {
+  .ol-original-toggle [data-original-label] { display: none; }
+}
 .ol-story-reader-page.ol-story-doc-page {
   width: 100%;
   max-width: none;

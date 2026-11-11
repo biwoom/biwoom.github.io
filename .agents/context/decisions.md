@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-11 — Shared STORY original passages
+
+- Extend the existing explicit original fence renderer, ReaderToolbar flag, visibility controller and original typography from TEXT to STORY. Use one parser/controller/style source; leave BLOG/pages, ordinary code, authored source bytes and document identities unchanged. Only marked documents have the tool, with visible default and mobile icon/accessibility labels. Original text remains CSS-scaled by the existing single font slider; STORY uses its secondary theme surface.
+
 ## 2026-11-11 — Canonical Unicode vault paths
 
 - Use NFC POSIX vault keys at filesystem-to-source, registry, Astro loader, category/library, relative-reference and generated asset boundaries. Keep physical paths separate and resolve native decomposed files without renaming the vault or normalizing authored text.

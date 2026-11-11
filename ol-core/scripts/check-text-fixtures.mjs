@@ -234,17 +234,17 @@ test('STORY chapter toggle preserves desktop choice through focus and uses one m
 });
 
 
-test('TEXT original toggle hides only marked passages and keeps accessible action/state in sync',()=>{
+for (const section of ['text', 'story']) test(`${section.toUpperCase()} original toggle hides only marked passages and keeps accessible action/state in sync`,()=>{
   const reader=new El(),button=new El(),label=new El(),blocks=[new El(),new El()],ordinary=new El();
   reader.select={'[data-original-toggle]':button};
   reader.lists={'.ol-story-chapter > .ol-prose [data-reader-original]':blocks};
   button.select={'[data-original-label]':label};
-  evaluate('ol-core/src/lib/client/reader-original.ts',{document:{querySelector:()=>reader}}).initOriginalToggle();
+  evaluate('ol-core/src/lib/client/reader-original.ts',{document:{querySelector:selector=>selector === '.ol-story-doc-page' || (section === 'text' && selector === '[data-text-workspace]') ? reader : null}}).initOriginalToggle();
   assert.equal(button.attrs['aria-controls'],'ol-reader-original-1 ol-reader-original-2');
   assert.equal(blocks[0].hidden,false);
   button.fire('click');assert.ok(blocks.every(block=>block.hidden));assert.equal(ordinary.hidden,false);
   assert.equal(button.attrs['aria-pressed'],'true');assert.equal(button.attrs['aria-label'],'원문 보기');assert.equal(label.textContent,'원문 보기');
   button.fire('click');assert.ok(blocks.every(block=>!block.hidden));
   assert.equal(button.attrs['aria-pressed'],'false');assert.equal(button.title,'원문 숨기기');assert.equal(label.textContent,'원문 숨기기');
-  reader.lists={};evaluate('ol-core/src/lib/client/reader-original.ts',{document:{querySelector:()=>reader}}).initOriginalToggle();assert.ok(button.hidden);
+  reader.lists={};evaluate('ol-core/src/lib/client/reader-original.ts',{document:{querySelector:selector=>selector === '.ol-story-doc-page' || (section === 'text' && selector === '[data-text-workspace]') ? reader : null}}).initOriginalToggle();assert.ok(button.hidden);
 });

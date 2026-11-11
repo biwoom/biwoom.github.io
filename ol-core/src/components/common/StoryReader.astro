@@ -15,6 +15,7 @@ import {
 } from "../../lib/library";
 import DocumentTags from "./DocumentTags.astro";
 import { url } from "../../lib/url";
+import { hasOriginalBlocks } from "../../../scripts/lib/markdown.mjs";
 interface Props {
   entry: Entry;
   series: Library;
@@ -163,7 +164,7 @@ const hasToc = headings.some(
         </aside>
 
         <article class="ol-story-part-content" data-pagefind-body>
-          <ReaderToolbar hasToc={hasToc} currentUrl={currentUrl} title={entry.data.title} currentPart={currentPart} />
+          <ReaderToolbar hasToc={hasToc} hasOriginal={hasOriginalBlocks('body' in entry ? entry.body ?? '' : '')} currentUrl={currentUrl} title={entry.data.title} currentPart={currentPart} />
 
           <header class="ol-story-part-content-head">
             <div>

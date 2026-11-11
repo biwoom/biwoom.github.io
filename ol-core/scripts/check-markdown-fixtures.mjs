@@ -59,14 +59,23 @@ test('links, headings, tables and footnotes retain CJK emphasis and metadata agr
 });
 
 
-test('marked TEXT originals preserve literal source text while ordinary code and inline code stay separate',async()=>{
+for (const section of ['text', 'story']) test(`marked ${section.toUpperCase()} originals preserve literal source text while ordinary code and inline code stay separate`,async()=>{
   const renderer=await createMarkdownProcessor({remarkPlugins:[...markdownRemarkPlugins,remarkContent],rehypePlugins:[rehypeReaderFootnotes]});
   const source='# 번역\n\n번역문입니다.\n\n```original\n一切法 <原文> & **文字**\n第二行\n```\n\n```text\nordinary code\n```\n\n`inline original`';
-  const result=(await renderer.render(source,{fileURL:new URL(`file://${path.resolve('content/text/category/work/part/example.md')}`)})).code;
+  const result=(await renderer.render(source,{fileURL:new URL(`file://${path.resolve(`content/${section}/category/work/part/example.md`)}`)})).code;
   assert.equal((result.match(/data-reader-original/g)??[]).length,1);
   assert.match(result,/一切法 (?:&lt;|&#x3C;)原文(?:&gt;|>) (?:&#x26;|&amp;) \*\*文字\*\*/);
   assert.ok(result.includes('第二行'));assert.ok(result.includes('ordinary code'));assert.ok(result.includes('<code>inline original</code>'));
   assert.equal(hasOriginalBlocks(source),true);
   assert.equal(hasOriginalBlocks('`original`\n\n```text\noriginal\n```'),false);
   assert.equal(hasOriginalBlocks('````text\n```original\n例\n```\n````'),false);
+});
+
+
+test('BLOG and permanent pages keep original-labelled fences as ordinary code',async()=>{
+  const renderer=await createMarkdownProcessor({remarkPlugins:[...markdownRemarkPlugins,remarkContent],syntaxHighlight:false});
+  for(const section of ['blog','pages']){
+    const result=(await renderer.render('```original\n原文 <literal>\n```',{fileURL:new URL(`file://${path.resolve(`content/${section}/example.md`)}`)})).code;
+    assert.ok(!result.includes('data-reader-original'));assert.match(result,/<pre><code/);
+  }
 });

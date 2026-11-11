@@ -68,7 +68,7 @@ export default function remarkContent({ root = PROJECT_ROOT } = {}) {
     );
     if (first >= 0) tree.children.splice(first, 1);
     visit(tree, (node) => {
-      if (source.startsWith('text/') && isOriginalBlock(node)) {
+      if (/^(text|story)\//.test(source) && isOriginalBlock(node)) {
         // A dedicated wrapper survives code highlighting. HAST text nodes keep
         // markup-like source characters literal, without HTML interpolation.
         node.type = 'original';
