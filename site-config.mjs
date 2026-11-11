@@ -12,4 +12,5 @@ export const BRAND = {
   description: "비움(Biwoom)은 불교 문헌과 이야기, 작업 기록을 함께 읽고 나누는 열린 불교 콘텐츠 프로젝트입니다.",
 };
 export const CONTENT_DEFAULTS = { author: "비움", lang: "ko", license: "CC0" };
-export default { SITE_URL, CONTENT_DEFAULTS, BRAND };
+export const BLOG = { journalSeries: "blog/005.비움제작일지" };
+export default { SITE_URL, CONTENT_DEFAULTS, BRAND, BLOG };

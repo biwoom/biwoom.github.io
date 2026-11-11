@@ -1,0 +1,6 @@
+---
+interface Props { active: "posts" | "series"; compact?: boolean; }
+const { active, compact = false } = Astro.props;
+---
+<section class:list={["ol-blog-hero", {"ol-blog-hero--compact": compact}]}><div class="ol-container"><span class="ol-section-label">BIWOOM · BLOG</span>{!compact && <><h1>사유하고, 실천하고,<br />기록합니다.</h1><p>불교의 가르침과 일상의 수행, 상상과 비움을 만들어 가는 기록.</p></>}</div></section>
+<div class="ol-container"><nav class="ol-blog-view-nav" aria-label="블로그 보기"><a href="/blog/" aria-current={active === 'posts' ? 'page' : undefined}>포스트</a><a href="/blog/series/" aria-current={active === 'series' ? 'page' : undefined}>시리즈</a></nav></div>

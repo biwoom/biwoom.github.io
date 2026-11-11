@@ -12,7 +12,7 @@ tags: ["design","불교세계관","무아","연기","사성제","인포그래픽
 
 그래서 이 인포그래픽의 핵심 질문은 “불교적 관찰은 무엇을 증명하려는가?”였다.
 
-![두 가지 관찰 인포그래픽 썸네일](../../../media/001.인포그래픽/buddhist-worldview-preview1.png)
+![두 가지 관찰 인포그래픽 썸네일](../../../../media/001.%EC%9D%B8%ED%8F%AC%EA%B7%B8%EB%9E%98%ED%94%BD/buddhist-worldview-preview1.png)
 
 ## 두 가지 관찰
 

@@ -5,9 +5,10 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
+import { readBlogCatalog } from "./lib/blog.mjs";
+import { BLOG, SITE_URL } from "../../site-config.mjs";
 import {
   readRegistry,
-  nameInfo,
   categoryFolders,
   normalize,
   walk,
@@ -118,7 +119,7 @@ for (const [source, record] of Object.entries(registry.files)) {
   )
     continue;
   const data = normalize(source, fs.readFileSync(file, "utf8"), registry);
-  if (!data.published || data.kind === "series") continue;
+  if (!data.published || data.kind !== "document") continue;
   const html = fs.readFileSync(
     path.join(dist, record.url, "index.html"),
     "utf8",
@@ -139,8 +140,8 @@ for (const [source, record] of Object.entries(registry.files)) {
   }
   if (collection === "blog") {
     publishedBlogTags.push(expectedTags);
-    const category = source.split("/").length > 2 ? nameInfo(source.split("/")[1]) : { label: "", order: Number.MAX_SAFE_INTEGER };
-    assert.equal(data.category, category.label, `${source}: BLOG category must come from first folder`);
+    const category = { label: data.category, order: data.categoryOrder };
+    assert.ok(data.seriesKey === "blog/standalone" || data.categoryKey.startsWith(data.seriesKey + "/"), `${source}: category must belong to its series`);
     publishedBlogCategories.push({ category: category.label || "미분류", order: category.order });
   }
   overlay(html, "ol-search-overlay", record.url);
@@ -318,6 +319,46 @@ classes(
   ["ol-post", "ol-blog-sidebar", "ol-blog-archive-list"],
   "BLOG index",
 );
+const blogCatalog = readBlogCatalog();
+rule(".ol-blog-series-card .ol-blog-cover-copy h2", /color:\s*inherit/);
+const seriesIndex = fs.readFileSync(path.join(dist, "blog/series/index.html"), "utf8");
+assert.equal((seriesIndex.match(/data-series-card(?:\s|=|>)/g) ?? []).length, blogCatalog.filter(s => s.key !== BLOG.journalSeries).length);
+assert.ok(seriesIndex.indexOf('class="ol-blog-journal"') > seriesIndex.lastIndexOf('data-series-card'), "Journal stays below randomized covers");
+assert.ok(!seriesIndex.includes('role="tab"'), "BLOG views navigate to separate pages");
+assert.match(seriesIndex, /href="\/blog\/series\/" aria-current="page"/);
+const feed = fs.readFileSync(path.join(dist, "rss.xml"), "utf8");
+assert.equal((feed.match(/<item>/g) ?? []).length, publishedBlogCategories.length, "Metadata must not enter RSS");
+const homeHtml = fs.readFileSync(path.join(dist, "index.html"), "utf8");
+const blogHomeCard = homeHtml.match(/<a href="\/blog\/?" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1] ?? "";
+assert.ok(blogHomeCard.includes(`${publishedBlogCategories.length}개 자료`), "Home product counts exclude BLOG metadata");
+for (const series of blogCatalog) {
+  const html = fs.readFileSync(path.join(dist, series.url, "index.html"), "utf8");
+  assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1, `${series.url}: one page title`);
+  const toc = html.match(/<ol class="ol-blog-series-toc">([\s\S]*?)<\/ol>/)?.[1] ?? "";
+  assert.deepEqual([...toc.matchAll(/href="([^"]+)"/g)].map(m => m[1]), series.entries.map(e => e.data.url), `${series.url}: rendered reading order`);
+  if (!series.count) {
+    assert.ok(html.includes("새로운 이야기를 준비하고 있습니다."));
+    assert.ok(!html.includes("처음부터 읽기"), "An empty series cannot have a dead reading link");
+  }
+  assert.ok(!feed.includes(`<link>${SITE_URL}${series.url}</link>`), "Series metadata is excluded from RSS");
+  for (const category of series.categories) {
+    const categoryHtml = fs.readFileSync(path.join(dist, category.url, "index.html"), "utf8");
+    assert.equal((categoryHtml.match(/<h1(?:\s|>)/g) ?? []).length, 1);
+    assert.ok(categoryHtml.includes(category.description));
+    assert.ok(!feed.includes(`<link>${SITE_URL}${category.url}</link>`), "Category metadata is excluded from RSS");
+  }
+  for (const [index, post] of series.entries.entries()) {
+    const postHtml = fs.readFileSync(path.join(dist, post.data.url, "index.html"), "utf8");
+    assert.ok(postHtml.includes('class="ol-blog-reading-context"'), `${post.data.url}: series context`);
+    const previous = postHtml.match(/<a[^>]*rel="prev"[^>]*>/)?.[0];
+    const next = postHtml.match(/<a[^>]*rel="next"[^>]*>/)?.[0];
+    assert.equal(Boolean(previous), index > 0);
+    assert.equal(Boolean(next), index < series.count - 1);
+    if (previous) assert.ok(previous.includes(`href="${series.entries[index-1].data.url}"`));
+    if (next) assert.ok(next.includes(`href="${series.entries[index+1].data.url}"`));
+  }
+}
+console.log(`BLOG covers, ${blogCatalog.length} series, metadata pages, RSS exclusions and sequential reading verified.`);
 const mediaImages = await syncMediaGallery();
 const mediaHtml = fs.readFileSync(path.join(dist, "media/index.html"), "utf8");
 classes(mediaHtml, ["ol-media-masonry", "ol-media-dialog"], "MEDIA");

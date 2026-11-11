@@ -1,0 +1,134 @@
+---
+import { getCollection, render } from "astro:content";
+import { getBlogTags, getBlogCategories } from "../../lib/tags";
+import { getBlogLibrary } from "../../lib/blog";
+import BlogPostItem from "./BlogPostItem.astro";
+const posts = (await getCollection("blog", e => e.data.published && e.data.kind === "document"))
+  .sort((a,b) => b.data.date.getTime() - a.data.date.getTime() || a.id.localeCompare(b.id));
+const library = await getBlogLibrary();
+const categories = library.flatMap(s => s.categories);
+const categoryCounts = getBlogCategories(posts.map(p => p.data));
+const categoryFilters = [
+  ...categories.map(c => ({ category: c.title, count: categoryCounts.find(item => item.category === c.title)?.count ?? 0, order: c.order })),
+  ...categoryCounts.filter(c => !categories.some(item => item.title === c.category)).map(c => ({ ...c, order: Number.MAX_SAFE_INTEGER })),
+].sort((a,b) => a.order - b.order || a.category.localeCompare(b.category, 'ko'));
+const tagFilters = getBlogTags(posts.map(p => p.data));
+const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sort((a,b) => b-a);
+---
+<div class="ol-blog-category-row">
+  <div class="ol-chips ol-blog-category-chips" id="blog-categories" role="group" aria-label="카테고리로 글 분류">
+    <button type="button" class="ol-chip active" data-blog-category="" aria-pressed="true">전체 <span class="count">{posts.length}</span></button>
+    {categoryFilters.map(({category,count}) => <button type="button" class="ol-chip" data-blog-category={category} aria-pressed="false">{category} <span class="count">{count}</span></button>)}
+  </div>
+</div>
+<div id="blog-category-information" class="ol-blog-category-information" hidden></div>
+{categories.map(async category => {
+  if (!category.meta) return null;
+  const { Content } = await render(category.meta);
+  return <template data-category-information={category.title}><h2>{category.title}</h2><div class="ol-prose"><Content /></div><a href={category.url}>카테고리 전체 보기 →</a></template>;
+})}
+<p class="ol-blog-filter-status" id="blog-filter-status" role="status" aria-live="polite">{posts.length}개 글</p>
+<div class="ol-section-grid-sidebar ol-blog-post-layout">
+  <div>
+    <div id="blog-posts">{posts.map((post,i) => <BlogPostItem post={post} index={i} hidden={i >= 6} />)}</div>
+    {posts.length === 0 && <p class="ol-blog-empty">아직 발행된 글이 없습니다.</p>}
+    <div id="blog-no-results" class="ol-blog-empty" hidden>선택한 필터에 해당하는 글이 없습니다.</div>
+    {posts.length > 6 && <div class="ol-blog-loadmore" id="blog-loadmore-wrap" hidden><button id="blog-loadmore-btn" class="ol-btn ol-btn-outline">더 보기 <span id="blog-loadmore-remaining">({posts.length-6})</span></button></div>}
+  </div>
+  <aside class="ol-blog-sidebar">
+    <section class="ol-blog-sidebar-series"><h2>시리즈로 읽기</h2>{library.map(s => <a href={s.url}>{s.title}<span>{s.count ? `${s.count}편` : '준비 중'}</span></a>)}</section>
+    <div class="ol-card ol-blog-archive-card"><div class="ol-meta-label">ARCHIVE</div><div class="ol-blog-archive-list" id="blog-archive">
+      <button type="button" class="ol-blog-archive-btn active" data-year="all" aria-pressed="true"><span>전체</span><span class="ol-blog-archive-count">{posts.length}</span></button>
+      {archiveYears.map(year => <button type="button" class="ol-blog-archive-btn" data-year={String(year)} aria-pressed="false"><span>{year}년</span><span class="ol-blog-archive-count">{posts.filter(p=>p.data.date.getFullYear()===year).length}</span></button>)}
+    </div></div>
+    <details class="ol-card ol-blog-tag-panel"><summary><span>태그</span><span class="ol-blog-tag-chevron" aria-hidden="true">⌄</span></summary>
+      <div class="ol-chips ol-blog-tag-chips" id="blog-chips" role="group" aria-label="태그로 글 분류">
+        <button type="button" class="ol-chip active" data-blog-tag="" aria-pressed="true">전체 <span class="count">{posts.length}</span></button>
+        {tagFilters.map(({tag,count}) => <button type="button" class="ol-chip" data-blog-tag={tag} aria-pressed="false">{tag} <span class="count">{count}</span></button>)}
+      </div>
+    </details>
+  </aside>
+</div>
+<noscript><style>#blog-posts .ol-post[hidden] { display: grid; } .ol-blog-category-row, .ol-blog-archive-card, .ol-blog-tag-panel { display: none; }</style></noscript>
+<script>
+  import { createPaginator } from "../../lib/client/paginated-list";
+  import { matchesBlogFilters } from "../../lib/tags";
+
+  let activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+  let activeCategory = new URLSearchParams(window.location.search).get("category") ?? "";
+  let activeYear = "all";
+  const posts = [...document.querySelectorAll<HTMLElement>("#blog-posts .ol-post")];
+  const categoryButtons = [...document.querySelectorAll<HTMLButtonElement>("#blog-categories [data-blog-category]")];
+  const tagButtons = [...document.querySelectorAll<HTMLButtonElement>("#blog-chips [data-blog-tag]")];
+  const yearButtons = [...document.querySelectorAll<HTMLButtonElement>(".ol-blog-archive-btn")];
+  const noResults = document.getElementById("blog-no-results")!;
+  const status = document.getElementById("blog-filter-status")!;
+  const paginator = createPaginator({
+    allItems: posts,
+    pageSize: 6,
+    loadMoreWrap: document.getElementById("blog-loadmore-wrap"),
+    loadMoreButton: document.querySelector<HTMLButtonElement>("#blog-loadmore-btn"),
+    loadMoreRemaining: document.getElementById("blog-loadmore-remaining"),
+    onRender: ({ matchedItems }) => {
+      noResults.hidden = matchedItems.length !== 0;
+      status.textContent = `${matchedItems.length}개 글`;
+    },
+  });
+
+  function applyFilters() {
+    const information = document.getElementById("blog-category-information")!;
+    const template = [...document.querySelectorAll<HTMLTemplateElement>("template[data-category-information]")]
+      .find(item => item.dataset.categoryInformation === activeCategory);
+    information.replaceChildren(...(template ? [template.content.cloneNode(true)] : []));
+    information.hidden = !template;
+    for (const button of categoryButtons) {
+      const selected = (button.dataset.blogCategory ?? "") === activeCategory;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
+    for (const button of tagButtons) {
+      const selected = (button.dataset.blogTag ?? "") === activeTag;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
+    for (const button of yearButtons) {
+      const selected = button.dataset.year === activeYear;
+      button.classList.toggle("active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    }
+    paginator.reset(posts.filter((post) => matchesBlogFilters({
+      tags: JSON.parse(post.dataset.tags ?? "[]") as string[],
+      year: post.dataset.year ?? "",
+      category: post.dataset.category ?? "",
+    }, activeTag, activeYear, activeCategory)));
+  }
+
+  function syncFilterUrl() {
+    const href = new URL(window.location.href);
+    if (activeTag) href.searchParams.set("tag", activeTag);
+    else href.searchParams.delete("tag");
+    if (activeCategory) href.searchParams.set("category", activeCategory);
+    else href.searchParams.delete("category");
+    window.history.replaceState(null, "", href);
+  }
+  for (const button of categoryButtons) button.addEventListener("click", () => {
+    activeCategory = button.dataset.blogCategory ?? "";
+    syncFilterUrl();
+    applyFilters();
+  });
+  for (const button of tagButtons) button.addEventListener("click", () => {
+    activeTag = button.dataset.blogTag ?? "";
+    syncFilterUrl();
+    applyFilters();
+  });
+  for (const button of yearButtons) button.addEventListener("click", () => {
+    activeYear = button.dataset.year ?? "all";
+    applyFilters();
+  });
+  window.addEventListener("popstate", () => {
+    activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+    activeCategory = new URLSearchParams(window.location.search).get("category") ?? "";
+    applyFilters();
+  });
+  applyFilters();
+</script>

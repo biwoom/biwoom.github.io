@@ -1,0 +1,22 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogNav from "../../../components/blog/BlogNav.astro";
+import BlogPostItem from "../../../components/blog/BlogPostItem.astro";
+import { getBlogLibrary } from "../../../lib/blog";
+import type { BlogSeries } from "../../../lib/blog";
+export async function getStaticPaths() {
+  return (await getBlogLibrary()).flatMap(series => series.categories.map(category => ({ params: { id: category.url!.split('/').filter(Boolean).at(-1) }, props: { series, category } })));
+}
+interface Props { series: BlogSeries; category: BlogSeries['categories'][number]; }
+const { series, category } = Astro.props;
+const rendered = category.meta ? await render(category.meta) : null;
+const Intro = rendered?.Content;
+const posts = series.entries.filter(p => p.data.categoryKey === category.key).sort((a,b) => b.data.date.getTime()-a.data.date.getTime() || a.id.localeCompare(b.id));
+---
+<BaseLayout title={`${category.title} — Biwoom BLOG`} description={category.description} pagefindMeta={{ title: category.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `BLOG · ${series.title} · ${category.title}` }}>
+  <main class="ol-blog-page"><BlogNav active="posts" compact /><section class="ol-section-tight"><div class="ol-container ol-blog-category-page">
+    <a class="ol-blog-breadcrumb" href={series.url}>← {series.title}</a><header class="ol-blog-series-intro"><span class="ol-section-label">CATEGORY</span><h1>{category.title}</h1>{category.coverUrl && <img class="ol-blog-category-cover" src={category.coverUrl} alt="" />}{Intro ? <div class="ol-prose"><Intro /></div> : <p>{category.description}</p>}<span>{posts.length}개의 글</span></header>
+    {posts.map(post => <BlogPostItem post={post} />)}{!posts.length && <p class="ol-blog-empty">새로운 글을 준비하고 있습니다.</p>}
+  </div></section></main>
+</BaseLayout>

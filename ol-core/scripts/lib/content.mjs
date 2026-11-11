@@ -119,7 +119,30 @@ export function linkMove(registry, oldPath, newPath) {
 }
 export function isIntroduction(relative) {
   const { collection, seriesPath } = folderParts(relative);
-  return ["text", "story"].includes(collection) && relative === `${seriesPath}/index.md`;
+  return (["text", "story", "blog"].includes(collection) && relative === `${seriesPath}/index.md`)
+    || isBlogCategoryIntroduction(relative);
+}
+export function isBlogCategoryIntroduction(relative) {
+  return /^blog\/[^/]+\/[^/]+\/index\.md$/.test(relative);
+}
+export function folderMetadata(key, root = PROJECT_ROOT) {
+  const file = path.join(projectPaths(root).content, key, "index.md");
+  const { data, body } = fs.existsSync(file) ? parse(fs.readFileSync(file, "utf8")) : { data: {}, body: "" };
+  return {
+    title: data.title?.trim() || (firstHeading(body) ? textOf(firstHeading(body)) : "") || nameInfo(key.split("/").at(-1)).label,
+    description: data.description ?? excerpt(body),
+    // Reuse the document publication policy for parent indexes, even for empty folders.
+    published: data.published !== false && isPublicSource(key, { files: {} }, root),
+  };
+}
+export function blogFolders(root = PROJECT_ROOT) {
+  const children = (key) => {
+    const dir = path.join(projectPaths(root).content, key);
+    return fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true })
+      .filter(e => e.isDirectory() && !/^[._]/.test(e.name) && !reserved.has(e.name))
+      .sort((a, b) => compareNames(a.name, b.name)).map(e => `${key}/${e.name}`) : [];
+  };
+  return children("blog").map(key => ({ key, categories: children(key) }));
 }
 export function publicationDay(now = new Date()) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
@@ -185,7 +208,7 @@ export function folderParts(relative) {
   const [collection, ...segments] = relative.split("/");
   const dirs = segments.slice(0, -1);
   if (collection === "blog") return {
-    collection, category: dirs[0] ?? "", seriesPath: "blog/standalone", part: "",
+    collection, category: dirs[1] ?? "", seriesPath: dirs.length ? `blog/${dirs[0]}` : "blog/standalone", part: "",
   };
   if (["text", "story"].includes(collection) && dirs.length >= 3)
     return {
@@ -221,11 +244,14 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     );
   const parts = folderParts(relative);
   const series = registry.folders[parts.seriesPath];
+  const intro = isIntroduction(relative);
   const title =
     data.title?.trim() ||
     (firstHeading(body) ? textOf(firstHeading(body)) : "") ||
-    nameInfo(path.basename(relative)).label;
-  const intro = isIntroduction(relative);
+    nameInfo(path.basename(parts.collection === "blog" && intro ? path.dirname(relative) : relative)).label;
+  const categoryKey = collectionKey(parts);
+  const categoryMeta = parts.collection === "blog" && categoryKey ? folderMetadata(categoryKey, root) : null;
+  const seriesMeta = parts.collection === "blog" && parts.seriesPath !== "blog/standalone" ? folderMetadata(parts.seriesPath, root) : null;
   return {
     title,
     description: data.description ?? excerpt(body),
@@ -236,10 +262,11 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     readingTime: Math.max(1, Math.ceil(body.length / 700)),
     url: record.url,
     source: relative,
-    kind: intro ? "series" : "document",
-    category: parts.category ? nameInfo(parts.category).label : "",
+    kind: isBlogCategoryIntroduction(relative) ? "category" : intro ? "series" : "document",
+    category: categoryMeta?.title ?? (parts.category ? nameInfo(parts.category).label : ""),
+    categoryKey,
     categoryOrder: nameInfo(parts.category).order,
-    series: series?.title ?? nameInfo(parts.seriesPath.split("/").at(-1)).label,
+    series: seriesMeta?.title ?? series?.title ?? nameInfo(parts.seriesPath.split("/").at(-1)).label,
     seriesKey: parts.seriesPath,
     seriesUrl: series?.url ?? `/${parts.collection}/`,
     part: parts.part ? nameInfo(parts.part).label : "자료",
@@ -252,6 +279,9 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     lang: data.lang ?? CONTENT_DEFAULTS.lang,
     thumbnailAsset: data.thumbnailAsset,
   };
+}
+function collectionKey(parts) {
+  return parts.collection === "blog" && parts.category ? `${parts.seriesPath}/${parts.category}` : "";
 }
 export function mediaEntries(root = PROJECT_ROOT) {
   const registry = readRegistry(root),
@@ -285,6 +315,11 @@ export function publicRoutes(registry, root = PROJECT_ROOT) {
     const info = folderParts(source);
     routes.set(record.url, source);
     if (["text", "story"].includes(info.collection)) routes.set(registry.folders[info.seriesPath]?.url, info.seriesPath);
+  }
+  for (const series of blogFolders(root)) {
+    if (!folderMetadata(series.key, root).published) continue;
+    routes.set(registry.folders[series.key]?.url, series.key);
+    for (const key of series.categories) if (folderMetadata(key, root).published) routes.set(registry.folders[key]?.url, key);
   }
   routes.delete(undefined);
   return routes;

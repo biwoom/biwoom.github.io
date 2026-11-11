@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogNav from "../../../components/blog/BlogNav.astro";
+import BlogSeriesCard from "../../../components/blog/BlogSeriesCard.astro";
+import { getBlogLibrary } from "../../../lib/blog";
+import { BLOG } from "../../../lib/site-config";
+const library = await getBlogLibrary();
+const featured = library.filter(s => s.key !== BLOG.journalSeries);
+const journal = library.find(s => s.key === BLOG.journalSeries);
+---
+<BaseLayout title="시리즈 — Biwoom BLOG" description="하나의 주제를 따라 이어 읽는 비움의 블로그 시리즈입니다." pagefindBody={false}>
+  <main class="ol-blog-page"><BlogNav active="series" /><section class="ol-section-tight"><div class="ol-container">
+    <div class="ol-blog-section-heading"><h2>연속된 생각을 따라 읽다</h2><span>주제별 시리즈</span></div>
+    <div class="ol-blog-series-grid" data-random-series data-pattern="0">
+      {featured.map((series, index) => <BlogSeriesCard series={series} coverIndex={index} />)}
+      <script is:inline>
+        // Reorder the actual links before paint, keeping visual and keyboard order equal.
+        (function () {
+          const grid = document.currentScript.parentElement;
+          const cards = [...grid.querySelectorAll('[data-series-card]')];
+          for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+          }
+          grid.dataset.pattern = String(Math.floor(Math.random() * 2));
+          cards.forEach((card, index) => { card.dataset.slot = String(index); grid.appendChild(card); });
+        })();
+      </script>
+    </div>
+    {journal && <section class="ol-blog-journal"><div><span class="ol-section-label">MAKING BIWOOM</span><h2><a href={journal.url}>{journal.title} <span aria-hidden="true">↗</span></a></h2><p>{journal.description}</p></div><div class="ol-blog-journal-meta"><span>{journal.categories.map(c => c.title).join(' · ')}</span><span>{journal.count}개의 기록</span></div></section>}
+  </div></section></main>
+</BaseLayout>

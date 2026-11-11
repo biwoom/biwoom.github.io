@@ -1,5 +1,11 @@
 # Decisions
 
+## 2026-11-11 — BLOG series and reading flow
+
+- Use physical blog/series/category/post folders, with each category owned by one series. Add 상상공장 for 디자인·인포그래픽; name the fixed production series 비움제작일지 for 비움·일지. Retain the empty essay series until user authoring.
+- Combine A compact post rows, B cover discovery and C ordered series TOCs. Use separate /blog/ and /blog/series/ pages, stable registry-based series/category routes and unchanged post canonical URLs. Randomize four non-journal links and desktop size patterns before paint; keep visual/keyboard order identical and journal fixed below. Mobile uses one column.
+- Read index.md metadata through the shared parser without new authoring fields; optional thumbnailAsset supplies covers. Do not count metadata as posts or include it in RSS/recent-post statistics. Private parents hide descendants/assets. Use oldest-first series reading order with optional explicit Markdown links under 읽는 순서, then append unspecified public posts. TOC/start/previous-next share that one order.
+
 ## 2026-11-09 — Restore reading size before paint
 
 - Restore the bounded reading-size preference in the head of academic layouts, using a CSS variable scoped to document readers. Supply equivalent initial sizes for the targets later managed by the shared slider; preserve unscaled base declarations and original passage sizing. Measure at a temporary 100% scale and restore synchronously so persisted scaling is applied once, including responsive resizes. Keep workspace columns and focus/panel behavior unchanged.

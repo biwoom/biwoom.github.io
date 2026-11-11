@@ -48,6 +48,7 @@ class Element {
   toggleAttribute(name, on) { if (on) this.attributes[name] = ''; else delete this.attributes[name]; }
   addEventListener(type, callback) { this.handlers[type] = callback; }
   click() { this.handlers.click?.(); }
+  replaceChildren() {}
 }
 
 test('blog UI combines tag/year filters, resets pagination, keeps untagged posts in All, and supports tag links', () => {
@@ -60,7 +61,7 @@ test('blog UI combines tag/year filters, resets pagination, keeps untagged posts
   const tagButtons = ['', '수메다', '수메다보살', 'all', '가, 나', '인용 "태그"'].map(blogTag => new Element({ blogTag }));
   const categoryButtons = ['', '교학', '수행', '일지'].map(blogCategory => new Element({ blogCategory }));
   const yearButtons = ['all', '2026', '2025'].map(year => new Element({ year }));
-  const ids = Object.fromEntries(['blog-no-results', 'blog-filter-status', 'blog-loadmore-wrap', 'blog-loadmore-remaining'].map(id => [id, new Element()]));
+  const ids = Object.fromEntries(['blog-category-information', 'blog-no-results', 'blog-filter-status', 'blog-loadmore-wrap', 'blog-loadmore-remaining'].map(id => [id, new Element()]));
   const more = new Element();
   const listeners = {};
   const location = { href: 'https://example.test/blog/?tag=' + encodeURIComponent('수메다'), search: '?tag=' + encodeURIComponent('수메다') };
@@ -75,12 +76,13 @@ test('blog UI combines tag/year filters, resets pagination, keeps untagged posts
       if (selector === '#blog-chips [data-blog-tag]') return tagButtons;
       if (selector === '#blog-categories [data-blog-category]') return categoryButtons;
       if (selector === '.ol-blog-archive-btn') return yearButtons;
+      if (selector === 'template[data-category-information]') return [];
       throw new Error(selector);
     },
     getElementById(id) { return ids[id] ?? null; },
     querySelector(selector) { assert.equal(selector, '#blog-loadmore-btn'); return more; },
   };
-  const source = fs.readFileSync('ol-core/src/pages/blog/index.astro', 'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
+  const source = fs.readFileSync('ol-core/src/components/blog/BlogPosts.astro', 'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
   evaluate(source, { '../../lib/client/paginated-list': pagination, '../../lib/tags': tags }, { window, document, URL, URLSearchParams });
   const visible = () => posts.filter(post => !post.hidden).length;
   const status = () => ids['blog-filter-status'].textContent;

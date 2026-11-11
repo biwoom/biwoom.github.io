@@ -5,7 +5,7 @@ import { url } from "../../lib/url";
 const counts = await Promise.all([
   getDocuments("text"),
   getDocuments("story"),
-  getCollection("blog", (e) => e.data.published),
+  getCollection("blog", (e) => e.data.published && e.data.kind === "document"),
 ]);
 const cards = [
   { name: "불교경론", href: "/text/", description: "문헌별 번역·연구·시각자료" },

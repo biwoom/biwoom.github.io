@@ -1,0 +1,375 @@
+{
+  "date": "2026-11-11",
+  "files": [
+    {
+      "from": "blog/001.교학/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
+      "to": "blog/001.불교의 세계/001.교학/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md",
+      "sha256": "a95ed10a09eb1ce4434ba6c10da7701aac54629f5813b2c2a6820beb8baa0959",
+      "record": {
+        "id": "text-211536d4712e36",
+        "url": "/blog/middle-way-beyond-scientism/",
+        "date": "2026-06-23",
+        "hash": "a95ed10a09eb1ce4434ba6c10da7701aac54629f5813b2c2a6820beb8baa0959",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/001.교학/부처님의 깨달음 - 무상정등정각에 대하여.md",
+      "to": "blog/001.불교의 세계/001.교학/부처님의 깨달음 - 무상정등정각에 대하여.md",
+      "sha256": "189cd5e36add7b72d7e3cdcc44bb0abb9eb563d214cb4bbef967da04c0ecc404",
+      "record": {
+        "id": "text-05f6d170f384d1",
+        "url": "/blog/anuttara-samma-sambodhi/",
+        "date": "2026-06-23",
+        "hash": "189cd5e36add7b72d7e3cdcc44bb0abb9eb563d214cb4bbef967da04c0ecc404",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/001.교학/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
+      "to": "blog/001.불교의 세계/001.교학/불교의 세계관 - 두 가지 관점에 근거한 나와 세계에 대한 이해.md",
+      "sha256": "707ae97b43302ac8a8ccad8acb33680812c35342c2f2159c9d877f65286145c7",
+      "record": {
+        "id": "text-1b012d8487de24",
+        "url": "/blog/buddhist-worldview-understanding/",
+        "date": "2026-06-13",
+        "hash": "707ae97b43302ac8a8ccad8acb33680812c35342c2f2159c9d877f65286145c7",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/002.수행/assets/basic-meditation/preview1.jpg",
+      "to": "blog/002.수행-몸과 마음 돌보기/002.수행/assets/basic-meditation/preview1.jpg",
+      "sha256": "060074e2adabbcb2ee58b0ceaa9a21f1e019e8d71855236233da56ae8ffd7cbd"
+    },
+    {
+      "from": "blog/002.수행/assets/basic-meditation/preview2.jpg",
+      "to": "blog/002.수행-몸과 마음 돌보기/002.수행/assets/basic-meditation/preview2.jpg",
+      "sha256": "2def2a964590ee67a7711d7eae99ddf808347feda9fde88df992707148306bd6"
+    },
+    {
+      "from": "blog/002.수행/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+      "to": "blog/002.수행-몸과 마음 돌보기/002.수행/몸과 마음의 정화를 위한 여섯 단계 불교명상 기초수행.md",
+      "sha256": "b592c89e759055cd0b8381013ec46c7bd5d0a672a50423ee9791fde06e915f75",
+      "record": {
+        "id": "text-0cc5ba610b1cbb",
+        "url": "/blog/six-steps-basic-meditation/",
+        "date": "2026-06-04",
+        "hash": "b592c89e759055cd0b8381013ec46c7bd5d0a672a50423ee9791fde06e915f75",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/body-mind-transformation-infographic/index.md",
+      "to": "blog/004.상상공장/003.인포그래픽/body-mind-transformation-infographic/index.md",
+      "sha256": "cfd1ccd7521c30e955838ce185e29208ba07bdc6c5435af9dba033a6409c26cc",
+      "record": {
+        "id": "blog-73bb55addb4db7",
+        "url": "/blog/body-mind-transformation-infographic/",
+        "date": "2026-06-04",
+        "hash": "cfd1ccd7521c30e955838ce185e29208ba07bdc6c5435af9dba033a6409c26cc",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/body-mind-transformation-infographic/preview1.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/body-mind-transformation-infographic/preview1.jpg",
+      "sha256": "060074e2adabbcb2ee58b0ceaa9a21f1e019e8d71855236233da56ae8ffd7cbd",
+      "record": {
+        "id": "blog-cafb591ab45d0a",
+        "url": "/blog/read/cafb591ab45d0a/",
+        "date": "2026-10-30",
+        "hash": "060074e2adabbcb2ee58b0ceaa9a21f1e019e8d71855236233da56ae8ffd7cbd",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/body-mind-transformation-infographic/preview2.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/body-mind-transformation-infographic/preview2.jpg",
+      "sha256": "2def2a964590ee67a7711d7eae99ddf808347feda9fde88df992707148306bd6",
+      "record": {
+        "id": "blog-364a7e736618a6",
+        "url": "/blog/read/364a7e736618a6/",
+        "date": "2026-10-30",
+        "hash": "2def2a964590ee67a7711d7eae99ddf808347feda9fde88df992707148306bd6",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/body-mind-transformation-infographic/thumb.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/body-mind-transformation-infographic/thumb.jpg",
+      "sha256": "22d257505c3dc3b386c8ad18360547a59d226df8c2ef52afcc1e6ab9418cea74",
+      "record": {
+        "id": "blog-c1a2a5718c27e2",
+        "url": "/blog/read/c1a2a5718c27e2/",
+        "date": "2026-10-30",
+        "hash": "22d257505c3dc3b386c8ad18360547a59d226df8c2ef52afcc1e6ab9418cea74",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/buddhist-worldview-two-perspectives/index.md",
+      "to": "blog/004.상상공장/003.인포그래픽/buddhist-worldview-two-perspectives/index.md",
+      "sha256": "e2d77d60310434292a2837363ed4b5da4d7c0e665a844e4e70bf5c1496f8b494",
+      "record": {
+        "id": "blog-3d2bfe8ce54cc3",
+        "url": "/blog/buddhist-worldview-two-perspectives/",
+        "date": "2026-06-11",
+        "hash": "e2d77d60310434292a2837363ed4b5da4d7c0e665a844e4e70bf5c1496f8b494",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/buddhist-worldview-two-perspectives/preview1.png",
+      "to": "blog/004.상상공장/003.인포그래픽/buddhist-worldview-two-perspectives/preview1.png",
+      "sha256": "6970d39bc76d0188d327d283f4f38b93716dfa0ca0f53e7133f13ca462681855",
+      "record": {
+        "id": "blog-d8267d0058f3bf",
+        "url": "/blog/read/d8267d0058f3bf/",
+        "date": "2026-10-30",
+        "hash": "6970d39bc76d0188d327d283f4f38b93716dfa0ca0f53e7133f13ca462681855",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/buddhist-worldview-two-perspectives/thumb.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/buddhist-worldview-two-perspectives/thumb.jpg",
+      "sha256": "9bb3141521e3e275b97c340e3a414837feb084a5d9e34342208e01100181a18a",
+      "record": {
+        "id": "blog-f565df790fdb23",
+        "url": "/blog/read/f565df790fdb23/",
+        "date": "2026-10-30",
+        "hash": "9bb3141521e3e275b97c340e3a414837feb084a5d9e34342208e01100181a18a",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/lamrim-infographic-making/index.md",
+      "to": "blog/004.상상공장/003.인포그래픽/lamrim-infographic-making/index.md",
+      "sha256": "c3569c56b00390b92e279a3b8aae3967969cd019db5be3b25979ae3161dcd459",
+      "record": {
+        "id": "blog-7c893fd903f62d",
+        "url": "/blog/lamrim-infographic-making/",
+        "date": "2026-06-04",
+        "hash": "c3569c56b00390b92e279a3b8aae3967969cd019db5be3b25979ae3161dcd459",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/lamrim-infographic-making/preview1.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/lamrim-infographic-making/preview1.jpg",
+      "sha256": "1a02c83cf51e8eb1ff726492c0fb40cb0f0d416eb1c68accba7ffc234328f120",
+      "record": {
+        "id": "blog-cf4697303bfaf4",
+        "url": "/blog/read/cf4697303bfaf4/",
+        "date": "2026-10-30",
+        "hash": "1a02c83cf51e8eb1ff726492c0fb40cb0f0d416eb1c68accba7ffc234328f120",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/lamrim-infographic-making/preview2.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/lamrim-infographic-making/preview2.jpg",
+      "sha256": "811827f8c52c17338aa5b21d9cfd7d0bd6f8d83c5002e7c510c19f244280f761",
+      "record": {
+        "id": "blog-89ff9637f5190c",
+        "url": "/blog/read/89ff9637f5190c/",
+        "date": "2026-10-30",
+        "hash": "811827f8c52c17338aa5b21d9cfd7d0bd6f8d83c5002e7c510c19f244280f761",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/003.인포그래픽/lamrim-infographic-making/thumb.jpg",
+      "to": "blog/004.상상공장/003.인포그래픽/lamrim-infographic-making/thumb.jpg",
+      "sha256": "0f3561c356dfda0a6fc66a04cdbfcdba29c4cd94d6eb5499b84455abb5c3bb62",
+      "record": {
+        "id": "blog-f0a97ee93321df",
+        "url": "/blog/read/f0a97ee93321df/",
+        "date": "2026-10-30",
+        "hash": "0f3561c356dfda0a6fc66a04cdbfcdba29c4cd94d6eb5499b84455abb5c3bb62",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/004.디자인/indramang-life-peace-patterns/index.md",
+      "to": "blog/004.상상공장/004.디자인/indramang-life-peace-patterns/index.md",
+      "sha256": "af498f9bdf605899a1b732f4d190e32b60e29714d6d5294e96b93d28fc08e432",
+      "record": {
+        "id": "blog-7e5c5458d494c9",
+        "url": "/blog/indramang-life-peace-patterns/",
+        "date": "2026-06-21",
+        "hash": "af498f9bdf605899a1b732f4d190e32b60e29714d6d5294e96b93d28fc08e432",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/004.디자인/indramang-life-peace-patterns/thumb.jpg",
+      "to": "blog/004.상상공장/004.디자인/indramang-life-peace-patterns/thumb.jpg",
+      "sha256": "13b25639d8cbcb6721089d98f1212d234405f3485b5c1e881cda58a6cf1a5860",
+      "record": {
+        "id": "blog-9d578ed85ca23c",
+        "url": "/blog/read/9d578ed85ca23c/",
+        "date": "2026-10-30",
+        "hash": "13b25639d8cbcb6721089d98f1212d234405f3485b5c1e881cda58a6cf1a5860",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/005.비움/ol-brand-design/index.md",
+      "to": "blog/005.비움제작일지/005.비움/ol-brand-design/index.md",
+      "sha256": "2a1dfd7b6b0ce434fa28f4ba714a84c6aad60cf2a859e5eafa2320834e5518d2",
+      "record": {
+        "id": "blog-9b9c8c6df4dfd1",
+        "url": "/blog/ol-brand-design/",
+        "date": "2026-05-25",
+        "hash": "2a1dfd7b6b0ce434fa28f4ba714a84c6aad60cf2a859e5eafa2320834e5518d2",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/005.비움/ol-why/index.md",
+      "to": "blog/005.비움제작일지/005.비움/ol-why/index.md",
+      "sha256": "cde4239f0dae4115a709dabbb9a0ff066479904d77429b0d0be175fc80e64eb8",
+      "record": {
+        "id": "blog-56a140a591ce16",
+        "url": "/blog/ol-why/",
+        "date": "2026-05-23",
+        "hash": "cde4239f0dae4115a709dabbb9a0ff066479904d77429b0d0be175fc80e64eb8",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/atlas-dev-journey/index.md",
+      "to": "blog/005.비움제작일지/006.일지/atlas-dev-journey/index.md",
+      "sha256": "555b8356f2a955bb32683b823d0c5cf36013c97970183919b886cd54f5abe8dc",
+      "record": {
+        "id": "blog-a99c35106d0edf",
+        "url": "/blog/atlas-dev-journey/",
+        "date": "2026-05-27",
+        "hash": "555b8356f2a955bb32683b823d0c5cf36013c97970183919b886cd54f5abe8dc",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/atlas-footnotes/index.md",
+      "to": "blog/005.비움제작일지/006.일지/atlas-footnotes/index.md",
+      "sha256": "5068ec807fd235377a997d71250dc90f5cc279db52c64c882a71f805fe24d00a",
+      "record": {
+        "id": "blog-7e2b2385c139bf",
+        "url": "/blog/atlas-footnotes/",
+        "date": "2026-05-31",
+        "hash": "5068ec807fd235377a997d71250dc90f5cc279db52c64c882a71f805fe24d00a",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/blog-atlas-code-restructuring/index.md",
+      "to": "blog/005.비움제작일지/006.일지/blog-atlas-code-restructuring/index.md",
+      "sha256": "b87cc7bf9c3f1dc6659ad05d01d3506cb371a977589e7d37987427a74a8aa4e8",
+      "record": {
+        "id": "blog-13fe94521f7eff",
+        "url": "/blog/blog-atlas-code-restructuring/",
+        "date": "2026-06-01",
+        "hash": "b87cc7bf9c3f1dc6659ad05d01d3506cb371a977589e7d37987427a74a8aa4e8",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/book-design-guide/index.md",
+      "to": "blog/005.비움제작일지/006.일지/book-design-guide/index.md",
+      "sha256": "176703ef4e232f2559aaa8974f55044d2cb4f763c8bd17206ab6bbd71cf14d7e",
+      "record": {
+        "id": "blog-836c67c8dbca96",
+        "url": "/blog/book-design-guide/",
+        "date": "2026-05-28",
+        "hash": "176703ef4e232f2559aaa8974f55044d2cb4f763c8bd17206ab6bbd71cf14d7e",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/net-menu-name-card-phase1/index.md",
+      "to": "blog/005.비움제작일지/006.일지/net-menu-name-card-phase1/index.md",
+      "sha256": "38ea917a5d5fda64ca5de2d2cdc57a0dd955e5ba66d7d291e3ae476bf49f8cbe",
+      "record": {
+        "id": "blog-640fb779bf3084",
+        "url": "/blog/net-menu-name-card-phase1/",
+        "date": "2026-06-20",
+        "hash": "38ea917a5d5fda64ca5de2d2cdc57a0dd955e5ba66d7d291e3ae476bf49f8cbe",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/ol-design-works-library-shift/index.md",
+      "to": "blog/005.비움제작일지/006.일지/ol-design-works-library-shift/index.md",
+      "sha256": "9e959a3f7f3f27dc856ce01caaf2dc114bad9270cc5e5d93f414b451b5bbfbe1",
+      "record": {
+        "id": "blog-628965f4ca7f5b",
+        "url": "/blog/ol-design-works-library-shift/",
+        "date": "2026-06-04",
+        "hash": "9e959a3f7f3f27dc856ce01caaf2dc114bad9270cc5e5d93f414b451b5bbfbe1",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/ol-home-build/index.md",
+      "to": "blog/005.비움제작일지/006.일지/ol-home-build/index.md",
+      "sha256": "633bdc66d60e03fbd6c9f9ee5522764b80036abdaa5edf0d01b1c62bf511fc37",
+      "record": {
+        "id": "blog-af2e99eea31e5e",
+        "url": "/blog/ol-home-build/",
+        "date": "2026-05-30",
+        "hash": "633bdc66d60e03fbd6c9f9ee5522764b80036abdaa5edf0d01b1c62bf511fc37",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/ol-home-phase4/index.md",
+      "to": "blog/005.비움제작일지/006.일지/ol-home-phase4/index.md",
+      "sha256": "87b570cd476e9f4a16304d0e740423ba2ac13f6bbf19d9fa76abf679569fab87",
+      "record": {
+        "id": "blog-32ddbb1546caed",
+        "url": "/blog/ol-home-phase4/",
+        "date": "2026-05-31",
+        "hash": "87b570cd476e9f4a16304d0e740423ba2ac13f6bbf19d9fa76abf679569fab87",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/ol-home-refactoring-and-pagination/index.md",
+      "to": "blog/005.비움제작일지/006.일지/ol-home-refactoring-and-pagination/index.md",
+      "sha256": "bc51c5446782d2bd2966d529ac4deff37cd009206fc5f6cfaa078a0f826fd09b",
+      "record": {
+        "id": "blog-225ca115c1c287",
+        "url": "/blog/ol-home-refactoring-and-pagination/",
+        "date": "2026-06-26",
+        "hash": "bc51c5446782d2bd2966d529ac4deff37cd009206fc5f6cfaa078a0f826fd09b",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/ol-home-text-story-reader-update/index.md",
+      "to": "blog/005.비움제작일지/006.일지/ol-home-text-story-reader-update/index.md",
+      "sha256": "0e3f17696d7a4e471b64fab68053c396aef6a6fc3c6a3a4d3569c9b6061973e1",
+      "record": {
+        "id": "blog-0077606ed3487b",
+        "url": "/blog/ol-home-text-story-reader-update/",
+        "date": "2026-06-11",
+        "hash": "0e3f17696d7a4e471b64fab68053c396aef6a6fc3c6a3a4d3569c9b6061973e1",
+        "seriesKey": "blog/standalone"
+      }
+    },
+    {
+      "from": "blog/006.일지/reader-tools-and-markdown-improvements.md",
+      "to": "blog/005.비움제작일지/006.일지/reader-tools-and-markdown-improvements.md",
+      "sha256": "07e75e275ea3e292a87850935aa7a1b540d7baba67d084d18de6a623e87c67ce",
+      "record": {
+        "id": "blog-06feb0b8e9e818",
+        "url": "/blog/read/06feb0b8e9e818/",
+        "date": "2026-11-05",
+        "seriesKey": "blog/standalone",
+        "hash": "07e75e275ea3e292a87850935aa7a1b540d7baba67d084d18de6a623e87c67ce"
+      }
+    }
+  ]
+}

@@ -32,6 +32,7 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
 - `content-registry.json` is committed source metadata for stable URLs/dates/paths. `ol-core/public/generated/content/` is derived output and is not committed.
 - Shared images live in `content/media/`; first subfolders supply categories for the auxiliary /media/ masonry gallery. Home statistics/footer link to it, without main-menu entries or per-image document records. Originals and generated previews are separate; respect user-deleted historical archives.
+- BLOG uses series/category/post folders; index metadata is excluded from post counts/RSS and categories have one series parent.
 - Shared settings: `site-config.mjs`, app entry `ol-core/src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
 - Deploy workflow: `.github/workflows/deploy.yml`. Upload requests stop after requested push.
 - TEXT reuses STORY series links and expandable lists; no real tab switching.
@@ -65,6 +66,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-11 — BLOG series
+
+- Document BLOG series/category ownership and index metadata separately from posts.
 
 ### 2026-11-09 — Content / OL core separation
 

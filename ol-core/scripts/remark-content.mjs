@@ -40,6 +40,14 @@ export default function remarkContent({ root = PROJECT_ROOT } = {}) {
       .split(path.sep)
       .join("/");
     const registry = readRegistry(root);
+    if (/^blog\/[^/]+\/index\.md$/.test(source)) {
+      const start = tree.children.findIndex(n => n.type === "heading" && n.depth === 2 && textOf(n).trim() === "읽는 순서");
+      if (start >= 0) {
+        let end = start + 1;
+        while (end < tree.children.length && !(tree.children[end].type === "heading" && tree.children[end].depth <= 2)) end++;
+        tree.children.splice(start, end - start);
+      }
+    }
     // Only remove a verified list of internal TOC links, never a heading section.
     const toc = tree.children.findIndex(node => node.type === "heading" && textOf(node).trim() === "목차");
     if (toc >= 0) {

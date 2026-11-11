@@ -214,18 +214,18 @@ test("STORY requires category/series/part/document and keeps private series hidd
   }));
 
 
-test('BLOG category derives from the first folder without changing standalone identity or index kind', () => fixture(root => {
-  const old='blog/001.교학/guide/index.md';
+test('BLOG category derives from its series child folder and preserves post identity on moves', () => fixture(root => {
+  const old='blog/001.불교/001.교학/guide/index.md';
   const source='# 교학 글\n\n본문';
   fs.mkdirSync(path.join(root,'content',path.dirname(old)),{recursive:true});
   fs.writeFileSync(path.join(root,'content',old),source);
   const before=prepare(root), record={...before.files[old]};
   let data=normalize(old,source,before,root);
   assert.equal(data.category,'교학'); assert.equal(data.categoryOrder,1);
-  assert.equal(data.kind,'document'); assert.equal(data.seriesKey,'blog/standalone');
-  const next='blog/002.수행/guide/index.md';
-  fs.mkdirSync(path.join(root,'content/blog/002.수행'),{recursive:true});
-  fs.renameSync(path.join(root,'content/blog/001.교학/guide'),path.join(root,'content/blog/002.수행/guide'));
+  assert.equal(data.kind,'document'); assert.equal(data.seriesKey,'blog/001.불교');
+  const next='blog/002.실천/002.수행/guide/index.md';
+  fs.mkdirSync(path.join(root,'content/blog/002.실천/002.수행'),{recursive:true});
+  fs.renameSync(path.join(root,'content/blog/001.불교/001.교학/guide'),path.join(root,'content/blog/002.실천/002.수행/guide'));
   const after=prepare(root);data=normalize(next,source,after,root);
   assert.equal(data.category,'수행'); assert.equal(data.categoryOrder,2);
   assert.equal(data.url,record.url); assert.equal(data.date.toISOString().slice(0,10),record.date);

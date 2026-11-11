@@ -7,7 +7,7 @@ const media = await getMediaGallery();
 const groups = await Promise.all([
   getDocuments("text"),
   getDocuments("story"),
-  getCollection("blog", (e) => e.data.published),
+  getCollection("blog", (e) => e.data.published && e.data.kind === "document"),
 ]);
 ---
 

@@ -17,7 +17,9 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and document TOC default open at >=1360px and closed below that width; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - STORY document aids use the shared TEXT-style dock at >=1360px: one persistent right panel with 본문 목차/각주 switching and the same background as the article. Below that width, move the original nodes back to native modals; do not duplicate IDs or auto-open a modal on resize. STORY focus hides both the left chapter list and right aid rail, then restores the selected aid.
-- BLOG posts are organized under `001.교학`, `002.수행`, `003.인포그래픽`, `004.디자인`, `005.비움`, and `006.일지` within `content/blog/`. Keep per-post folders/attachments together; preserve registry identity and rebase relative links when moving.
+- BLOG uses `content/blog/series/category/post`: each category belongs to exactly one series. 불교의 세계 → 교학; 수행-몸과 마음 돌보기 → 수행; 상상공장 → 디자인·인포그래픽; 비움제작일지 → 비움·일지. 에세이-삶의 쉼표 intentionally has only its introduction until the user adds categories/posts. Keep per-post folders/attachments together; preserve IDs/URLs/dates/rights and rebase relative links when moving.
+- BLOG `/blog/` uses compact post rows; `/blog/series/` randomizes the four non-journal covers and asymmetric sizes once before paint, with a fixed journal section below. Mobile uses one column. Series detail uses an ordered TOC; category detail uses its authored introduction and posts. Use real page links with aria-current for 포스트/시리즈.
+- BLOG series/category `index.md` supplies title/H1, description/first paragraph, optional thumbnailAsset and published state; classify these as metadata, never posts/RSS/recent-post/statistics. Private intros hide descendants/assets. Optional series `## 읽는 순서` ordered Markdown links override oldest-first reading order; unlisted public posts follow by date. Use the same order for TOC and previous/next. Reject duplicate category labels across series, duplicate reading-order links and cross-series membership. No tag inheritance.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
 ## Content Rules
@@ -61,6 +63,10 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-11 — BLOG series
+
+- Added series/category/post hierarchy, index metadata, separate post/series pages, randomized asymmetric covers, category introductions and sequential post navigation. Keep the essay series empty.
 
 ### 2026-11-09 — Content / OL core separation
 

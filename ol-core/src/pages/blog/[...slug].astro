@@ -4,9 +4,10 @@ import DocumentTags from "../../components/common/DocumentTags.astro";
 import ContentRights from "../../components/common/ContentRights.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { url } from "../../lib/url";
+import { getBlogLibrary } from "../../lib/blog";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", (e) => e.data.published);
+  const posts = await getCollection("blog", (e) => e.data.published && e.data.kind === "document");
   return posts.map((entry) => ({
     params: {
       slug: entry.data.url.replace(/^\/blog\//, "").replace(/\/$/, ""),
@@ -17,6 +18,11 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const series = (await getBlogLibrary()).find(s => s.key === entry.data.seriesKey);
+const category = series?.categories.find(c => c.key === entry.data.categoryKey);
+const position = series?.entries.findIndex(p => p.id === entry.id) ?? -1;
+const previous = series?.entries[position - 1];
+const next = series?.entries[position + 1];
 const pagefindBreadcrumb = ["BLOG", entry.data.category]
   .filter(Boolean)
   .join(" · ");
@@ -37,6 +43,7 @@ const pagefindBreadcrumb = ["BLOG", entry.data.category]
   <main>
     <section class="ol-section">
       <div class="ol-container ol-container--readable">
+        {series && <nav class="ol-blog-breadcrumb" aria-label="현재 위치"><a href="/blog/">BLOG</a><span aria-hidden="true"> / </span><a href={series.url}>{series.title}</a>{category && <><span aria-hidden="true"> / </span><a href={category.url}>{category.title}</a></>}</nav>}
         <header class="ol-blog-detail-header">
           {entry.data.category && (
             <span class="ol-badge">{entry.data.category}</span>
@@ -50,11 +57,17 @@ const pagefindBreadcrumb = ["BLOG", entry.data.category]
             )}
           </div>
         </header>
+        {series && <details class="ol-blog-reading-context"><summary><span>{series.title}</span><span>시리즈 목차 · {position + 1} / {series.count}</span></summary><ol>{series.entries.map(post => <li><a href={post.data.url} aria-current={post.id === entry.id ? 'page' : undefined}>{post.data.title}</a></li>)}</ol></details>}
         <div class="ol-prose">
           <Content />
         </div>
         <ContentRights data={entry.data} />
         <footer class="ol-blog-detail-footer">
+          {series && <nav class="ol-blog-sequence" aria-label="시리즈 이어 읽기">
+            {previous ? <a href={previous.data.url} rel="prev"><span>← 이전 글</span><strong>{previous.data.title}</strong></a> : <div><span>시리즈의 첫 글입니다.</span></div>}
+            {next ? <a href={next.data.url} rel="next"><span>다음 글 →</span><strong>{next.data.title}</strong></a> : <a href="/blog/series/"><span>마지막 글까지 읽으셨습니다.</span><strong>다른 시리즈 둘러보기 →</strong></a>}
+          </nav>}
+          {series && <a href={series.url} class="ol-blog-detail-back">시리즈 전체 목차 →</a>}
           <a href={url("/blog")} class="ol-blog-detail-back">
             ← 목록으로
           </a>

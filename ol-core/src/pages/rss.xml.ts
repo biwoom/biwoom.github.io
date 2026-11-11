@@ -5,12 +5,12 @@ import type { APIContext } from "astro";
 
 export async function GET(context: APIContext) {
   const posts = (
-    await getCollection("blog", ({ data }) => data.published)
+    await getCollection("blog", ({ data }) => data.published && data.kind === "document")
   ).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   return rss({
-    title: `${BRAND.name} BLOG — 불교 콘텐츠 작업 일지`,
-    description: `${BRAND.nameKo} 프로젝트의 개발 기록, 결정과 회고, 작은 발견들.`,
+    title: `${BRAND.name} BLOG`,
+    description: "불교의 사유와 수행, 창작과 비움의 제작 기록.",
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,

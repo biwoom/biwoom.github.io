@@ -1,0 +1,12 @@
+---
+import type { BlogSeries } from "../../lib/blog";
+interface Props { series: BlogSeries; coverIndex?: number; }
+const { series, coverIndex = 0 } = Astro.props;
+const tone = series.key.split('/').at(-1)?.match(/^0*(\d+)/)?.[1] ?? '1';
+---
+<a href={series.url} class:list={["ol-blog-series-card", {"ol-blog-series-card--image": !!series.coverUrl}]} data-series-card data-slot={coverIndex} data-tone={tone}>
+  {series.coverUrl && <img class="ol-blog-cover-image" src={series.coverUrl} alt="" loading="lazy" />}
+  <div class="ol-blog-cover-line"><span>SERIES / {String(Number(tone)).padStart(2,'0')}</span><span>{series.count ? `${series.count}편` : '준비 중'}</span></div>
+  <span class="ol-blog-cover-art" aria-hidden="true"></span>
+  <div class="ol-blog-cover-copy"><h2>{series.title}</h2><p>{series.description}</p><div class="ol-blog-cover-bottom"><span>{series.categories.map(c => c.title).join(' · ') || '새로운 이야기를 준비합니다'}</span><span aria-hidden="true">↗</span></div></div>
+</a>

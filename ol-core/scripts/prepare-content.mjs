@@ -15,6 +15,10 @@ import {
   isIntroduction,
   publicationDay,
   resolveAlias,
+  isBlogCategoryIntroduction,
+  folderMetadata,
+  blogFolders,
+  isPublicSource,
 } from "./lib/content.mjs";
 export function prepare(root = PROJECT_ROOT) {
   const registry = readRegistry(root),
@@ -70,7 +74,18 @@ export function prepare(root = PROJECT_ROOT) {
       }
       registry.files[relative] = record;
     }
-    if (info.collection !== "blog" && info.collection !== "pages") {
+    if (info.collection === "blog" && info.seriesPath !== "blog/standalone") {
+      const ensure = (key, kind, oldKey) => {
+        const previous = oldKey && registry.folders[oldKey] && !fs.existsSync(path.join(base, oldKey)) ? registry.folders[oldKey] : null;
+        registry.folders[key] ??= previous ? { ...previous } : { url: `/blog/${kind}/${shortId(key)}/` };
+        const meta = folderMetadata(key, root);
+        registry.folders[key].title = meta.title;
+        if (!meta.published) registry.folders[key].hidden = true;
+        else delete registry.folders[key].hidden;
+      };
+      ensure(info.seriesPath, "series", record.seriesKey);
+      if (info.category) ensure(`${info.seriesPath}/${info.category}`, "category", record.categoryKey);
+    } else if (info.collection !== "blog" && info.collection !== "pages") {
       if (!registry.folders[info.seriesPath]) {
         const oldSeries = record.seriesKey;
         const previous =
@@ -97,18 +112,31 @@ export function prepare(root = PROJECT_ROOT) {
       else delete registry.folders[info.seriesPath].hidden;
     }
     if (isIntroduction(relative)) {
-      const url = registry.folders[info.seriesPath].url;
+      const key = isBlogCategoryIntroduction(relative) ? `${info.seriesPath}/${info.category}` : info.seriesPath;
+      const url = registry.folders[key].url;
       if (record.url !== url) registry.redirects[record.url] = url;
       record.url = url;
     }
     record.seriesKey = info.seriesPath;
+    if (info.collection === "blog" && info.category) record.categoryKey = `${info.seriesPath}/${info.category}`;
     record.hash = digest;
     if (
       !record.date &&
       data.published !== false &&
-      !registry.folders[info.seriesPath]?.hidden
+      !registry.folders[info.seriesPath]?.hidden &&
+      isPublicSource(relative, registry, root)
     )
       record.date = publicationDay();
+  }
+  // Empty public series/categories are authorable even before their first post.
+  for (const series of blogFolders(root)) {
+    for (const [key, kind] of [[series.key, "series"], ...series.categories.map(key => [key, "category"])]) {
+      registry.folders[key] ??= { url: `/blog/${kind}/${shortId(key)}/` };
+      const meta = folderMetadata(key, root);
+      registry.folders[key].title = meta.title;
+      if (!meta.published) registry.folders[key].hidden = true;
+      else delete registry.folders[key].hidden;
+    }
   }
   const serialized = JSON.stringify(registry, null, 2) + "\n",
     file = projectPaths(root).registry;

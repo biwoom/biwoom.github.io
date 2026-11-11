@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getBlogThumbnailUrl } from "../../lib/assets";
+interface Props { post: CollectionEntry<"blog">; index?: number; hidden?: boolean; }
+const { post, index = 0, hidden = false } = Astro.props;
+const thumbnail = getBlogThumbnailUrl(post);
+---
+<article class:list={["ol-post", "ol-blog-post-row", {"ol-post--text-only": !thumbnail}]} data-category={post.data.category || "미분류"} data-tags={JSON.stringify(post.data.tags)} data-year={post.data.date.getFullYear()} data-index={index} hidden={hidden}>
+  <div class="ol-blog-post-copy"><div class="ol-blog-card-meta-row"><span class="when">{post.data.date.toLocaleDateString("ko-KR")}</span>{post.data.category && <span class="ol-badge">{post.data.category}</span>}</div>
+    <a href={post.data.url} class="ol-post-title-link"><h3>{post.data.title}</h3></a><p>{post.data.description}</p>
+    <div class="meta">{post.data.seriesKey !== "blog/standalone" && <a href={post.data.seriesUrl}>{post.data.series}</a>}<span>{post.data.readingTime}분 읽기</span></div>
+  </div>
+  {thumbnail && <a href={post.data.url} class="ol-blog-list-thumbnail" aria-label={`${post.data.title} 읽기`} tabindex="-1"><img src={thumbnail} alt="" loading="lazy" width="160" height="120" /></a>}
+</article>
