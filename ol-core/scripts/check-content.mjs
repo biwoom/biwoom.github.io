@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths, isMainModule } from './lib/paths.mjs';
+import { PROJECT_ROOT, projectPaths, isMainModule, relativeContentPath, contentFile } from './lib/paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import { visit } from "unist-util-visit";
@@ -19,7 +19,7 @@ export function validate(root = PROJECT_ROOT) {
     urls.set(url, source);
   };
   for (const file of ["text", "story", "blog", "pages"].flatMap(c => walk(path.join(base,c))).filter(p => markdownPattern.test(p) || mediaPattern.test(p))) {
-    const relative = path.relative(base,file).split(path.sep).join("/");
+    const relative = relativeContentPath(file, root);
     try {
       const source = markdownPattern.test(file) ? fs.readFileSync(file,"utf8") : "";
       const {data,body} = parse(source), normal = normalize(relative,source,registry,root);
@@ -44,7 +44,7 @@ export function validate(root = PROJECT_ROOT) {
         if (/^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(url) && !url.startsWith("content-asset:") && !url.startsWith("design-asset:")) return;
         if (url.startsWith("design-asset:")) { errors.push(`${relative}: unmigrated asset ${url}`); return; }
         const candidate = referenceTarget(relative,url,registry);
-        if (!candidate || !fs.existsSync(path.join(base,candidate))) errors.push(`${relative}: missing local target ${url}`);
+        if (!candidate || !fs.existsSync(contentFile(candidate, root))) errors.push(`${relative}: missing local target ${url}`);
         else if (!isPublicSource(candidate,registry,root,{asset:!markdownPattern.test(candidate)})) errors.push(`${relative}: link points to excluded document or asset ${url}`);
       };
       visit(markdownTree(body),node => { if (["link","image","definition"].includes(node.type) && node.url) checkReference(node.url); });

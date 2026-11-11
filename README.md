@@ -1,6 +1,6 @@
 # Biwoom - 비움
 
-문서 버전: v1.6 · 최종 업데이트: 2026-11-11 · 대상: Biwoom (OL 코어)
+문서 버전: v1.7 · 최종 업데이트: 2026-11-11 · 대상: Biwoom (OL 코어)
 
 불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
 
@@ -25,7 +25,7 @@ site-config.mjs          # 브랜드·운영 URL·기본값
 content-registry.json    # 문서 식별자·주소·날짜·이력
 ```
 
-저장소 루트에서 기존 `npm run dev`, `npm run build` 명령을 그대로 사용합니다. 빌드 결과는 `dist/`에 생성됩니다. 경로 기준은 `ol-core/scripts/lib/paths.mjs`에서 관리합니다. 기존 Obsidian 보관함은 위치만 `content/`로 옮겼으므로 해당 폴더를 보관함으로 다시 열어 사용합니다. `.obsidian` 내용은 유지하며 Git에서는 제외합니다.
+저장소 루트에서 기존 `npm run dev`, `npm run build` 명령을 그대로 사용합니다. 빌드 결과는 `dist/`에 생성됩니다. 경로 기준은 `ol-core/scripts/lib/paths.mjs`에서 관리합니다. 보관함 상대 경로와 레지스트리 키는 NFC로 통일하여 macOS의 자모 분해형 파일명과 Linux의 Git 체크아웃이 같은 메타정보를 사용합니다. 실제 파일명·본문·기존 문서 주소는 바꾸지 않습니다. 기존 Obsidian 보관함은 위치만 `content/`로 옮겼으므로 해당 폴더를 보관함으로 다시 열어 사용합니다. `.obsidian` 내용은 유지하며 Git에서는 제외합니다.
 
 ## 집필
 
@@ -118,6 +118,10 @@ Biwoom - 비움의 심볼은 `ol-core/public/brand/biwoom-mark-monochrome.png`(�
 `content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
 
 ## 수정 변경사항
+
+### 2026-11-11 — v1.7
+
+- 한글 경로의 NFC/NFD 차이로 Actions 레지스트리 검사가 실패하던 문제를 수정했습니다. 기존 식별 정보는 유지합니다.
 
 ### 2026-11-11 — v1.6
 

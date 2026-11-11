@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths, isMainModule } from './lib/paths.mjs';
+import { PROJECT_ROOT, projectPaths, isMainModule, relativeContentPath, normalizeContentPath, contentFile } from './lib/paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import { walk, markdownPattern, readRegistry, isPublicSource } from "./lib/content.mjs";
@@ -15,11 +15,11 @@ export function syncAssets(root = PROJECT_ROOT) {
   for (const collection of ["text", "story", "blog", "pages", "media"]) {
     for (const file of walk(`${base}/${collection}`, { assets: true })) {
       if (markdownPattern.test(file)) continue;
-      const source = path.relative(base, file).split(path.sep).join("/");
+      const source = relativeContentPath(file, root);
       if (!isPublicSource(source, registry, root, { asset: true })) continue;
-      const relative = path.relative(base, file),
+      const relative = source,
         output = path.join(target, relative);
-      expected.add(path.resolve(output));
+      expected.add(normalizeContentPath(path.resolve(output)));
       fs.mkdirSync(path.dirname(output), { recursive: true });
       if (
         !fs.existsSync(output) ||
@@ -31,14 +31,14 @@ export function syncAssets(root = PROJECT_ROOT) {
   // Publish only selected covers and complete public ebook downloads; never copy metadata/drafts.
   for (const book of getEbooks(root)) {
     for (const source of [book.coverSource, ...book.downloads.map(file => file.source)].filter(Boolean)) {
-      const file = path.join(base, source), output = path.join(target, source);
-      expected.add(path.resolve(output));
+      const file = contentFile(source, root), output = path.join(target, source);
+      expected.add(normalizeContentPath(path.resolve(output)));
       fs.mkdirSync(path.dirname(output), { recursive: true });
       if (!fs.existsSync(output) || !fs.readFileSync(file).equals(fs.readFileSync(output))) fs.copyFileSync(file, output);
     }
   }
   for (const file of allFiles(target))
-    if (!expected.has(path.resolve(file))) fs.unlinkSync(file);
+    if (!expected.has(normalizeContentPath(path.resolve(file)))) fs.unlinkSync(file);
   function pruneEmpty(dir) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       if (!entry.isDirectory()) continue;

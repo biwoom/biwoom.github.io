@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { projectPaths } from "../scripts/lib/paths.mjs";
+import { projectPaths, normalizeContentPath, relativeContentPath } from "../scripts/lib/paths.mjs";
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
@@ -51,7 +51,7 @@ function collection(name: string) {
       "!**/_*/**",
     ],
     generateId({ entry }) {
-      const relative = `${name}/${entry}`;
+      const relative = normalizeContentPath(`${name}/${entry}`);
       let registry = readRegistry();
       if (!registry.files[relative]) registry = prepare();
       return registry.files[relative].id;
@@ -70,10 +70,7 @@ function collection(name: string) {
             ...context,
             watcher: undefined,
             parseData(options) {
-              const relative = path
-                .relative(projectPaths().content, options.filePath!)
-                .split(path.sep)
-                .join("/");
+              const relative = relativeContentPath(options.filePath!);
               return context.parseData({
                 ...options,
                 data: {

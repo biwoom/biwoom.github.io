@@ -69,6 +69,7 @@ curl -I -L https://biwoom.github.io/sitemap-index.xml
 - Browser cache or GitHub Pages CDN delay shows a stale 404.
 - Git remote still points at the pre-rename repository URL.
 - New content is not committed because it is untracked.
+- macOS NFD filenames and Linux NFC checkout paths can make check:content rewrite a committed registry before check:registry runs. Use the shared NFC path boundary and preserve IDs/URLs/dates; do not disable the HEAD comparison or repeatedly commit platform-dependent keys. Unicode fixtures cover canonical registry stability, native NFD assets and collision errors.
 
 ## Reporting
 

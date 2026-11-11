@@ -16,12 +16,16 @@ Latest update: 2026-11-11.
 7. Use `_drafts/` for unpublished work. Public menu documents are public by default, with explicit `published: false` preserved. Nonpublic intros hide descendants.
 8. Preserve dates, rights and provenance; put source notes in body prose. Defaults live in `site-config.mjs` and app config in `ol-core/src/lib/site-config.ts`.
 9. Keep shared images in `content/media/` with ordinary document-relative links. The first subfolder is the gallery category; root files are 미분류. Optional category index.md files hold multiple `## [Image title](relative-image-path)` sections whose bodies are rendered in image modals; retain sample indexes in the three existing categories and validate category-local targets/duplicates. Update references when moving files. The auxiliary /media/ gallery is linked from home statistics/footer only, without per-image content records or main-menu entries. Put listable PDFs/images/HTML directly in a material section. Put supporting files in `assets/` or `_assets/` and use relative Markdown links. Do not add DESIGN keys or generated URLs.
-10. Preserve `content-registry.json`. Moves with unchanged content retain identity; moved-and-edited files may require `npm run content:move -- old new` before preparation. Do not silently assign a replacement URL to a known moved document.
+10. Vault-relative paths are canonical NFC via shared paths helpers; physical NFD names remain supported without renaming sources or normalizing prose. Preserve `content-registry.json`. Moves with unchanged content retain identity; moved-and-edited files may require `npm run content:move -- old new` before preparation. Do not silently assign a replacement URL to a known moved document.
 11. Use shared DocumentTags for document-only optional tags below the title, without series inheritance. Series tag menus/modals are retired; BLOG tags filter alongside years/pagination. Do not create real tab switching; section buttons link to the first item, with expandable full lists.
 12. BLOG series/category index.md holds title/description, optional thumbnailAsset and publication state; metadata is excluded from post counts/RSS. Each category belongs to one series. Optional series `## 읽는 순서` ordered relative post links override oldest-first order; keep TOC/previous-next identical. Preserve the empty essay series until the user adds content.
 13. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
 ## 수정 변경사항
+
+### 2026-11-11 — Unicode 경로
+
+- NFC 경로 키와 원본 보존, macOS/Linux 레지스트리 검증 차이와 충돌 처리 규칙을 반영했습니다.
 
 ### 2026-11-11 — BLOG series
 

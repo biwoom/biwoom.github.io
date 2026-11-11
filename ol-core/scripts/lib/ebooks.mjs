@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths } from './paths.mjs';
+import { PROJECT_ROOT, projectPaths, normalizeContentPath, contentFile, readContentDirectory } from './paths.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { compareNames, nameInfo, parse, markdownTree, textOf, shortId, readRegistry, referenceTarget, isPublicSource } from './content.mjs';
@@ -8,7 +8,7 @@ export const ebookLicense = { label: 'CC0 1.0', url: 'https://creativecommons.or
 const imagePattern = /\.(png|jpe?g|webp|avif)$/i;
 const labels = ['저자', '원저자', '번역자', '편집자', '발행일', '판본', '언어'];
 function publicDirectories(directory) {
-  return fs.readdirSync(directory, { withFileTypes: true })
+  return readContentDirectory(directory)
     .filter(entry => entry.isDirectory() && !/^[._]/.test(entry.name) && entry.name !== 'assets')
     .sort((a, b) => compareNames(a.name, b.name))
     .filter(entry => {
@@ -24,23 +24,23 @@ export function getEbookLibrary(root = PROJECT_ROOT) {
   const registry = readRegistry(root);
   const parent = path.join(base, 'index.md');
   if (fs.existsSync(parent) && parse(fs.readFileSync(parent, 'utf8')).data.published === false) return empty;
-  const categories = publicDirectories(base).map(entry => ({ key: entry.name, label: nameInfo(entry.name).label, count: 0 }));
-  const books = categories.flatMap(category => publicDirectories(path.join(base, category.key)).flatMap(entry => {
-      const packagePath = `ebook/${category.key}/${entry.name}`;
-      const directory = path.join(projectPaths(root).content, packagePath);
+  const categories = publicDirectories(base).map(entry => ({ key: normalizeContentPath(entry.name), label: nameInfo(entry.name).label, count: 0 }));
+  const books = categories.flatMap(category => publicDirectories(contentFile(`ebook/${category.key}`, root)).flatMap(entry => {
+      const packagePath = normalizeContentPath(`ebook/${category.key}/${entry.name}`);
+      const directory = contentFile(packagePath, root);
       const source = `${packagePath}/index.md`;
       const intro = path.join(directory, 'index.md');
       const { data, body } = fs.existsSync(intro) ? parse(fs.readFileSync(intro, 'utf8')) : { data: {}, body: '' };
       if (data.published === false) return [];
-      const files = fs.readdirSync(directory, { withFileTypes: true })
+      const files = readContentDirectory(directory)
         .filter(file => file.isFile() && !/^[._]/.test(file.name)).map(file => file.name).sort(compareNames);
       const downloads = files.filter(name => /\.(epub|pdf)$/i.test(name)).map(name => ({
-        name, source: `${packagePath}/${name}`, url: assetUrl(`${packagePath}/${name}`),
+        name, source: normalizeContentPath(`${packagePath}/${name}`), url: assetUrl(`${packagePath}/${name}`),
         format: path.extname(name).slice(1).toUpperCase(), bytes: fs.statSync(path.join(directory, name)).size,
       })).filter(file => file.bytes > 0).sort((a, b) => a.format.localeCompare(b.format) || compareNames(a.name, b.name));
       if (!downloads.length) return [];
-      const coverName = files.find(name => /^(cover|표지)\.(png|jpe?g|webp|avif)$/i.test(name)) ?? files.find(name => imagePattern.test(name));
-      const coverSource = coverName ? `${packagePath}/${coverName}` : '';
+      const coverName = files.find(name => /^(cover|표지)\.(png|jpe?g|webp|avif)$/i.test(normalizeContentPath(name))) ?? files.find(name => imagePattern.test(name));
+      const coverSource = coverName ? normalizeContentPath(`${packagePath}/${coverName}`) : '';
       const tree = markdownTree(body);
       const heading = tree.children.find(node => node.type === 'heading' && node.depth === 1);
       const title = data.title || (heading ? textOf(heading).trim() : '') || nameInfo(entry.name).label;

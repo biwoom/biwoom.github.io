@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths, isMainModule } from './lib/paths.mjs';
+import { PROJECT_ROOT, projectPaths, isMainModule, relativeContentPath, contentFile } from './lib/paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -30,10 +30,10 @@ export function prepare(root = PROJECT_ROOT) {
     .flatMap((c) => walk(path.join(base, c)))
     .filter((p) => markdownPattern.test(p) || mediaPattern.test(p));
   const relativeSet = new Set(
-    files.map((p) => path.relative(base, p).split(path.sep).join("/")),
+    files.map((p) => relativeContentPath(p, root)),
   );
   for (const p of files) {
-    const relative = path.relative(base, p).split(path.sep).join("/");
+    const relative = relativeContentPath(p, root);
     const source = markdownPattern.test(p)
       ? fs.readFileSync(p, "utf8")
       : fs.readFileSync(p);
@@ -51,7 +51,7 @@ export function prepare(root = PROJECT_ROOT) {
           old.split("/")[0] === info.collection,
       );
       const newMatches = files.filter(file => {
-        const name = path.relative(base, file).split(path.sep).join("/");
+        const name = relativeContentPath(file, root);
         return !registry.files[name] && name.split("/")[0] === info.collection && hash(fs.readFileSync(file)) === digest;
       });
       if (moved.length && (moved.length !== 1 || newMatches.length !== 1))
@@ -76,7 +76,7 @@ export function prepare(root = PROJECT_ROOT) {
     }
     if (info.collection === "blog" && info.seriesPath !== "blog/standalone") {
       const ensure = (key, kind, oldKey) => {
-        const previous = oldKey && registry.folders[oldKey] && !fs.existsSync(path.join(base, oldKey)) ? registry.folders[oldKey] : null;
+        const previous = oldKey && registry.folders[oldKey] && !fs.existsSync(contentFile(oldKey, root)) ? registry.folders[oldKey] : null;
         registry.folders[key] ??= previous ? { ...previous } : { url: `/blog/${kind}/${shortId(key)}/` };
         const meta = folderMetadata(key, root);
         registry.folders[key].title = meta.title;
@@ -91,7 +91,7 @@ export function prepare(root = PROJECT_ROOT) {
         const previous =
           oldSeries &&
           registry.folders[oldSeries] &&
-          !fs.existsSync(path.join(base, oldSeries))
+          !fs.existsSync(contentFile(oldSeries, root))
             ? registry.folders[oldSeries]
             : null;
         registry.folders[info.seriesPath] = previous
@@ -104,7 +104,7 @@ export function prepare(root = PROJECT_ROOT) {
               url: `/${info.collection}/library/${shortId(info.seriesPath)}/`,
             };
       }
-      const intro = path.join(base, info.seriesPath, "index.md");
+      const intro = contentFile(`${info.seriesPath}/index.md`, root);
       const hidden =
         fs.existsSync(intro) &&
         parse(fs.readFileSync(intro, "utf8")).data.published === false;

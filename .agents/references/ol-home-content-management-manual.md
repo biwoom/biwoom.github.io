@@ -1,6 +1,6 @@
 # Biwoom 콘텐츠 관리 매뉴얼
 
-- 문서 버전: v4.0
+- 문서 버전: v4.1
 - 최신 수정일: 2026-11-11
 - 대상 프로젝트: Biwoom (OL 코어)
 - 배포 URL: https://biwoom.github.io/
@@ -11,6 +11,7 @@
 - `ol-core/src/`, `ol-core/scripts/`, `ol-core/public/`: Astro 구현·콘텐츠 엔진·고정 자산. 콘텐츠와 구분하여 관리한다.
 - 저장소 루트의 `astro.config.mjs`, package 파일, `site-config.mjs`, `content-registry.json`과 `dist/` 출력은 유지한다. npm 명령도 루트에서 실행한다.
 - 파일시스템 경로는 `ol-core/scripts/lib/paths.mjs`의 공통 기준을 사용한다. glob()은 실제 content 경로를 읽고, registry 내부 키는 기존 `text/...` 같은 보관함 상대 경로를 유지한다. 보관함의 저장 위치만 바꾸었다고 문서 URL·발행일을 새로 만들지 않는다.
+- 한글 경로는 내부 색인·로더·상대 링크·생성 첨부 주소에서 NFC로 통일한다. macOS에서 NFD로 읽히는 파일명도 공통 contentFile 경로 조회로 지원한다. 파일명을 직접 변환하거나 본문을 다시 저장할 필요는 없다. 과거 레지스트리의 경로 키·seriesKey·categoryKey·별칭은 준비 과정에서 NFC로 이관하되 ID·URL·발행일·해시·리디렉션은 보존한다. 같은 NFC 경로로 겹치는 파일이나 충돌하는 레지스트리는 검사 오류이며 자동 덮어쓰지 않는다.
 - 생성 자산은 `ol-core/public/generated/`, 개발 메타데이터는 `.astro/`에 있으며 커밋하지 않는다. `.gitignore`는 `content/.obsidian/`을 제외한다.
 
 ## 집필 원칙
@@ -240,6 +241,10 @@ YAML 없는 글, 제목, 경로 계층, 중복 주소, 링크와 자산, 초안 
 GitHub Pages 루트 배포를 유지하며 Astro `base`는 설정하지 않는다. 라우트 변경 시 robots·RSS·사이트맵을 함께 검사한다. 업로드 요청은 요청된 push까지만 수행하며 배포 확인·후속 로그 커밋을 자동으로 하지 않는다.
 
 ## 수정 변경사항
+
+### 2026-11-11 — Unicode 경로 안정화
+
+- macOS/Linux의 NFC·NFD 경로 차이, 공통 조회·레지스트리 보존과 충돌 검사 규칙을 추가했다.
 
 ### 2026-11-11 — BLOG 시리즈와 index 메타정보
 

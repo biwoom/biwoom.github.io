@@ -1,5 +1,11 @@
 # Decisions
 
+## 2026-11-11 — Canonical Unicode vault paths
+
+- Use NFC POSIX vault keys at filesystem-to-source, registry, Astro loader, category/library, relative-reference and generated asset boundaries. Keep physical paths separate and resolve native decomposed files without renaming the vault or normalizing authored text.
+- Read legacy registries into canonical tables before move detection. Normalize file/folder keys, seriesKey/categoryKey and alias endpoints; remove canonical self-aliases, preserve IDs/URLs/dates/hashes/redirects and reject conflicting canonical entries. Treat Unicode spelling as the same source rather than a move.
+- Retain strict committed-registry checks. Test both NFC checkout listings and NFD physical paths, identical preparation bytes, a temporary committed checkpoint, canonical loader/link/privacy refresh, asset sync and collisions.
+
 ## 2026-11-11 — BLOG series and reading flow
 
 - Use physical blog/series/category/post folders, with each category owned by one series. Add 상상공장 for 디자인·인포그래픽; name the fixed production series 비움제작일지 for 비움·일지. Retain the empty essay series until user authoring.

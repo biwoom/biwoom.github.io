@@ -36,6 +36,26 @@ const series=reg().folders['text/C/W'].url;
 const rights=reg().files['blog/rights.md'].url;
 await until(async()=>{const html=await get(rights);return html.includes('Rights Owner') && html.includes('CC-BY') && html.includes('Special notice');},'BLOG rights rendering');
 await until(async()=> (await get(series)).includes('Live document'),'initial document');
+const unicodeSource='story/003.유니코드/001.마하붓다왐사/01.자료/001.글.md';
+const unicodeNext='story/003.유니코드/001.마하붓다왐사/01.자료/002.다음.md';
+const unicodeIntro='story/003.유니코드/001.마하붓다왐사/index.md';
+const unicodeAsset='story/003.유니코드/001.마하붓다왐사/01.자료/_assets/첨부.pdf';
+write(unicodeSource.normalize('NFD'),'# Unicode live document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
+write(unicodeNext.normalize('NFD'),'# Unicode next document');write(unicodeAsset.normalize('NFD'),'%PDF-unicode');
+await until(async()=>{const r=reg();if(!r.files[unicodeSource]||!r.files[unicodeNext])return false;const html=await get(r.files[unicodeSource].url);return html.includes('Unicode live document')&&html.includes('href="'+r.files[unicodeNext].url+'"')&&html.includes(encodeURIComponent('첨부.pdf'));},'NFD source discovery, canonical loader IDs and relative links');
+const unicodeUrl=reg().files[unicodeSource].url;
+write(unicodeSource.normalize('NFD'),'# Unicode updated document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
+await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD edit without identity churn');
+assert.equal(reg().files[unicodeSource].url,unicodeUrl);assert.ok(Object.keys(reg().files).every(key=>key===key.normalize('NFC')));
+write(unicodeIntro.normalize('NFD'),'---\npublished: false\n---\n# Unicode private series');
+const unicodeCategory=categoryUrl('story/003.유니코드');
+await until(async()=>!(await get(unicodeCategory)).includes('href="'+reg().folders['story/003.유니코드/001.마하붓다왐사'].url+'"'),'NFD introduction privacy');
+const unicodeAssetUrl='/generated/content/'+unicodeAsset.split('/').map(encodeURIComponent).join('/');
+await until(async()=> (await fetch('http://127.0.0.1:4399'+unicodeAssetUrl)).status===404,'NFD private asset cleanup');
+write(unicodeIntro.normalize('NFD'),'# Unicode restored series');
+await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD series restore');
+await until(async()=> (await fetch('http://127.0.0.1:4399'+unicodeAssetUrl)).status===200,'NFD public asset restore');
+
 write('text/C/W/index.md','---\npublished: false\n---\n# Work');
 await until(async()=> !(await get(textCategory)).includes('href="'+series+'"'),'hide series without restart');
 write('text/C/W/index.md','# Work');
@@ -59,5 +79,5 @@ await until(async()=> !(await get('/ebook/')).includes('Live ebook'), 'EBOOK pri
 await until(async()=> (await fetch('http://127.0.0.1:4399/generated/content/ebook/001.Sample/001.Book/book.pdf')).status===404, 'private EBOOK asset removal');
 write('ebook/001.Sample/001.Book/index.md','# Restored ebook');
 await until(async()=> (await get('/ebook/')).includes('Restored ebook'), 'EBOOK restore without restart');
-console.log('LIVE PASS: separate content/core paths; TEXT/STORY hierarchy, privacy and document/PDF refresh; BLOG rights; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
+console.log('LIVE PASS: separate content/core paths; TEXT/STORY hierarchy, privacy and document/PDF refresh; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
 }finally{try{process.kill(-child.pid,'SIGTERM');}catch{}await new Promise(r=>setTimeout(r,500));fs.rmSync(root,{recursive:true,force:true});}

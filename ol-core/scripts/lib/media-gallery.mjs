@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths } from './paths.mjs';
+import { PROJECT_ROOT, projectPaths, relativeContentPath } from './paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
@@ -57,7 +57,7 @@ async function prepareGallery(root) {
   /** @type {MediaImage[]} */
   const items = [];
   for (const file of walk(path.join(base, "media"), { assets: true }).filter(file => mediaImagePattern.test(file) && !path.relative(base, file).split(path.sep).some(part => /^[._]/.test(part)))) {
-    const source = path.relative(base, file).split(path.sep).join("/");
+    const source = relativeContentPath(file, root);
     const stat = fs.statSync(file), signature = `${stat.size}:${stat.mtimeMs}`;
     const previous = cache.files[source];
     if (previous?.signature === signature && previous.item.previewUrl.endsWith(`-v${previewVersion}.webp`) && fs.existsSync(path.join(projectPaths(root).public, previous.item.previewUrl))) {

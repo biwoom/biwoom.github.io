@@ -14,7 +14,7 @@ Last updated: 2026-11-11
 
 - Biwoom - 비움, powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
 - Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
-- Refactor commit `f70b680` was pushed to `origin/main` on 2026-10-30. Production deployment completion has not been verified.
+- Latest inspected Actions runs: 2026-11-10 `7d6c9ed` and 2026-11-11 `4ccecdb` stopped at the committed-registry gate (211 STORY paths changed NFD/NFC spelling). The last inspected successful run is 2026-11-09 `6de2f4d`. Unicode handling is fixed locally; no new push, rerun or production deployment is included.
 
 ## Menu Accents
 
@@ -24,6 +24,8 @@ Last updated: 2026-11-11
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
 
 ## Current Architecture
+
+- Vault keys are now canonical NFC POSIX paths across registry preparation, Astro IDs/data, folder grouping, Markdown references and attachment URLs. Shared paths helpers retain native filesystem roots and resolve decomposed physical names. Legacy registry paths/alias endpoints migrate without changing any IDs, URLs, dates, hashes or redirects; canonical collisions fail explicitly. The 2026-11-10/11 Actions failures were caused by 211 STORY records changing NFD/NFC spelling before the strict HEAD check. Keep the code and migrated registry committed together; production CI validation awaits the next requested push.
 
 - TEXT/STORY restore the saved 80–150% reading size in the document head before body paint. Initial typography uses the same scale for prose, headings, title, code/tables and original passages; the shared slider then measures at 100% and restores the scale synchronously, preventing a small-to-large flash and repeated scaling on resize.
 
@@ -78,7 +80,7 @@ Last updated: 2026-11-11
 
 ## Known Limits and Follow-ups
 
-- Development server was restarted on 127.0.0.1:4321 after the 2026-11-11 BLOG parser migration and final build. BLOG desktop/412px mobile light/dark views were verified in native Chrome. Registry preparation is stable; the intentional source/registry changes require a commit before check:registry passes its HEAD comparison. No commit/push is included.
+- Development server was restarted on 127.0.0.1:4321 after the 2026-11-11 Unicode path fix and final build. BLOG desktop/412px mobile light/dark views were verified in native Chrome. Registry preparation is stable; code and registry belong in the same local commit. Run check:registry after committing; production deployment awaits a requested push.
 
 - Content engine code changes require a full development-process restart. A stale native parser can keep rewriting registry series keys and merge a category into a single series even when the new static build is correct. Runtime category checks must assert actual series titles/counts. The previous root/category HTTP check inspected only view markers and missed this stale grouping.
 

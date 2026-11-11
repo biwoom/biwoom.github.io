@@ -1,5 +1,5 @@
-import { projectPaths } from './lib/paths.mjs';
-const { dist, content } = projectPaths();
+import { projectPaths, contentFile } from './lib/paths.mjs';
+const { dist } = projectPaths();
 import fs from "node:fs";
 import path from "node:path";
 import assert from "node:assert/strict";
@@ -111,7 +111,7 @@ const publishedBlogCategories = [];
 const drawerCounts = { text: 0, story: 0 };
 for (const [source, record] of Object.entries(registry.files)) {
   const collection = source.split("/")[0],
-    file = path.join(content, source);
+    file = contentFile(source);
   if (
     !["text", "story", "blog"].includes(collection) ||
     !markdownPattern.test(source) ||
@@ -267,8 +267,8 @@ for (const section of ["text", "story"]) {
   assert.ok(!index.includes("ol-category-filter"), `${section}: obsolete category buttons`);
   const series = new Map();
   for (const [source] of Object.entries(registry.files)) {
-    if (!source.startsWith(`${section}/`) || !fs.existsSync(`${content}/${source}`)) continue;
-    const data = normalize(source, markdownPattern.test(source) ? fs.readFileSync(`${content}/${source}`, "utf8") : "", registry);
+    if (!source.startsWith(`${section}/`) || !fs.existsSync(contentFile(source))) continue;
+    const data = normalize(source, markdownPattern.test(source) ? fs.readFileSync(contentFile(source), "utf8") : "", registry);
     if (data.published) series.set(data.seriesKey, data.seriesUrl);
   }
   const categories = categoryFolders(section);

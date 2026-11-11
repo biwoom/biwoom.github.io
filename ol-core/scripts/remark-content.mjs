@@ -1,5 +1,4 @@
-import { PROJECT_ROOT, projectPaths } from './lib/paths.mjs';
-import path from "node:path";
+import { PROJECT_ROOT, contentFile, normalizeContentPath, relativeContentPath } from './lib/paths.mjs';
 import fs from "node:fs";
 import { visit } from "unist-util-visit";
 import { readRegistry, referenceTarget, textOf } from "./lib/content.mjs";
@@ -23,22 +22,19 @@ export function resolveReference(source, url, registry = readRegistry(), root = 
   if (!target) return url;
   if (registry.files[target] && /\.mdx?$/.test(target))
     return registry.files[target].url + (fragment ? "#" + fragment : "");
-  if (fs.existsSync(path.join(projectPaths(root).content, target)))
+  if (fs.existsSync(contentFile(target, root)))
     return assetUrl(target) + (url.includes("?") ? "?" + raw.split("?").slice(1).join("?") : "") + (fragment ? "#" + fragment : "");
   return url;
 }
 export function assetUrl(relative) {
   return (
     "/generated/content/" +
-    relative.split("/").map(encodeURIComponent).join("/")
+    normalizeContentPath(relative).split("/").map(encodeURIComponent).join("/")
   );
 }
 export default function remarkContent({ root = PROJECT_ROOT } = {}) {
   return (tree, file) => {
-    const source = path
-      .relative(projectPaths(root).content, file.path)
-      .split(path.sep)
-      .join("/");
+    const source = relativeContentPath(file.path, root);
     const registry = readRegistry(root);
     if (/^blog\/[^/]+\/index\.md$/.test(source)) {
       const start = tree.children.findIndex(n => n.type === "heading" && n.depth === 2 && textOf(n).trim() === "읽는 순서");

@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths } from './paths.mjs';
+import { PROJECT_ROOT, projectPaths, normalizeContentPath, contentFile, readContentDirectory } from './paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -12,6 +12,7 @@ export const reserved = new Set(["assets", "_assets", "_drafts", "_templates"]);
 export const mediaPattern = /\.(pdf|png|jpe?g|webp|gif|svg|html)$/i;
 export const markdownPattern = /\.mdx?$/i;
 export function nameInfo(value) {
+  value = normalizeContentPath(value);
   const name = value.replace(/\.(mdx?|pdf|png|jpe?g|webp|gif|svg|html)$/i, "");
   const match = name.match(/^(\d+)\.(.+)$/);
   return {
@@ -41,7 +42,7 @@ export function walk(root, { assets = false } = {}) {
   if (!fs.existsSync(root)) return [];
   const files = [];
   function visit(dir) {
-    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    for (const e of readContentDirectory(dir)) {
       if (
         e.name.startsWith(".") ||
         e.name === "_drafts" ||
@@ -56,7 +57,10 @@ export function walk(root, { assets = false } = {}) {
     }
   }
   visit(root);
-  return files.sort();
+  return files.sort((a, b) => {
+    const left = normalizeContentPath(a), right = normalizeContentPath(b);
+    return left < right ? -1 : left > right ? 1 : 0;
+  });
 }
 export function parse(source) {
   const m = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
@@ -72,6 +76,26 @@ export function readRegistry(root = PROJECT_ROOT) {
   const registry = JSON.parse(fs.readFileSync(p, "utf8"));
   if (registry.version !== 1 || !registry.files || !registry.folders || !registry.redirects)
     throw new Error("Invalid content-registry.json: restore the committed registry.");
+  return normalizeRegistryPaths(registry);
+}
+export function normalizeRegistryPaths(registry) {
+  const table = (entries, transform, label) => {
+    const result = new Map();
+    for (const [key, value] of Object.entries(entries)) {
+      const canonical = normalizeContentPath(key), next = transform(value);
+      if (result.has(canonical) && JSON.stringify(result.get(canonical)) !== JSON.stringify(next)) throw new Error(`Unicode registry collision in ${label}: ${key}`);
+      result.set(canonical, next);
+    }
+    return Object.fromEntries(result);
+  };
+  registry.files = table(registry.files, record => {
+    const next = { ...record };
+    for (const field of ['seriesKey', 'categoryKey']) if (next[field]) next[field] = normalizeContentPath(next[field]);
+    return next;
+  }, 'files');
+  registry.folders = table(registry.folders, record => ({ ...record }), 'folders');
+  registry.aliases = table(registry.aliases ?? {}, normalizeContentPath, 'aliases');
+  for (const [from, to] of Object.entries(registry.aliases)) if (from === to) delete registry.aliases[from];
   return registry;
 }
 export function hash(body) {
@@ -103,6 +127,7 @@ export function excerpt(body) {
   return paragraph ? textOf(paragraph).replace(/\s+/g, " ").trim().slice(0, 180) : "";
 }
 export function resolveAlias(relative, registry) {
+  relative = normalizeContentPath(relative);
   const seen = new Set();
   while (registry.aliases?.[relative]) {
     if (seen.has(relative)) throw new Error(`Alias cycle: ${relative}`);
@@ -112,12 +137,15 @@ export function resolveAlias(relative, registry) {
   return relative;
 }
 export function linkMove(registry, oldPath, newPath) {
+  oldPath = normalizeContentPath(oldPath); newPath = normalizeContentPath(newPath);
+  if (oldPath === newPath) return;
   registry.aliases ??= {};
   delete registry.aliases[newPath];
   registry.aliases[oldPath] = newPath;
   for (const alias of Object.keys(registry.aliases)) registry.aliases[alias] = resolveAlias(alias, registry);
 }
 export function isIntroduction(relative) {
+  relative = normalizeContentPath(relative);
   const { collection, seriesPath } = folderParts(relative);
   return (["text", "story", "blog"].includes(collection) && relative === `${seriesPath}/index.md`)
     || isBlogCategoryIntroduction(relative);
@@ -126,7 +154,7 @@ export function isBlogCategoryIntroduction(relative) {
   return /^blog\/[^/]+\/[^/]+\/index\.md$/.test(relative);
 }
 export function folderMetadata(key, root = PROJECT_ROOT) {
-  const file = path.join(projectPaths(root).content, key, "index.md");
+  const file = contentFile(`${key}/index.md`, root);
   const { data, body } = fs.existsSync(file) ? parse(fs.readFileSync(file, "utf8")) : { data: {}, body: "" };
   return {
     title: data.title?.trim() || (firstHeading(body) ? textOf(firstHeading(body)) : "") || nameInfo(key.split("/").at(-1)).label,
@@ -137,10 +165,10 @@ export function folderMetadata(key, root = PROJECT_ROOT) {
 }
 export function blogFolders(root = PROJECT_ROOT) {
   const children = (key) => {
-    const dir = path.join(projectPaths(root).content, key);
-    return fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true })
+    const dir = contentFile(key, root);
+    return fs.existsSync(dir) ? readContentDirectory(dir)
       .filter(e => e.isDirectory() && !/^[._]/.test(e.name) && !reserved.has(e.name))
-      .sort((a, b) => compareNames(a.name, b.name)).map(e => `${key}/${e.name}`) : [];
+      .sort((a, b) => compareNames(a.name, b.name)).map(e => normalizeContentPath(`${key}/${e.name}`)) : [];
   };
   return children("blog").map(key => ({ key, categories: children(key) }));
 }
@@ -150,24 +178,24 @@ export function publicationDay(now = new Date()) {
 // Assets belong to their nearest index.md directory; a loose document's links are private
 // unless the same asset is also referenced by a public document. Unreferenced shared assets are public.
 export function isPublicSource(relative, registry, root = PROJECT_ROOT, { asset = false } = {}) {
+  relative = normalizeContentPath(relative);
   if (relative.split("/").some(p => p.startsWith(".") || (p.startsWith("_") && !(asset && p === "_assets")))) return false;
   if (!asset && ignored(relative)) return false;
-  const base = projectPaths(root).content;
-  if (!fs.existsSync(path.join(base, relative))) return false;
+  if (!fs.existsSync(contentFile(relative, root))) return false;
   // media is a shared public asset namespace, never a document collection.
   if (relative.startsWith("media/"))
-    return asset && !markdownPattern.test(relative) && fs.statSync(path.join(base, relative)).isFile();
+    return asset && !markdownPattern.test(relative) && fs.statSync(contentFile(relative, root)).isFile();
   for (let dir = path.posix.dirname(relative); dir !== "."; dir = path.posix.dirname(dir)) {
-    const intro = path.join(base, dir, "index.md");
+    const intro = contentFile(`${dir}/index.md`, root);
     if (fs.existsSync(intro) && parse(fs.readFileSync(intro, "utf8")).data.published === false) return false;
   }
-  if (!asset && markdownPattern.test(relative)) return parse(fs.readFileSync(path.join(base, relative), "utf8")).data.published !== false;
+  if (!asset && markdownPattern.test(relative)) return parse(fs.readFileSync(contentFile(relative, root), "utf8")).data.published !== false;
   if (asset && registry.files[relative] && mediaPattern.test(relative) && !ignored(relative)) return true;
   if (asset) {
     let privateUse = false, publicUse = false;
     for (const source of Object.keys(registry.files)) {
-      if (!markdownPattern.test(source) || !fs.existsSync(path.join(base, source)) || ignored(source)) continue;
-      const { data, body } = parse(fs.readFileSync(path.join(base, source), "utf8"));
+      if (!markdownPattern.test(source) || !fs.existsSync(contentFile(source, root)) || ignored(source)) continue;
+      const { data, body } = parse(fs.readFileSync(contentFile(source, root), "utf8"));
       const urls = data.thumbnailAsset ? [data.thumbnailAsset] : [];
       const collect = n => { if (n.url) urls.push(n.url); n.children?.forEach(collect); };
       collect(markdownTree(body));
@@ -186,7 +214,7 @@ export function referenceTarget(source, url, registry) {
   try { target = raw.startsWith("content-asset:") ? decodeURIComponent(raw.slice(14)) : path.posix.join(path.posix.dirname(source), decodeURIComponent(raw)); } catch { return null; }
   target = path.posix.normalize(target);
   if (target === ".." || target.startsWith("../")) return null;
-  return resolveAlias(target, registry);
+  return resolveAlias(normalizeContentPath(target), registry);
 }
 export function categoryUrl(key) {
   return `/${key.split("/")[0]}/category/${shortId(key)}/`;
@@ -196,15 +224,16 @@ export function categoryFolders(collection, root = PROJECT_ROOT) {
   if (!["text", "story"].includes(collection)) return [];
   const base = path.join(projectPaths(root).content, collection);
   if (!fs.existsSync(base)) return [];
-  return fs.readdirSync(base, { withFileTypes: true })
+  return readContentDirectory(base)
     .filter((entry) => entry.isDirectory() && !/^[._]/.test(entry.name) && entry.name !== "assets")
     .sort((a, b) => compareNames(a.name, b.name))
     .map((entry) => {
-      const key = `${collection}/${entry.name}`;
+      const key = normalizeContentPath(`${collection}/${entry.name}`);
       return { key, label: nameInfo(entry.name).label, url: categoryUrl(key) };
     });
 }
 export function folderParts(relative) {
+  relative = normalizeContentPath(relative);
   const [collection, ...segments] = relative.split("/");
   const dirs = segments.slice(0, -1);
   if (collection === "blog") return {
@@ -236,6 +265,7 @@ export function folderParts(relative) {
   };
 }
 export function normalize(relative, source, registry = readRegistry(), root = PROJECT_ROOT) {
+  relative = normalizeContentPath(relative);
   const { data, body } = parse(source);
   const record = registry.files[relative];
   if (!record)
@@ -290,7 +320,7 @@ export function mediaEntries(root = PROJECT_ROOT) {
     if (
       !mediaPattern.test(relative) ||
       ignored(relative) ||
-      !fs.existsSync(path.join(projectPaths(root).content, relative))
+      !fs.existsSync(contentFile(relative, root))
     )
       continue;
     const data = normalize(relative, "", registry, root);

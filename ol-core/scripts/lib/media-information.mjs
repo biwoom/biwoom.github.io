@@ -1,4 +1,4 @@
-import { PROJECT_ROOT, projectPaths } from './paths.mjs';
+import { PROJECT_ROOT, projectPaths, normalizeContentPath, contentFile, readContentDirectory } from './paths.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -15,12 +15,12 @@ export function readMediaInformation(root = PROJECT_ROOT) {
   const media = path.join(base, 'media');
   const entries = new Map();
   if (!fs.existsSync(media)) return entries;
-  const indexes = ['media/index.md', ...fs.readdirSync(media, { withFileTypes: true })
+  const indexes = ['media/index.md', ...readContentDirectory(media)
     .filter(entry => entry.isDirectory() && !/^[._]/.test(entry.name))
-    .map(entry => `media/${entry.name}/index.md`)];
+    .map(entry => normalizeContentPath(`media/${entry.name}/index.md`))];
   const registry = readRegistry(root);
   for (const source of indexes) {
-    const file = path.join(base, source);
+    const file = contentFile(source, root);
     if (!fs.existsSync(file)) continue;
     const { data, body } = parse(fs.readFileSync(file, 'utf8'));
     // Metadata privacy does not change the existing shared-public-image policy.
@@ -58,7 +58,7 @@ export async function addMediaInformation(items, root = PROJECT_ROOT) {
     const entry = entries.get(item.source);
     if (!entry) return { ...item, informationHtml: '' };
     const rendered = await processor.render(entry.markdown, {
-      fileURL: pathToFileURL(path.join(projectPaths(root).content, entry.source)),
+      fileURL: pathToFileURL(contentFile(entry.source, root)),
     });
     return { ...item, title: entry.title, informationHtml: rendered.code };
   }));

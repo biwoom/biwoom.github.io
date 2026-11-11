@@ -1,12 +1,11 @@
-import { projectPaths } from './lib/paths.mjs';
-import path from 'node:path';
+import { relativeContentPath } from './lib/paths.mjs';
 import { visit } from 'unist-util-visit';
 
 // Retain generated reference IDs, but make each note's text the return control.
 // BLOG/pages continue to use their ordinary footnote markup.
 export default function rehypeReaderFootnotes() {
   return (tree, file) => {
-    const source = path.relative(projectPaths().content, file.path).split(path.sep).join('/');
+    const source = relativeContentPath(file.path);
     if (!/^(text|story)\//.test(source) || /(?:^|\/)index\.mdx?$/i.test(source)) return;
     visit(tree, 'element', section => {
       if (section.tagName !== 'section' || !('dataFootnotes' in (section.properties ?? {}))) return;

@@ -1,11 +1,10 @@
 import fs from "node:fs";
-import path from "node:path";
-import { PROJECT_ROOT, projectPaths } from "./paths.mjs";
+import { PROJECT_ROOT, contentFile } from "./paths.mjs";
 import { blogFolders, folderMetadata, readRegistry, normalize, markdownPattern, parse, markdownTree, textOf, referenceTarget, compareNames } from "./content.mjs";
 
 // Only the explicit reading-order section controls navigation; ordinary body links do not.
 export function readingOrder(source, registry, root = PROJECT_ROOT) {
-  const file = path.join(projectPaths(root).content, source);
+  const file = contentFile(source, root);
   if (!fs.existsSync(file)) return [];
   const nodes = markdownTree(parse(fs.readFileSync(file, "utf8")).body).children;
   const start = nodes.findIndex(n => n.type === "heading" && n.depth === 2 && textOf(n).trim() === "읽는 순서");
@@ -14,7 +13,7 @@ export function readingOrder(source, registry, root = PROJECT_ROOT) {
   const visit = node => {
     if (node.type === "link") {
       const target = referenceTarget(source, node.url, registry);
-      if (!target || !markdownPattern.test(target) || !fs.existsSync(path.join(projectPaths(root).content, target))) throw new Error(`${source}: invalid reading-order post ${node.url}`);
+      if (!target || !markdownPattern.test(target) || !fs.existsSync(contentFile(target, root))) throw new Error(`${source}: invalid reading-order post ${node.url}`);
       if (result.includes(target)) throw new Error(`${source}: duplicate reading-order post ${node.url}`);
       result.push(target);
     }
@@ -29,8 +28,8 @@ export function readingOrder(source, registry, root = PROJECT_ROOT) {
 
 export function readBlogCatalog(root = PROJECT_ROOT, registry = readRegistry(root)) {
   const documents = Object.entries(registry.files)
-    .filter(([source]) => source.startsWith("blog/") && markdownPattern.test(source) && fs.existsSync(path.join(projectPaths(root).content, source)))
-    .map(([source, record]) => ({ id: record.id, data: normalize(source, fs.readFileSync(path.join(projectPaths(root).content, source), "utf8"), registry, root) }))
+    .filter(([source]) => source.startsWith("blog/") && markdownPattern.test(source) && fs.existsSync(contentFile(source, root)))
+    .map(([source, record]) => ({ id: record.id, data: normalize(source, fs.readFileSync(contentFile(source, root), "utf8"), registry, root) }))
     .filter(e => e.data.kind === "document");
   const categoryNames = new Set();
   return blogFolders(root).map(({ key, categories }) => {

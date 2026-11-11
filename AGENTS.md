@@ -7,7 +7,7 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 ## Current Architecture
 
 - Repository root remains the Astro/npm execution root. Authoring lives in `content/`; implementation lives in `ol-core/src/`, `ol-core/scripts/`, and `ol-core/public/`. Root `astro.config.mjs`, package files, `site-config.mjs`, and `content-registry.json` remain in place; output stays `dist/`.
-- Define filesystem paths in `ol-core/scripts/lib/paths.mjs`, anchored to the module location rather than process.cwd(). Load Markdown using glob() with an absolute content base. Keep registry keys relative to the vault (text/..., story/..., blog/...); a physical vault move must not change IDs, URLs, dates or hashes.
+- Define filesystem paths in `ol-core/scripts/lib/paths.mjs`, anchored to the module location rather than process.cwd(). Vault-relative keys use NFC Unicode and POSIX separators: use normalizeContentPath/relativeContentPath for keys and contentFile for physical source lookup. Normalize legacy registry keys/series/category paths and aliases without changing IDs, URLs, dates, hashes or redirects; reject conflicting normalized paths. Do not rename vault files or rewrite prose to fix normalization. Load Markdown using glob() with an absolute content base. Keep registry keys relative to the vault (text/..., story/..., blog/...); a physical vault move must not change IDs, URLs, dates or hashes.
 
 - `content/` is both the content source and the user's Obsidian vault.
 - Public content menus are TEXT, STORY, BLOG. HOME is the entry page; `pages` holds visitor-facing permanent documents.
@@ -63,6 +63,10 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-11 — Unicode path stability
+
+- Canonicalize source/registry/loader/link/asset keys to NFC across macOS and Linux; preserve identities and native filenames, and keep strict registry checks.
 
 ### 2026-11-11 — BLOG series
 
