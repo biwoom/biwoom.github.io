@@ -2214,13 +2214,6 @@
       "seriesKey": "text/010.니까야",
       "hash": "0843fada788269e6a579bc7dafe0da32c422f9016651b80825b43ddd4ffef7c0"
     },
-    "story/004.가르침과 일화/001.담마빠다이야기/00.서문(Ganthārambhakathā)/서문(Ganthārambhakathā).md": {
-      "id": "story-7e6738e18ac954",
-      "url": "/story/read/7e6738e18ac954/",
-      "date": "2026-11-12",
-      "seriesKey": "story/004.가르침과 일화/001.담마빠다이야기",
-      "hash": "f3b35ef0d5b57a2956cf7b97f76062ca644737d51e67ea5da35f205ae7bf997d"
-    },
     "story/004.가르침과 일화/001.담마빠다이야기/01.쌍의 품(Yamakavaggo)/01-01.md": {
       "id": "story-e92f6a50439bb2",
       "url": "/story/read/e92f6a50439bb2/",
@@ -2381,6 +2374,13 @@
       "date": "2026-11-12",
       "seriesKey": "story/004.가르침과 일화/001.담마빠다이야기",
       "hash": "8b4938148c5fce8e494c16437a9723c65ff939977df1b152e5be56188a859b76"
+    },
+    "story/004.가르침과 일화/001.담마빠다이야기/01.쌍의 품(Yamakavaggo)/01-00-서문(Ganthārambhakathā).md": {
+      "id": "story-7e6738e18ac954",
+      "url": "/story/read/7e6738e18ac954/",
+      "date": "2026-11-12",
+      "seriesKey": "story/004.가르침과 일화/001.담마빠다이야기",
+      "hash": "f3b35ef0d5b57a2956cf7b97f76062ca644737d51e67ea5da35f205ae7bf997d"
     }
   },
   "folders": {
@@ -3709,6 +3709,8 @@
     "story/001.불전문학/002.마하붓다왐사-ABT본/14.바라밀에 대한 두 번째 논고/205-8-결의바라밀.md": "story/001.붓다전기/002.마하붓다왐사-ABT본/14.바라밀에 대한 두 번째 논고/205-8-결의바라밀.md",
     "story/001.불전문학/002.마하붓다왐사-ABT본/14.바라밀에 대한 두 번째 논고/206-9-자애바라밀.md": "story/001.붓다전기/002.마하붓다왐사-ABT본/14.바라밀에 대한 두 번째 논고/206-9-자애바라밀.md",
     "story/001.불전문학/002.마하붓다왐사-ABT본/14.바라밀에 대한 두 번째 논고/207-10-평온바라밀.md": "story/001.붓다전기/002.마하붓다왐사-ABT본/14.바라밀에 대한 두 번째 논고/207-10-평온바라밀.md",
-    "story/001.불전문학/002.마하붓다왐사-ABT본/index.md": "story/001.붓다전기/002.마하붓다왐사-ABT본/index.md"
+    "story/001.불전문학/002.마하붓다왐사-ABT본/index.md": "story/001.붓다전기/002.마하붓다왐사-ABT본/index.md",
+    "story/004.가르침과 일화/001.담마빠다이야기/00.서문(Ganthārambhakathā)/서문(Ganthārambhakathā).md": "story/004.가르침과 일화/001.담마빠다이야기/01.쌍의 품(Yamakavaggo)/01-00-서문(Ganthārambhakathā).md",
+    "story/004.가르침과 일화/001.담마빠다이야기/01.쌍의 품(Yamakavaggo)/서문(Ganthārambhakathā).md": "story/004.가르침과 일화/001.담마빠다이야기/01.쌍의 품(Yamakavaggo)/01-00-서문(Ganthārambhakathā).md"
   }
 }
