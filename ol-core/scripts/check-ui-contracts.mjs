@@ -63,6 +63,29 @@ rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /max-width:780px/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-size:17px/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /line-height:1.95/);
 rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-family:var\(--ol-reader-serif\)/);
+rule(".ol-story-doc-page :is(.ol-prose,.ol-reader-footnotes-content) :is(em,i)", /font-family:var\(--ol-reader-pali-serif\),var\(--ol-reader-emphasis-fallback\)/);
+rule(".ol-story-doc-page .ol-reader-footnotes-content", /--ol-reader-emphasis-fallback:var\(--ol-font-ui\)/);
+rule(".ol-story-doc-page :is(.ol-prose,.ol-reader-footnotes-content) :is(em,i)", /font-feature-settings:normal/);
+const paliFaces = rules.filter(([, selector, body]) => selector.includes('@font-face') && /font-family:["']?Gentium/.test(body));
+assert.equal(paliFaces.length, 2, 'Gentium has only the two genuine italic faces');
+for (const [, , body] of paliFaces) {
+  assert.match(body, /font-style:italic/);
+  const ranges = body.match(/unicode-range:([^;}]+)/i)?.[1].split(',') ?? [];
+  const covers = codepoint => ranges.some(range => {
+    const [first, last = first] = range.trim().replace(/^u\+/i, '').split('-');
+    return codepoint >= parseInt(first.replaceAll('?', '0'), 16)
+      && codepoint <= parseInt(last.replaceAll('?', 'f'), 16);
+  });
+  for (const char of 'aāīūṅñṭḍṇḷṃṁ\u0304\u0307\u0323') assert.ok(covers(char.codePointAt(0)), `Pali character range missing: ${char}`);
+  assert.ok(!covers(0xac00) && !covers(0x1000), 'Korean and Myanmar retain their existing fonts');
+}
+for (const file of ['Gentium-Italic.woff2', 'Gentium-BoldItalic.woff2']) {
+  const source = fs.readFileSync(path.join(projectPaths().public, 'fonts/gentium', file));
+  const deployed = fs.readFileSync(path.join(dist, 'fonts/gentium', file));
+  assert.equal(source.subarray(0, 4).toString(), 'wOF2');
+  assert.deepEqual(deployed, source, `Unmodified font asset must be present: ${file}`);
+}
+assert.ok(fs.readFileSync(path.join(dist, 'fonts/gentium/OFL.txt'), 'utf8').includes('SIL OPEN FONT LICENSE'));
 rule(".ol-story-reader-page.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
 rule(".ol-story-doc-page [data-reader-original] pre", /font-size:18px/);
 rule(".ol-story-doc-page [data-reader-original] pre code", /font-size:calc\(1em\s*\*\s*var\(--ol-reader-font-scale,1\)\)/);

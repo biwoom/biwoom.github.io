@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-12 — Gentium for romanized Pali emphasis
+
+- Use self-hosted, unmodified SIL Gentium 7.000 italic 400/700 faces for Latin characters/combining marks in shared TEXT/STORY prose and footnote em/i. Retain Noto Serif KR and existing other-script fallback, upright/original/code typography, font sizes and slider behavior. Do not add language detection, alter authored text or depend on locally installed fonts. Disable inherited UI-specific stylistic features within emphasis; use the font's default mark positioning. Keep the OFL license and pinned source/checksums with the font assets.
+
 ## 2026-11-12 — TEXT category introductions
 
 - Apply the user's ten-category plan in order: 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야. Keep existing 중관부/대승현론 sources and document/library identities unchanged; create category introductions only for future content. Use the shared lowercase index.md title/description/publication interpretation and exclude category metadata from reader/document counts. Translation and research remain independent material sections within each work.
