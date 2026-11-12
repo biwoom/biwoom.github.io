@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-12 — Shared reader aid sizing
+
+- Resize the existing right 本문 목차/각주 dock only at >=1360px through one ReaderPanelResize component/controller and grid width variable. Keep the left list and modal sizing unchanged. Use a 300px default, 240–520px limits, a 480px minimum article allocation and the existing 780px prose cap.
+- Store one preferred pixel width for TEXT/STORY; initialize it before body paint and constrain only its effective CSS width when space is limited. Switching aids/focus or crossing the modal breakpoint must preserve the preference and existing panel ownership. Pointer capture, cancellation and accessible separator keyboard controls belong to the shared sizing controller; do not copy/recreate TOC/footnote nodes.
+
 ## 2026-11-11 — Shared STORY original passages
 
 - Extend the existing explicit original fence renderer, ReaderToolbar flag, visibility controller and original typography from TEXT to STORY. Use one parser/controller/style source; leave BLOG/pages, ordinary code, authored source bytes and document identities unchanged. Only marked documents have the tool, with visible default and mobile icon/accessibility labels. Original text remains CSS-scaled by the existing single font slider; STORY uses its secondary theme surface.

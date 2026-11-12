@@ -92,7 +92,10 @@ rule(".ol-text-reader .ol-text-parts", /position:static/);
 rule(".ol-text-reader .ol-reader-toolbar", /top:0/);
 rule(".ol-text-reader [data-text-focus]", /display:none/);
 rule(".ol-text-reader .ol-text-list-label-compact", /display:inline/);
-rule(".ol-text-workspace-grid", /grid-template-columns:240px minmax\(0,1fr\) 300px/);
+rule(".ol-text-workspace-grid", /grid-template-columns:240px minmax\(0,1fr\) var\(--ol-reader-aid-width\)/);
+rule(".ol-reader-panel-resize", /cursor:col-resize/);
+rule(".ol-reader-panel-resize", /touch-action:none/);
+rule(".ol-story-doc-page [data-reader-resizable-grid]", /--ol-reader-body-min-width:480px/);
 rule(".ol-text-reading-column", /width:/);
 rule(".ol-story-doc-page", /--ol-reader-font-scale:var\(--ol-reader-initial-scale,1\)/);
 rule(".ol-story-doc-page .ol-story-chapter>.ol-prose:not([data-reader-scalable])", /font-size:calc\(17px\s*\*\s*var\(--ol-reader-font-scale\)\)/);
@@ -150,6 +153,12 @@ for (const [source, record] of Object.entries(registry.files)) {
   if (isLibrary) {
     const fontInit = html.indexOf('data-reader-font-init');
     assert.ok(fontInit >= 0 && fontInit < html.indexOf('</head>'), `${record.url}: restore saved reading size before first paint`);
+    const panelInit = html.indexOf('data-reader-panel-init');
+    assert.ok(panelInit >= 0 && panelInit < html.indexOf('</head>'), `${record.url}: restore saved aid width before first paint`);
+    assert.match(html, /data-reader-resizable-grid/);
+    assert.equal((html.match(/<div[^>]*\sdata-reader-panel-resize(?:\s|>)/g) ?? []).length, 1, `${record.url}: one shared resize handle`);
+    assert.match(html, /role="separator"[^>]*aria-label="문서 보조 패널 너비"[^>]*aria-orientation="vertical"[^>]*aria-controls="reader-aid"/);
+    assert.equal((html.match(/id="reader-aid"/g) ?? []).length, 1);
   }
   const expected = isLibrary
     ? [

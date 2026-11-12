@@ -7,7 +7,7 @@
   },
   "scripts": {
     "check:content": "node ol-core/scripts/check-content.mjs",
-    "check:content:fixtures": "node --test ol-core/scripts/check-content-fixtures.mjs ol-core/scripts/check-transition-fixtures.mjs ol-core/scripts/check-tags-fixtures.mjs ol-core/scripts/check-media-fixtures.mjs ol-core/scripts/check-reader-fixtures.mjs ol-core/scripts/check-markdown-fixtures.mjs ol-core/scripts/check-text-fixtures.mjs ol-core/scripts/check-ebook-fixtures.mjs ol-core/scripts/check-paths-fixtures.mjs ol-core/scripts/check-blog-fixtures.mjs ol-core/scripts/check-unicode-fixtures.mjs",
+    "check:content:fixtures": "node --test ol-core/scripts/check-content-fixtures.mjs ol-core/scripts/check-transition-fixtures.mjs ol-core/scripts/check-tags-fixtures.mjs ol-core/scripts/check-media-fixtures.mjs ol-core/scripts/check-reader-fixtures.mjs ol-core/scripts/check-reader-resize-fixtures.mjs ol-core/scripts/check-markdown-fixtures.mjs ol-core/scripts/check-text-fixtures.mjs ol-core/scripts/check-ebook-fixtures.mjs ol-core/scripts/check-paths-fixtures.mjs ol-core/scripts/check-blog-fixtures.mjs ol-core/scripts/check-unicode-fixtures.mjs",
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node ol-core/scripts/sync-content-assets.mjs && node ol-core/scripts/sync-media-gallery.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",

@@ -75,6 +75,16 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <link rel="apple-touch-icon" sizes="180x180" href={url('/apple-touch-icon.png')} />
 
   {academic && <>
+    <script is:inline data-reader-panel-init>
+      (function () {
+        let width = 300;
+        try {
+          const saved = Number(localStorage.getItem('ol-reader-aid-width'));
+          if (Number.isFinite(saved) && saved >= 240 && saved <= 520) width = saved;
+        } catch { /* Use the default when browser storage is unavailable. */ }
+        document.documentElement.style.setProperty('--ol-reader-aid-preferred-width', `${width}px`);
+      })();
+    </script>
     <script is:inline data-reader-font-init>
       (function () {
         let percent = 100;

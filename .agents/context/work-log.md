@@ -1,5 +1,13 @@
 # Work Log
 
+## 2026-11-12 — TEXT/STORY 보조 패널 너비 조절
+
+- Added one ReaderPanelResize component and reader-panel-resize controller for the existing >=1360px right TOC/footnote docks. An 8px boundary handle updates the grid/article together; preserve the 780px prose cap, 300px default, 240–520px panel range and at least 480px article allocation. The left list and native modal widths retain their existing behavior.
+- Share a bounded browser preference across TEXT/STORY, restore it in the head before paint, and apply effective width constraints in CSS without replacing the preferred size. Add pointer capture/frame scheduling, cancellation cleanup, accessible separator arrows/Home/End, Enter/double-click reset, and hide the handle for hidden docks, focus, compact layouts and print. Existing controllers retain sole ownership of TOC/footnote nodes and panel state.
+- Added six interaction/storage/resize regressions and generated-page contracts for one separator/target per reader and pre-paint restoration. Updated AGENTS, manual v4.3, state and decisions. Preserve concurrent user STORY folder/content/registry changes and plan edits; no authored prose, assets or Obsidian state was edited for this feature.
+- Validation: check 97 tests, typecheck (0 errors/warnings, existing TextReader unused-fields hint), latest-source isolated build and check:built passed (289 HTML files, 26 redirects, 235 document UI contracts, 1100 production metadata/feed/sitemap URLs). Native Safari confirmed keyboard 300→316px and actual boundary drag 300→420px before the user requested no browser access. Stopped all browser work immediately at that instruction; remaining visual testing belongs to the user. The user's restarted server on 4321 remains untouched; stopped the duplicate validation server on 4322. No commit/push.
+- Local commit requested: include only the panel sizing implementation, regression checks and related guidance/continuity records. Leave the user's concurrent STORY content moves, content-registry.json and plan.md edits uncommitted. Reuse the completed checks; no additional browser access, push or deployment inspection.
+
 This file records concise date-based work summaries for continuity across Codex sessions.
 
 ## 2026-11-08

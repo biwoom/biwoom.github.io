@@ -4,6 +4,7 @@ import ContentRights from "./ContentRights.astro";
 import MaterialBody from "./MaterialBody.astro";
 import ReaderBody from "./ReaderBody.astro";
 import ReaderToolbar from "./ReaderToolbar.astro";
+import ReaderPanelResize from "./ReaderPanelResize.astro";
 import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import {
@@ -134,7 +135,7 @@ const hasToc = headings.some(
     )}
 
     <section class="ol-story-reader-shell">
-      <div class="ol-story-part-layout">
+      <div class="ol-story-part-layout" data-reader-resizable-grid>
         <aside class="ol-story-part-sidebar" id="story-document-list" data-pagefind-ignore>
           <div data-story-list-content>
           <div class="ol-story-part-sidebar-head">
@@ -228,7 +229,8 @@ const hasToc = headings.some(
             </nav>
           )}
         </article>
-        <aside class="ol-story-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
+        <aside id="reader-aid" class="ol-story-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
+          <ReaderPanelResize />
           <div class="ol-text-panel-tabs" role="group" aria-label="보조 패널 선택">
             <button type="button" data-reader-panel="toc" aria-pressed="false" disabled={!hasToc}>본문 목차</button>
             <button type="button" data-reader-panel="footnotes" aria-pressed="false" disabled>각주</button>

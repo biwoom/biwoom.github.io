@@ -2,6 +2,7 @@
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ReaderToolbar from './ReaderToolbar.astro';
+import ReaderPanelResize from './ReaderPanelResize.astro';
 import ReaderBody from './ReaderBody.astro';
 import MaterialBody from './MaterialBody.astro';
 import ContentRights from './ContentRights.astro';
@@ -30,7 +31,7 @@ const fields = readTextBibliography('body' in entry ? entry.body : '');
       <a href={series.url} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌정보</strong></a>
       {series.parts.map((part, i) => <a href={part.entries[0].data.url} class:list={{ active: part.key === currentPart?.key }} aria-current={part.key === currentPart?.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
     </nav>
-    <div class="ol-text-workspace-grid">
+    <div class="ol-text-workspace-grid" data-reader-resizable-grid>
       <aside class="ol-story-part-sidebar ol-text-document-list" id="text-document-list" aria-label="문헌 자료 목록" data-pagefind-ignore>
         <div data-text-list-content>
           <!-- <div class="ol-text-section-head">
@@ -57,7 +58,8 @@ const fields = readTextBibliography('body' in entry ? entry.body : '');
           <nav class="ol-text-document-next" aria-label="자료 탐색"><a href={series.url}>← 문헌 목차</a>{prev && <a href={prev.data.url}>이전 {entry.data.part} 자료</a>}{next && <a href={next.data.url}>다음 {entry.data.part} 자료 →</a>}</nav>
         </div>
       </article>
-      <aside class="ol-text-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
+      <aside id="reader-aid" class="ol-text-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
+        <ReaderPanelResize />
         <div class="ol-text-panel-tabs" role="group" aria-label="보조 패널 선택">
           <button type="button" data-text-panel="toc" aria-pressed="false" disabled={!headings.length}>본문 목차</button>
           <button type="button" data-text-panel="footnotes" aria-pressed="false" disabled>각주</button>

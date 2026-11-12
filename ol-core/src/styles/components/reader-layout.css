@@ -1,4 +1,31 @@
 /* Shared reader shell and toolbar layout; TEXT and STORY variants follow in their own files. */
+.ol-story-doc-page [data-reader-resizable-grid] {
+  --ol-reader-aid-min-width: 240px;
+  --ol-reader-aid-max-width: 520px;
+  --ol-reader-body-min-width: 480px;
+  --ol-reader-list-width: 240px;
+  --ol-reader-aid-width: clamp(var(--ol-reader-aid-min-width), var(--ol-reader-aid-preferred-width, 300px), min(var(--ol-reader-aid-max-width), calc(100% - var(--ol-reader-list-width) - var(--ol-reader-body-min-width))));
+}
+.ol-story-doc-page:is([data-text-left-hidden], [data-story-left-hidden], [data-story-focus]) [data-reader-resizable-grid] { --ol-reader-list-width: 0px; }
+.ol-reader-panel-resize { display: none; }
+@media (min-width: 1360px) {
+  .ol-reader-panel-resize {
+    position: absolute;
+    display: block;
+    z-index: 46;
+    inset: 0 auto 0 -4px;
+    width: 8px;
+    cursor: col-resize;
+    touch-action: none;
+  }
+  .ol-reader-panel-resize::after { content: ''; position: absolute; inset: 0 auto 0 3px; width: 2px; background: transparent; }
+  .ol-reader-panel-resize:is(:hover, :focus-visible)::after,
+  html[data-reader-panel-dragging] .ol-reader-panel-resize::after { background: var(--ol-accent); }
+  .ol-reader-panel-resize:focus-visible { outline: 2px solid var(--ol-accent); outline-offset: 1px; }
+}
+.ol-reader-panel-resize[hidden] { display: none; }
+html[data-reader-panel-dragging], html[data-reader-panel-dragging] * { cursor: col-resize !important; user-select: none !important; }
+@media print { .ol-reader-panel-resize { display: none !important; } }
 :root:has(.ol-story-doc-page) { scrollbar-gutter: stable; }
 .ol-reader-navigation-tools { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .ol-original-toggle [data-original-slash] { display: none; }

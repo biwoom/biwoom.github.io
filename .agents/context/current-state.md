@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-11-11
+Last updated: 2026-11-12
 
 ## Brand
 
@@ -24,6 +24,8 @@ Last updated: 2026-11-11
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
 
 ## Current Architecture
+
+- TEXT/STORY right aid docks now share ReaderPanelResize/reader-panel-resize at >=1360px. The 8px boundary handle adjusts the grid and article together, with keyboard arrows/Home/End, Enter/double-click reset, 300px default and 240–520px bounds reserving a 480px article. Prose retains its 780px cap. Both readers share the saved preferred width restored in the head; CSS applies temporary viewport limits without replacing the preference. Focus, hidden aids, modal transitions and print remove the handle; interrupted drags restore the prior preference and release pointer capture/selection locks.
 
 - Vault keys are now canonical NFC POSIX paths across registry preparation, Astro IDs/data, folder grouping, Markdown references and attachment URLs. Shared paths helpers retain native filesystem roots and resolve decomposed physical names. Legacy registry paths/alias endpoints migrate without changing any IDs, URLs, dates, hashes or redirects; canonical collisions fail explicitly. The 2026-11-10/11 Actions failures were caused by 211 STORY records changing NFD/NFC spelling before the strict HEAD check. Keep the code and migrated registry committed together; production CI validation awaits the next requested push.
 

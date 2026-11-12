@@ -1,0 +1,20 @@
+<div
+  class="ol-reader-panel-resize"
+  data-reader-panel-resize
+  role="separator"
+  aria-label="문서 보조 패널 너비"
+  aria-orientation="vertical"
+  aria-controls="reader-aid"
+  aria-describedby="reader-panel-resize-help"
+  aria-valuemin="240"
+  aria-valuemax="520"
+  aria-valuenow="300"
+  tabindex="0"
+  title="드래그하여 너비 조절 · 더블클릭하여 기본 너비"
+  hidden
+></div>
+<span id="reader-panel-resize-help" hidden>왼쪽 방향키로 넓히고 오른쪽 방향키로 좁힙니다. Home은 최소, End는 최대, Enter 또는 더블클릭은 기본 너비로 복원합니다.</span>
+<script>
+  import { initReaderPanelResize } from '../../lib/client/reader-panel-resize';
+  initReaderPanelResize();
+</script>
