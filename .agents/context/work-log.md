@@ -1327,3 +1327,26 @@ This file records concise date-based work summaries for continuity across Codex 
 - Moved eye state/mobile label rules to shared reader layout and broadened existing original typography to document readers: 18px serif, wrapping, 1.95 line height and the existing single font slider. TEXT retains its soft panel background; STORY uses the secondary theme surface. Focus, sidebars, TOC and footnotes retain their existing behavior.
 - Added STORY parser/controller regressions and BLOG/pages exclusions; isolated live rendering checks cover two original blocks and a plain STORY document without a toggle. Updated authoring manual, AGENTS, current state and decisions. The implementation does not rewrite authored prose or change document identities/dates/assets. During verification the user added an original block to the 004 STORY document; preserve that edit and its prepared registry hash, along with the existing plan.md edits.
 - Validation: check (91 tests), typecheck (zero errors; existing TextReader hint), isolated live STORY positive/negative rendering and existing reader interactions passed. After the user added the live example following the first build, rebuilt the latest snapshot separately to preserve their active dev server; build and generated links/UI/domain checks passed, and copied verified dist back. Actual /story/read/402293e8a3872f/ responds with the toggle and original block; its original ID/URL/date remain unchanged and only the user's content hash is refreshed. The earlier committed-registry check passed before that authoring edit; keep the new source and matching registry hash together on a future commit. Scoped whitespace check passes; pre-existing plan.md whitespace is untouched. No commit/push.
+
+
+## 2026-11-12 — STORY 이야기불교 분류 계획
+
+- 사용자 요청에 따라 plan.md 하단에 이야기불교 주제, 7개 카테고리·예정 작품, 분류 경계와 향후 작업을 추가했다. 정토왕생집은 설화와 전승, 담마빠다이야기는 가르침과 일화에 배치하는 제안이다. 기존 계획 내용과 실제 콘텐츠 폴더·레지스트리는 변경하지 않았다. 추가 부분과 기존 바이트 보존을 확인했으며, 내부 계획 문서 변경으로 빌드·브라우저 조작·커밋·푸시는 수행하지 않았다.
+
+## 2026-11-12 — STORY 카테고리 폴더와 소개 구성
+
+- 이야기불교의 상위 카테고리 7개를 순서대로 구성하고 각각 소문자 index.md에 H1·소개를 작성했다. 불전문학을 붓다전기로 옮기고 기존 두 마하붓다왐사 판본을 함께 보존했다. 이전의 비어 있는 선시 폴더는 .gitkeep만 제거했다. 나머지 6개 카테고리는 소개만 있으며 새 작품·본문·태그는 만들지 않았다.
+- 카테고리 소개가 본문 문서·가짜 standalone 시리즈로 잡히지 않도록 TEXT/STORY 공통 메타정보 분류와 정규 카테고리 URL, 제목·소개·비공개 해석을 추가했다. 라이브러리·자료 수에서 카테고리 메타정보를 제외하고 카드·카테고리 화면에 소개를 표시한다. 홈 STORY 표기는 이야기불교로 정리했다. 계획 체크리스트, AGENTS, 매뉴얼 v4.4, 현재 상태와 결정 기록을 갱신했다.
+- 원본 파일 215개의 바이트·ID·URL·발행일·해시와 두 시리즈 URL을 보존하고 레지스트리·별칭을 갱신했다. 이전 불전문학 카테고리 주소는 붓다전기로 연결한다. 실행 중이던 구버전 개발 서버의 캐시가 메타정보를 이전 방식으로 다시 기록해 서버를 최신 코드로 재시작하고 새로 생긴 잘못된 standalone 폴더 기록만 제거했다. 반복 준비의 바이트 안정성과 4321 서버 기동을 확인한다.
+- 검증: check 99개, typecheck 오류·경고 0개(기존 TextReader 미사용 변수 힌트 1개), 격리된 최신 소스 build와 check:built 통과(302 HTML, 34 리디렉션, 235 문서 UI 계약, 1128 운영 도메인 URL). 실제 dist에서 7개 카드·제목·소개와 6개 빈 카테고리, 두 판본의 213개 본문 및 기존 주소 보존을 확인했다. 브라우저 조작·커밋·푸시는 수행하지 않았다.
+
+
+## 2026-11-12 — 브라우저 테스트 지침과 TEXT 분류 계획
+
+- AGENTS.md에 별도 명시 요청 전 로컬 브라우저 실행·기존 탭 조작·스크린샷·인앱 및 헤드리스 브라우저 테스트를 금지하는 규칙을 추가하고 결정 기록에 반영했다. plan.md 하단에는 사용자가 제시한 TEXT 10개 카테고리와 예정 문헌, 폴더 순서·분류 원칙·향후 작업을 추가했다. 기존 계획 바이트를 보존하고 문서 변경과 공백을 확인했다. 실제 콘텐츠·레지스트리·코드는 변경하지 않았으며 빌드·브라우저 조작·커밋·푸시는 수행하지 않았다.
+
+## 2026-11-12 — TEXT 카테고리 폴더와 소개 구성
+
+- 계획에 맞춰 001.중관부부터 010.니까야까지 10개 상위 폴더와 H1·소개 문단을 담은 소문자 index.md를 구성했다. 기존 중관부/대승현론의 원본 파일 2개와 문헌·문서 주소를 그대로 보존했다. 나머지 9개 카테고리는 소개만 있으며 새 문헌·번역·연구 본문은 만들지 않았다.
+- 기존 TEXT/STORY 공통 카테고리 메타정보 처리를 재사용하여 소개를 카드·상세 화면에 표시하고 문헌·자료 수에서 제외한다. 준비된 레지스트리에 새 메타정보를 추가했으며 기존 모든 파일·폴더 기록과 별칭의 동일성, 반복 준비의 바이트 안정성을 확인했다. 별도 구현 코드 변경은 없으며 기존 STORY 등 미커밋 작업도 보존했다.
+- 계획 체크리스트와 AGENTS, 매뉴얼 v4.5, 현재 상태·결정 기록을 갱신했다. check 99개, typecheck 오류·경고 0개(기존 TextReader 힌트 1개), 격리된 최신 소스 build와 check:built 통과(321 HTML, 44 리디렉션, 235 문서 UI 계약, 1174 운영 도메인 URL). 실제 dist의 TEXT 카드·카테고리 페이지 10개와 소개, 빈 카테고리 9개, 기존 중관부 1문헌·1자료와 기존 경로를 확인했다. 브라우저 조작·서버 재시작·커밋·푸시는 수행하지 않았다.

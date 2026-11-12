@@ -6,6 +6,8 @@ import path from "node:path";
 import {
   nameInfo,
   categoryFolders,
+  categoryUrl,
+  isPublicSource,
   hash,
   compareNames,
   normalize,
@@ -212,6 +214,41 @@ test("STORY requires category/series/part/document and keeps private series hidd
     write(root, "story/010.옛시리즈/010.파트/001.이전 구조.md", "# 이전 구조");
     assert.ok(validate(root).some((error) => error.includes("expected category/work/section/document")));
   }));
+
+for (const collection of ["text", "story"]) {
+  test(`${collection} category indexes are metadata with canonical category URLs, authored labels and private descendants`, () => fixture(root => {
+    const category = `${collection}/010.폴더명`;
+    const index = `${category}/index.md`;
+    const doc = `${category}/001.작품/01.본문/001.자료.md`;
+    const body = '# 카테고리 표시명\n\n이야기를 읽는 카테고리 소개입니다.\n';
+    write(root, index, body);
+    write(root, `${category}/001.작품/index.md`, '# 작품 소개\n');
+    write(root, doc, '# 실제 문서\n\n본문\n');
+    write(root, `${category}/_assets/private.svg`, '<svg/>');
+    const registry = prepare(root);
+    const meta = normalize(index, body, registry, root);
+    const document = normalize(doc, '# 실제 문서\n\n본문\n', registry, root);
+    assert.equal(meta.kind, 'category');
+    assert.equal(meta.url, categoryUrl(category));
+    assert.equal(meta.categoryKey, category);
+    assert.equal(document.kind, 'document');
+    assert.equal(document.category, '카테고리 표시명');
+    assert.equal(document.categoryKey, category);
+    assert.ok(!registry.folders[`${collection}/standalone`]);
+    const folder = categoryFolders(collection, root).find(item => item.key === category);
+    assert.equal(folder.label, '카테고리 표시명');
+    assert.equal(folder.description, '이야기를 읽는 카테고리 소개입니다.');
+    assert.deepEqual(validate(root), []);
+    const privateBody = `---\npublished: false\n---\n${body}`;
+    write(root, index, privateBody);
+    const privateRegistry = prepare(root);
+    assert.ok(!categoryFolders(collection, root).some(item => item.key === category));
+    assert.equal(normalize(doc, '# 실제 문서', privateRegistry, root).published, false);
+    assert.equal(isPublicSource(`${category}/_assets/private.svg`, privateRegistry, root, { asset: true }), false);
+    for (const field of ['id', 'url', 'date', 'hash']) assert.equal(privateRegistry.files[doc][field], registry.files[doc][field]);
+    assert.deepEqual(validate(root), []);
+  }));
+}
 
 
 test('BLOG category derives from its series child folder and preserves post identity on moves', () => fixture(root => {

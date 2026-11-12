@@ -4,6 +4,11 @@
 
 Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
 
+## Browser Testing
+
+- 사용자가 별도로 명시적으로 요청하기 전에는 로컬 웹브라우저를 열거나, 이미 열린 브라우저·탭을 조작하여 사이트 열람·스크린샷·UI/시각 테스트를 수행하지 않는다. 인앱 브라우저, 컴퓨터 사용 도구와 헤드리스 브라우저 자동화를 이용한 로컬 사이트 테스트도 같은 제한을 적용한다.
+- 일반적인 구현·수정·검증·빌드·커밋 요청은 브라우저 테스트를 허용한 것으로 해석하지 않는다. 기본 검증은 필요한 CLI 검사·타입 검사·빌드·생성 파일 및 링크 확인으로 수행하며, 브라우저 화면 점검은 사용자가 담당한다.
+
 ## Current Architecture
 
 - Repository root remains the Astro/npm execution root. Authoring lives in `content/`; implementation lives in `ol-core/src/`, `ol-core/scripts/`, and `ol-core/public/`. Root `astro.config.mjs`, package files, `site-config.mjs`, and `content-registry.json` remain in place; output stays `dist/`.
@@ -13,7 +18,9 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Public content menus are TEXT, STORY, BLOG. HOME is the entry page; `pages` holds visitor-facing permanent documents.
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
+- TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
 - TEXT/STORY menu roots show top-level categories as `ol-grid-3` cards; category pages list their series. Empty category folders remain visible (track `.gitkeep` when needed).
+- TEXT/STORY category `index.md` files are category metadata, with authored title/description and canonical category URLs; exclude them from readers, series lists and document counts. Private category intros hide descendants/assets. STORY's 이야기불교 categories are 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. Keep the two existing Maha Buddhavamsa editions under 붓다전기; other categories currently have introductions only. Future works are added by the user.
 - TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and document TOC default open at >=1360px and closed below that width; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - TEXT/STORY document readers recognize explicitly fenced `original` blocks via one shared Markdown transform, toolbar and visibility controller. Start visible; show the toggle only with marked blocks, use an icon with accessible labels at <=980px, and leave ordinary code/inline code unchanged. Share original typography and font scaling; TEXT uses its soft panel background and STORY its themed secondary surface.
@@ -65,6 +72,18 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-12 — TEXT category introductions
+
+- Added the ten planned TEXT categories and their introductions while preserving the existing Madhyamaka work and reusing shared category metadata handling.
+
+### 2026-11-12 — Browser testing requires an explicit request
+
+- 사용자의 별도 명시 요청 전에는 브라우저 실행·탭 조작·스크린샷·브라우저 기반 테스트를 수행하지 않도록 규정했다.
+
+### 2026-11-12 — STORY 이야기불교 categories
+
+- Added seven category introductions, moved existing editions to 붓다전기 with preserved identities, and shared TEXT/STORY category metadata handling.
 
 ### 2026-11-12 — Reader aid panel sizing
 

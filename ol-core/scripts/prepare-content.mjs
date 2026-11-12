@@ -16,6 +16,8 @@ import {
   publicationDay,
   resolveAlias,
   isBlogCategoryIntroduction,
+  isLibraryCategoryIntroduction,
+  categoryUrl,
   folderMetadata,
   blogFolders,
   isPublicSource,
@@ -74,7 +76,13 @@ export function prepare(root = PROJECT_ROOT) {
       }
       registry.files[relative] = record;
     }
-    if (info.collection === "blog" && info.seriesPath !== "blog/standalone") {
+    if (isLibraryCategoryIntroduction(relative)) {
+      const meta = folderMetadata(info.seriesPath, root);
+      registry.folders[info.seriesPath] ??= { url: categoryUrl(info.seriesPath) };
+      registry.folders[info.seriesPath].title = meta.title;
+      if (!meta.published) registry.folders[info.seriesPath].hidden = true;
+      else delete registry.folders[info.seriesPath].hidden;
+    } else if (info.collection === "blog" && info.seriesPath !== "blog/standalone") {
       const ensure = (key, kind, oldKey) => {
         const previous = oldKey && registry.folders[oldKey] && !fs.existsSync(contentFile(oldKey, root)) ? registry.folders[oldKey] : null;
         registry.folders[key] ??= previous ? { ...previous } : { url: `/blog/${kind}/${shortId(key)}/` };

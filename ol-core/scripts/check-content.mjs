@@ -31,7 +31,7 @@ export function validate(root = PROJECT_ROOT) {
       if (published) {
         if (ids.has(registry.files[relative].id)) errors.push(`${relative}: duplicate content id`);
         ids.set(registry.files[relative].id,relative);
-        if (["text","story"].includes(info[0])) {
+        if (["text","story"].includes(info[0]) && normal.kind !== "category") {
           if (!series.has(normal.seriesKey)) { claim(normal.seriesUrl,normal.seriesKey); series.add(normal.seriesKey); }
           if (intro && normal.url !== normal.seriesUrl) errors.push(`${relative}: introduction URL must equal series URL`);
         }

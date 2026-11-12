@@ -1,5 +1,19 @@
 # Decisions
 
+## 2026-11-12 — TEXT category introductions
+
+- Apply the user's ten-category plan in order: 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야. Keep existing 중관부/대승현론 sources and document/library identities unchanged; create category introductions only for future content. Use the shared lowercase index.md title/description/publication interpretation and exclude category metadata from reader/document counts. Translation and research remain independent material sections within each work.
+
+## 2026-11-12 — Explicit request before browser testing
+
+- 사용자의 별도 명시 요청이 있어야 로컬 브라우저 실행, 기존 탭 조작, 스크린샷, 인앱·헤드리스 브라우저 기반 UI 테스트를 수행한다. 일반적인 구현·검증 요청은 이에 대한 허가가 아니다. 기본 검증은 필요한 CLI 검사와 생성 파일 확인으로 진행하고, 화면 점검은 사용자에게 맡긴다. 상세 규칙은 AGENTS.md의 Browser Testing에 둔다.
+
+## 2026-11-12 — STORY 이야기불교 categories
+
+- Organize STORY by narrative purpose using seven categories: 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. Retain the category → work/series → part → document hierarchy; countries/periods/sects belong in introductions and optional document tags rather than additional top-level axes.
+- Create only category introductions for future content. 담마빠다이야기 belongs in 가르침과 일화 and 정토왕생집 in 설화와 전승 when the user supplies them. Preserve the two existing Maha editions under 붓다전기 and their document/library identities; remove only the empty former 선시 folder.
+- Treat TEXT/STORY category index.md as metadata with category canonical URLs and the same title/H1/excerpt/private-parent interpretation as other folder metadata. Filter it out before constructing reader libraries/counts; do not generate standalone documents or duplicate series from introductions.
+
 ## 2026-11-12 — Shared reader aid sizing
 
 - Resize the existing right 本문 목차/각주 dock only at >=1360px through one ReaderPanelResize component/controller and grid width variable. Keep the left list and modal sizing unchanged. Use a 300px default, 240–520px limits, a 480px minimum article allocation and the existing 780px prose cap.

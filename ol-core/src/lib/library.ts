@@ -10,7 +10,7 @@ export async function getDocuments(section: Section) {
   return [
     ...documents,
     ...media.filter((e) => e.data.source.startsWith(section + "/")),
-  ].filter((e) => e.data.published);
+  ].filter((e) => e.data.published && e.data.kind !== "category");
 }
 export async function getLibrary(section: Section) {
   const entries = await getDocuments(section);

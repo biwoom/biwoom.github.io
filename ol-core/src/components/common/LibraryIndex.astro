@@ -16,7 +16,7 @@ const label = section.toUpperCase();
 <BaseLayout
   title={category ? `${category.label} — Biwoom ${label}` : `Biwoom ${label}`}
   description={category
-    ? `${category.label}의 ${section === "text" ? "문헌" : "이야기"} 시리즈`
+    ? category.description || `${category.label}의 ${section === "text" ? "문헌" : "이야기"} 시리즈`
     : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "불교의 인물과 가르침을 만나는 이야기"}
   pagefindBody={false}
 >
@@ -36,8 +36,9 @@ const label = section.toUpperCase();
         <p class="ol-lead ol-kr">
           {category ? `${category.series.length}개 시리즈 · ${category.count}개 자료`
             : section === "text" ? "카테고리를 선택해 문헌별 번역과 연구, 시각자료를 살펴보세요."
-            : "카테고리를 선택해 부처님 전기, 고승들의 설화, 선시(禪詩)들을 읽어보세요."}
+            : "카테고리를 선택해 붓다와 고승의 생애, 가르침과 전승, 구법의 여정과 게송을 만나보세요."}
         </p>
+        {category?.description && <p class="ol-lead ol-kr">{category.description}</p>}
       </div>
     </section>
     <section class="ol-section" aria-labelledby="ol-library-list-label">
@@ -64,6 +65,7 @@ const label = section.toUpperCase();
             <a class="ol-card ol-story-library-card" href={url(item.url)} data-library-item data-library-category={item.key}>
               <span class="ol-meta-label">{label} CATEGORY</span>
               <h2 class="ol-kr">{item.label}</h2>
+              {item.description && <p class="ol-kr">{item.description}</p>}
               <span class="ol-meta-label">{item.series.length}개 시리즈 · {item.count}개 자료</span>
             </a>
           ))}

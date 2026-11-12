@@ -148,7 +148,13 @@ export function isIntroduction(relative) {
   relative = normalizeContentPath(relative);
   const { collection, seriesPath } = folderParts(relative);
   return (["text", "story", "blog"].includes(collection) && relative === `${seriesPath}/index.md`)
-    || isBlogCategoryIntroduction(relative);
+    || isCategoryIntroduction(relative);
+}
+export function isLibraryCategoryIntroduction(relative) {
+  return /^(text|story)\/[^/]+\/index\.md$/.test(normalizeContentPath(relative));
+}
+export function isCategoryIntroduction(relative) {
+  return isLibraryCategoryIntroduction(relative) || isBlogCategoryIntroduction(relative);
 }
 export function isBlogCategoryIntroduction(relative) {
   return /^blog\/[^/]+\/[^/]+\/index\.md$/.test(relative);
@@ -229,13 +235,17 @@ export function categoryFolders(collection, root = PROJECT_ROOT) {
     .sort((a, b) => compareNames(a.name, b.name))
     .map((entry) => {
       const key = normalizeContentPath(`${collection}/${entry.name}`);
-      return { key, label: nameInfo(entry.name).label, url: categoryUrl(key) };
-    });
+      const meta = folderMetadata(key, root);
+      return { key, label: meta.title, description: meta.description, published: meta.published, url: categoryUrl(key) };
+    }).filter(category => category.published);
 }
 export function folderParts(relative) {
   relative = normalizeContentPath(relative);
   const [collection, ...segments] = relative.split("/");
   const dirs = segments.slice(0, -1);
+  if (isLibraryCategoryIntroduction(relative)) return {
+    collection, category: dirs[0], seriesPath: [collection, dirs[0]].join("/"), part: "",
+  };
   if (collection === "blog") return {
     collection, category: dirs[1] ?? "", seriesPath: dirs.length ? `blog/${dirs[0]}` : "blog/standalone", part: "",
   };
@@ -280,7 +290,7 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     (firstHeading(body) ? textOf(firstHeading(body)) : "") ||
     nameInfo(path.basename(parts.collection === "blog" && intro ? path.dirname(relative) : relative)).label;
   const categoryKey = collectionKey(parts);
-  const categoryMeta = parts.collection === "blog" && categoryKey ? folderMetadata(categoryKey, root) : null;
+  const categoryMeta = categoryKey ? folderMetadata(categoryKey, root) : null;
   const seriesMeta = parts.collection === "blog" && parts.seriesPath !== "blog/standalone" ? folderMetadata(parts.seriesPath, root) : null;
   return {
     title,
@@ -292,7 +302,7 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     readingTime: Math.max(1, Math.ceil(body.length / 700)),
     url: record.url,
     source: relative,
-    kind: isBlogCategoryIntroduction(relative) ? "category" : intro ? "series" : "document",
+    kind: isCategoryIntroduction(relative) ? "category" : intro ? "series" : "document",
     category: categoryMeta?.title ?? (parts.category ? nameInfo(parts.category).label : ""),
     categoryKey,
     categoryOrder: nameInfo(parts.category).order,
@@ -311,7 +321,8 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
   };
 }
 function collectionKey(parts) {
-  return parts.collection === "blog" && parts.category ? `${parts.seriesPath}/${parts.category}` : "";
+  if (!parts.category) return "";
+  return parts.collection === "blog" ? `${parts.seriesPath}/${parts.category}` : `${parts.collection}/${parts.category}`;
 }
 export function mediaEntries(root = PROJECT_ROOT) {
   const registry = readRegistry(root),
