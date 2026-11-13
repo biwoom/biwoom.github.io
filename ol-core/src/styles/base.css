@@ -297,6 +297,12 @@ a { color: inherit; }
 .ol-btn-sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: var(--ol-r-sm); }
 .ol-btn-icon { width: 32px; padding: 0; }
 
+.ol-list-loadmore:not([hidden]) {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
 /* ===== Cards ===== */
 .ol-card {
   background: var(--ol-surface);
@@ -338,7 +344,7 @@ a { color: inherit; }
 .ol-badge-accent.ol-badge-dot::before { background: var(--ol-bg); }
 
 /* ===== Section ===== */
-.ol-section { padding: 80px 0; }
+.ol-section { padding-top: 40px; padding-bottom: 40px; }
 .ol-section-tight { padding: 48px 0; }
 .ol-section-head { margin-bottom: 32px; }
 .ol-section-head .ol-section-label { display: inline-block; margin-bottom: 14px; }

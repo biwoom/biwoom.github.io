@@ -33,7 +33,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     <div id="blog-posts">{posts.map((post,i) => <BlogPostItem post={post} index={i} hidden={i >= 6} />)}</div>
     {posts.length === 0 && <p class="ol-blog-empty">아직 발행된 글이 없습니다.</p>}
     <div id="blog-no-results" class="ol-blog-empty" hidden>선택한 필터에 해당하는 글이 없습니다.</div>
-    {posts.length > 6 && <div class="ol-blog-loadmore" id="blog-loadmore-wrap" hidden><button id="blog-loadmore-btn" class="ol-btn ol-btn-outline">더 보기 <span id="blog-loadmore-remaining">({posts.length-6})</span></button></div>}
+    {posts.length > 6 && <div class="ol-list-loadmore" id="blog-loadmore-wrap" hidden><button id="blog-loadmore-btn" class="ol-btn ol-btn-outline">더 보기 <span id="blog-loadmore-remaining">({posts.length-6})</span></button></div>}
   </div>
   <aside class="ol-blog-sidebar">
     <section class="ol-blog-sidebar-series"><h2>시리즈로 읽기</h2>{library.map(s => <a href={s.url}>{s.title}<span>{s.count ? `${s.count}편` : '준비 중'}</span></a>)}</section>

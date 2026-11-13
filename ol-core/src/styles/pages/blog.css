@@ -89,12 +89,6 @@
   margin-bottom: 8px;
 }
 
-.ol-blog-loadmore {
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
-}
-
 .ol-blog-sidebar {
   position: sticky;
   top: 80px;

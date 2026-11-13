@@ -61,6 +61,38 @@ export function entryUrl(entry: { data: { url: string } }) {
 
 export type Library = Awaited<ReturnType<typeof getLibrary>>[number];
 
+export function getRecentLibraryDocuments(library: Library[]) {
+  const publicationDay = new Intl.DateTimeFormat("en-CA", {
+    dateStyle: "short",
+    timeZone: "Asia/Seoul",
+  });
+  const documents = library.flatMap((work) => work.entries)
+    .filter((entry) => entry.collection !== "materials" && entry.data.kind === "document")
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const byDay = new Map<string, Map<string, typeof documents>>();
+  for (const document of documents) {
+    const day = publicationDay.format(document.data.date);
+    const works = byDay.get(day) ?? new Map<string, typeof documents>();
+    const entries = works.get(document.data.seriesKey) ?? [];
+    entries.push(document);
+    works.set(document.data.seriesKey, entries);
+    byDay.set(day, works);
+  }
+
+  const recent: { document: (typeof documents)[number]; day: string }[] = [];
+  for (const [day, works] of byDay) {
+    // Take one document per work before returning to any work on the same day.
+    for (let round = 0; round < 3; round++) {
+      for (const entries of works.values()) {
+        const document = entries[round];
+        if (document) recent.push({ document, day });
+        if (recent.length === 3) return recent;
+      }
+    }
+  }
+  return recent;
+}
+
 export { categoryUrl } from "../../scripts/lib/content.mjs";
 export function getCategories(section: Section, library: Library[]) {
   return categoryFolders(section).map((category) => {

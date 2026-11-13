@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-13 — TEXT/STORY work and category views
+
+- Make work rows the TEXT root and work cards the STORY root. Link each 카테고리 tab to its own static page. Recent links use public Markdown document dates in Asia/Seoul, visiting each work once per round within a day before moving to older days.
+
 ## 2026-11-13 — Empty reader TOC and notes-first aids
 
 - TEXT/STORY body TOCs collect H2–H5 and exclude the renderer-generated footnote-label heading. Authored headings named 각주 remain ordinary body headings. Always render an accessible TOC dialog with 목차없음 when empty. On desktop, prefer real body TOC, then existing notes, then the empty TOC; initial compact layouts keep dialogs closed. Preserve user panel selection through existing focus/layout behavior.

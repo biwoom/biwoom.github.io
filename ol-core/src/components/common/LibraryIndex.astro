@@ -1,92 +1,213 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCategories, getLibrary } from "../../lib/library";
+import { getCategories, getLibrary, getRecentLibraryDocuments } from "../../lib/library";
 import type { Category, Section } from "../../lib/library";
 import { url } from "../../lib/url";
 interface Props {
   section: Section;
   category?: Category;
+  view?: "works" | "categories";
 }
-const { section, category } = Astro.props;
+const { section, category, view = "works" } = Astro.props;
 const library = category?.series ?? await getLibrary(section);
 const categories = category ? [] : getCategories(section, library);
+const showCategories = !category && view === "categories";
+const showWorks = !category && view === "works";
+const showStoryCards = showWorks && section === "story";
+const showTextAside = showWorks && section === "text" && library.length > 0;
+const usePostPaginationStyle = showCategories && section === "text";
+const recent = showWorks ? getRecentLibraryDocuments(library) : [];
 const label = section.toUpperCase();
+const workLabel = section === "text" ? "문헌" : "이야기";
+const categoriesUrl = url(`/${section}/categories/`);
+const pageTitle = category?.label ?? (showCategories ? "카테고리" : "");
+const heroDesign = section === "text"
+  ? { label: "TEXT ARCHIVE · 01", first: "한 권의 문헌에서", second: "깊은 사유까지", caption: "Translation / Original / Study" }
+  : { label: "STORY LIBRARY · 02", first: "한 편의 이야기에서", second: "삶을 돌아보다", caption: "Life / Journey / Wisdom" };
+const listTitle = section === "text"
+  ? (showCategories ? "분야에 따라 문헌을 읽다" : "문헌을 찾아 읽다")
+  : (showCategories ? "주제에 따라 이야기를 만나다" : "이야기를 찾아 읽다");
+const listDescription = section === "text"
+  ? (showCategories ? "경전과 논서의 사상적·문헌적 분류를 따라 탐색합니다." : "번역과 원문, 연구를 함께 읽을 수 있는 문헌들을 찾아보세요.")
+  : (showCategories ? "인물의 삶과 가르침, 설화와 전승을 일곱 영역에서 찾아보세요." : "한 편의 이야기에서 시작해 인물과 사건, 가르침의 흐름을 따라 읽어보세요.");
+const listCount = showCategories ? `${categories.length}개 카테고리`
+  : `${library.length}개 ${section === "text" ? "문헌" : "작품"} · ${categories.length}개 카테고리`;
+const WorkHeading = category ? "h2" : "h3";
 ---
 
 <BaseLayout
-  title={category ? `${category.label} — Biwoom ${label}` : `Biwoom ${label}`}
+  title={pageTitle ? `${pageTitle} — Biwoom ${label}` : `Biwoom ${label}`}
   description={category
     ? category.description || `${category.label}의 ${section === "text" ? "문헌" : "이야기"} 시리즈`
     : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "불교의 인물과 가르침을 만나는 이야기"}
   pagefindBody={false}
 >
-  <main class="ol-library-index-page">
+  <main class="ol-library-index-page" data-library-index>
     <section class:list={[
       "ol-hero ol-hero--compact",
       category && "ol-library-category-hero",
       !category && `ol-library-menu-hero ol-grid-bg ol-grid-bg--${section}`,
     ]}>
-      <div class="ol-container">
-        {category ? (
-          <nav class="ol-text-breadcrumb" aria-label="현재 위치">
-            <a href={url(`/${section}/`)}>{label}</a><span>/</span><span>{category.label}</span>
-          </nav>
-        ) : <span class="ol-section-label">Biwoom {label}</span>}
-        <h1 class="ol-kr">{category?.label ?? (section === "text" ? "불교 문헌을 읽고 연구하다." : "이야기로 만나는 불교.")}</h1>
-        <p class="ol-lead ol-kr">
-          {category ? `${category.series.length}개 시리즈 · ${category.count}개 자료`
-            : section === "text" ? "카테고리를 선택해 문헌별 번역과 연구, 시각자료를 살펴보세요."
-            : "카테고리를 선택해 붓다와 고승의 생애, 가르침과 전승, 구법의 여정과 게송을 만나보세요."}
-        </p>
-        {category?.description && <p class="ol-lead ol-kr">{category.description}</p>}
+      <div class:list={["ol-container", { "ol-library-hero-grid": !category }]}>
+        <div>
+          {category ? (
+            <nav class="ol-text-breadcrumb" aria-label="현재 위치">
+              <a href={url(`/${section}/`)}>{label}</a><span>/</span><a href={categoriesUrl}>카테고리</a><span>/</span><span>{category.label}</span>
+            </nav>
+          ) : <span class="ol-section-label">Biwoom {label}</span>}
+          <h1 class="ol-kr">{pageTitle || (section === "text" ? "불교 문헌을 읽고 연구하다." : "이야기로 만나는 불교.")}</h1>
+          <p class="ol-lead ol-kr">
+            {category ? `${category.series.length}개 시리즈 · ${category.count}개 자료`
+              : section === "text" ? "불교 문헌을 현대 한국어로 읽고 원문과 번역, 연구를 함께 살펴봅니다."
+              : "붓다와 수행자의 생애, 삶의 선택과 변화를 담은 이야기를 따라 읽습니다."}
+          </p>
+          {category?.description && <p class="ol-lead ol-kr">{category.description}</p>}
+        </div>
+        {!category && (
+          <div class="ol-library-hero-design">
+            <span>{heroDesign.label}</span>
+            <strong class="ol-kr">{heroDesign.first}<br />{heroDesign.second}</strong>
+            <small>{heroDesign.caption}</small>
+          </div>
+        )}
       </div>
     </section>
+    {!category && (
+      <div class="ol-container">
+        <nav class="ol-library-view-nav" aria-label={`${label} 보기`}>
+          <a href={url(`/${section}/`)} aria-current={showWorks ? "page" : undefined}>{workLabel}</a>
+          <a href={categoriesUrl} aria-current={showCategories ? "page" : undefined}>카테고리</a>
+        </nav>
+      </div>
+    )}
     <section class="ol-section" aria-labelledby="ol-library-list-label">
       <div class="ol-container">
-        <p class="ol-library-list-label" id="ol-library-list-label">{category ? "시리즈 목록" : "카테고리 목록"}</p>
-        <div class:list={category ? "ol-library-series-list" : "ol-grid-3"} data-library-grid data-library-view={category ? "series" : "categories"}>
-          {category ? library.map((series, index) => (
-            <a class="ol-library-series-row" href={url(series.url)} data-library-item>
-              <span class="ol-library-series-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-              <div class="ol-library-series-body">
-                <h2 class="ol-kr">{series.label}</h2>
-                {series.description && <p class="ol-kr">{series.description}</p>}
-                <div class="ol-library-series-meta">
-                  <span>{series.count}개 자료</span>
-                  {series.parts.length > 0 && <span>{series.parts.map((part) => part.label).join(" · ")}</span>}
-                </div>
+        {category ? <p class="ol-library-list-label" id="ol-library-list-label">시리즈 목록</p> : (
+          <div class="ol-library-title-row">
+            <div>
+              <h2 id="ol-library-list-label" class="ol-kr">{listTitle}</h2>
+              <p>{listDescription}</p>
+            </div>
+            <span>{listCount}</span>
+          </div>
+        )}
+        {showWorks && library.length > 0 && (
+          <div class="ol-library-tools" data-library-tools hidden>
+            <div class="ol-library-filters" role="group" aria-label="카테고리 필터">
+              <button type="button" data-library-filter="" aria-pressed="true">전체</button>
+              {categories.map((item) => (
+                <button type="button" data-library-filter={item.key} aria-pressed="false">{item.label}</button>
+              ))}
+            </div>
+            <label class="ol-library-search">
+              <span class="sr-only">{workLabel} 검색</span>
+              <input type="search" placeholder={`${workLabel} 검색`} data-library-search />
+            </label>
+          </div>
+        )}
+        <div class:list={{ "ol-library-split": showTextAside }}>
+          <div>
+            <div class:list={showCategories ? "ol-grid-3" : showStoryCards ? "ol-library-story-grid" : "ol-library-series-list"} data-library-grid data-library-view={showCategories ? "categories" : "series"}>
+              {!showCategories ? library.map((series, index) => (
+                <a class:list={showStoryCards ? ["ol-card", "ol-library-story-work"] : ["ol-library-series-row", { "ol-library-work-row": showWorks }]} href={url(series.url)} data-library-item data-library-work-category={showWorks ? series.categoryKey : undefined}>
+                  {category && <span class="ol-library-series-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>}
+                  <div class="ol-library-series-body">
+                    {showWorks && <span class="ol-library-work-category">{series.category}</span>}
+                    <WorkHeading class="ol-kr">{series.label}</WorkHeading>
+                    {series.description && <p class="ol-kr">{series.description}</p>}
+                    <div class="ol-library-series-meta">
+                      <span>{series.count}개 자료</span>
+                      {category && series.parts.length > 0 && <span>{series.parts.map((part) => part.label).join(" · ")}</span>}
+                    </div>
+                  </div>
+                  <svg class="ol-library-series-arrow" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 12h16m-6-6 6 6-6 6" />
+                  </svg>
+                </a>
+              )) : categories.map((item) => (
+                <a class="ol-card ol-story-library-card" href={url(item.url)} data-library-item data-library-category={item.key}>
+                  <span class="ol-meta-label">{label} CATEGORY</span>
+                  <h3 class="ol-kr">{item.label}</h3>
+                  {item.description && <p class="ol-kr">{item.description}</p>}
+                  <span class="ol-meta-label">{item.series.length}개 시리즈 · {item.count}개 자료</span>
+                </a>
+              ))}
+            </div>
+            <div class={usePostPaginationStyle ? "ol-list-loadmore" : "ol-loadmore-wrap"} data-library-more hidden>
+              <button type="button" class:list={["ol-btn", usePostPaginationStyle ? "ol-btn-outline" : "ol-btn-ghost"]} data-library-more-button>
+                더 보기 <span data-library-remaining></span>
+              </button>
+            </div>
+            {showWorks && <p class="ol-library-no-results" role="status" data-library-empty hidden>검색 결과가 없습니다.</p>}
+            {(showCategories ? categories.length === 0 : library.length === 0) && <p>준비 중입니다.</p>}
+          </div>
+          {showTextAside && (
+            <aside class="ol-library-aside" aria-label="분류별 문헌">
+              <h2>분류별 문헌</h2>
+              {categories.filter((item) => item.series.length > 0).map((item) => (
+                <a href={url(item.url)}><span>{item.label}</span><span>{item.series.length}개 문헌</span></a>
+              ))}
+              <div class="ol-library-aside-note">
+                <h3>문헌을 읽는 방법</h3>
+                <p>문헌 개요에서 원문·번역 자료와 파트 목차를 확인하고, 개별 문서에서 본문과 각주를 읽습니다.</p>
+                <a href={categoriesUrl}>카테고리 전체 보기 →</a>
               </div>
-              <svg class="ol-library-series-arrow" width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 12h16m-6-6 6 6-6 6" />
-              </svg>
-            </a>
-          )) : categories.map((item) => (
-            <a class="ol-card ol-story-library-card" href={url(item.url)} data-library-item data-library-category={item.key}>
-              <span class="ol-meta-label">{label} CATEGORY</span>
-              <h2 class="ol-kr">{item.label}</h2>
-              {item.description && <p class="ol-kr">{item.description}</p>}
-              <span class="ol-meta-label">{item.series.length}개 시리즈 · {item.count}개 자료</span>
-            </a>
-          ))}
+            </aside>
+          )}
         </div>
-        <div class="ol-loadmore-wrap" data-library-more hidden>
-          <button type="button" class="ol-btn ol-btn-ghost" data-library-more-button>
-            더 보기 <span data-library-remaining></span>
-          </button>
-        </div>
-        {(category ? library.length === 0 : categories.length === 0) && <p>준비 중입니다.</p>}
       </div>
     </section>
+    {recent.length > 0 && (
+      <section class="ol-section ol-library-recent" aria-labelledby="ol-library-recent-title">
+        <div class="ol-container">
+          <h2 id="ol-library-recent-title">최근 공개 글</h2>
+          <ul>
+            {recent.map(({ document: { data }, day }) => (
+              <li>
+                <a href={url(data.url)}>{data.title}</a>
+                <span>{data.series} <span aria-hidden="true">·</span> <time datetime={day}>{day.replaceAll("-", ".")}</time></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
   </main>
 </BaseLayout>
 <script>
   import { createPaginator } from "../../lib/client/paginated-list";
-  createPaginator({
-    allItems: [...document.querySelectorAll<HTMLElement>("[data-library-item]")],
-    pageSize: 9,
-    loadMoreWrap: document.querySelector("[data-library-more]"),
-    loadMoreButton: document.querySelector("[data-library-more-button]"),
-    loadMoreRemaining: document.querySelector("[data-library-remaining]"),
-  }).reset();
+  document.querySelectorAll("[data-library-index]").forEach((root) => {
+    const items = [...root.querySelectorAll<HTMLElement>("[data-library-item]")];
+    const tools = root.querySelector<HTMLElement>("[data-library-tools]");
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>("[data-library-filter]")];
+    const search = root.querySelector<HTMLInputElement>("[data-library-search]");
+    const empty = root.querySelector<HTMLElement>("[data-library-empty]");
+    const paginator = createPaginator({
+      allItems: items,
+      pageSize: 9,
+      loadMoreWrap: root.querySelector("[data-library-more]"),
+      loadMoreButton: root.querySelector("[data-library-more-button]"),
+      loadMoreRemaining: root.querySelector("[data-library-remaining]"),
+      onRender: ({ matchedItems }) => {
+        if (empty) empty.hidden = matchedItems.length !== 0 || items.length === 0;
+      },
+    });
+    let category = "";
+    function filterWorks() {
+      const query = (search?.value ?? "").trim().normalize("NFC").toLowerCase();
+      paginator.reset(items.filter((item) =>
+        (!category || category === item.dataset.libraryWorkCategory) &&
+        (item.textContent ?? "").normalize("NFC").toLowerCase().includes(query),
+      ));
+    }
+    if (tools) tools.hidden = false;
+    buttons.forEach((button) => button.addEventListener("click", () => {
+      category = button.dataset.libraryFilter ?? "";
+      buttons.forEach((option) => option.setAttribute("aria-pressed", String(option === button)));
+      filterWorks();
+    }));
+    search?.addEventListener("input", filterWorks);
+    filterWorks();
+  });
 </script>

@@ -27,7 +27,7 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 
 - Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
 - `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
-- TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item; both menu roots show category cards before series lists; order comes from numeric prefixes and title/body writing is supported without YAML.
+- TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
 - `content-registry.json` is committed source metadata for stable URLs/dates/paths. `ol-core/public/generated/content/` is derived output and is not committed.
@@ -66,6 +66,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-13 — TEXT/STORY menus
+
+- Record the separate work and category routes.
 
 ### 2026-11-11 — BLOG series
 

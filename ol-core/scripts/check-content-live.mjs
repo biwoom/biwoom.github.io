@@ -8,8 +8,12 @@ for(const f of ['ol-core','astro.config.mjs','site-config.mjs','package.json','t
 fs.symlinkSync(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');fs.writeFileSync(path.join(root,'content-registry.json'),JSON.stringify({version:1,files:{},folders:{},redirects:{},aliases:{}}));
 const write=(rel,body)=>{const f=path.join(root,'content',rel);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,body);};
 write('text/C/W/P/A.md','# Live document');write('text/C/W/P/file.pdf','%PDF-test');write('text/C/W/index.md','# Work');
-write('story/001.Literature/010.First/010.Part/001.First.md','# First story document\n\n번역문입니다.\n\n```original\n原文 <literal> & **文字**\n```\n\n```original\n두 번째 원문\n```\n\n```text\nordinary code\n```\n\n`inline original`');
-write('story/001.Literature/020.Second/010.Part/001.Second.md','# Second story document');
+write('story/001.Literature/010.First/010.Part/001.First.md','---\ndate: 2026-01-01\n---\n# First story document\n\n번역문입니다.\n\n```original\n原文 <literal> & **文字**\n```\n\n```original\n두 번째 원문\n```\n\n```text\nordinary code\n```\n\n`inline original`');
+write('story/001.Literature/020.Second/010.Part/001.Second.md','---\ndate: 2026-01-02\n---\n# Second story document');
+write('story/001.Literature/010.First/010.Part/002.New.md','---\ndate: 2026-01-02\n---\n# New story document');
+write('story/001.Literature/010.First/010.Part/003.New.md','---\ndate: 2026-01-02\n---\n# Another new story document');
+write('story/001.Literature/010.First/010.Part/004.Latest.md','---\ndate: 2026-01-03\n---\n# Latest story document');
+write('story/001.Literature/010.First/010.Part/005.Private.md','---\ndate: 2026-01-04\npublished: false\n---\n# Private story document');
 write('story/002.Poems/.gitkeep','');
 write('blog/rights.md','---\nlicense: CC-BY\nrightsHolder: Rights Owner\ncopyrightNotice: Special notice\n---\n# Rights test');
 write('media/001.Images/index.md','# Images\n\n## [First media title](first.png)\n\nFirst media description.');
@@ -20,13 +24,15 @@ const child=spawn('npm',['run','dev','--','--host','127.0.0.1','--port','4399'],
 const get=async p=>{try{return await (await fetch('http://127.0.0.1:4399'+p)).text();}catch{return '';}};
 const until=async(fn,label)=>{const deadline=Date.now()+18000;while(Date.now()<deadline){if(await fn())return;await new Promise(r=>setTimeout(r,300));}throw new Error(label+'\n'+log.slice(-3500));};
 const cardTitles = html => [...html.matchAll(/<a\b[^>]*\bdata-library-item[^>]*>([\s\S]*?)<\/a>/g)]
-  .map(([, card]) => card.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/)?.[1]?.replace(/<[^>]+>/g, '').trim());
+  .map(([, card]) => card.match(/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/)?.[1]?.replace(/<[^>]+>/g, '').trim());
 const textCategory = categoryUrl('text/C');
 const storyCategory = categoryUrl('story/001.Literature');
 try{
-await until(async()=> JSON.stringify(cardTitles(await get('/text/'))) === JSON.stringify(['C']), 'initial TEXT category cards');
+await until(async()=> JSON.stringify(cardTitles(await get('/text/'))) === JSON.stringify(['W']), 'initial TEXT work rows');
+await until(async()=> JSON.stringify(cardTitles(await get('/text/categories/'))) === JSON.stringify(['C']), 'initial TEXT category cards');
 await until(async()=> JSON.stringify(cardTitles(await get(textCategory))) === JSON.stringify(['W']), 'initial TEXT series inside category');
-await until(async()=> JSON.stringify(cardTitles(await get('/story/'))) === JSON.stringify(['Literature', 'Poems']), 'STORY category cards');
+await until(async()=> JSON.stringify(cardTitles(await get('/story/'))) === JSON.stringify(['First', 'Second']), 'STORY work cards');
+await until(async()=> JSON.stringify(cardTitles(await get('/story/categories/'))) === JSON.stringify(['Literature', 'Poems']), 'STORY category cards');
 await until(async()=> JSON.stringify(cardTitles(await get(storyCategory))) === JSON.stringify(['First', 'Second']), 'STORY category must contain two distinct series, not another category card');
 const empty = await get(categoryUrl('story/002.Poems'));
 assert.deepEqual(cardTitles(empty), []);
@@ -35,6 +41,14 @@ const reg=()=>JSON.parse(fs.readFileSync(path.join(root,'content-registry.json')
 const series=reg().folders['text/C/W'].url;
 const rights=reg().files['blog/rights.md'].url;
 const originalUrl=reg().files['story/001.Literature/010.First/010.Part/001.First.md'].url;
+const recentLinks = (html) => [...(html.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "").matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
+assert.deepEqual(recentLinks(await get('/text/')), [reg().files['text/C/W/P/A.md'].url], 'recent TEXT links exclude attachments and introductions');
+const recentStorySources = [
+  'story/001.Literature/010.First/010.Part/004.Latest.md',
+  'story/001.Literature/010.First/010.Part/002.New.md',
+  'story/001.Literature/020.Second/010.Part/001.Second.md',
+];
+assert.deepEqual(recentLinks(await get('/story/')), recentStorySources.map((source) => reg().files[source].url), 'recent STORY links prioritize date, then distinct works within the day');
 await until(async()=>{const html=await get(originalUrl);return html.includes('data-original-toggle')&&(html.match(/data-reader-original(?=[\s=>])/g)??[]).length===2&&html.includes('원문 숨기기')&&html.includes('ordinary code')&&html.includes('inline original');},'STORY explicit original blocks and shared toggle');
 const plainStory=await get(reg().files['story/001.Literature/020.Second/010.Part/001.Second.md'].url);
 assert.ok(!plainStory.includes('data-original-toggle'),'Plain STORY pages must not show an original toggle');

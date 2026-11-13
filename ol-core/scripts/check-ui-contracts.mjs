@@ -294,22 +294,38 @@ for (const [source, record] of Object.entries(registry.files)) {
 for (const [collection, total] of Object.entries(drawerCounts)) {
   assert.ok(total > 0, `${collection}: no document TOC drawer generated`);
 }
-// Menu roots list categories; category pages list only their own public series.
+// Menu roots list works and recent documents; category tabs list public categories.
 for (const section of ["text", "story"]) {
   const index = fs.readFileSync(`${dist}/${section}/index.html`, "utf8");
-  classes(index, ["ol-grid-3"], `${section} categories`);
-  assert.match(index, /data-library-view="categories"/);
-  assert.ok(!index.includes("ol-category-filter"), `${section}: obsolete category buttons`);
+  const categoryIndex = fs.readFileSync(`${dist}/${section}/categories/index.html`, "utf8");
+  classes(index, [section === "text" ? "ol-library-series-list" : "ol-library-story-grid"], `${section} works`);
+  classes(categoryIndex, ["ol-grid-3"], `${section} categories`);
+  assert.match(index, /data-library-view="series"/);
+  assert.match(categoryIndex, /data-library-view="categories"/);
+  assert.ok(index.includes(`href="/${section}/categories/"`));
+  assert.ok(index.includes(`href="/${section}/" aria-current="page"`));
+  assert.ok(categoryIndex.includes(`href="/${section}/categories/" aria-current="page"`));
+  assert.ok(!categoryIndex.includes('id="ol-library-recent-title"'));
   const series = new Map();
+  const documents = new Map();
   for (const [source] of Object.entries(registry.files)) {
     if (!source.startsWith(`${section}/`) || !fs.existsSync(contentFile(source))) continue;
     const data = normalize(source, markdownPattern.test(source) ? fs.readFileSync(contentFile(source), "utf8") : "", registry);
-    if (data.published) series.set(data.seriesKey, data.seriesUrl);
+    if (!data.published || data.kind === "category") continue;
+    series.set(data.seriesKey, data.seriesUrl);
+    if (data.kind === "document" && markdownPattern.test(source)) documents.set(data.url, data);
   }
+  const workLinks = [...index.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*data-library-work-category=/g)].map(([, href]) => href);
+  assert.deepEqual(workLinks.sort(), [...series.values()].sort(), `${section}: menu must list all public works`);
+  const recent = index.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "";
+  const recentLinks = [...recent.matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
+  assert.equal(new Set(recentLinks).size, recentLinks.length);
+  assert.equal(recentLinks.length, Math.min(3, documents.size));
+  assert.ok(recentLinks.every((href) => documents.has(href)), `${section}: recent links must open public reading pages`);
   const categories = categoryFolders(section);
-  assert.equal((index.match(/data-library-category=/g) ?? []).length, categories.length);
+  assert.equal((categoryIndex.match(/data-library-category=/g) ?? []).length, categories.length);
   for (const category of categories) {
-    assert.ok(index.includes(`href="${category.url}"`), `${section}: missing category link ${category.label}`);
+    assert.ok(categoryIndex.includes(`href="${category.url}"`), `${section}: missing category link ${category.label}`);
     const html = fs.readFileSync(path.join(dist, category.url, "index.html"), "utf8");
     assert.match(html, /data-library-view="series"/);
     classes(html, ["ol-library-series-list"], category.url);
