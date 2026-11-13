@@ -47,7 +47,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
       <!-- Read -->
       <div>
         <h4>READ</h4>
-        <a href={url('/blog')}>BLOG · 포스트</a>
+        <a href={url('/blog/series/')}>BLOG · 시리즈</a>
         <a href={url('/pages/brand')}>{BRAND.nameKo} 소개</a>
         <a href={url('/partners')}>기여 및 협력단체</a>
         {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원</a>}
