@@ -14,7 +14,8 @@ export function initStoryWorkspace() {
   }));
   const wide = window.matchMedia('(min-width: 1360px)');
   let active = dialogs.find(dialog => dialog.open)?.id
-    ?? dialogs.find(dialog => dialog.id === 'ol-reader-toc')?.id ?? dialogs[0]?.id;
+    ?? dialogs.find(dialog => dialog.id === 'ol-reader-toc' && !dialog.hasAttribute('data-reader-toc-empty'))?.id
+    ?? dialogs.find(dialog => dialog.id === 'ol-reader-footnotes')?.id ?? dialogs[0]?.id;
   let layingOut = false;
   const sync = () => {
     const opened = dialogs.find(dialog => dialog.open);

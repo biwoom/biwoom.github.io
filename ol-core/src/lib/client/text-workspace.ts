@@ -19,7 +19,8 @@ export function initTextWorkspace() {
   const focusButton = root.querySelector<HTMLButtonElement>('[data-text-focus]')!;
   const focusLabel = root.querySelector<HTMLElement>('[data-text-focus-label]')!;
   const panelButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-text-panel]')];
-  let activePanel = dialogs.find(dialog => dialog.open)?.id ?? dialogs.find(dialog => dialog.id === 'ol-reader-toc')?.id ?? dialogs[0]?.id;
+  let activePanel = dialogs.find(dialog => dialog.open)?.id ?? dialogs.find(dialog => dialog.id === 'ol-reader-toc' && !dialog.hasAttribute('data-reader-toc-empty'))?.id
+    ?? dialogs.find(dialog => dialog.id === 'ol-reader-footnotes')?.id ?? dialogs[0]?.id;
   let focused = false;
   let saved: { left: boolean; panel?: string; right: boolean } | undefined;
   let listOverflow = '';
@@ -147,7 +148,7 @@ export function initTextWorkspace() {
   }
   // Initial defaults follow the same breakpoint as the three-column dock.
   setLeft(!wide.matches);
-  root.toggleAttribute('data-text-right-hidden', !wide.matches || !dialogs.some(dialog => dialog.id === 'ol-reader-toc'));
+  root.toggleAttribute('data-text-right-hidden', !wide.matches);
   layout();
   root.setAttribute('data-text-ready', '');
 }

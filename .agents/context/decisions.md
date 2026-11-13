@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-13 — Empty reader TOC and notes-first aids
+
+- TEXT/STORY body TOCs collect H2–H5 and exclude the renderer-generated footnote-label heading. Authored headings named 각주 remain ordinary body headings. Always render an accessible TOC dialog with 목차없음 when empty. On desktop, prefer real body TOC, then existing notes, then the empty TOC; initial compact layouts keep dialogs closed. Preserve user panel selection through existing focus/layout behavior.
+
 ## 2026-11-13 — Bounded reuse in content processing
 
 - Keep the normalized schema in content.config.ts and isolate filesystem loading in content-loaders.ts. Share a prepared registry only within each collection refresh; prepare afresh on subsequent edits. Reuse frozen Markdown parser configuration, never mutable ASTs. Derive title/description together without changing author-input precedence.

@@ -12,14 +12,12 @@ const { hasToc, hasOriginal = false, currentUrl, title, academic = false } = Ast
             </button>}
             </div>
             <div class="ol-story-part-tools">
-              {hasToc && (
                 <button class="ol-text-tool-btn ol-reader-toc-trigger" type="button"
-                  aria-label="본문 목차 열기" title="본문 목차" aria-haspopup="dialog"
+                  aria-label="본문 목차 열기" title={hasToc ? "본문 목차" : "목차없음"} aria-haspopup="dialog"
                   aria-expanded="false" aria-controls="ol-reader-toc" data-reader-toc-trigger>
                   <span class="ol-text-tool-symbol" aria-hidden="true">≡</span>
                   <span class="ol-text-tool-label ol-reader-toc-label">{academic && <span class="ol-reader-toc-prefix">본문{' '}</span>}목차</span>
                 </button>
-              )}
               <button class="ol-text-tool-btn" type="button" disabled
                 aria-label="각주 없음" title="각주 없음" aria-haspopup="dialog"
                 aria-expanded="false" aria-controls="ol-reader-footnotes" data-reader-footnotes-trigger>

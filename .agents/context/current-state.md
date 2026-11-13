@@ -25,6 +25,8 @@ Last updated: 2026-11-13
 
 ## Current Architecture
 
+- TEXT/STORY TOCs exclude the generated footnote-label and retain authored H2–H5 headings. Empty TOCs remain accessible with 목차없음. Desktop readers initially choose notes when the body TOC is empty and notes exist; compact layouts do not auto-open a panel on initial load.
+
 - 2026-11-13 internal audit: normalized schema remains in `src/content.config.ts`; `src/lib/content-loaders.ts` owns loading and refresh-scoped registry snapshots. Markdown parser configuration is reused with fresh ASTs, title/description share one parse, and development assets use the shared serialized watcher. Retired TOC CSS and redundant dark rules were removed without changing active declarations. Built-link validation now matches literal percent-encoded footnote IDs before decoding. Evidence: `.agents/references/ol-core-maintenance-audit-2026-11-13.md`.
 
 - Desktop/mobile header BLOG menus enter /blog/series/ first. Keep /blog/ as the posts list with the existing real-page 포스트/시리즈 tabs and explicit post-list links.

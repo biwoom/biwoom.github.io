@@ -4,6 +4,11 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import * as content from './lib/content.mjs';
+import { createMarkdownProcessor } from '@astrojs/markdown-remark';
+import { markdownRemarkPlugins } from './lib/markdown.mjs';
+import rehypeReaderFootnotes from './rehype-reader-footnotes.mjs';
+import { contentFile } from './lib/paths.mjs';
+import { pathToFileURL } from 'node:url';
 function evaluate(file, globals={}, imports={}) {
   const module={exports:{}};
   const source=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
@@ -50,12 +55,13 @@ test('docked document panels are nonmodal, do not lock body scroll, and close wi
   const controller=api.createReaderDrawer(dialog,trigger,null);controller.open();assert.ok(dialog.open);assert.equal(document.body.style.overflow,'scroll');assert.equal(active.focused,undefined);assert.equal(trigger.attrs['aria-expanded'],'true');
   let returned=false;controller.close(()=>returned=true);assert.equal(dialog.open,false);assert.ok(returned);assert.equal(document.body.style.overflow,'scroll');
 });
-function workspace({ opened = true, initialNote = false, wideScreen = true } = {}) {
+function workspace({ opened = true, initialNote = false, wideScreen = true, emptyToc = false, withNotes = true } = {}) {
   const root=new El(),slot=new El(),printSlot=new El(),left=new El(),list=new El(),mobile=new El(),mobileSlot=new El(),leftBtn=new El(),focusBtn=new El(),focusLabel=new El();
   const toc=new El(),notes=new El();toc.id='ol-reader-toc';notes.id='ol-reader-footnotes';
   if (!opened) { root.setAttribute('data-text-left-hidden',''); root.setAttribute('data-text-right-hidden',''); }
   toc.parentElement=root;notes.parentElement=root;notes.open=initialNote;
-  const dialogs=[toc,notes],tabs=['toc','footnotes'].map(type=>{const e=new El();e.dataset.textPanel=type;return e;});
+  if (emptyToc) toc.setAttribute('data-reader-toc-empty','');
+  const dialogs=withNotes?[toc,notes]:[toc],tabs=['toc','footnotes'].map(type=>{const e=new El();e.dataset.textPanel=type;return e;});
   const wide=new El(),narrow=new El();wide.matches=wideScreen;narrow.matches=false;
   root.select={'[data-text-panel-slot]':slot,'[data-text-print-notes]':printSlot,'#text-document-list':left,'[data-text-list-content]':list,'#text-list-dialog':mobile,'[data-text-left-toggle]':leftBtn,'[data-text-focus]':focusBtn,'[data-text-focus-label]':focusLabel,'[data-text-list-close]':new El()};
   root.lists={'.ol-reader-toc':dialogs,'[data-text-panel]':tabs};mobile.select={'[data-text-mobile-list-slot]':mobileSlot};
@@ -157,10 +163,11 @@ test('STORY focus toggles its chapter sidebar layout and restores the default mo
 });
 
 
-function storyWorkspace(wideScreen = true, withList = false) {
+function storyWorkspace(wideScreen = true, withList = false, { emptyToc = false, withNotes = true } = {}) {
   const root=new El(),slot=new El(),empty=new El(),body=new El(),wide=new El();
   wide.matches=wideScreen;
-  const dialogs=['toc','footnotes'].map(type=>{const dialog=new El();dialog.id=`ol-reader-${type}`;dialog.parentElement=root;return dialog;});
+  const dialogs=(withNotes?['toc','footnotes']:['toc']).map(type=>{const dialog=new El();dialog.id=`ol-reader-${type}`;dialog.parentElement=root;return dialog;});
+  if (emptyToc) dialogs[0].setAttribute('data-reader-toc-empty','');
   const buttons=['toc','footnotes'].map(type=>{const button=new El();button.dataset.readerPanel=type;return button;});
   root.select={'[data-reader-panel-slot]':slot,'[data-reader-panel-empty]':empty};
   root.lists={'.ol-reader-toc':dialogs,'[data-reader-panel]':buttons};
@@ -247,4 +254,38 @@ for (const section of ['text', 'story']) test(`${section.toUpperCase()} original
   button.fire('click');assert.ok(blocks.every(block=>!block.hidden));
   assert.equal(button.attrs['aria-pressed'],'false');assert.equal(button.title,'원문 숨기기');assert.equal(label.textContent,'원문 숨기기');
   reader.lists={};evaluate('ol-core/src/lib/client/reader-original.ts',{document:{querySelector:selector=>selector === '.ol-story-doc-page' || (section === 'text' && selector === '[data-text-workspace]') ? reader : null}}).initOriginalToggle();assert.ok(button.hidden);
+});
+
+
+test('reader TOC excludes generated footnote labels while retaining authored headings named 각주', async () => {
+  const processor = await createMarkdownProcessor({ remarkPlugins: markdownRemarkPlugins, rehypePlugins: [rehypeReaderFootnotes], remarkRehype: { footnoteLabel: '각주' } });
+  const { readerTocHeadings } = evaluate('ol-core/src/lib/reader-toc.ts');
+  for (const section of ['text', 'story']) {
+    for (const body of ['본문[^1]\n\n[^1]: 설명', '## 각주\n\n### 하위\n\n#### 세부\n\n##### 상세\n\n###### 제외\n\n본문[^1]\n\n[^1]: 설명']) {
+      const result = await processor.render(body, { fileURL: pathToFileURL(contentFile(`${section}/category/work/part/item.md`)) });
+      assert.ok(result.metadata.headings.some(heading => heading.slug === 'footnote-label'));
+      const headings = readerTocHeadings(result.metadata.headings);
+      assert.deepEqual(Array.from(headings, heading => heading.text), body.startsWith('##') ? ['각주', '하위', '세부', '상세'] : []);
+    }
+  }
+});
+
+test('TEXT empty TOC defaults to notes on desktop, permits the empty TOC and keeps mobile closed', () => {
+  const h = workspace({ emptyToc: true });
+  assert.equal(h.notes.open, true); assert.equal(h.toc.open, false);
+  h.tabs[0].fire('click'); assert.equal(h.toc.open, true); assert.equal(h.notes.open, false);
+  const compact = workspace({ emptyToc: true, wideScreen: false });
+  assert.equal(compact.toc.open || compact.notes.open, false);
+  const empty = workspace({ emptyToc: true, withNotes: false });
+  assert.equal(empty.toc.open, true); assert.equal(empty.tabs[1].disabled, true);
+});
+
+test('STORY empty TOC defaults to notes on desktop, permits the empty TOC and keeps mobile closed', () => {
+  const h = storyWorkspace(true, false, { emptyToc: true });
+  assert.equal(h.dialogs[1].open, true); assert.equal(h.dialogs[0].open, false);
+  h.buttons[0].fire('click'); assert.equal(h.dialogs[0].open, true); assert.equal(h.dialogs[1].open, false);
+  const compact = storyWorkspace(false, false, { emptyToc: true });
+  assert.equal(compact.dialogs.some(dialog => dialog.open), false);
+  const empty = storyWorkspace(true, false, { emptyToc: true, withNotes: false });
+  assert.equal(empty.dialogs[0].open, true); assert.equal(empty.buttons[1].disabled, true);
 });

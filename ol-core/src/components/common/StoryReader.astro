@@ -231,17 +231,16 @@ const hasToc = headings.length > 0;
         <aside id="reader-aid" class="ol-story-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>
           <ReaderPanelResize />
           <div class="ol-text-panel-tabs" role="group" aria-label="보조 패널 선택">
-            <button type="button" data-reader-panel="toc" aria-pressed="false" disabled={!hasToc}>본문 목차</button>
+            <button type="button" data-reader-panel="toc" aria-pressed="false">본문 목차</button>
             <button type="button" data-reader-panel="footnotes" aria-pressed="false" disabled>각주</button>
           </div>
           <div data-reader-panel-slot></div>
-          <p class="ol-text-panel-empty" data-reader-panel-empty hidden>본문 목차와 각주가 없습니다.</p>
+          <p class="ol-text-panel-empty" data-reader-panel-empty hidden>목차없음</p>
         </aside>
       </div>
     </section>
     <dialog id="story-list-dialog" class="ol-text-list-dialog" aria-label="문헌 목차" data-pagefind-ignore><div data-story-mobile-list-slot></div></dialog>
-    {hasToc && (
-      <dialog id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore>
+      <dialog data-reader-toc-empty={!hasToc ? true : undefined} id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore>
         <section class="ol-reader-toc-panel">
           <header class="ol-reader-toc-head">
             <h2 id="ol-reader-toc-title">본문 목차</h2>
@@ -256,9 +255,9 @@ const hasToc = headings.length > 0;
               <li><a href={`#${heading.slug}`} data-level={heading.depth}>{heading.text}</a></li>
             ))}
           </ul></nav>
+          {!hasToc && <p class="ol-text-panel-empty">목차없음</p>}
         </section>
       </dialog>
-    )}
   </main>
 </BaseLayout>
 
