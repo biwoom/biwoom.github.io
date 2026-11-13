@@ -73,6 +73,67 @@ test('watch invalidation includes Markdown and folder changes, ignores personal 
  await new Promise(r=>setTimeout(r,400));assert.equal(count,1);
  watcher.emit('all','change',path.resolve('content/.obsidian/workspace.json'));await new Promise(r=>setTimeout(r,350));assert.equal(count,1);watcher.emit('close');
 });
+
+test('watch refreshes never overlap and recover after a failed refresh', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const watcher = new EventEmitter(); watcher.add = () => {};
+  let rejectFirst, calls = 0, active = 0, maximum = 0;
+  const errors = [];
+  const dispose = watchContent(watcher, async () => {
+    calls++; active++; maximum = Math.max(maximum, active);
+    try {
+      if (calls === 1) await new Promise((_resolve, reject) => { rejectFirst = reject; });
+    } finally { active--; }
+  }, error => errors.push(error.message));
+  t.after(dispose);
+  const change = () => watcher.emit('all', 'change', path.join(original, 'content/text/W/index.md'));
+  const flush = () => new Promise(resolve => setImmediate(resolve));
+  change(); t.mock.timers.tick(250); await flush();
+  change(); change(); t.mock.timers.tick(250); await flush();
+  assert.equal(calls, 1);
+  rejectFirst(new Error('temporary read failure')); await flush();
+  assert.equal(calls, 2); assert.equal(maximum, 1);
+  assert.deepEqual(errors, ['temporary read failure']);
+  change(); t.mock.timers.tick(250); await flush();
+  assert.equal(calls, 3);
+});
+
+test('watch disposal removes listeners and cancels queued work after an active refresh', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const watcher = new EventEmitter(); watcher.add = () => {};
+  let release, calls = 0;
+  const dispose = watchContent(watcher, async () => {
+    calls++;
+    await new Promise(resolve => { release = resolve; });
+  });
+  t.after(dispose);
+  const change = () => watcher.emit('all', 'addDir', path.join(original, 'content/text/New'));
+  const flush = () => new Promise(resolve => setImmediate(resolve));
+  change(); t.mock.timers.tick(250); await flush();
+  change(); t.mock.timers.tick(250); await flush();
+  change(); watcher.emit('close');
+  release(); t.mock.timers.tick(250); await flush();
+  assert.equal(calls, 1);
+  assert.equal(watcher.listenerCount('all'), 0);
+  assert.equal(watcher.listenerCount('close'), 0);
+});
+
+test('asset watching excludes registry feedback, outside paths and personal state', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const watcher = new EventEmitter(); let watched; watcher.add = files => { watched = files; };
+  let calls = 0;
+  const dispose = watchContent(watcher, async () => { calls++; }, assert.fail, { includeRegistry: false, delay: 200 });
+  t.after(dispose);
+  for (const relative of ['content-registry.json', 'content/.obsidian/workspace.json', 'content-sibling/file.md']) {
+    watcher.emit('all', 'change', path.join(original, relative));
+  }
+  t.mock.timers.tick(200); await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls, 0);
+  assert.deepEqual(watched, [path.join(original, 'content')]);
+  watcher.emit('all', 'change', path.join(original, 'content/media/_assets/image.png'));
+  t.mock.timers.tick(200); await new Promise(resolve => setImmediate(resolve));
+  assert.equal(calls, 1);
+});
 test('identical move candidates require explicit identity instead of arbitrarily choosing',()=>fixture((root,write)=>{
  write(rel,'# Same');prepare(root);fs.unlinkSync(path.join(root,'content',rel));write(rel.replace('001.A','002.B'),'# Same');write(rel.replace('001.A','003.C'),'# Same');assert.throws(()=>prepare(root),/Ambiguous move/);
 }));

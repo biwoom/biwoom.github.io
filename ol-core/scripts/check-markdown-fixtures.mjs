@@ -7,6 +7,9 @@ import rehypeReaderFootnotes from './rehype-reader-footnotes.mjs';
 import path from 'node:path';
 import remarkContent from './remark-content.mjs';
 import { hasOriginalBlocks } from './lib/markdown.mjs';
+import { checkBuiltLinks } from './check-built-links.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
 
 const processor = await createMarkdownProcessor({
   remarkPlugins: markdownRemarkPlugins,
@@ -15,6 +18,36 @@ const processor = await createMarkdownProcessor({
 const html = async source => (await processor.render(source, {
   fileURL: new URL(`file://${path.resolve('content/story/category/series/part/example.md')}`),
 })).code;
+
+test('shared parser keeps mutable trees and reference definitions isolated between documents', () => {
+  const source = '# 제목\n\n[자료][ref]와 각주[^한글]\n\n[ref]: /text/\n\n[^한글]: 설명';
+  const expected = markdownTree(source);
+  const changed = markdownTree(source);
+  changed.children[0].children[0].value = '변경한 제목';
+  changed.children.splice(1);
+  assert.deepEqual(markdownTree(source), expected);
+  const other = markdownTree('[자료][ref]와 각주[^한글]');
+  assert.equal(other.children[0].children.length, 1);
+  assert.equal(other.children[0].children[0].type, 'text');
+});
+
+test('built link validation accepts generated Unicode footnotes and still reports missing targets', async t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ol-built-links-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(root, 'dist'));
+  fs.writeFileSync(path.join(root, 'content-registry.json'), JSON.stringify({ version: 1, files: {}, folders: {}, redirects: {} }));
+  const page = path.join(root, 'dist/index.html');
+  const rendered = await html('본문[^한글각주]\n\n[^한글각주]: 설명');
+  const links = '<h2 id="한글">제목</h2><a href="#%ED%95%9C%EA%B8%80">제목</a><i id="literal%broken"></i><a href="#literal%broken">원형 ID</a>';
+  fs.writeFileSync(page, rendered + links);
+  assert.deepEqual(checkBuiltLinks(root), { errors: [], pageCount: 1, redirectCount: 0 });
+  fs.appendFileSync(page, '<a href="#missing">누락</a><a href="#%xx">잘못된 인코딩</a><a href="/missing/">없는 페이지</a>');
+  assert.deepEqual(checkBuiltLinks(root).errors, [
+    'index.html: missing anchor #missing',
+    'index.html: missing anchor #%xx',
+    'index.html: missing href /missing/',
+  ]);
+});
 
 test('punctuation and attached Korean particles render emphasis without altering text', async () => {
   const cases = [

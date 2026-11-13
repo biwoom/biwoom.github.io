@@ -123,8 +123,21 @@ export function firstHeading(body) {
   return markdownTree(body).children.find(n => n.type === "heading" && n.depth === 1);
 }
 export function excerpt(body) {
-  const paragraph = markdownTree(body).children.find(n => n.type === "paragraph" && !/^(저자|출처|목차)/.test(textOf(n)) && !n.children?.some(c => c.type === "image"));
+  return excerptFromTree(markdownTree(body));
+}
+function excerptFromTree(tree) {
+  const paragraph = tree.children.find(n => n.type === "paragraph" && !/^(저자|출처|목차)/.test(textOf(n)) && !n.children?.some(c => c.type === "image"));
   return paragraph ? textOf(paragraph).replace(/\s+/g, " ").trim().slice(0, 180) : "";
+}
+// Title and description are derived together so a document is parsed at most once.
+function titleAndDescription(data, body, fallbackTitle) {
+  const override = data.title?.trim();
+  const tree = !override || data.description == null ? markdownTree(body) : null;
+  const heading = !override && tree.children.find(n => n.type === "heading" && n.depth === 1);
+  return {
+    title: override || (heading ? textOf(heading) : "") || fallbackTitle,
+    description: data.description ?? excerptFromTree(tree),
+  };
 }
 export function resolveAlias(relative, registry) {
   relative = normalizeContentPath(relative);
@@ -163,8 +176,7 @@ export function folderMetadata(key, root = PROJECT_ROOT) {
   const file = contentFile(`${key}/index.md`, root);
   const { data, body } = fs.existsSync(file) ? parse(fs.readFileSync(file, "utf8")) : { data: {}, body: "" };
   return {
-    title: data.title?.trim() || (firstHeading(body) ? textOf(firstHeading(body)) : "") || nameInfo(key.split("/").at(-1)).label,
-    description: data.description ?? excerpt(body),
+    ...titleAndDescription(data, body, nameInfo(key.split("/").at(-1)).label),
     // Reuse the document publication policy for parent indexes, even for empty folders.
     published: data.published !== false && isPublicSource(key, { files: {} }, root),
   };
@@ -285,16 +297,12 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
   const parts = folderParts(relative);
   const series = registry.folders[parts.seriesPath];
   const intro = isIntroduction(relative);
-  const title =
-    data.title?.trim() ||
-    (firstHeading(body) ? textOf(firstHeading(body)) : "") ||
-    nameInfo(path.basename(parts.collection === "blog" && intro ? path.dirname(relative) : relative)).label;
+  const fallbackTitle = nameInfo(path.basename(parts.collection === "blog" && intro ? path.dirname(relative) : relative)).label;
   const categoryKey = collectionKey(parts);
   const categoryMeta = categoryKey ? folderMetadata(categoryKey, root) : null;
   const seriesMeta = parts.collection === "blog" && parts.seriesPath !== "blog/standalone" ? folderMetadata(parts.seriesPath, root) : null;
   return {
-    title,
-    description: data.description ?? excerpt(body),
+    ...titleAndDescription(data, body, fallbackTitle),
     tags: data.tags ?? [],
     published:
       data.published !== false && !ignored(relative) && !series?.hidden && isPublicSource(relative, registry, root),

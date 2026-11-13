@@ -1,5 +1,4 @@
-import { projectPaths } from './lib/paths.mjs';
-import path from "node:path";
+import { watchContent } from "./lib/watch-content.mjs";
 import { prepare } from "./prepare-content.mjs";
 import { syncAssets } from "./sync-content-assets.mjs";
 import { syncMediaGallery } from "./lib/media-gallery.mjs";
@@ -8,29 +7,16 @@ export default function contentDevelopment() {
     name: "ol-content-development",
     hooks: {
       "astro:server:setup": ({ server }) => {
-        let timer;
-        server.watcher.add(projectPaths().content);
-        server.watcher.on("all", (event, file) => {
-          const relative = path.relative(projectPaths().content, file);
-          if (
-            relative.startsWith("..") ||
-            relative.split(path.sep).some((p) => p.startsWith(".")) ||
-            !["add", "change", "unlink", "addDir", "unlinkDir"].includes(event)
-          )
-            return;
-          clearTimeout(timer);
-          timer = setTimeout(async () => {
-            try {
-              prepare();
-              syncAssets();
-              await syncMediaGallery();
-              server.ws.send({ type: "full-reload" });
-            } catch (error) {
-              server.config.logger.error(error.message);
-            }
-          }, 200);
+        const dispose = watchContent(server.watcher, async () => {
+          prepare();
+          syncAssets();
+          await syncMediaGallery();
+          server.ws.send({ type: "full-reload" });
+        }, error => server.config.logger.error(error.message), {
+          delay: 200,
+          includeRegistry: false,
         });
-        server.httpServer?.once("close", () => clearTimeout(timer));
+        server.httpServer?.once("close", dispose);
       },
     },
   };

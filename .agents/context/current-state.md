@@ -25,6 +25,8 @@ Last updated: 2026-11-13
 
 ## Current Architecture
 
+- 2026-11-13 internal audit: normalized schema remains in `src/content.config.ts`; `src/lib/content-loaders.ts` owns loading and refresh-scoped registry snapshots. Markdown parser configuration is reused with fresh ASTs, title/description share one parse, and development assets use the shared serialized watcher. Retired TOC CSS and redundant dark rules were removed without changing active declarations. Built-link validation now matches literal percent-encoded footnote IDs before decoding. Evidence: `.agents/references/ol-core-maintenance-audit-2026-11-13.md`.
+
 - Desktop/mobile header BLOG menus enter /blog/series/ first. Keep /blog/ as the posts list with the existing real-page 포스트/시리즈 tabs and explicit post-list links.
 
 - TEXT/STORY modal TOC/footnote shells use overflow: clip so native autofocus cannot horizontally scroll the wrapper around the animated right-hand panel. Clear shell scroll offsets immediately after showModal; retain the resting transform, 360ms entrance/280ms exit, reduced motion, internal content scrolling and the shared desktop dock.
@@ -98,7 +100,7 @@ Last updated: 2026-11-13
 
 ## Known Limits and Follow-ups
 
-- 2026-11-13: current user-added TEXT sources contain 22 unresolved relative references to glossary/prepared/raw/context files. `npm run check` and `npm run build` stop at content validation; the full fixture suite passes 100/101 with the sole failure invoking that same validator. Footnote regressions pass and typecheck has zero errors/warnings (one existing hint). These authoring links were not changed as part of the footnote fix.
+- 2026-11-13: current TEXT sources contain 22 unresolved relative references to glossary/prepared/raw/context files. `npm run check` and `npm run build` stop at content validation; the full fixture suite passes 105/106 with the sole failure invoking that same validator. Typecheck has zero errors/warnings/hints. The internal audit preserved all content bytes and compared 424 generated HTML pages, active CSS declarations, client JS, RSS/sitemaps/robots and normalized data before/after. Generated links now report only the same 22 missing targets, without false Unicode-footnote errors. These authoring links remain unchanged.
 
 - Development server was restarted on 127.0.0.1:4321 after the 2026-11-11 Unicode path fix and final build. BLOG desktop/412px mobile light/dark views were verified in native Chrome. Registry preparation is stable; code and registry belong in the same local commit. Run check:registry after committing; production deployment awaits a requested push.
 

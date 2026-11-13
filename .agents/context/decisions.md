@@ -1,5 +1,11 @@
 # Decisions
 
+## 2026-11-13 — Bounded reuse in content processing
+
+- Keep the normalized schema in content.config.ts and isolate filesystem loading in content-loaders.ts. Share a prepared registry only within each collection refresh; prepare afresh on subsequent edits. Reuse frozen Markdown parser configuration, never mutable ASTs. Derive title/description together without changing author-input precedence.
+- Route development collection/asset invalidation through watchContent with serialized async work and explicit disposal. Asset sync ignores registry feedback. Avoid global metadata caches that can retain stale privacy or paths.
+- Built-link checking follows reader navigation for fragment targets: literal ID first, decoded fallback second. Malformed fragments remain reportable errors when no literal target exists; do not bypass actual missing-reference checks.
+
 ## 2026-11-13 — Non-scrolling reader modal shell
 
 - Keep the full-viewport TOC/footnote dialog shell non-scrollable with overflow: clip. overflow: hidden still permits focus-driven scrolling of the translated panel and can shift its apparent starting position. Clear retained/native-focus shell offsets after showModal, before entrance animation; keep native autofocus at the resting transform and scroll only the inner TOC/footnotes. Preserve shared TEXT/STORY animation timing, reduced motion and dock/modal lifecycle.

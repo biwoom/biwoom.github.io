@@ -19,8 +19,7 @@
   display: inline;
 }
 
-.ol-text-tool-btn:hover,
-.ol-text-toc-dropdown button[aria-expanded="true"] {
+.ol-text-tool-btn:hover {
   border-color: #cbc2b8;
   background: #fbfaf8;
 }
@@ -66,33 +65,4 @@
 .ol-copy-panel button:hover {
   background: #f4f0eb;
   color: #211e1a;
-}
-
-.dark .ol-copy-panel,
-.dark .ol-text-tool-btn {
-  border-color: var(--ol-border);
-  background: var(--ol-surface);
-}
-
-.dark .ol-text-tool-btn {
-  color: var(--ol-ink-2);
-}
-
-.dark .ol-text-tool-btn:hover,
-.dark .ol-text-toc-dropdown button[aria-expanded="true"] {
-  background: var(--ol-surface-2);
-  color: var(--ol-ink);
-}
-
-.dark .ol-copy-panel {
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
-}
-
-.dark .ol-copy-panel button {
-  color: var(--ol-ink-2);
-}
-
-.dark .ol-copy-panel button:hover {
-  background: var(--ol-surface-2);
-  color: var(--ol-ink);
 }
