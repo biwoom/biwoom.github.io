@@ -25,6 +25,8 @@ Last updated: 2026-11-13
 
 ## Current Architecture
 
+- Desktop/mobile header BLOG menus enter /blog/series/ first. Keep /blog/ as the posts list with the existing real-page 포스트/시리즈 tabs and explicit post-list links.
+
 - TEXT/STORY modal TOC/footnote shells use overflow: clip so native autofocus cannot horizontally scroll the wrapper around the animated right-hand panel. Clear shell scroll offsets immediately after showModal; retain the resting transform, 360ms entrance/280ms exit, reduced motion, internal content scrolling and the shared desktop dock.
 
 - TEXT work libraries open only the first material folder by default; later folders start closed. Searching temporarily opens matching folders, and clearing/resetting search restores the pre-search open states.

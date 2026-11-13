@@ -1390,3 +1390,8 @@ This file records concise date-based work summaries for continuity across Codex 
 - 공통 shell을 overflow: clip으로 바꾸고 showModal 직후 scrollLeft/scrollTop을 초기화했다. 기존 오른쪽 진입 키프레임·360/280ms 열기/닫기·중단 시 현재 위치에서 닫기·모션 감소·포커스 복귀와 내부 콘텐츠 스크롤·데스크톱 도킹은 유지한다. 자동 포커스가 남긴 wrapper 스크롤을 정리하는 회귀 검증과 생성 CSS 계약을 추가했다.
 - 독자 도구·도킹·크기 조절 회귀 35개 통과. 최종 reader 회귀 12개와 타입 검사도 통과했다(오류·경고 0, 기존 TextReader 힌트 1개). 임시 복사본의 Astro 정적 생성 423페이지와 생성 HTML/CSS 계약 334문서 및 BLOG/EBOOK 검사를 통과했다. 로컬 HTTP로 실제 제공 CSS의 clip과 JS의 showModal 이후 위치 초기화를 확인했다.
 - 표준 check/build는 기존 원고 누락 링크 22건에서 중단되며, 전체 fixture도 101개 중 100개 통과·동일 콘텐츠 검증을 호출하는 1개 실패다. 별도 컴파일을 표준 전체 빌드 통과로 간주하지 않는다. 원고·Obsidian 상태와 기존 미커밋 변경을 보존하고 임시 dist는 원본에 복사하지 않았다. 브라우저 조작·커밋·푸시는 수행하지 않았다.
+
+## 2026-11-13 — BLOG 메뉴 기본 진입을 시리즈로 변경
+
+- 공통 OLHeader의 데스크톱 BLOG 버튼과 모바일 BLOG 메뉴 목적지를 /blog/series/로 변경했다. /blog/의 기존 포스트 목록과 포스트/시리즈 탭, 명시적인 포스트 목록 링크는 유지한다. 경로 재배치나 리디렉션은 추가하지 않았다.
+- 로컬 HTTP HTML에서 두 BLOG 메뉴의 시리즈 목적지, 시리즈 페이지의 시리즈 탭 선택 상태, 기존 /blog/ 포스트 페이지와 포스트 탭을 확인했다. 타입 검사 통과(오류·경고 0, 기존 TextReader 힌트 1개) 및 수정 범위 공백 검사 통과. 표준 check/build는 기존 원고 누락 링크 22건에서 중단된다. 브라우저 조작·원고 직접 수정·커밋·푸시는 수행하지 않았다.
