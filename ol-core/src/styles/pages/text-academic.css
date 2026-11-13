@@ -94,7 +94,7 @@ body:has(.ol-text-reader) .ol-header { position: relative; top: auto; }
 body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px; }
 .ol-text-work-name { display: block; font: 600 22px/1.6 var(--ol-text-serif); color: var(--ol-ink); text-decoration: none; }
 .ol-text-reader .ol-text-parts { position: static; top: auto; z-index: 45; margin: 0; padding: 0 36px; background: var(--ol-bg); min-height: 58px; }
-.ol-text-reader .ol-text-parts a { flex-direction: row; min-width: auto; box-shadow: none; }
+.ol-text-reader .ol-text-parts a { flex-direction: row; min-width: auto; border-bottom: 2px solid transparent; box-shadow: none; }
 .ol-text-reader .ol-text-parts strong { font-size: 14px; }
 .ol-text-reader .ol-text-parts .ol-story-part-home { width: auto; }
 .ol-text-workspace-grid { display: grid; grid-template-columns: 240px minmax(0, 1fr) var(--ol-reader-aid-width); border-bottom: 1px solid var(--ol-border); }
@@ -178,7 +178,7 @@ body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px
   .ol-text-reader .ol-prose { color: #000; }
 }
 
-body .ol-text-reader .ol-text-parts a.active { background: transparent; color: var(--ol-accent); }
+body .ol-text-reader .ol-text-parts a.active { background: transparent; border-bottom-color: var(--ol-accent); color: var(--ol-accent); }
 
 .ol-reader-feedback:empty { display: none; }
 .ol-reader-feedback { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 12px 18px; border-radius: 6px; background: var(--ol-ink); color: var(--ol-bg); font: 13px/1.6 var(--ol-font-ui); z-index: 100; box-shadow: var(--ol-shadow); }

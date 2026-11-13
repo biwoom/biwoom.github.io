@@ -1443,3 +1443,4 @@ This file records concise date-based work summaries for continuity across Codex 
 ## 2026-11-13 — TEXT 헤더 테두리 정리
 
 - 문헌·문서 헤더와 자료 구분 바의 구분선을 제거하고 TEXT 목록의 카테고리 히어로, 장식 카드, 메뉴 표지, 탭 바 외곽선을 투명하게 했다. 문서 이동 중 보일 수 있는 자료 링크의 강조선과 도구 모음 구분선도 제거했다. 자료 위치 표시는 글자색을 사용한다.
+- 후속 요청에 따라 TEXT 본문에서 현재 자료 폴더 링크에만 2px 강조색 밑줄을 복원했다.
