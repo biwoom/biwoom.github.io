@@ -10,11 +10,12 @@ import DocumentTags from './DocumentTags.astro';
 import { categoryUrl, type Entry, type Library } from '../../lib/library';
 import { readTextBibliography } from '../../lib/text-bibliography';
 import { hasOriginalBlocks } from '../../../scripts/lib/markdown.mjs';
+import { readerTocHeadings } from '../../lib/reader-toc';
 interface Props { entry: Entry; series: Library; }
 const { entry, series } = Astro.props;
 const rendered = entry.data.format ? undefined : await render(entry as CollectionEntry<'text'>);
 const Content = rendered?.Content;
-const headings = (rendered?.headings ?? []).filter(heading => heading.depth === 2 || heading.depth === 3);
+const headings = readerTocHeadings(rendered?.headings);
 const currentPart = series.parts.find(part => part.key === entry.data.partKey);
 const index = currentPart?.entries.findIndex(item => item.id === entry.id) ?? 0;
 const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index + 1];

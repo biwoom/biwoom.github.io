@@ -96,9 +96,9 @@ test('TEXT print uses the original footnotes once, then restores the research wo
 
 test('shared document copy tools copy the selected quote with provenance, section URL, and report clipboard failures', async()=>{
   const document=new El(),feedback=new El(),prose={innerText:'본문 단락'},note={innerText:'각주 설명'};
-  const heading={id:'현재-절',getBoundingClientRect:()=>({top:120})};
+  const heading={id:'현재-h5-절',tagName:'H5',getBoundingClientRect:()=>({top:120})};
   document.querySelector=s=>s==='[data-reader-feedback]'?feedback:s==='.ol-prose'?prose:s==='.ol-reader-footnotes-content .footnotes'?note:null;
-  document.querySelectorAll=s=>s==='.ol-story-chapter > .ol-prose :is(h2,h3)'?[heading]:[];
+  document.querySelectorAll=s=>s==='.ol-story-chapter > .ol-prose :is(h2,h3,h4,h5)'?[heading]:[];
   const copied=[];let selected='',clipboardFails=false;
   const navigator={clipboard:{async writeText(text){if(clipboardFails)throw Error('denied');copied.push(text);}}};
   const window={location:{pathname:'/text/read/example/',origin:'https://example.test'},addEventListener(){},setTimeout(){},getSelection:()=>({toString:()=>selected,anchorNode:{parentElement:{closest:()=>selected?{}:null}}})};
@@ -110,7 +110,7 @@ test('shared document copy tools copy the selected quote with provenance, sectio
   };
   await click('citation');assert.equal(copied.length,0);assert.match(feedback.textContent,/먼저 선택/);
   selected='선택한 문장';await click('citation');assert.equal(copied.at(-1),'선택한 문장\n\n문서 제목 — Biwoom TEXT\nhttps://example.test/text/read/example/');
-  await click('section');assert.equal(new URL(copied.at(-1)).hash,`#${encodeURIComponent('현재-절')}`);
+  await click('section');assert.equal(new URL(copied.at(-1)).hash,`#${encodeURIComponent(heading.id)}`);
   await click('markdown');assert.equal(copied.at(-1),'# 문서 제목\n\n본문 단락\n\n각주 설명');
   clipboardFails=true;await click('link');assert.match(feedback.textContent,/복사할 수 없습니다/);
 });

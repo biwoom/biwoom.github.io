@@ -10,7 +10,8 @@
   border: 0;
   background: transparent;
   color: var(--ol-ink);
-  overflow: hidden;
+  /* Unlike hidden, clip cannot scroll to autofocus inside the moving panel. */
+  overflow: clip;
 }
 .ol-reader-toc:not([open]) { display: none; }
 .ol-reader-toc::backdrop {
@@ -55,6 +56,8 @@
   text-decoration: none;
 }
 .ol-reader-toc-panel a[data-level="3"] { padding-left: 28px; font-size: 13px; }
+.ol-reader-toc-panel a[data-level="4"] { padding-left: 44px; font-size: 13px; }
+.ol-reader-toc-panel a[data-level="5"] { padding-left: 60px; font-size: 13px; }
 .ol-reader-toc-panel a:hover { background: var(--ol-surface-2); }
 .ol-reader-toc-panel a.active {
   border-left-color: var(--ol-accent, currentColor);

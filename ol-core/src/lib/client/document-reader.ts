@@ -109,7 +109,7 @@ export function initDocumentReader() {
         }
       };
       if (copyButton.dataset.copyKind === "section") {
-        const current = [...document.querySelectorAll<HTMLElement>(".ol-story-chapter > .ol-prose :is(h2,h3)")]
+        const current = [...document.querySelectorAll<HTMLElement>(".ol-story-chapter > .ol-prose :is(h2,h3,h4,h5)")]
           .filter(heading => heading.getBoundingClientRect().top <= readerBoundary()).at(-1);
         const sectionUrl = new URL(href);
         if (current) sectionUrl.hash = current.id;

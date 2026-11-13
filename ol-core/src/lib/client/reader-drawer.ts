@@ -1,5 +1,5 @@
-/** Keep the resting panel in view: native dialog autofocus must not scroll an
- * offscreen transformed panel into view before its entrance animation starts. */
+/** The modal shell clips without scrolling; only its inner panel animates.
+ * Keep native autofocus at rest before starting the right-edge entrance. */
 export function createReaderDrawer(
   drawer: HTMLDialogElement,
   trigger: HTMLButtonElement,
@@ -75,6 +75,10 @@ export function createReaderDrawer(
     previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     drawer.showModal();
+    // Clear offsets retained by a previous opening/native autofocus. The shell
+    // uses overflow: clip so later focus cannot scroll it during the animation.
+    drawer.scrollLeft = 0;
+    drawer.scrollTop = 0;
     drawer.classList.add("is-open");
     trigger.setAttribute("aria-expanded", "true");
     // Explicit keyframes start before the first paint, without rAF/style timing races.

@@ -25,7 +25,7 @@ const hasIntro = !!intro.replace(/<[^>]*>/g, "").trim();
       <section class="ol-text-library-main" id="text-materials">
         <div class="ol-text-section-head"><h2>자료 목록</h2><span>{series.count}개 자료</span></div>
         {series.count > 0 && <div class="ol-text-filter"><label for="text-material-search">자료 찾기</label><div><input type="search" id="text-material-search" placeholder="자료 제목·설명 검색" autocomplete="off" /><button type="button" data-text-search-reset>초기화</button></div><p class="ol-text-search-status" role="status" aria-live="polite" data-text-search-status>{series.count}개 자료</p></div>}
-        {series.parts.map((part, i) => <details class="ol-text-material-group" id={`text-group-${i}`} open data-text-material-group>
+        {series.parts.map((part, i) => <details class="ol-text-material-group" id={`text-group-${i}`} open={i === 0} data-text-material-group>
           <summary><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small data-text-group-count>{part.entries.length}개 자료</small></summary>
           <ol>{part.entries.map((entry, j) => <li data-text-material-item data-search-text={`${entry.data.title} ${entry.data.description}`}><a href={entry.data.url}><span class="ol-text-row-num">{String(j + 1).padStart(2, '0')}</span><div><strong>{entry.data.title}</strong>{entry.data.description && <p>{entry.data.description}</p>}{entry.data.format && <small>{entry.data.format}</small>}</div><span aria-hidden="true">→</span></a></li>)}</ol>
         </details>)}

@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-11-12
+Last updated: 2026-11-13
 
 ## Brand
 
@@ -24,6 +24,14 @@ Last updated: 2026-11-12
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
 
 ## Current Architecture
+
+- TEXT/STORY modal TOC/footnote shells use overflow: clip so native autofocus cannot horizontally scroll the wrapper around the animated right-hand panel. Clear shell scroll offsets immediately after showModal; retain the resting transform, 360ms entrance/280ms exit, reduced motion, internal content scrolling and the shared desktop dock.
+
+- TEXT work libraries open only the first material folder by default; later folders start closed. Searching temporarily opens matching folders, and clearing/resetting search restores the pre-search open states.
+
+- TEXT/STORY body TOCs share reader-toc.ts to collect H2–H5 in source order, including documents containing only H4/H5. Both docked and modal TOCs indent H3/H4/H5 by depth; active heading tracking and current-section link copying cover the same range. H1 remains the title and H6 stays outside the TOC.
+
+- TEXT/STORY footnote navigation resolves literal generated IDs before decoding URL fragments. This preserves Korean/Unicode note labels for reference clicks, note-text returns and incoming hashes, including encoded sharing links; authored Markdown and generated IDs remain unchanged.
 
 - TEXT/STORY body and footnote emphasis uses local Gentium 7.000 italic (400/700) for Latin and combining marks only. Unicode-range retains Korean/other-script fallback; upright prose, original fences and code keep their existing typography and size slider. Fonts and OFL are unmodified SIL distribution assets under ol-core/public/fonts/gentium, loaded on demand. Source Pali remains unchanged; glyph/mark-table coverage is checked statically, with visual review reserved for the user.
 
@@ -87,6 +95,8 @@ Last updated: 2026-11-12
 - Subsequent deletion and migration status: `.agents/references/content-deletion-followup.json`.
 
 ## Known Limits and Follow-ups
+
+- 2026-11-13: current user-added TEXT sources contain 22 unresolved relative references to glossary/prepared/raw/context files. `npm run check` and `npm run build` stop at content validation; the full fixture suite passes 100/101 with the sole failure invoking that same validator. Footnote regressions pass and typecheck has zero errors/warnings (one existing hint). These authoring links were not changed as part of the footnote fix.
 
 - Development server was restarted on 127.0.0.1:4321 after the 2026-11-11 Unicode path fix and final build. BLOG desktop/412px mobile light/dark views were verified in native Chrome. Registry preparation is stable; code and registry belong in the same local commit. Run check:registry after committing; production deployment awaits a requested push.
 

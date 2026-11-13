@@ -5,6 +5,8 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import rehypeReaderFootnotes from './rehype-reader-footnotes.mjs';
 import path from 'node:path';
+import { createMarkdownProcessor } from '@astrojs/markdown-remark';
+import { markdownRemarkPlugins } from './lib/markdown.mjs';
 
 class Element {
   attrs = {}; handlers = {}; props = {}; hidden = true; open = false; value = ''; disabled = true;
@@ -24,12 +26,12 @@ class Element {
   showModal() { this.open = true; }
   close() { this.open = false; }
 }
-function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMotion=true } = {}) {
+function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMotion=true, noteId='note', referenceId='ref', noteHash=`#${noteId}`, initialHash='' } = {}) {
   const reader=new Element(), font=new Element(), trigger=new Element(), panel=new Element(), slider=new Element(), output=new Element(), reset=new Element();
   const drawer=new Element(), noteTrigger=new Element(), close=new Element(), reference=new Element(), note=new Element(), back=new Element();
-  const secondReference=new Element(); secondReference.id='ref2'; secondReference.hash='#note';
-  reference.id='ref'; reference.hash='#note'; note.id='note';
-  back.dataset={footnoteReturn:'#ref'}; back.closest=()=>note;
+  const secondReference=new Element(); secondReference.id='ref2'; secondReference.hash=noteHash;
+  reference.id=referenceId; reference.hash=noteHash; note.id=noteId;
+  back.dataset={footnoteReturn:`#${referenceId}`}; back.closest=()=>note;
   drawer.children=[note];
   const scroller=new Element(); scroller.scrollTop=0; scroller.clientHeight=400; scroller.getBoundingClientRect=()=>({top:100});
   note.getBoundingClientRect=()=>({top:900}); note.offsetHeight=80;
@@ -42,7 +44,7 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   font.select={'[data-reader-font-trigger]':trigger,'.ol-reader-font-panel':panel,'[data-reader-font-size]':slider,'[data-reader-font-value]':output,'[data-reader-font-reset]':reset};
   font.children=[trigger,panel,slider,reset];
   trigger.getBoundingClientRect=()=>({bottom:120});
-  const doc=new Element(); doc.body=new Element(); doc.querySelector=()=>reader; doc.getElementById=id=>({ref:reference,ref2:secondReference,note}[id] ?? null);
+  const doc=new Element(); doc.body=new Element(); doc.querySelector=()=>reader; doc.getElementById=id=>[reference,secondReference,note].find(el=>el.id===id) ?? null;
   const win=new Element(); win.matchMedia=query=>({matches:query.includes('prefers-reduced-motion')?reducedMotion:true}); win.setTimeout=fn=>fn();
   const backToTop=new Element();win.scrollY=0;win.innerWidth=1200;win.scrollTo=options=>win.lastScroll=options;
   body.getBoundingClientRect=()=>({right:1000});
@@ -50,13 +52,14 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   const store = {getItem:()=>{if(unavailable) throw Error(); return saved;},setItem:(_k,v)=>{if(unavailable) throw Error(); saved=v;}};
   const module={exports:{}};
   const source=ts.transpileModule(fs.readFileSync('ol-core/src/lib/client/reader-tools.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-  const globals = {document:doc,window:win,Node:Element,Element,localStorage:store,location:{hash:''},history:{replaceState(){}},requestAnimationFrame:fn=>fn(),getComputedStyle:el=>({fontSize:el.base ? `${parseFloat(el.base) * Number(reader.props['--ol-reader-font-scale'] ?? (!unavailable && Number(saved)>=80 && Number(saved)<=150 ? Number(saved)/100 : 1))}px` : undefined,transform:'matrix(1, 0, 0, 1, 0, 0)'})};
+  const location={hash:initialHash};
+  const globals = {document:doc,window:win,Node:Element,Element,localStorage:store,location,history:{replaceState(_state,_title,hash){location.hash=hash;}},requestAnimationFrame:fn=>fn(),getComputedStyle:el=>({fontSize:el.base ? `${parseFloat(el.base) * Number(reader.props['--ol-reader-font-scale'] ?? (!unavailable && Number(saved)>=80 && Number(saved)<=150 ? Number(saved)/100 : 1))}px` : undefined,transform:'matrix(1, 0, 0, 1, 0, 0)'})};
   const drawerModule = {exports:{}};
   const drawerSource=ts.transpileModule(fs.readFileSync('ol-core/src/lib/client/reader-drawer.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
   vm.runInNewContext(drawerSource,{module:drawerModule,exports:drawerModule.exports,...globals});
   vm.runInNewContext(source,{module,exports:module.exports,require:name=>{assert.equal(name,'./reader-drawer');return drawerModule.exports;},...globals});
   module.exports.initReaderTools();
-  return {reader,font,trigger,panel,slider,output,reset,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference,backToTop};
+  return {reader,font,trigger,panel,slider,output,reset,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference,backToTop,location};
 }
 test('single reading slider scales title/body together, restores saved size, resets and dismisses',()=>{
   const h=setup({saved:'125'});
@@ -87,12 +90,54 @@ test('footnote references open selected note, backreferences return, Escape and 
   h.noteTrigger.fire('click'); h.drawer.fire('click'); assert.equal(h.drawer.open,false);
 });
 
+test('TEXT and STORY Unicode footnotes resolve generated IDs for clicks, returns and incoming hashes',async()=>{
+  const processor=await createMarkdownProcessor({remarkPlugins:markdownRemarkPlugins,rehypePlugins:[rehypeReaderFootnotes]});
+  for(const section of ['text','story']){
+    const {code}=await processor.render('본문[^03-방문]\n\n[^03-방문]: 한글 각주.',{
+      fileURL:new URL(`file://${path.resolve(`content/${section}/category/work/part/example.md`)}`),
+    });
+    const anchor=code.match(/<a\b[^>]*data-footnote-ref[^>]*>/)?.[0];
+    assert.ok(anchor);
+    const noteHash=anchor.match(/href="([^"]+)"/)[1];
+    const referenceId=anchor.match(/\bid="([^"]+)"/)[1];
+    const noteId=code.match(/<li id="([^"]+)"/)[1];
+    assert.equal(noteHash,`#${noteId}`);
+    assert.notEqual(decodeURIComponent(noteId),noteId);
+    const h=setup({noteId,referenceId,noteHash});
+    let prevented=false;
+    h.reference.fire('click',{preventDefault(){prevented=true;}});
+    assert.ok(prevented);assert.ok(h.drawer.open);assert.ok(h.note.focused);
+    h.back.fire('click');assert.equal(h.drawer.open,false);assert.ok(h.reference.focused);
+    assert.equal(h.location.hash,`#${encodeURIComponent(referenceId)}`);
+    const fallback=setup({noteId,referenceId,noteHash});
+    fallback.noteTrigger.fire('click');fallback.back.fire('keydown',{key:'Enter'});
+    assert.equal(fallback.drawer.open,false);assert.ok(fallback.reference.focused);
+    for(const initialHash of [noteHash,`#${encodeURIComponent(noteId)}`]){
+      const incoming=setup({noteId,referenceId,noteHash,initialHash});
+      assert.ok(incoming.drawer.open);assert.ok(incoming.note.focused);
+    }
+    h.location.hash=noteHash;h.win.fire('hashchange');assert.ok(h.drawer.open);
+  }
+});
+
+test('footnote hashes retain decoded Unicode fallback and tolerate malformed escapes',()=>{
+  const h=setup({noteId:'각주',noteHash:`#${encodeURIComponent('각주')}`});
+  h.reference.fire('click');assert.ok(h.drawer.open);
+  const malformed=setup({noteHash:'#missing-%ZZ',initialHash:'#missing-%ZZ'});
+  assert.doesNotThrow(()=>malformed.reference.fire('click'));
+  assert.equal(malformed.drawer.open,false);
+});
+
 
 test('shared drawer waits for exit completion and preserves an interrupted entrance position', async () => {
-  const dialog=new Element(), trigger=new Element(), panel=new Element();
+  const dialog=Object.assign(new Element(),{scrollLeft:0,scrollTop:0});
+  const trigger=new Element(), panel=new Element();
   dialog.select={'.ol-reader-toc-panel':panel};
+  dialog.showModal=()=>{dialog.open=true;dialog.scrollLeft=160;dialog.scrollTop=40;};
   const animations=[];
   panel.animate=(frames, options)=>{
+    assert.equal(dialog.scrollLeft,0,'native autofocus must not offset the modal shell before animation');
+    assert.equal(dialog.scrollTop,0);
     let resolve, reject;
     const finished=new Promise((ok,fail)=>{resolve=ok;reject=fail;});
     const animation={finished, cancel(){this.cancelled=true;reject(new Error('cancelled'));},resolve};
@@ -105,6 +150,8 @@ test('shared drawer waits for exit completion and preserves an interrupted entra
   vm.runInNewContext(code,{module,exports:module.exports,document:{body},window:{matchMedia:()=>({matches:false})},getComputedStyle:()=>({transform:'matrix(1, 0, 0, 1, 160, 0)'})});
   const controller=module.exports.createReaderDrawer(dialog,trigger,null);
   controller.open();
+  assert.equal(dialog.scrollLeft,0);
+  assert.equal(dialog.scrollTop,0);
   assert.equal(animations[0].options.duration,360);
   assert.equal(animations[0].frames[0].transform,'translateX(100%)');
   let returned=false;

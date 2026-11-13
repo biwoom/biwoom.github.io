@@ -97,6 +97,7 @@ rule(".ol-ebook-dialog", /position:fixed/);
 rule(".ol-ebook-dialog", /inset:0/);
 rule(".ol-ebook-dialog", /margin:auto/);
 rule(".ol-reader-toc:not([open])", /display:none/);
+rule(".ol-reader-toc", /(?:^|;)overflow:clip(?:;|$)/);
 rule(".ol-reader-toc-panel", /transform:translate(?:X)?\(0\)/);
 rule(":root:has(.ol-story-doc-page)", /scrollbar-gutter:stable/);
 rule(".ol-reader-toc::backdrop", /animation:[^;]*ol-reader-backdrop-in/);

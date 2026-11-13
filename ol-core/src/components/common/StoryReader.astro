@@ -17,6 +17,7 @@ import {
 import DocumentTags from "./DocumentTags.astro";
 import { url } from "../../lib/url";
 import { hasOriginalBlocks } from "../../../scripts/lib/markdown.mjs";
+import { readerTocHeadings } from "../../lib/reader-toc";
 interface Props {
   entry: Entry;
   series: Library;
@@ -28,7 +29,7 @@ const rendered = entry.data.format
   ? undefined
   : await render(entry as CollectionEntry<"text" | "story">);
 const Content = rendered?.Content;
-const headings = rendered?.headings ?? [];
+const headings = readerTocHeadings(rendered?.headings);
 const documentParts = series.parts.map((part) => ({
   ...part,
   slug: part.key,
@@ -52,9 +53,7 @@ const pagefindBreadcrumb = [
 ]
   .filter(Boolean)
   .join(" · ");
-const hasToc = headings.some(
-  (heading) => heading.depth === 2 || heading.depth === 3,
-);
+const hasToc = headings.length > 0;
 ---
 
 <BaseLayout
@@ -253,7 +252,7 @@ const hasToc = headings.some(
             </button>
           </header>
           <nav aria-label="문서 내 제목"><ul data-story-toc-list>
-            {headings.filter((heading) => heading.depth === 2 || heading.depth === 3).map((heading) => (
+            {headings.map((heading) => (
               <li><a href={`#${heading.slug}`} data-level={heading.depth}>{heading.text}</a></li>
             ))}
           </ul></nav>

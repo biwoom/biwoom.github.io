@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-13 — Non-scrolling reader modal shell
+
+- Keep the full-viewport TOC/footnote dialog shell non-scrollable with overflow: clip. overflow: hidden still permits focus-driven scrolling of the translated panel and can shift its apparent starting position. Clear retained/native-focus shell offsets after showModal, before entrance animation; keep native autofocus at the resting transform and scroll only the inner TOC/footnotes. Preserve shared TEXT/STORY animation timing, reduced motion and dock/modal lifecycle.
+
 ## 2026-11-12 — Gentium for romanized Pali emphasis
 
 - Use self-hosted, unmodified SIL Gentium 7.000 italic 400/700 faces for Latin characters/combining marks in shared TEXT/STORY prose and footnote em/i. Retain Noto Serif KR and existing other-script fallback, upright/original/code typography, font sizes and slider behavior. Do not add language detection, alter authored text or depend on locally installed fonts. Disable inherited UI-specific stylistic features within emphasis; use the font's default mark positioning. Keep the OFL license and pinned source/checksums with the font assets.

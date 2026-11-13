@@ -70,7 +70,12 @@ export function initReaderTools() {
       }
     };
     const hashTarget = (hash: string) => {
-      try { return document.getElementById(decodeURIComponent(hash.slice(1))); }
+      const id = hash.slice(1);
+      // Markdown footnote IDs contain literal percent escapes for Unicode labels.
+      // Resolve that exact ID before decoding an ordinary URL fragment.
+      const target = document.getElementById(id);
+      if (target) return target;
+      try { return document.getElementById(decodeURIComponent(id)); }
       catch { return null; }
     };
     trigger.addEventListener("click", () => drawer.open ? close() : open(trigger));
