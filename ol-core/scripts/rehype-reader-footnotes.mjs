@@ -1,7 +1,7 @@
 import { relativeContentPath } from './lib/paths.mjs';
 import { visit } from 'unist-util-visit';
 
-// Retain generated reference IDs, but make each note's text the return control.
+// Retain generated reference IDs and make each note a return target.
 // BLOG/pages continue to use their ordinary footnote markup.
 export default function rehypeReaderFootnotes() {
   return (tree, file) => {
@@ -13,22 +13,36 @@ export default function rehypeReaderFootnotes() {
       for (const note of list?.children ?? []) {
         if (note.tagName !== 'li') continue;
         let target;
-        const removeBackrefs = node => {
+        const prepareLinks = node => {
           node.children = node.children?.filter(child => {
-            if (child.tagName === 'a' && 'dataFootnoteBackref' in (child.properties ?? {})) {
-              target ??= child.properties.href;
-              return false;
+            if (child.tagName === 'a') {
+              const properties = child.properties ?? {};
+              if ('dataFootnoteBackref' in properties) {
+                target ??= properties.href;
+                return false;
+              }
+              if (typeof properties.href === 'string') {
+                child.properties = {
+                  ...properties,
+                  className: [...(properties.className ?? []), 'ol-footnote-source-link'],
+                };
+                if (/^https?:\/\//i.test(properties.href)) {
+                  child.properties.target = '_blank';
+                  child.properties.rel = [...new Set([...(properties.rel ?? []), 'noopener'])];
+                }
+              }
             }
-            removeBackrefs(child);
+            prepareLinks(child);
             return true;
           });
         };
-        removeBackrefs(note);
+        prepareLinks(note);
         if (!target) continue;
+        note.properties = { ...note.properties, dataFootnoteReturn: target, tabIndex: 0,
+          title: '본문 각주 번호로 이동' };
         note.children = [{
           type: 'element', tagName: 'div',
-          properties: { className: ['ol-footnote-return'], role: 'link', tabIndex: 0,
-            dataFootnoteReturn: target, title: '본문 각주 번호로 이동' },
+          properties: { className: ['ol-footnote-text'] },
           children: note.children,
         }];
       }

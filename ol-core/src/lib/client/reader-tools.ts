@@ -44,22 +44,12 @@ export function initReaderTools() {
       reference.setAttribute("data-active-footnote-ref", "");
     };
     const controller = createReaderDrawer(drawer, trigger, drawer.querySelector("[data-reader-footnotes-close]"));
-    const close = (destination?: HTMLElement) => {
-      const navigate = () => {
-        if (!destination) return;
-        history.replaceState(null, "", `#${encodeURIComponent(destination.id)}`);
-        destination.scrollIntoView({ block: "center" });
-        destination.focus({ preventScroll: true });
-        markReference(destination);
-      };
-      controller.close(navigate);
-    };
     const open = (source: HTMLElement, note?: HTMLElement) => {
       if (!controller.open(source)) return;
       drawer.querySelectorAll("[data-active-note]").forEach(el => el.removeAttribute("data-active-note"));
       if (note) {
         note.setAttribute("data-active-note", "");
-        note.tabIndex = -1;
+        if (!note.hasAttribute("tabindex")) note.tabIndex = -1;
         const scroller = drawer.querySelector<HTMLElement>(".ol-reader-footnotes-content");
         if (scroller) {
           // Scroll only the note list, never the viewport/translated dialog.
@@ -78,7 +68,7 @@ export function initReaderTools() {
       try { return document.getElementById(decodeURIComponent(id)); }
       catch { return null; }
     };
-    trigger.addEventListener("click", () => drawer.open ? close() : open(trigger));
+    trigger.addEventListener("click", () => drawer.open ? controller.close() : open(trigger));
     reader.querySelectorAll<HTMLAnchorElement>("a[data-footnote-ref]").forEach(link => {
       link.addEventListener("click", event => {
         const note = hashTarget(link.hash);
@@ -89,21 +79,30 @@ export function initReaderTools() {
         open(link, note);
       });
     });
-    drawer.querySelectorAll<HTMLElement>("[data-footnote-return]").forEach(control => {
-      const returnToBody = (event: Event) => {
-        // Preserve authored links and other interactive content inside a note.
-        if (event.target instanceof Element && event.target !== control &&
-            event.target.closest("a, button, input, select, textarea")) return;
-        const note = control.closest<HTMLElement>("li[id]");
-        const reference = (note && lastReferences.get(note.id)) ?? hashTarget(control.dataset.footnoteReturn ?? "");
-        if (!reference) return;
-        event.preventDefault();
-        close(reference);
-      };
-      control.addEventListener("click", returnToBody);
-      control.addEventListener("keydown", event => {
-        if (event.target === control && (event.key === "Enter" || event.key === " ")) returnToBody(event);
-      });
+    const returnToReference = (event: MouseEvent | KeyboardEvent) => {
+      if (!drawer.open || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const note = target.closest<HTMLElement>(".footnotes > ol > li[id][data-footnote-return]");
+      if (!note || !drawer.contains(note)) return;
+      if (event.type === "keydown") {
+        if (target !== note) return;
+      } else {
+        if (target.closest("a, button, input, select, textarea, label, summary, [contenteditable]")) return;
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed && selection.containsNode(note, true)) return;
+      }
+
+      const reference = lastReferences.get(note.id) ?? hashTarget(note.dataset.footnoteReturn ?? "");
+      if (!reference) return;
+      event.preventDefault();
+      history.replaceState(null, "", `#${encodeURIComponent(reference.id)}`);
+      reference.scrollIntoView({ block: "center" });
+      markReference(reference);
+    };
+    drawer.addEventListener("click", returnToReference);
+    drawer.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") returnToReference(event);
     });
     const followHash = () => {
       const note = hashTarget(location.hash);

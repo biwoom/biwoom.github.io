@@ -92,6 +92,14 @@ test('links, headings, tables and footnotes retain CJK emphasis and metadata agr
 });
 
 
+for (const section of ['text', 'story']) test(`${section.toUpperCase()} footnotes retain inline web links and surrounding prose`, async () => {
+  const source = '본문[^1]\n\n[^1]: 앞 [출처](https://example.com/source) 뒤';
+  const { code } = await processor.render(source, {
+    fileURL: new URL(`file://${path.resolve(`content/${section}/category/series/part/example.md`)}`),
+  });
+  assert.match(code, /<section[^>]*data-footnotes[\s\S]*<li [^>]*data-footnote-return[^>]*>[\s\S]*<p>앞 <a href="https:\/\/example\.com\/source" class="ol-footnote-source-link" target="_blank" rel="noopener">출처<\/a> 뒤\s*<\/p>/);
+});
+
 for (const section of ['text', 'story']) test(`marked ${section.toUpperCase()} originals preserve literal source text while ordinary code and inline code stay separate`,async()=>{
   const renderer=await createMarkdownProcessor({remarkPlugins:[...markdownRemarkPlugins,remarkContent],rehypePlugins:[rehypeReaderFootnotes]});
   const source='# 번역\n\n번역문입니다.\n\n```original\n一切法 <原文> & **文字**\n第二行\n```\n\n```text\nordinary code\n```\n\n`inline original`';

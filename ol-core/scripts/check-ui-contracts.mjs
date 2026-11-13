@@ -99,6 +99,10 @@ rule(".ol-ebook-dialog", /margin:auto/);
 rule(".ol-reader-toc:not([open])", /display:none/);
 rule(".ol-reader-toc", /(?:^|;)overflow:clip(?:;|$)/);
 rule(".ol-reader-toc-panel", /transform:translate(?:X)?\(0\)/);
+rule(".ol-reader-toc-panel nav a", /display:block/);
+rule(".ol-reader-footnotes-content .ol-footnote-source-link", /text-decoration-color:currentcolor/i);
+assert.ok(!rules.some(([, selectors]) => /\.ol-reader-toc-panel\s+a\b/.test(selectors)),
+  "TOC link styles must be scoped to its navigation so footnote links retain prose styling");
 rule(":root:has(.ol-story-doc-page)", /scrollbar-gutter:stable/);
 rule(".ol-reader-toc::backdrop", /animation:[^;]*ol-reader-backdrop-in/);
 rule(".ol-story-doc-page .ol-reader-toolbar", /position:sticky/);
@@ -238,9 +242,9 @@ for (const [source, record] of Object.entries(registry.files)) {
       assert.ok(!/<dialog[^>]*\sopen(?:\s|=|>)/.test(notesDialog));
       assert.match(notesDialog, /data-reader-footnotes-close/);
       assert.match(notesDialog, /data-footnotes/);
-      assert.ok(!notesDialog.includes('data-footnote-backref'), `${record.url}: no separate backreference controls`);
-      const controls = [...notesDialog.matchAll(/data-footnote-return="#([^"]+)"/g)];
-      assert.ok(controls.length > 0, `${record.url}: clickable note text`);
+      assert.ok(!notesDialog.includes('data-footnote-backref'), `${record.url}: no original Markdown backreferences`);
+      const controls = [...notesDialog.matchAll(/<li\b[^>]*data-footnote-return="#([^"]+)"/g)];
+      assert.ok(controls.length > 0, `${record.url}: note return targets`);
       for (const [, id] of controls) {
         assert.ok(html.includes(`id="${id}"`), `${record.url}: note return destination`);
       }

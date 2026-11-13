@@ -15,8 +15,9 @@ class Element {
   setAttribute(k,v) { this.attrs[k] = v; }
   removeAttribute(k) { delete this.attrs[k]; }
   getAttribute(k) { return this.attrs[k]; }
+  hasAttribute(k) { return k in this.attrs; }
   addEventListener(k,fn) { (this.handlers[k] ??= []).push(fn); }
-  fire(k, extra = {}) { for (const fn of this.handlers[k] ?? []) fn({ target:this, preventDefault() {}, ...extra }); }
+  fire(k, extra = {}) { for (const fn of this.handlers[k] ?? []) fn({ type:k, target:this, preventDefault() {}, ...extra }); }
   focus() { this.focused = true; }
   scrollIntoView() { this.scrolled = true; }
   querySelector(s) { return this.select?.[s] ?? null; }
@@ -28,15 +29,17 @@ class Element {
 }
 function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMotion=true, noteId='note', referenceId='ref', noteHash=`#${noteId}`, initialHash='' } = {}) {
   const reader=new Element(), font=new Element(), trigger=new Element(), panel=new Element(), slider=new Element(), output=new Element(), reset=new Element();
-  const drawer=new Element(), noteTrigger=new Element(), close=new Element(), reference=new Element(), note=new Element(), back=new Element();
+  const drawer=new Element(), noteTrigger=new Element(), close=new Element(), reference=new Element(), note=new Element();
   const secondReference=new Element(); secondReference.id='ref2'; secondReference.hash=noteHash;
   reference.id=referenceId; reference.hash=noteHash; note.id=noteId;
-  back.dataset={footnoteReturn:`#${referenceId}`}; back.closest=()=>note;
+  note.dataset={footnoteReturn:`#${referenceId}`};
+  note.setAttribute('tabindex','0');
+  const noteSelector='.footnotes > ol > li[id][data-footnote-return]';
+  note.closest=selector=>[noteSelector,'.footnotes li'].includes(selector) ? note : null;
   drawer.children=[note];
   const scroller=new Element(); scroller.scrollTop=0; scroller.clientHeight=400; scroller.getBoundingClientRect=()=>({top:100});
   note.getBoundingClientRect=()=>({top:900}); note.offsetHeight=80;
   drawer.select={'[data-reader-footnotes-close]':close,'.ol-reader-footnotes-content':scroller};
-  drawer.lists={'[data-footnote-return]':[back]};
   const title=new Element(), body=new Element(), original=new Element(); title.base='34px'; body.base='16px';
   title.closest=()=>null;body.closest=()=>null;original.closest=()=>original;
   reader.select={'#ol-reader-footnotes':drawer,'[data-reader-footnotes-trigger]':noteTrigger,'[data-reader-font]':font};
@@ -46,6 +49,7 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   trigger.getBoundingClientRect=()=>({bottom:120});
   const doc=new Element(); doc.body=new Element(); doc.querySelector=()=>reader; doc.getElementById=id=>[reference,secondReference,note].find(el=>el.id===id) ?? null;
   const win=new Element(); win.matchMedia=query=>({matches:query.includes('prefers-reduced-motion')?reducedMotion:true}); win.setTimeout=fn=>fn();
+  win.getSelection=()=>win.selection ?? null;
   const backToTop=new Element();win.scrollY=0;win.innerWidth=1200;win.scrollTo=options=>win.lastScroll=options;
   body.getBoundingClientRect=()=>({right:1000});
   if(withBackToTop){reader.select['[data-reader-back-to-top]']=backToTop;reader.select['.ol-story-chapter > .ol-prose']=body;}
@@ -59,7 +63,7 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   vm.runInNewContext(drawerSource,{module:drawerModule,exports:drawerModule.exports,...globals});
   vm.runInNewContext(source,{module,exports:module.exports,require:name=>{assert.equal(name,'./reader-drawer');return drawerModule.exports;},...globals});
   module.exports.initReaderTools();
-  return {reader,font,trigger,panel,slider,output,reset,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,back,scroller,secondReference,backToTop,location};
+  return {reader,font,trigger,panel,slider,output,reset,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,scroller,secondReference,backToTop,location};
 }
 test('single reading slider scales title/body together, restores saved size, resets and dismisses',()=>{
   const h=setup({saved:'125'});
@@ -80,13 +84,14 @@ test('reading control tolerates unavailable storage and invalid stored values',(
   assert.equal(setup({unavailable:true}).output.value,'100%');
   assert.equal(setup({saved:'900'}).output.value,'100%');
 });
-test('footnote references open selected note, backreferences return, Escape and backdrop restore scrolling',()=>{
+test('footnote references open selected note, backreferences keep the panel open, Escape and backdrop restore scrolling',()=>{
   const h=setup(); assert.equal(h.noteTrigger.disabled,false);
   h.reference.fire('click'); assert.ok(h.drawer.open); assert.ok(h.note.focused); assert.equal(h.doc.body.style.overflow,'hidden');
   assert.equal(h.scroller.scrollTop,640); assert.equal(h.note.scrolled,undefined);
-  h.back.fire('click'); assert.equal(h.drawer.open,false); assert.ok(h.reference.focused); assert.equal(h.reference.getAttribute('data-active-footnote-ref'),''); assert.equal(h.doc.body.style.overflow,'');
-  h.noteTrigger.fire('click'); h.back.fire('keydown',{key:'Enter'}); assert.equal(h.drawer.open,false);
-  h.noteTrigger.fire('click'); h.drawer.fire('cancel'); assert.equal(h.drawer.open,false);
+  h.drawer.fire('click',{target:h.note}); assert.ok(h.drawer.open); assert.ok(h.reference.scrolled); assert.ok(!h.reference.focused);
+  assert.equal(h.reference.getAttribute('data-active-footnote-ref'),''); assert.equal(h.doc.body.style.overflow,'hidden');
+  assert.equal(h.scroller.scrollTop,640);
+  h.drawer.fire('cancel'); assert.equal(h.drawer.open,false); assert.equal(h.doc.body.style.overflow,'');
   h.noteTrigger.fire('click'); h.drawer.fire('click'); assert.equal(h.drawer.open,false);
 });
 
@@ -107,11 +112,11 @@ test('TEXT and STORY Unicode footnotes resolve generated IDs for clicks, returns
     let prevented=false;
     h.reference.fire('click',{preventDefault(){prevented=true;}});
     assert.ok(prevented);assert.ok(h.drawer.open);assert.ok(h.note.focused);
-    h.back.fire('click');assert.equal(h.drawer.open,false);assert.ok(h.reference.focused);
+    h.drawer.fire('click',{target:h.note});assert.ok(h.drawer.open);assert.ok(h.reference.scrolled);
     assert.equal(h.location.hash,`#${encodeURIComponent(referenceId)}`);
     const fallback=setup({noteId,referenceId,noteHash});
-    fallback.noteTrigger.fire('click');fallback.back.fire('keydown',{key:'Enter'});
-    assert.equal(fallback.drawer.open,false);assert.ok(fallback.reference.focused);
+    fallback.noteTrigger.fire('click');fallback.drawer.fire('keydown',{target:fallback.note,key:'Enter'});
+    assert.ok(fallback.drawer.open);assert.ok(fallback.reference.scrolled);
     for(const initialHash of [noteHash,`#${encodeURIComponent(noteId)}`]){
       const incoming=setup({noteId,referenceId,noteHash,initialHash});
       assert.ok(incoming.drawer.open);assert.ok(incoming.note.focused);
@@ -169,7 +174,7 @@ test('shared drawer waits for exit completion and preserves an interrupted entra
 });
 
 
-test('reader build removes all backref controls while preserving nested note content and authored links', () => {
+test('reader build stores one return target on each note and preserves source links', () => {
   const el=(tagName,properties={},children=[])=>({type:'element',tagName,properties,children});
   const text={type:'text',value:'각주 내용'};
   const external=el('a',{href:'https://example.com'},[text]);
@@ -180,12 +185,14 @@ test('reader build removes all backref controls while preserving nested note con
   const transform=rehypeReaderFootnotes();
   const original=structuredClone(tree);
   transform(tree,{path:path.resolve('content/story/category/series/part/one.md')});
-  const control=note.children[0];
-  assert.equal(control.properties.dataFootnoteReturn,'#ref-1');
-  assert.equal(control.properties.tabIndex,0);
-  assert.equal(control.properties.role,'link');
-  assert.equal(control.children[0].children[1],external);
-  assert.equal(control.children[1],nested);
+  const content=note.children[0];
+  const [paragraph, list]=content.children;
+  assert.equal(note.properties.dataFootnoteReturn,'#ref-1');
+  assert.equal(note.properties.tabIndex,0);
+  assert.deepEqual(content.properties, { className: ['ol-footnote-text'] });
+  assert.equal(paragraph.children[1],external);
+  assert.deepEqual(external.properties, { href: 'https://example.com', className: ['ol-footnote-source-link'], target: '_blank', rel: ['noopener'] });
+  assert.equal(list,nested);
   assert.ok(!JSON.stringify(tree).includes('dataFootnoteBackref'));
   assert.ok(!JSON.stringify(tree).includes('↩'));
   const blog=structuredClone(original);
@@ -197,22 +204,41 @@ test('reader build removes all backref controls while preserving nested note con
 });
 
 
-test('note text returns to the last clicked repeated reference and preserves authored link clicks',()=>{
+test('note text and box return to the body while nested source links and text selection stay native',()=>{
   const h=setup();
   h.noteTrigger.fire('click');
-  const authoredLink=new Element();
-  h.back.fire('click',{target:authoredLink});
+  const authoredLink=new Element(), nestedLinkText=new Element(), noteText=new Element();
+  const noteSelector='.footnotes > ol > li[id][data-footnote-return]';
+  nestedLinkText.closest=selector=>selector===noteSelector ? h.note : authoredLink;
+  noteText.closest=selector=>selector===noteSelector ? h.note : null;
+
+  let prevented=false;
+  const click=target=>h.drawer.fire('click',{target,preventDefault(){prevented=true;}});
+  click(nestedLinkText);
+  h.drawer.fire('keydown',{target:nestedLinkText,key:'Enter',preventDefault(){prevented=true;}});
+  assert.equal(prevented,false);
+  assert.equal(h.reference.scrolled,undefined);
   assert.ok(h.drawer.open);
-  h.back.fire('keydown',{key:'Enter'});
-  assert.equal(h.drawer.open,false);
-  assert.ok(h.reference.focused);
+
+  h.win.selection={isCollapsed:false,containsNode:node=>node===h.note};
+  click(noteText);
+  assert.equal(prevented,false);
+  assert.equal(h.reference.scrolled,undefined);
+  h.win.selection=null;
+  click(noteText);
+  assert.ok(prevented);
+  assert.ok(h.reference.scrolled);
+  assert.ok(h.drawer.open);
+
   h.secondReference.fire('click');
-  h.back.fire('click');
-  assert.ok(h.secondReference.focused);
+  const panelScroll=h.scroller.scrollTop;
+  click(h.note);
+  assert.ok(h.drawer.open);
+  assert.equal(h.scroller.scrollTop,panelScroll);
+  assert.ok(h.secondReference.scrolled);
   assert.equal(h.reference.getAttribute('data-active-footnote-ref'),undefined);
   assert.equal(h.secondReference.getAttribute('data-active-footnote-ref'),'');
 });
-
 
 test('shared back-to-top follows the prose edge, reveals on scroll and respects reduced motion',()=>{
   const h=setup({withBackToTop:true});
