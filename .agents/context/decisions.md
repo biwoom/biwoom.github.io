@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-13 — Incremental development document refresh
+
+- Keep fresh registry preparation for source edits, but ignore hash-only registry feedback before preparation. Reuse Astro glob digests for ordinary Markdown changes in the affected collection; skip unrelated collections and material updates. Preserve full invalidation for introductions, adds/removals/moves, assets, unknown events and non-hash registry changes. A failed refresh resets the reuse policy so recovery is conservative.
+- Do not cache mutable privacy/path metadata globally. Keep asset synchronization for every source edit because Markdown privacy and references can change public attachments. Restrict gallery preparation to MEDIA and vault-root events. Keep serialized callbacks and disposal, and retain all structural events within each debounce batch.
+
 ## 2026-11-13 — TEXT/STORY work and category views
 
 - Make work rows the TEXT root and work cards the STORY root. Link each 카테고리 tab to its own static page. Recent links use public Markdown document dates in Asia/Seoul, visiting each work once per round within a day before moving to older days.

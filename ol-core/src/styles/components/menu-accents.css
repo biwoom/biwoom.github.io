@@ -16,7 +16,7 @@ body[data-accent-theme] {
     var(--ol-border)
   );
 }
-body[data-site-section="home"] .ol-hero,
+body[data-site-section="home"] :is(.ol-hero, .ol-manifest),
 body[data-accent-theme] .ol-library-menu-hero {
   background-image:
     radial-gradient(

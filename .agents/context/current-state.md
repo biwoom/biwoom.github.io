@@ -18,12 +18,14 @@ Last updated: 2026-11-13
 
 ## Menu Accents
 
-- Landing ol-manifest randomly chooses HOME/TEXT/STORY accent backgrounds or BLOG's existing monochrome treatment on each page load (also on bfcache return). An inline script runs before the card content; bright variants use dark text in both modes. Colors reuse existing tokens; no timed cycling or stored selection.
+- Landing ol-manifest shares HOME hero’s cyan radial/linear gradient (18%/7% accent mixing) and theme-aware text. Random menu-color selection and bfcache recoloring are removed.
 
 - HOME #00d3f3, TEXT menu/category #f0b100, STORY #7ccf00; BLOG retains its existing palette. TEXT work/document views use sample slate blue #274e65 (dark #9cbed2); document footnote emphasis alone retains gold. TEXT work/document and STORY document views selectively load Noto Serif KR 400/600 for reading; UI keeps Pretendard.
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
 
 ## Current Architecture
+
+- Development ordinary Markdown edits target their own collection and retain Astro digests so only changed documents are normalized/rendered. Registry hash-only echoes are ignored; introductions, add/delete/move, attachments, unknown events and registry policy changes retain full collection invalidation. Watch batches preserve structural events and serialize/dispose as before. Asset sync still runs on every source change for reference/privacy correctness; media-gallery preparation runs only for MEDIA or vault-root changes.
 
 - TEXT/STORY TOCs exclude the generated footnote-label and retain authored H2–H5 headings. Empty TOCs remain accessible with 목차없음. Desktop readers initially choose notes when the body TOC is empty and notes exist; compact layouts do not auto-open a panel on initial load.
 

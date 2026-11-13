@@ -15,36 +15,15 @@
 
 /* ===== Manifest box ===== */
 .ol-manifest {
-  --ol-manifest-bg: var(--ol-ink);
-  --ol-manifest-fg: var(--ol-bg);
-  --ol-manifest-subtle: rgba(255,255,255,0.5);
-  --ol-manifest-muted: rgba(255,255,255,0.65);
-  --ol-manifest-mark: rgba(255,255,255,0.04);
-  background: var(--ol-manifest-bg);
+  --ol-manifest-fg: var(--ol-ink);
+  --ol-manifest-subtle: var(--ol-muted);
+  --ol-manifest-muted: var(--ol-ink-2);
+  --ol-manifest-mark: color-mix(in srgb, var(--ol-ink) 4%, transparent);
   color: var(--ol-manifest-fg);
   border-radius: var(--ol-r-lg);
   padding: 48px;
   position: relative;
   overflow: hidden;
-}
-html.dark .ol-manifest {
-  --ol-manifest-bg: #121212;
-  --ol-manifest-fg: var(--ol-ink);
-  --ol-manifest-subtle: rgba(250,250,250,0.56);
-  --ol-manifest-muted: rgba(250,250,250,0.74);
-  --ol-manifest-mark: rgba(255,255,255,0.03);
-  border: 1px solid var(--ol-border);
-}
-:root .ol-manifest[data-manifest-accent="home"] { --ol-manifest-bg: var(--ol-accent-home); }
-:root .ol-manifest[data-manifest-accent="text"] { --ol-manifest-bg: var(--ol-accent-text); }
-:root .ol-manifest[data-manifest-accent="story"] { --ol-manifest-bg: var(--ol-accent-story); }
-/* BLOG retains the existing monochrome treatment in either color mode. */
-:root .ol-manifest:is([data-manifest-accent="home"], [data-manifest-accent="text"], [data-manifest-accent="story"]) {
-  --ol-manifest-fg: #0a0a0a;
-  --ol-manifest-subtle: rgb(0 0 0 / 65%);
-  --ol-manifest-muted: rgb(0 0 0 / 78%);
-  --ol-manifest-mark: rgb(0 0 0 / 6%);
-  border-color: rgb(0 0 0 / 12%);
 }
 .ol-manifest::before {
   content: "Biwoom";

@@ -7,10 +7,12 @@ export default function contentDevelopment() {
     name: "ol-content-development",
     hooks: {
       "astro:server:setup": ({ server }) => {
-        const dispose = watchContent(server.watcher, async () => {
+        const dispose = watchContent(server.watcher, async (changes) => {
           prepare();
           syncAssets();
-          await syncMediaGallery();
+          if (changes.some(change => !change.relative || change.relative === "media" || change.relative.startsWith("media/"))) {
+            await syncMediaGallery();
+          }
           server.ws.send({ type: "full-reload" });
         }, error => server.config.logger.error(error.message), {
           delay: 200,

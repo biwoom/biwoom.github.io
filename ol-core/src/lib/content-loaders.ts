@@ -3,18 +3,29 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { glob, type Loader } from "astro/loaders";
 import { projectPaths, normalizeContentPath, relativeContentPath } from "../../scripts/lib/paths.mjs";
-import { normalize, mediaEntries } from "../../scripts/lib/content.mjs";
+import { normalize, mediaEntries, readRegistry } from "../../scripts/lib/content.mjs";
 import { watchContent } from "../../scripts/lib/watch-content.mjs";
+import { acceptsCollectionChange, isDocumentEdit, registryPolicy, refreshMode } from "../../scripts/lib/content-refresh.mjs";
 import { prepare } from "../../scripts/prepare-content.mjs";
 
 export function markdownLoader(name: string): Loader {
   return {
     name: "glob",
     async load(context) {
-      const refresh = async () => {
-        // One registry snapshot per refresh, shared by IDs and normalized data.
-        // A new refresh always prepares again, including parent/folder changes.
+      let policy: string | undefined;
+      type Change = { event: string; file: string; relative: string | null };
+      const refresh = async (changes: Change[] = []) => {
+        // Preparation writes hashes back to the registry. Do not let that echo
+        // rescan the vault or trigger unrelated collections again.
+        if (changes.length && changes.every(change => change.relative === null)
+          && policy === registryPolicy(readRegistry())) return;
+        // Source changes always prepare afresh; never cache privacy or paths.
         let registry = prepare();
+        const nextPolicy = registryPolicy(registry);
+        const mode = refreshMode(changes, policy, nextPolicy);
+        if (mode === "skip") return;
+        // Failed refreshes must retry conservatively rather than reuse partial data.
+        policy = undefined;
         const loader = glob({
           base: pathToFileURL(path.join(projectPaths().content, name)),
           pattern: [
@@ -30,7 +41,7 @@ export function markdownLoader(name: string): Loader {
           },
         });
         // Folder names and registry policy can change while Markdown is unchanged.
-        context.store.clear();
+        if (mode === "full") context.store.clear();
         await loader.load({
           ...context,
           watcher: undefined,
@@ -45,9 +56,12 @@ export function markdownLoader(name: string): Loader {
             });
           },
         });
+        policy = nextPolicy;
       };
       await refresh();
-      watchContent(context.watcher, refresh, (error: Error) => context.logger.error(error.message));
+      watchContent(context.watcher, refresh, (error: Error) => context.logger.error(error.message), {
+        accept: (change: Change) => acceptsCollectionChange(name, change),
+      });
     },
   };
 }
@@ -64,10 +78,15 @@ export const materialsLoader: Loader = {
         });
       }
     };
+    let policy = registryPolicy(prepare());
     await update();
-    watchContent(context.watcher, async () => {
-      prepare();
+    watchContent(context.watcher, async (changes: { relative: string | null }[]) => {
+      if (changes.every(change => change.relative === null) && policy === registryPolicy(readRegistry())) return;
+      const nextPolicy = registryPolicy(prepare());
       await update();
-    }, (error: Error) => context.logger.error(error.message));
+      policy = nextPolicy;
+    }, (error: Error) => context.logger.error(error.message), {
+      accept: (change: { event: string; relative: string | null }) => !isDocumentEdit(change),
+    });
   },
 };

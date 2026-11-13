@@ -163,3 +163,61 @@ test('shared media assets resolve from documents without becoming content or inh
  write('blog/public.md','# Public');fs.unlinkSync(path.join(root,'content',image));syncAssets(root);
  assert.equal(fs.existsSync(generated),false);
 }));
+
+test('watch batches retain structural events, filter before scheduling, and normalize source keys', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const watcher = new EventEmitter(); watcher.add = () => {};
+  const batches = [];
+  const dispose = watchContent(watcher, changes => batches.push(changes), assert.fail, {
+    accept: change => change.relative === null || !change.relative.startsWith('blog/'),
+  });
+  t.after(dispose);
+  const emit = (event, source) => watcher.emit('all', event, path.join(original, 'content', source));
+  emit('change', 'text/한글.md'.normalize('NFD'));
+  emit('change', 'text/한글.md'.normalize('NFD'));
+  emit('unlink', 'text/old.md'); emit('add', 'text/new.md');
+  t.mock.timers.tick(200); emit('change', 'blog/ignored.md');
+  t.mock.timers.tick(50); await new Promise(resolve => setImmediate(resolve));
+  assert.equal(batches.length, 1);
+  assert.deepEqual(batches[0].map(({event, relative}) => [event, relative]), [
+    ['change', 'text/한글.md'], ['unlink', 'text/old.md'], ['add', 'text/new.md'],
+  ]);
+});
+
+test('incremental content refresh retains policy invalidation and hash-only feedback suppression', async () => {
+  const { registryPolicy, refreshMode, acceptsCollectionChange, isDocumentEdit } = await import('./lib/content-refresh.mjs');
+  const r = { files: { 'text/A.md': {id: 'a', url: '/a/', date: '2026-01-01', hash: 'before'} }, folders: {}, aliases: {}, redirects: {} };
+  const policy = registryPolicy(r);
+  const edit = {event: 'change', relative: 'text/A.md'};
+  const registry = {event: 'change', relative: null};
+  r.files['text/A.md'].hash = 'after';
+  assert.equal(registryPolicy(r), policy);
+  assert.equal(refreshMode([edit, registry], policy, registryPolicy(r)), 'incremental');
+  assert.equal(refreshMode([registry], policy, registryPolicy(r)), 'skip');
+  assert.equal(refreshMode([edit], undefined, policy), 'full');
+  assert.equal(acceptsCollectionChange('story', edit), false);
+  assert.equal(acceptsCollectionChange('text', edit), true);
+  for (const change of [
+    {event: 'change', relative: 'text/C/index.md'},
+    {event: 'add', relative: 'text/A.md'},
+    {event: 'unlink', relative: 'text/A.md'},
+    {event: 'addDir', relative: 'text/New'},
+    {event: 'change', relative: 'text/file.pdf'},
+    {event: 'change', relative: 'media/index.md'},
+  ]) {
+    assert.equal(isDocumentEdit(change), false);
+    assert.equal(acceptsCollectionChange('story', change), true);
+    assert.equal(refreshMode([edit, change], policy, policy), 'full');
+  }
+  for (const mutate of [
+    r => r.files['text/A.md'].url = '/moved/',
+    r => r.files['text/A.md'].date = '2026-01-02',
+    r => r.folders.work = { hidden: true },
+    r => r.aliases.old = 'text/A.md',
+    r => r.redirects['/old/'] = '/a/',
+    r => delete r.files['text/A.md'],
+  ]) {
+    const changed = structuredClone(r); mutate(changed);
+    assert.equal(refreshMode([registry], policy, registryPolicy(changed)), 'full');
+  }
+});

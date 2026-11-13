@@ -6,8 +6,18 @@ import fs from 'node:fs';import path from 'node:path';import os from 'node:os';i
 const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'ol-live-'));
 for(const f of ['ol-core','astro.config.mjs','site-config.mjs','package.json','tsconfig.json']) fs.cpSync(path.join(source,f),path.join(root,f),{recursive:true,filter:p=>!p.includes('ol-core/public/generated')});
 fs.symlinkSync(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');fs.writeFileSync(path.join(root,'content-registry.json'),JSON.stringify({version:1,files:{},folders:{},redirects:{},aliases:{}}));
+// Instrument only the disposable server copy to verify unchanged documents are reused.
+const loaderPath=path.join(root,'ol-core/src/lib/content-loaders.ts');
+const parseLog=path.join(root,'loader-parses.jsonl');
+fs.writeFileSync(loaderPath, fs.readFileSync(loaderPath,'utf8').replace(
+  'const relative = relativeContentPath(options.filePath!);',
+  `const relative = relativeContentPath(options.filePath!); fs.appendFileSync(${JSON.stringify(parseLog)}, JSON.stringify(relative) + "\\n");`,
+));
 const write=(rel,body)=>{const f=path.join(root,'content',rel);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,body);};
-write('text/C/W/P/A.md','# Live document');write('text/C/W/P/file.pdf','%PDF-test');write('text/C/W/index.md','# Work');
+write('text/C/W/P/A.md','# Live document');write('text/C/W/P/file.pdf','%PDF-test');
+// Include unchanged private siblings to catch accidental whole-collection reparsing.
+for(let i=0;i<60;i++) write(`text/C/W/P/Private-${i}.md`,'---\npublished: false\n---\n# Cached sibling '+i+'\n\n'+('Unchanged Markdown paragraph.\n\n'.repeat(40)));
+write('text/C/W/index.md','# Work');
 write('story/001.Literature/010.First/010.Part/001.First.md','---\ndate: 2026-01-01\n---\n# First story document\n\n번역문입니다.\n\n```original\n原文 <literal> & **文字**\n```\n\n```original\n두 번째 원문\n```\n\n```text\nordinary code\n```\n\n`inline original`');
 write('story/001.Literature/020.Second/010.Part/001.Second.md','---\ndate: 2026-01-02\n---\n# Second story document');
 write('story/001.Literature/010.First/010.Part/002.New.md','---\ndate: 2026-01-02\n---\n# New story document');
@@ -55,6 +65,22 @@ assert.ok(!plainStory.includes('data-original-toggle'),'Plain STORY pages must n
 
 await until(async()=>{const html=await get(rights);return html.includes('Rights Owner') && html.includes('CC-BY') && html.includes('Special notice');},'BLOG rights rendering');
 await until(async()=> (await get(series)).includes('Live document'),'initial document');
+// Ordinary edits must update the reader and list without reparsing siblings/other collections.
+await new Promise(r=>setTimeout(r,800));
+fs.writeFileSync(parseLog,'');
+const editStarted=performance.now();
+write('text/C/W/P/A.md','# Updated live document\n\nUpdated body marker.');
+const documentUrl=reg().files['text/C/W/P/A.md'].url;
+await until(async()=> (await get(documentUrl)).includes('Updated body marker.'),'ordinary document body refresh');
+const editLatency=Math.round(performance.now()-editStarted);
+await until(async()=> (await get(series)).includes('Updated live document'),'ordinary edit updates list title');
+await new Promise(r=>setTimeout(r,800));
+const parsed=fs.readFileSync(parseLog,'utf8').trim().split('\n').filter(Boolean).map(line=>JSON.parse(line));
+assert.deepEqual(parsed,['text/C/W/P/A.md'],'ordinary edit reparses exactly one document, not siblings or unrelated collections');
+console.log(`LIVE EDIT: ${editLatency}ms to HTTP body update; ${parsed.length} document parsed.`);
+write('text/C/W/P/A.md','# Live document');
+await until(async()=> (await get(series)).includes('Live document') && !(await get(series)).includes('Updated live document'),'restore ordinary edit');
+
 const unicodeSource='story/003.유니코드/001.마하붓다왐사/01.자료/001.글.md';
 const unicodeNext='story/003.유니코드/001.마하붓다왐사/01.자료/002.다음.md';
 const unicodeIntro='story/003.유니코드/001.마하붓다왐사/index.md';
@@ -82,6 +108,14 @@ await until(async()=> (await get(series)).includes('Live document') && (await ge
 write('text/C/New/P/New.md','# Added live');
 await until(async()=>{const r=reg();const f=r.folders['text/C/New'];return f && (await get(f.url)).includes('Added live');},'new folder without restart');
 await until(async()=> JSON.stringify(cardTitles(await get(textCategory))) === JSON.stringify(['New', 'W']), 'category series membership after live addition');
+const addedSource='text/C/New/P/New.md', movedSource='text/C/New/P/Renamed.md';
+const addedUrl=reg().files[addedSource].url;
+const addedId=reg().files[addedSource].id;
+fs.renameSync(path.join(root,'content',addedSource),path.join(root,'content',movedSource));
+await until(async()=>{const r=reg();return r.aliases[addedSource]===movedSource && r.files[movedSource]?.id===addedId && (await get(addedUrl)).includes('Added live');},'Markdown rename preserves identity and route');
+fs.unlinkSync(path.join(root,'content',movedSource));
+await until(async()=> !(await get(reg().folders['text/C/New'].url)).includes('Added live'),'Markdown deletion removes reader list entry');
+await until(async()=> (await fetch('http://127.0.0.1:4399'+addedUrl)).status===404,'deleted Markdown reader disappears');
 await until(async()=> (await get('/media/')).includes('First media title'), 'MEDIA information from the separate vault');
 write('media/001.Images/index.md','# Images\n\n## [Changed media title](first.png)\n\nChanged media description.');
 await until(async()=> {const html=await get('/media/');return html.includes('Changed media title') && html.includes('Changed media description.') && !html.includes('First media title');}, 'MEDIA index edit without restart');
@@ -98,5 +132,5 @@ await until(async()=> !(await get('/ebook/')).includes('Live ebook'), 'EBOOK pri
 await until(async()=> (await fetch('http://127.0.0.1:4399/generated/content/ebook/001.Sample/001.Book/book.pdf')).status===404, 'private EBOOK asset removal');
 write('ebook/001.Sample/001.Book/index.md','# Restored ebook');
 await until(async()=> (await get('/ebook/')).includes('Restored ebook'), 'EBOOK restore without restart');
-console.log('LIVE PASS: separate content/core paths; TEXT/STORY hierarchy, privacy and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
+console.log('LIVE PASS: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
 }finally{try{process.kill(-child.pid,'SIGTERM');}catch{}await new Promise(r=>setTimeout(r,500));fs.rmSync(root,{recursive:true,force:true});}
