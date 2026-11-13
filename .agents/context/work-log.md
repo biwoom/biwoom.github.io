@@ -1419,3 +1419,11 @@ This file records concise date-based work summaries for continuity across Codex 
 - 리더 회귀 32개와 타입 검사 통과(오류·경고·힌트 0). 전체 fixture 109개 중 108개 통과하며, 실제 원고 검증을 호출하는 기존 1개는 같은 TEXT 누락 링크 22건으로 실패한다. check/build도 같은 원고 오류에서 중단된다.
 - 원고를 바꾸지 않은 임시 복사본에 TEXT/STORY별 빈 문서·각주만 있는 문서·직접 작성한 각주/H5 제목 문서 6개를 추가해 build:site/Pagefind와 생성 HTML을 검증했다. 목차없음·목차 버튼·각주 제외·고유 ID를 확인했고 생성 UI 계약 340문서와 BLOG/EBOOK 검사도 통과했다. 임시 컴파일을 표준 전체 build 통과로 간주하지 않는다.
 - 사용자 요청에 따라 수정 코드와 운영 기록을 로컬 커밋한다. 별도 편집 중인 STORY 원고 및 연결 레지스트리는 제외해 보존한다. 브라우저 조작·원본 dist 교체·푸시·배포는 수행하지 않았다.
+
+
+## 2026-11-13 — BLOG 시리즈 진입 변경에 따른 Actions 검증 수정
+
+- 최신 Actions 실행 43358969885는 콘텐츠·레지스트리·타입·빌드를 통과했으나 check:built의 홈 BLOG 카드 검사에서 실패했다. 홈 카드는 /blog/series/로 변경됐는데 검사기는 /blog/를 찾고 있어 빈 문자열을 자료 개수 오류로 보고한 것이 원인이었다.
+- 카드 탐색 주소를 /blog/series/로 맞추고, 카드 탐색 실패를 자료 개수 불일치와 별도 assertion으로 구분했다. 기존 BLOG 메타정보 제외·자료 개수 검사는 유지한다. 5881992에서 원고 누락 링크가 정리된 현재 상태를 current-state에 반영했다.
+- npm run build, typecheck(오류·경고·힌트 0), check:registry, check:built 통과. 생성 링크 424페이지·45리디렉션, UI 계약 334문서 및 BLOG/EBOOK, 운영 도메인 1,579 URL 검사 통과. 분석 단계의 npm run check도 회귀 109개 모두 통과했다.
+- 사용자 요청에 따라 검사기와 작업 기록을 로컬 커밋한다. 브라우저 조작·GitHub 푸시·워크플로 재실행은 수행하지 않았다.

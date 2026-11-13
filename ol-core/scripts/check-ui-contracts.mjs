@@ -364,7 +364,8 @@ assert.match(seriesIndex, /href="\/blog\/series\/" aria-current="page"/);
 const feed = fs.readFileSync(path.join(dist, "rss.xml"), "utf8");
 assert.equal((feed.match(/<item>/g) ?? []).length, publishedBlogCategories.length, "Metadata must not enter RSS");
 const homeHtml = fs.readFileSync(path.join(dist, "index.html"), "utf8");
-const blogHomeCard = homeHtml.match(/<a href="\/blog\/?" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1] ?? "";
+const blogHomeCard = homeHtml.match(/<a href="\/blog\/series\/" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1];
+assert.ok(blogHomeCard, "Home BLOG product card must link to /blog/series/");
 assert.ok(blogHomeCard.includes(`${publishedBlogCategories.length}개 자료`), "Home product counts exclude BLOG metadata");
 for (const series of blogCatalog) {
   const html = fs.readFileSync(path.join(dist, series.url, "index.html"), "utf8");

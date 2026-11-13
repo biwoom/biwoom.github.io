@@ -102,7 +102,7 @@ Last updated: 2026-11-13
 
 ## Known Limits and Follow-ups
 
-- 2026-11-13: current TEXT sources contain 22 unresolved relative references to glossary/prepared/raw/context files. `npm run check` and `npm run build` stop at content validation; the full fixture suite passes 105/106 with the sole failure invoking that same validator. Typecheck has zero errors/warnings/hints. The internal audit preserved all content bytes and compared 424 generated HTML pages, active CSS declarations, client JS, RSS/sitemaps/robots and normalized data before/after. Generated links now report only the same 22 missing targets, without false Unicode-footnote errors. These authoring links remain unchanged.
+- 2026-11-13: commit 5881992 removed the unresolved TEXT source links; content checks and all 109 fixtures now pass. Latest Actions run 43358969885 completed content/registry/type/build/link checks, then failed the home BLOG card UI assertion because its selector still expected /blog/ instead of /blog/series/. The selector now follows the series entry route and reports a missing card separately from a count mismatch. Historical audit evidence and the former 22-reference limitation remain recorded in work-log and the audit report.
 
 - Development server was restarted on 127.0.0.1:4321 after the 2026-11-11 Unicode path fix and final build. BLOG desktop/412px mobile light/dark views were verified in native Chrome. Registry preparation is stable; code and registry belong in the same local commit. Run check:registry after committing; production deployment awaits a requested push.
 
