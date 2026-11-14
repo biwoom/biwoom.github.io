@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-15 — List only categories with public works
+
+- Filter TEXT/STORY category cards and menu filters/counts by public library membership, not category introductions or raw folder presence. A work introduction counts as a registered work even with no body documents. Preserve category metadata, canonical routes and empty direct pages. BLOG/EBOOK category rules remain unchanged.
+
 ## 2026-11-13 — Incremental development document refresh
 
 - Keep fresh registry preparation for source edits, but ignore hash-only registry feedback before preparation. Reuse Astro glob digests for ordinary Markdown changes in the affected collection; skip unrelated collections and material updates. Preserve full invalidation for introductions, adds/removals/moves, assets, unknown events and non-hash registry changes. A failed refresh resets the reuse policy so recovery is conservative.

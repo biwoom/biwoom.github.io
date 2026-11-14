@@ -327,9 +327,12 @@ for (const section of ["text", "story"]) {
   assert.equal(recentLinks.length, Math.min(3, documents.size));
   assert.ok(recentLinks.every((href) => documents.has(href)), `${section}: recent links must open public reading pages`);
   const categories = categoryFolders(section);
-  assert.equal((categoryIndex.match(/data-library-category=/g) ?? []).length, categories.length);
+  const listedCategories = categories.filter(category => [...series.keys()].some(key => key.startsWith(category.key + "/")));
+  assert.equal((categoryIndex.match(/data-library-category=/g) ?? []).length, listedCategories.length);
   for (const category of categories) {
-    assert.ok(categoryIndex.includes(`href="${category.url}"`), `${section}: missing category link ${category.label}`);
+    const listed = listedCategories.includes(category);
+    assert.equal(categoryIndex.includes(`href="${category.url}"`), listed, `${section}: incorrect category visibility ${category.label}`);
+    assert.equal(index.includes(`data-library-filter="${category.key}"`), listed, `${section}: incorrect category filter ${category.label}`);
     const html = fs.readFileSync(path.join(dist, category.url, "index.html"), "utf8");
     assert.match(html, /data-library-view="series"/);
     classes(html, ["ol-library-series-list"], category.url);

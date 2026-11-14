@@ -25,6 +25,7 @@ write('story/001.Literature/010.First/010.Part/003.New.md','---\ndate: 2026-01-0
 write('story/001.Literature/010.First/010.Part/004.Latest.md','---\ndate: 2026-01-03\n---\n# Latest story document');
 write('story/001.Literature/010.First/010.Part/005.Private.md','---\ndate: 2026-01-04\npublished: false\n---\n# Private story document');
 write('story/002.Poems/.gitkeep','');
+write('story/002.Poems/index.md','# Poems\n\nCategory introduction only.');
 write('blog/rights.md','---\nlicense: CC-BY\nrightsHolder: Rights Owner\ncopyrightNotice: Special notice\n---\n# Rights test');
 write('media/001.Images/index.md','# Images\n\n## [First media title](first.png)\n\nFirst media description.');
 await sharp({create:{width:20,height:30,channels:3,background:'red'}}).png().toFile(path.join(root,'content/media/001.Images/first.png'));
@@ -42,7 +43,7 @@ await until(async()=> JSON.stringify(cardTitles(await get('/text/'))) === JSON.s
 await until(async()=> JSON.stringify(cardTitles(await get('/text/categories/'))) === JSON.stringify(['C']), 'initial TEXT category cards');
 await until(async()=> JSON.stringify(cardTitles(await get(textCategory))) === JSON.stringify(['W']), 'initial TEXT series inside category');
 await until(async()=> JSON.stringify(cardTitles(await get('/story/'))) === JSON.stringify(['First', 'Second']), 'STORY work cards');
-await until(async()=> JSON.stringify(cardTitles(await get('/story/categories/'))) === JSON.stringify(['Literature', 'Poems']), 'STORY category cards');
+await until(async()=> JSON.stringify(cardTitles(await get('/story/categories/'))) === JSON.stringify(['Literature']), 'STORY category cards exclude introduction-only categories');
 await until(async()=> JSON.stringify(cardTitles(await get(storyCategory))) === JSON.stringify(['First', 'Second']), 'STORY category must contain two distinct series, not another category card');
 const empty = await get(categoryUrl('story/002.Poems'));
 assert.deepEqual(cardTitles(empty), []);
@@ -132,5 +133,11 @@ await until(async()=> !(await get('/ebook/')).includes('Live ebook'), 'EBOOK pri
 await until(async()=> (await fetch('http://127.0.0.1:4399/generated/content/ebook/001.Sample/001.Book/book.pdf')).status===404, 'private EBOOK asset removal');
 write('ebook/001.Sample/001.Book/index.md','# Restored ebook');
 await until(async()=> (await get('/ebook/')).includes('Restored ebook'), 'EBOOK restore without restart');
+write('story/002.Poems/First/index.md','# First poem work');
+await until(async()=> cardTitles(await get('/story/categories/')).includes('Poems'), 'category appears with a public work introduction, even before body documents');
+write('story/002.Poems/First/index.md','---\npublished: false\n---\n# First poem work');
+await until(async()=> !cardTitles(await get('/story/categories/')).includes('Poems'), 'category disappears when its only work becomes private');
+write('story/002.Poems/First/index.md','# First poem work');
+await until(async()=> cardTitles(await get('/story/categories/')).includes('Poems'), 'category returns after its work is restored');
 console.log('LIVE PASS: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
 }finally{try{process.kill(-child.pid,'SIGTERM');}catch{}await new Promise(r=>setTimeout(r,500));fs.rmSync(root,{recursive:true,force:true});}

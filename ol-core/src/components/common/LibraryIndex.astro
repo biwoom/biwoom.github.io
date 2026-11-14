@@ -10,7 +10,7 @@ interface Props {
 }
 const { section, category, view = "works" } = Astro.props;
 const library = category?.series ?? await getLibrary(section);
-const categories = category ? [] : getCategories(section, library);
+const categories = category ? [] : getCategories(section, library).filter((item) => item.series.length > 0);
 const showCategories = !category && view === "categories";
 const showWorks = !category && view === "works";
 const showStoryCards = showWorks && section === "story";
