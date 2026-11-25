@@ -2,14 +2,18 @@ import { projectPaths } from './lib/paths.mjs';
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { SITE_URL } from "../../site-config.mjs";
-import { walk } from "./lib/content.mjs";
+import { SITE_BASE, SITE_URL } from "../../site-config.mjs";
+import { activeRedirects, readRegistry, walk } from "./lib/content.mjs";
 
 const root = projectPaths().dist;
 const origin = new URL(SITE_URL).origin;
+const redirects = activeRedirects(readRegistry());
 let checked = 0;
 function verify(value, file) {
-  assert.equal(new URL(value).origin, origin, `${file}: unexpected production URL ${value}`);
+  const url = new URL(value);
+  assert.equal(url.origin, origin, `${file}: unexpected production URL ${value}`);
+  assert.ok(url.pathname.startsWith(`${SITE_BASE}/`) && !url.pathname.startsWith(`${SITE_BASE}${SITE_BASE}/`),
+    `${file}: unexpected HUB path ${value}`);
   checked++;
 }
 for (const file of walk(root, { assets: true })) {
@@ -25,10 +29,16 @@ for (const file of walk(root, { assets: true })) {
     const xml = fs.readFileSync(file, "utf8");
     const urls = [...xml.matchAll(/<(?:loc|link)>([^<]+)<\/(?:loc|link)>/g)];
     assert.ok(urls.length, `${relative}: missing production URLs`);
-    for (const [, value] of urls) verify(value, relative);
+    for (const [, value] of urls) {
+      verify(value, relative);
+      if (relative.startsWith("sitemap")) {
+        assert.ok(!Object.hasOwn(redirects, new URL(value).pathname.slice(SITE_BASE.length)),
+          `${relative}: redirect should not be indexed ${value}`);
+      }
+    }
   }
 }
 const robots = fs.readFileSync(path.join(root, "robots.txt"), "utf8");
-assert.deepEqual([...robots.matchAll(/^Sitemap:\s*(\S+)/gm)].map(([, value]) => value), [`${origin}/sitemap-index.xml`]);
+assert.deepEqual([...robots.matchAll(/^Sitemap:\s*(\S+)/gm)].map(([, value]) => value), [`${SITE_URL}/sitemap-index.xml`]);
 assert.ok(checked, "No production metadata found in dist");
-console.log(`Production domain verified: ${origin} (${checked} metadata/feed/sitemap URLs and robots.txt).`);
+console.log(`Production site verified: ${SITE_URL}/ (${checked} metadata/feed/sitemap URLs and robots.txt).`);

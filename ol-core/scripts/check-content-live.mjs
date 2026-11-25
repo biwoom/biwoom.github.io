@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { categoryUrl } from './lib/content.mjs';
 import { PROJECT_ROOT } from './lib/paths.mjs';
+import { hubPath } from '../../site-config.mjs';
 import sharp from 'sharp';
 import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import {spawn} from 'node:child_process';
 const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'ol-live-'));
@@ -32,7 +33,8 @@ await sharp({create:{width:20,height:30,channels:3,background:'red'}}).png().toF
 write('ebook/001.Sample/001.Book/book.pdf','%PDF-test');
 write('ebook/001.Sample/001.Book/index.md','# Live ebook');
 const child=spawn('npm',['run','dev','--','--host','127.0.0.1','--port','4399'],{cwd:root,stdio:['ignore','pipe','pipe'],detached:true});let log='';child.stdout.on('data',d=>log+=d);child.stderr.on('data',d=>log+=d);
-const get=async p=>{try{return await (await fetch('http://127.0.0.1:4399'+p)).text();}catch{return '';}};
+const liveUrl = (pathname) => 'http://127.0.0.1:4399' + hubPath(pathname);
+const get=async p=>{try{return await (await fetch(liveUrl(p))).text();}catch{return '';}};
 const until=async(fn,label)=>{const deadline=Date.now()+18000;while(Date.now()<deadline){if(await fn())return;await new Promise(r=>setTimeout(r,300));}throw new Error(label+'\n'+log.slice(-3500));};
 const cardTitles = html => [...html.matchAll(/<a\b[^>]*\bdata-library-item[^>]*>([\s\S]*?)<\/a>/g)]
   .map(([, card]) => card.match(/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/)?.[1]?.replace(/<[^>]+>/g, '').trim());
@@ -53,13 +55,13 @@ const series=reg().folders['text/C/W'].url;
 const rights=reg().files['blog/rights.md'].url;
 const originalUrl=reg().files['story/001.Literature/010.First/010.Part/001.First.md'].url;
 const recentLinks = (html) => [...(html.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "").matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
-assert.deepEqual(recentLinks(await get('/text/')), [reg().files['text/C/W/P/A.md'].url], 'recent TEXT links exclude attachments and introductions');
+assert.deepEqual(recentLinks(await get('/text/')), [hubPath(reg().files['text/C/W/P/A.md'].url)], 'recent TEXT links exclude attachments and introductions');
 const recentStorySources = [
   'story/001.Literature/010.First/010.Part/004.Latest.md',
   'story/001.Literature/010.First/010.Part/002.New.md',
   'story/001.Literature/020.Second/010.Part/001.Second.md',
 ];
-assert.deepEqual(recentLinks(await get('/story/')), recentStorySources.map((source) => reg().files[source].url), 'recent STORY links prioritize date, then distinct works within the day');
+assert.deepEqual(recentLinks(await get('/story/')), recentStorySources.map((source) => hubPath(reg().files[source].url)), 'recent STORY links prioritize date, then distinct works within the day');
 await until(async()=>{const html=await get(originalUrl);return html.includes('data-original-toggle')&&(html.match(/data-reader-original(?=[\s=>])/g)??[]).length===2&&html.includes('원문 숨기기')&&html.includes('ordinary code')&&html.includes('inline original');},'STORY explicit original blocks and shared toggle');
 const plainStory=await get(reg().files['story/001.Literature/020.Second/010.Part/001.Second.md'].url);
 assert.ok(!plainStory.includes('data-original-toggle'),'Plain STORY pages must not show an original toggle');
@@ -88,22 +90,22 @@ const unicodeIntro='story/003.유니코드/001.마하붓다왐사/index.md';
 const unicodeAsset='story/003.유니코드/001.마하붓다왐사/01.자료/_assets/첨부.pdf';
 write(unicodeSource.normalize('NFD'),'# Unicode live document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
 write(unicodeNext.normalize('NFD'),'# Unicode next document');write(unicodeAsset.normalize('NFD'),'%PDF-unicode');
-await until(async()=>{const r=reg();if(!r.files[unicodeSource]||!r.files[unicodeNext])return false;const html=await get(r.files[unicodeSource].url);return html.includes('Unicode live document')&&html.includes('href="'+r.files[unicodeNext].url+'"')&&html.includes(encodeURIComponent('첨부.pdf'));},'NFD source discovery, canonical loader IDs and relative links');
+await until(async()=>{const r=reg();if(!r.files[unicodeSource]||!r.files[unicodeNext])return false;const html=await get(r.files[unicodeSource].url);return html.includes('Unicode live document')&&html.includes('href="'+hubPath(r.files[unicodeNext].url)+'"')&&html.includes(encodeURIComponent('첨부.pdf'));},'NFD source discovery, canonical loader IDs and relative links');
 const unicodeUrl=reg().files[unicodeSource].url;
 write(unicodeSource.normalize('NFD'),'# Unicode updated document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
 await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD edit without identity churn');
 assert.equal(reg().files[unicodeSource].url,unicodeUrl);assert.ok(Object.keys(reg().files).every(key=>key===key.normalize('NFC')));
 write(unicodeIntro.normalize('NFD'),'---\npublished: false\n---\n# Unicode private series');
 const unicodeCategory=categoryUrl('story/003.유니코드');
-await until(async()=>!(await get(unicodeCategory)).includes('href="'+reg().folders['story/003.유니코드/001.마하붓다왐사'].url+'"'),'NFD introduction privacy');
+await until(async()=>!(await get(unicodeCategory)).includes('href="'+hubPath(reg().folders['story/003.유니코드/001.마하붓다왐사'].url)+'"'),'NFD introduction privacy');
 const unicodeAssetUrl='/generated/content/'+unicodeAsset.split('/').map(encodeURIComponent).join('/');
-await until(async()=> (await fetch('http://127.0.0.1:4399'+unicodeAssetUrl)).status===404,'NFD private asset cleanup');
+await until(async()=> (await fetch(liveUrl(unicodeAssetUrl))).status===404,'NFD private asset cleanup');
 write(unicodeIntro.normalize('NFD'),'# Unicode restored series');
 await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD series restore');
-await until(async()=> (await fetch('http://127.0.0.1:4399'+unicodeAssetUrl)).status===200,'NFD public asset restore');
+await until(async()=> (await fetch(liveUrl(unicodeAssetUrl))).status===200,'NFD public asset restore');
 
 write('text/C/W/index.md','---\npublished: false\n---\n# Work');
-await until(async()=> !(await get(textCategory)).includes('href="'+series+'"'),'hide series without restart');
+await until(async()=> !(await get(textCategory)).includes('href="'+hubPath(series)+'"'),'hide series without restart');
 write('text/C/W/index.md','# Work');
 await until(async()=> (await get(series)).includes('Live document') && (await get(series)).includes('PDF'),'restore docs and media without restart');
 write('text/C/New/P/New.md','# Added live');
@@ -116,7 +118,7 @@ fs.renameSync(path.join(root,'content',addedSource),path.join(root,'content',mov
 await until(async()=>{const r=reg();return r.aliases[addedSource]===movedSource && r.files[movedSource]?.id===addedId && (await get(addedUrl)).includes('Added live');},'Markdown rename preserves identity and route');
 fs.unlinkSync(path.join(root,'content',movedSource));
 await until(async()=> !(await get(reg().folders['text/C/New'].url)).includes('Added live'),'Markdown deletion removes reader list entry');
-await until(async()=> (await fetch('http://127.0.0.1:4399'+addedUrl)).status===404,'deleted Markdown reader disappears');
+await until(async()=> (await fetch(liveUrl(addedUrl))).status===404,'deleted Markdown reader disappears');
 await until(async()=> (await get('/media/')).includes('First media title'), 'MEDIA information from the separate vault');
 write('media/001.Images/index.md','# Images\n\n## [Changed media title](first.png)\n\nChanged media description.');
 await until(async()=> {const html=await get('/media/');return html.includes('Changed media title') && html.includes('Changed media description.') && !html.includes('First media title');}, 'MEDIA index edit without restart');
@@ -130,7 +132,7 @@ await until(async()=> ((await get('/media/')).match(/data-media-item(?=[\s>])/g)
 await until(async()=> (await get('/ebook/')).includes('Live ebook'), 'EBOOK discovery from the separate vault');
 write('ebook/001.Sample/001.Book/index.md','---\npublished: false\n---\n# Live ebook');
 await until(async()=> !(await get('/ebook/')).includes('Live ebook'), 'EBOOK privacy change without restart');
-await until(async()=> (await fetch('http://127.0.0.1:4399/generated/content/ebook/001.Sample/001.Book/book.pdf')).status===404, 'private EBOOK asset removal');
+await until(async()=> (await fetch(liveUrl('/generated/content/ebook/001.Sample/001.Book/book.pdf'))).status===404, 'private EBOOK asset removal');
 write('ebook/001.Sample/001.Book/index.md','# Restored ebook');
 await until(async()=> (await get('/ebook/')).includes('Restored ebook'), 'EBOOK restore without restart');
 write('story/002.Poems/First/index.md','# First poem work');

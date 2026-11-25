@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EbookDetails from '../../components/ebook/EbookDetails.astro';
 import { getEbookLibrary, ebookLicense } from '../../../scripts/lib/ebooks.mjs';
@@ -26,7 +27,7 @@ const { books, categories } = getEbookLibrary();
       <div class="ol-ebook-grid">
         {books.map(book => <article class="ol-ebook-card" data-ebook-item data-ebook-id={book.id} data-ebook-category={book.categoryKey} data-ebook-search-text={`${book.title} ${book.bibliography.map(item => item.value).join(' ')}`} data-ebook-formats={book.downloads.map(file => file.format).join(' ')}>
           <button class="ol-ebook-open" type="button" data-ebook-open aria-haspopup="dialog" aria-controls="ebook-dialog" aria-label={`${book.title} 서지정보와 다운로드`}>
-            <span class="ol-ebook-cover">{book.coverUrl ? <img src={book.coverUrl} alt="" loading="lazy" decoding="async" /> : <span class="ol-ebook-placeholder"><span>Biwoom EBOOK</span><strong>{book.title}</strong><span>비움</span></span>}</span>
+            <span class="ol-ebook-cover">{book.coverUrl ? <img src={url(book.coverUrl)} alt="" loading="lazy" decoding="async" /> : <span class="ol-ebook-placeholder"><span>Biwoom EBOOK</span><strong>{book.title}</strong><span>비움</span></span>}</span>
             <span class="ol-ebook-caption"><strong>{book.title}</strong><span>{book.bibliography.filter(item => ['저자', '원저자', '번역자'].includes(item.label)).map(item => `${item.value} ${item.label}`).join(' · ')}</span><span class="ol-ebook-formats">{[...new Set(book.downloads.map(file => file.format))].join(' · ')}<span>서지정보 · 다운로드 ↗</span></span></span>
           </button>
           <template data-ebook-detail>

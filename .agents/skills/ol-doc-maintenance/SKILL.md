@@ -1,6 +1,6 @@
 ---
 name: ol-doc-maintenance
-description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, README.md, and project rule documents. Use when updating durable project guidance, Codex rules, content management manuals, brand definitions, changelog sections inside docs, or documentation that governs how Biwoom (OL 코어) should be operated.
+description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md, and project rules. Use for durable guidance, content management manuals, brand definitions, and change histories.
 ---
 
 # OL Doc Maintenance
@@ -23,10 +23,10 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 7. Add or update a bottom section named `수정 변경사항`.
 8. Run `npm run build` after public content changes.
 
-## Current Biwoom (OL 코어) Facts
+## Current BIWOOM HUB Facts
 
-- Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
-- `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
+- HUB uses `https://biwoom.github.io/hub/`, repository `biwoom/hub` and Astro `base: "/hub"`. The root site at `https://biwoom.github.io/` is the HOME destination.
+- `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus. The HUB wordmark takes readers to the HUB landing, and HOME opens the root site.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
@@ -66,6 +66,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-25 — BIWOOM HUB
+
+- Record the HUB project address and the separate HOME destination.
 
 ### 2026-11-13 — TEXT/STORY menus
 

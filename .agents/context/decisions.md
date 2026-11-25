@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-25 — BIWOOM HUB project site
+
+- Publish this project from `biwoom/hub` under `https://biwoom.github.io/hub/`. Keep the existing root at `https://biwoom.github.io/` for future BIWOOM HOME and connect the existing site with HUB.
+- Keep the registry's HUB-relative routes and render public links with the `/hub` deployment prefix. The HUB wordmark opens HUB; HOME opens the existing root.
+
 ## 2026-11-15 — List only categories with public works
 
 - Filter TEXT/STORY category cards and menu filters/counts by public library membership, not category introductions or raw folder presence. A work introduction counts as a registered work even with no body documents. Preserve category metadata, canonical routes and empty direct pages. BLOG/EBOOK category rules remain unchanged.

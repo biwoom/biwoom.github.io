@@ -1,15 +1,16 @@
-# Biwoom - 비움
+# BIWOOM HUB
 
-문서 버전: v1.8 · 최종 업데이트: 2026-11-13 · 대상: Biwoom (OL 코어)
+문서 버전 v1.9 · 2026-11-25 · BIWOOM HUB (OL 코어)
 
 불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
 
-- 사이트: https://biwoom.github.io/
-- 저장소: `biwoom/biwoom.github.io`
+- 사이트: https://biwoom.github.io/hub/
+- 저장소: `biwoom/hub`
+- HOME: https://biwoom.github.io/
 - Node.js: 22.12 이상
-- 배포: GitHub Actions → GitHub Pages 루트
+- 배포: GitHub Actions → GitHub Pages 프로젝트 경로 `/hub/`
 
-공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 기본 GitHub Pages 도메인을 사용하므로 CNAME 파일과 사용자 도메인용 DNS 설정은 필요하지 않습니다. 기존 사용자 도메인이 연결되어 있으면 저장소 Settings → Pages → Custom domain에서 제거해야 합니다. [GitHub 공식 안내](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#removing-a-custom-domain)를 참고하세요.
+공개 주소와 Astro `base`는 `site-config.mjs`에서 관리합니다. 개발·미리보기 주소도 `/hub/`에서 엽니다. 레지스트리 경로는 HUB 기준으로 보존하고, 생성하는 링크와 메타데이터에 `/hub`를 붙입니다. 배포는 `biwoom/hub`의 Settings → Pages에서 GitHub Actions를 소스로 사용합니다. HUB 로고는 HUB 첫 화면으로, 헤더의 HOME은 향후 BIWOOM HOME에 사용할 기존 루트 사이트로 이동합니다.
 
 ## 폴더 구조
 
@@ -111,13 +112,17 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 ## 브랜드 자산
 
-Biwoom - 비움의 심볼은 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. 기존 심볼의 모양은 유지하며 공유 이미지의 영문 표기는 Biwoom입니다. 영문명은 Biwoom, 한글명은 비움이며 함께 쓸 때는 `Biwoom - 비움`으로 표기합니다. OL은 내부 코어 이름입니다.
+BIWOOM HUB는 비움의 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 표기는 `BIWOOM HUB`이며 OL은 내부 코어 이름입니다.
 
 ## 전자책
 
 `content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
 
 ## 수정 변경사항
+
+### 2026-11-25 — v1.9
+
+- HUB 저장소·공개 배포 경로와 HOME 연결을 반영했습니다.
 
 ### 2026-11-13 — TEXT·STORY 메뉴
 

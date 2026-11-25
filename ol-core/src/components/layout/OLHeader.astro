@@ -1,29 +1,19 @@
 ---
-import { BRAND } from "../../lib/site-config";
+import { BRAND, REPOSITORY_URL } from "../../lib/site-config";
+import { navItems } from "../../data/nav";
 import { url } from "../../lib/url";
-
-const navItems = [
-  { href: url("/"), label: "HOME" },
-  { href: url("/text"), label: "TEXT" },
-  { href: url("/story"), label: "STORY" },
-];
 
 const currentPath = Astro.url.pathname;
 
 function isActive(href: string): boolean {
-  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  if (href === url("/"))
-    return (
-      currentPath === href || currentPath === base || currentPath === base + "/"
-    );
-  return currentPath.startsWith(href);
+  return currentPath === href || currentPath.startsWith(`${href}/`);
 }
 ---
 
 <header class="ol-header" data-pagefind-ignore>
   <div class="ol-container ol-header-inner">
     <!-- Brand -->
-    <a href={url("/")} class="ol-brand">
+    <a href={url("/")} class="ol-brand" aria-label="BIWOOM HUB 첫 화면">
       <!-- <img class="ol-brand-symbol ol-brand-symbol--monochrome" src={url(BRAND.logoMonochrome)} width="38" height="38" alt="" /> -->
       <span class="ol-brand-name">{BRAND.name}</span>
       <span class="ol-brand-meta">{BRAND.nameKo}</span>
@@ -132,7 +122,7 @@ function isActive(href: string): boolean {
 
       <!-- GitHub -->
       <a
-        href="https://github.com/biwoom"
+        href={REPOSITORY_URL}
         class="ol-btn ol-btn-primary ol-btn-sm"
         target="_blank"
         rel="noopener noreferrer"
@@ -181,7 +171,7 @@ function isActive(href: string): boolean {
         BLOG
       </a>
       <a
-        href="https://github.com/biwoom"
+        href={REPOSITORY_URL}
         class="ol-mobile-sheet-link ol-mobile-sheet-link--sub"
         target="_blank"
         rel="noopener noreferrer"

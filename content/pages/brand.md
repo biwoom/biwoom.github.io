@@ -4,12 +4,12 @@ description: 비움(Biwoom)의 소개. 비움 철학과 콘텐츠 운영 원칙�
 
 # 비움 소개
 
-**문서 버전**: v1.16
-**최종 업데이트**: 2026-11-09
-**기준 프로젝트**: Biwoom - 비움 (`biwoom.github.io`)
-**기준 배포 URL**: `https://biwoom.github.io/`
+- **문서 버전** v1.17
+- **최종 업데이트** 2026-11-25
+- **기준 프로젝트** BIWOOM HUB (`biwoom/hub`)
+- **공개 주소** https://biwoom.github.io/hub/
 
-이 문서는 비움 프로젝트를 소개하는 공식 문서입니다. 영문명은 **Biwoom**, 한글명은 **비움**이며, 함께 표기할 때는 **Biwoom - 비움**을 사용합니다. OL은 소스코드 코어의 이름으로 유지합니다.
+**비움(BIWOOM)**은 불교의 지혜를 오늘의 삶과 연결하는 통합 브랜드입니다. **BIWOOM HUB**는 불교 문헌과 번역·연구, 이야기의 원전, 미디어, 전자책과 포스트를 함께 읽고 탐구하는 공간입니다. 대중을 위한 이야기 서비스 **BIWOOM HOME**은 기획 중이며, 헤더의 HOME은 현재의 비움 첫 화면으로 연결됩니다.
 
 ---
 
@@ -210,7 +210,7 @@ description: 비움(Biwoom)의 소개. 비움 철학과 콘텐츠 운영 원칙�
 
 ---
 
-## Biwoom - 비움
+## BIWOOM HUB
 
 **붓다의 지혜를 오늘의 삶으로**
 
@@ -229,6 +229,10 @@ description: 비움(Biwoom)의 소개. 비움 철학과 콘텐츠 운영 원칙�
 
 <details class="document-changelog">
 <summary><span class="document-changelog-arrow" aria-hidden="true">›</span> 수정 변경사항</summary>
+
+### 2026-11-25 — v1.17
+
+- 통합 브랜드와 HUB의 역할, 새 공개 주소를 반영했습니다.
 
 ### 2026-11-09 — v1.16
 

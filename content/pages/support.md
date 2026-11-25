@@ -61,6 +61,10 @@ description: 비움의 서비스 개발과 유지, 불교 콘텐츠 제작을 �
 <details class="document-changelog">
 <summary><span class="document-changelog-arrow" aria-hidden="true">›</span> 수정 변경사항</summary>
 
+### 2026-11-25 — v1.3
+
+- BIWOOM HUB의 공개 주소를 반영했습니다.
+
 ### 2026-11-09 — v1.2
 
 - 브랜드명과 공개 주소를 Biwoom - 비움 및 `https://biwoom.github.io/`로 갱신했습니다.
@@ -76,4 +80,4 @@ description: 비움의 서비스 개발과 유지, 불교 콘텐츠 제작을 �
 </details>
 
 문서 버전: v1.2 · 최종 업데이트: 2026-11-09<br>
-대상 프로젝트: Biwoom - 비움 · 공개 사이트: https://biwoom.github.io/
+대상 프로젝트 BIWOOM HUB · 공개 사이트 https://biwoom.github.io/hub/

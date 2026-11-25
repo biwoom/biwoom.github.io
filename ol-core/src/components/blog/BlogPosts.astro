@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 import { getCollection, render } from "astro:content";
 import { getBlogTags, getBlogCategories } from "../../lib/tags";
 import { getBlogLibrary } from "../../lib/blog";
@@ -25,7 +26,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
 {categories.map(async category => {
   if (!category.meta) return null;
   const { Content } = await render(category.meta);
-  return <template data-category-information={category.title}><h2>{category.title}</h2><div class="ol-prose"><Content /></div><a href={category.url}>카테고리 전체 보기 →</a></template>;
+  return <template data-category-information={category.title}><h2>{category.title}</h2><div class="ol-prose"><Content /></div><a href={url(category.url)}>카테고리 전체 보기 →</a></template>;
 })}
 <p class="ol-blog-filter-status" id="blog-filter-status" role="status" aria-live="polite">{posts.length}개 글</p>
 <div class="ol-section-grid-sidebar ol-blog-post-layout">
@@ -36,7 +37,7 @@ const archiveYears = [...new Set(posts.map(p => p.data.date.getFullYear()))].sor
     {posts.length > 6 && <div class="ol-list-loadmore" id="blog-loadmore-wrap" hidden><button id="blog-loadmore-btn" class="ol-btn ol-btn-outline">더 보기 <span id="blog-loadmore-remaining">({posts.length-6})</span></button></div>}
   </div>
   <aside class="ol-blog-sidebar">
-    <section class="ol-blog-sidebar-series"><h2>시리즈로 읽기</h2>{library.map(s => <a href={s.url}>{s.title}<span>{s.count ? `${s.count}편` : '준비 중'}</span></a>)}</section>
+    <section class="ol-blog-sidebar-series"><h2>시리즈로 읽기</h2>{library.map(s => <a href={url(s.url)}>{s.title}<span>{s.count ? `${s.count}편` : '준비 중'}</span></a>)}</section>
     <div class="ol-card ol-blog-archive-card"><div class="ol-meta-label">ARCHIVE</div><div class="ol-blog-archive-list" id="blog-archive">
       <button type="button" class="ol-blog-archive-btn active" data-year="all" aria-pressed="true"><span>전체</span><span class="ol-blog-archive-count">{posts.length}</span></button>
       {archiveYears.map(year => <button type="button" class="ol-blog-archive-btn" data-year={String(year)} aria-pressed="false"><span>{year}년</span><span class="ol-blog-archive-count">{posts.filter(p=>p.data.date.getFullYear()===year).length}</span></button>)}

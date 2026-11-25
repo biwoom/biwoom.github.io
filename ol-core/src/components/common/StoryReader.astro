@@ -86,7 +86,7 @@ const hasToc = headings.length > 0;
           </>
         )}
         <span>/</span>
-        <a href={series.url}>{series?.label ?? entry.data.series}</a>
+        <a href={url(series.url)}>{series?.label ?? entry.data.series}</a>
         {entry.data.part && (
           <>
             <span>/</span>

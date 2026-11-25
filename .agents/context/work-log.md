@@ -1,5 +1,10 @@
 # Work Log
 
+## 2026-11-25 — BIWOOM HUB
+
+- Moved the HUB deployment to `biwoom/hub` and the `/hub/` base. Kept registry IDs, source paths, first publication dates and route history. Updated public links, search, downloads, metadata and deployment checks for the project base.
+- The HUB wordmark opens its own landing page. The HOME navigation uses the existing root site reserved for BIWOOM HOME. Updated the HUB operating guides and live-address notices.
+
 ## 2026-11-12 — TEXT/STORY 보조 패널 너비 조절
 
 - Added one ReaderPanelResize component and reader-panel-resize controller for the existing >=1360px right TOC/footnote docks. An 8px boundary handle updates the grid/article together; preserve the 780px prose cap, 300px default, 240–520px panel range and at least 480px article allocation. The left list and native modal widths retain their existing behavior.

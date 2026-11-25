@@ -1,13 +1,13 @@
 ---
 import type { Entry } from "../../lib/library";
+import { assetUrl } from "../../../scripts/remark-content.mjs";
+import { url } from "../../lib/url";
 interface Props {
   entry: Entry;
 }
 const { entry } = Astro.props;
 const { data } = entry;
-const asset =
-  "/generated/content/" +
-  data.source.split("/").map(encodeURIComponent).join("/");
+const asset = url(assetUrl(data.source));
 ---
 
 {data.format ? (

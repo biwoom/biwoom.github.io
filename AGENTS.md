@@ -2,7 +2,7 @@
 
 ## Project
 
-Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
+BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub/`, deployed from `biwoom/hub` through GitHub Actions. The existing root site at `https://biwoom.github.io/` is reserved for BIWOOM HOME. Its current site stays available while HOME development is pending.
 
 ## Browser Testing
 
@@ -15,7 +15,7 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Define filesystem paths in `ol-core/scripts/lib/paths.mjs`, anchored to the module location rather than process.cwd(). Vault-relative keys use NFC Unicode and POSIX separators: use normalizeContentPath/relativeContentPath for keys and contentFile for physical source lookup. Normalize legacy registry keys/series/category paths and aliases without changing IDs, URLs, dates, hashes or redirects; reject conflicting normalized paths. Do not rename vault files or rewrite prose to fix normalization. Load Markdown using glob() with an absolute content base. Keep registry keys relative to the vault (text/..., story/..., blog/...); a physical vault move must not change IDs, URLs, dates or hashes.
 
 - `content/` is both the content source and the user's Obsidian vault.
-- Public content menus are TEXT, STORY, BLOG. HOME is the entry page; `pages` holds visitor-facing permanent documents.
+- Public content menus are TEXT, STORY, BLOG. The HUB wordmark opens the HUB landing page; the header and mobile HOME menu open the root site. `pages` holds visitor-facing permanent documents.
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
@@ -56,7 +56,7 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 ## Preservation and Verification
 
 - Preserve existing unpublished states, dates, rights, body text and assets when migrating content. Review `.agents/references/content-migration-inventory.json` for the original migration mapping.
-- Keep GitHub Pages root deployment; never add Astro `base`.
+- Keep GitHub Pages project deployment at Astro `base: "/hub"`. Paths such as `/text/` in the registry and in routing rules are relative to the HUB site. Apply the deployment prefix at link and metadata output via the shared path helper in `site-config.mjs`. Preserve registry IDs and existing path keys.
 - Run `npm run check`, `npm run typecheck`, and `npm run build` for content/route/layout/config changes.
 - Verify actual `dist` pages and local targets, plus RSS/sitemap/robots when routing changes.
 - Keep `dist/`, `.astro/`, `node_modules/`, and `ol-core/public/generated/` out of commits. Do not edit generated assets as source.
@@ -73,6 +73,10 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-25 — BIWOOM HUB
+
+- Adopt the HUB name and repository, deploy under `/hub/`, and connect the HUB header to the existing root site reserved for HOME.
 
 ### 2026-11-15 — Empty TEXT/STORY category lists
 

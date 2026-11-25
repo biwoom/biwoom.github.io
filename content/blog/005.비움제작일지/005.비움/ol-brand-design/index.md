@@ -6,7 +6,7 @@ tags: ["브랜드","디자인","blog","ol-home","brand","design-system"]
 
 # "올"이라는 이름 — 브랜드 정의와 디자인 시스템
 
-> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 현재 브랜드는 **Biwoom - 비움**, 공개 주소는 https://biwoom.github.io/ 입니다.
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 이 자료를 계승한 **BIWOOM HUB**의 공개 주소는 https://biwoom.github.io/hub/ 입니다.
 
 ## 왜 "올"인가
 

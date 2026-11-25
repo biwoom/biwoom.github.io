@@ -1,13 +1,13 @@
 ---
 name: ol-github-upload-log
-description: Push Biwoom (OL 코어) changes to GitHub. Use when the user asks to upload, push, publish, or deploy changes to GitHub. This workflow performs the upload only; it does not update work logs or wait for deployment verification unless explicitly requested.
+description: Push BIWOOM HUB changes to GitHub. Use when the user asks to upload, push, publish, or deploy changes to GitHub. Verify deployment when explicitly requested.
 ---
 
 # OL GitHub Upload
 
 ## Scope
 
-Use this skill for Biwoom (OL 코어) GitHub upload requests.
+Use this skill for BIWOOM HUB uploads. The standard `origin` is `https://github.com/biwoom/hub.git`, with Pages at `https://biwoom.github.io/hub/`.
 
 Default target:
 
@@ -50,4 +50,4 @@ Report:
 - Do not couple upload requests to work-log edits or follow-up log commits.
 - Do not wait for GitHub Pages deployment completion by default.
 - Do not interpret "deploy" as "wait until the Pages site is live" unless the user asks for deployment verification.
-- Use the default `git push origin main` path for Biwoom (OL 코어) uploads; non-default push targets should still be confirmed.
+- Use the default `git push origin main` path for BIWOOM HUB uploads; check that the configured remote matches the requested repository.

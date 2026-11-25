@@ -1,11 +1,13 @@
 ---
 name: ol-content-authoring
-description: Create or revise Biwoom (OL 코어) Markdown and content assets in the Obsidian vault under content/.
+description: Create or revise BIWOOM HUB Markdown and assets in the Obsidian vault under content/.
 ---
 
 # OL Content Authoring
 
-Latest update: 2026-11-11.
+Latest update: 2026-11-25.
+
+BIWOOM HUB is published from `biwoom/hub` at `https://biwoom.github.io/hub/`. Use vault-relative Markdown links in authoring. The build adds the public `/hub` prefix and the registry keeps paths relative to HUB.
 
 1. Read `.agents/references/ol-home-content-management-manual.md` and `ol-core/src/content.config.ts` before changing authoring rules.
 2. Use `content/` as the existing Obsidian vault. Do not install a CMS or edit personal `.obsidian` state.
@@ -22,6 +24,10 @@ Latest update: 2026-11-11.
 13. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
 ## 수정 변경사항
+
+### 2026-11-25 — BIWOOM HUB
+
+- Record the public path and keep the same vault authoring and registry conventions.
 
 ### 2026-11-11 — Unicode 경로
 

@@ -41,4 +41,4 @@ OL은 소스코드 코어의 이름이다. ATLAS는 이전 OL 도구의 개발 �
 
 현재 콘텐츠는 `src/content/`를 Obsidian 보관함으로 사용해 관리한다. 비움은 이 자료를 Astro 정적 페이지로 제공하며, 내부 코드에는 OL 이름을 유지한다.
 
-현재 공개 주소는 https://biwoom.github.io/ 이다. GitHub Pages를 통해 기존 문서 경로를 유지하며 제공한다.
+이 자료를 계승한 BIWOOM HUB의 공개 주소는 https://biwoom.github.io/hub/ 이다.

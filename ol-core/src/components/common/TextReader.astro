@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 import { render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ReaderToolbar from './ReaderToolbar.astro';
@@ -23,12 +24,12 @@ const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index 
   pagefindMeta={{ title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
   <main class="ol-story-reader-page ol-story-doc-page ol-text-academic ol-text-reader" data-reader-section="text" data-text-workspace>
     <header class="ol-story-doc-hero ol-text-document-head">
-      <nav class="ol-text-crumb" aria-label="현재 위치"><a href="/text/">TEXT</a>{series.category && <><span>/</span><a href={categoryUrl(series.categoryKey)}>{series.category}</a></>}<span>/</span><a href={series.url}>{series.label}</a><span>/</span><span>{entry.data.part}</span></nav>
-      <a class="ol-text-work-name" href={series.url}>{series.label}</a>
+      <nav class="ol-text-crumb" aria-label="현재 위치"><a href={url("/text/")}>TEXT</a>{series.category && <><span>/</span><a href={url(categoryUrl(series.categoryKey))}>{series.category}</a></>}<span>/</span><a href={url(series.url)}>{series.label}</a><span>/</span><span>{entry.data.part}</span></nav>
+      <a class="ol-text-work-name" href={url(series.url)}>{series.label}</a>
     </header>
     <nav class="ol-story-part-nav ol-text-parts" aria-label={`${series.label} 자료 구분 바로가기`}>
-      <a href={series.url} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌정보</strong></a>
-      {series.parts.map((part, i) => <a href={part.entries[0].data.url} class:list={{ active: part.key === currentPart?.key }} aria-current={part.key === currentPart?.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
+      <a href={url(series.url)} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌정보</strong></a>
+      {series.parts.map((part, i) => <a href={url(part.entries[0].data.url)} class:list={{ active: part.key === currentPart?.key }} aria-current={part.key === currentPart?.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
     </nav>
     <div class="ol-text-workspace-grid" data-reader-resizable-grid>
       <aside class="ol-story-part-sidebar ol-text-document-list" id="text-document-list" aria-label="문헌 자료 목록" data-pagefind-ignore>
@@ -37,10 +38,10 @@ const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index 
             <h2>문헌 목차</h2>
             <button class="ol-text-list-close" type="button" aria-label="문헌 목차 닫기" data-text-list-close>닫기</button>
           </div> -->
-          <a class="ol-text-work-name" href={series.url}>{series.label}</a>
+          <a class="ol-text-work-name" href={url(series.url)}>{series.label}</a>
           <p class="ol-text-list-part">{currentPart?.label} · {currentPart?.entries.length ?? 0}개 자료</p>
-          <nav aria-label={`${currentPart?.label ?? entry.data.part} 자료 목록`}>{currentPart?.entries.map((item, i) => <a href={item.data.url} class:list={{ active: item.id === entry.id }} aria-current={item.id === entry.id ? 'page' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{item.data.title}</strong></a>)}</nav>
-          <a class="ol-text-all-materials" href={series.url}>← 전체 자료 목록</a>
+          <nav aria-label={`${currentPart?.label ?? entry.data.part} 자료 목록`}>{currentPart?.entries.map((item, i) => <a href={url(item.data.url)} class:list={{ active: item.id === entry.id }} aria-current={item.id === entry.id ? 'page' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{item.data.title}</strong></a>)}</nav>
+          <a class="ol-text-all-materials" href={url(series.url)}>← 전체 자료 목록</a>
         </div>
       </aside>
       <article class="ol-story-part-content ol-text-document" data-pagefind-body>
@@ -54,7 +55,7 @@ const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index 
           <div class="ol-story-chapter active"><ReaderBody><MaterialBody entry={entry}>{Content && <Content />}</MaterialBody></ReaderBody></div>
           <div data-text-print-notes></div>
           <ContentRights data={entry.data} />
-          <nav class="ol-text-document-next" aria-label="자료 탐색"><a href={series.url}>← 문헌 목차</a>{prev && <a href={prev.data.url}>이전 {entry.data.part} 자료</a>}{next && <a href={next.data.url}>다음 {entry.data.part} 자료 →</a>}</nav>
+          <nav class="ol-text-document-next" aria-label="자료 탐색"><a href={url(series.url)}>← 문헌 목차</a>{prev && <a href={url(prev.data.url)}>이전 {entry.data.part} 자료</a>}{next && <a href={url(next.data.url)}>다음 {entry.data.part} 자료 →</a>}</nav>
         </div>
       </article>
       <aside id="reader-aid" class="ol-text-reader-rail" aria-label="문서 보조 패널" data-pagefind-ignore>

@@ -1,19 +1,19 @@
 # Current State
 
-Last updated: 2026-11-15
+Last updated: 2026-11-25
 
 ## Brand
 
-- Public brand: Biwoom - 비움 (English: Biwoom; Korean: 비움). OL remains the source-code core name. Name/description live in site-config.mjs.
+- Public service: BIWOOM HUB under the BIWOOM (비움) brand. OL remains the source-code core name. Name and description live in `site-config.mjs`.
 - Existing symbol shapes are retained under ol-core/public/brand/biwoom-mark-monochrome.png and biwoom-mark-gold.png; derived icons and the Biwoom sharing image use npm run brand:assets.
-- Production target: `https://biwoom.github.io/`, with root routes and no Astro base. Local source/metadata/docs now target this URL; no push, hosting setting change or live deployment verification is included in this change. GitHub Pages Custom domain must be empty before using the default domain.
+- HUB publishes at `https://biwoom.github.io/hub/`. Astro uses `/hub` as the base in dev and production. Registry routes stay HUB-relative, and the public-link helper adds the prefix at rendering.
 - Previous borido.org DNS/TLS investigation is historical evidence in `.agents/references/borido-https-investigation-2026-11-08.md`, not a current migration goal.
-- Historical BLOG articles and the completed BORIDO ebook sample retain authored titles/assets with current-brand notices. Public brand/support pages and the active manifesto describe Biwoom - 비움.
+- Historical BLOG articles and the completed BORIDO ebook sample retain authored titles and assets. Public pages identify HUB as BIWOOM's platform for text, research, and related content.
 
 ## Project
 
-- Biwoom - 비움, powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
-- Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
+- HUB repository: `biwoom/hub`. Astro 6 static site with Pagefind and GitHub Actions publication.
+- HOME uses the existing root site `https://biwoom.github.io/` while the future HOME design is pending. The HUB wordmark links to `/hub/`; its HOME navigation opens the root site.
 - Latest inspected Actions runs: 2026-11-10 `7d6c9ed` and 2026-11-11 `4ccecdb` stopped at the committed-registry gate (211 STORY paths changed NFD/NFC spelling). The last inspected successful run is 2026-11-09 `6de2f4d`. Unicode handling is fixed locally; no new push, rerun or production deployment is included.
 
 ## Menu Accents

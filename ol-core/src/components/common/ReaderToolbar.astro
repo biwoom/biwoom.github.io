@@ -1,4 +1,5 @@
 ---
+import { url } from "../../lib/url";
 import type { Library } from "../../lib/library";
 interface Props { hasToc: boolean; hasOriginal?: boolean; currentUrl: string; title: string; currentPart?: Library["parts"][number]; academic?: boolean; }
 const { hasToc, hasOriginal = false, currentUrl, title, academic = false } = Astro.props;
@@ -39,7 +40,7 @@ const { hasToc, hasOriginal = false, currentUrl, title, academic = false } = Ast
               <div
                 class="ol-copy-dropdown"
                 data-copy-dropdown
-                data-copy-url={currentUrl}
+                data-copy-url={url(currentUrl)}
                 data-copy-title={title}
               >
                 <button

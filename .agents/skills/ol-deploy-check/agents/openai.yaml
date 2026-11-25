@@ -1,4 +1,4 @@
 interface:
-  display_name: "Biwoom Deploy Check"
-  short_description: "Verify Biwoom GitHub Pages deploys"
-  default_prompt: "Use $ol-deploy-check to verify Biwoom build and GitHub Pages readiness."
+  display_name: "BIWOOM HUB Deploy Check"
+  short_description: "Verify the HUB GitHub Pages deployment"
+  default_prompt: "Use $ol-deploy-check to verify the BIWOOM HUB build and GitHub Pages readiness."

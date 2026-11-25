@@ -1,9 +1,9 @@
-# Biwoom 콘텐츠 관리 매뉴얼
+# BIWOOM HUB 콘텐츠 관리 매뉴얼
 
-- 문서 버전: v4.8
-- 최신 수정일: 2026-11-15
-- 대상 프로젝트: Biwoom (OL 코어)
-- 배포 URL: https://biwoom.github.io/
+- 문서 버전 v4.9
+- 최신 수정일 2026-11-25
+- 대상 프로젝트 BIWOOM HUB (OL 코어)
+- 배포 URL https://biwoom.github.io/hub/
 
 ## 콘텐츠와 OL 코어의 위치
 
@@ -245,9 +245,13 @@ npm run check:built
 
 YAML 없는 글, 제목, 경로 계층, 중복 주소, 링크와 자산, 초안 제외를 검사한다. 실제 TEXT 문헌·자료와 PDF가 `dist/`에 생성되었는지 확인한다. 변경되는 메뉴와 기존 공개 URL도 확인한다.
 
-GitHub Pages 루트 배포를 유지하며 Astro `base`는 설정하지 않는다. 라우트 변경 시 robots·RSS·사이트맵을 함께 검사한다. 업로드 요청은 요청된 push까지만 수행하며 배포 확인·후속 로그 커밋을 자동으로 하지 않는다.
+GitHub Pages는 `biwoom/hub`에서 Astro `base: "/hub"`로 배포한다. 레지스트리 경로는 HUB 기준으로 유지하고 생성 링크에 배포 경로를 붙인다. 라우트 변경 시 robots·RSS·사이트맵을 함께 검사한다. 업로드 요청은 요청된 push까지 수행하고, 배포 확인은 요청에 따라 진행한다.
 
 ## 수정 변경사항
+
+### 2026-11-25 — BIWOOM HUB 이전
+
+- HUB 배포 주소와 URL 처리 기준을 갱신했다.
 
 ### 2026-11-15 — 빈 TEXT/STORY 카테고리 목록 숨김
 

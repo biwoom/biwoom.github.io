@@ -3,8 +3,8 @@ import '../styles/global.css';
 import OLHeader from '../components/layout/OLHeader.astro';
 import OLFooter from '../components/layout/OLFooter.astro';
 import OLSearchModal from '../components/layout/OLSearchModal.astro';
-import { SITE_URL_ORIGIN, BRAND } from '../lib/site-config';
-import { url } from '../lib/url';
+import { SITE_URL, BRAND } from '../lib/site-config';
+import { url, stripHubBase } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -26,15 +26,12 @@ const {
   academic = false,
 } = Astro.props;
 
-const sectionPath = Astro.url.pathname;
+const sectionPath = stripHubBase(Astro.url.pathname);
 const siteSection = sectionPath === '/' ? 'home' : sectionPath.match(/^\/(text|story|blog)(?:\/|$)/)?.[1];
 const hasAccentTheme = ['home', 'text', 'story'].includes(siteSection ?? '');
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? SITE_URL_ORIGIN;
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImageUrl = ogImage
-  ? new URL(ogImage, siteUrl).toString()
-  : new URL(url('/og-image.png'), siteUrl).toString();
+const canonicalUrl = new URL(url(sectionPath), SITE_URL).href;
+const ogImageUrl = new URL(url(ogImage ?? '/og-image.png'), SITE_URL).href;
 const pagefindMetaEntries = Object.entries(pagefindMeta)
   .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
   .map(([key, value]) => [key, String(value)] as const);

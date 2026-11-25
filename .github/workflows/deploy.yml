@@ -1,4 +1,4 @@
-name: Deploy Biwoom to GitHub Pages
+name: Deploy BIWOOM HUB to GitHub Pages
 
 on:
   push:

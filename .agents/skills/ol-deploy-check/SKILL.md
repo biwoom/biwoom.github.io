@@ -1,6 +1,6 @@
 ---
 name: ol-deploy-check
-description: Verify Biwoom (OL 코어) build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, root/base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing 404s and broken links on https://biwoom.github.io/.
+description: Verify BIWOOM HUB build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing links at https://biwoom.github.io/hub/.
 ---
 
 # OL Deploy Check
@@ -14,18 +14,16 @@ git remote -v
 git status --short --branch
 ```
 
-2. Confirm root GitHub Pages configuration:
-   - `astro.config.mjs` should set `site: SITE_URL`, imported from `site-config.mjs` (https://biwoom.github.io).
-   - `astro.config.mjs` should not set `base`.
-   - Production is `https://biwoom.github.io`; repository remains `biwoom/biwoom.github.io`. The default GitHub Pages domain requires no CNAME file; GitHub Pages Custom domain must be empty.
-   - Local URL changes do not clear GitHub Pages Custom domain. For default-domain deployment, remove any existing custom domain in repository Settings → Pages; this is separate from build validation.
-   - `ol-core/public/robots.txt` should point to `https://biwoom.github.io/sitemap-index.xml`.
-   - `ol-core/src/pages/rss.xml.ts` should not hardcode `/ol-home` or `/biwoom`.
+2. Confirm GitHub Pages project configuration:
+   - `astro.config.mjs` uses `site: HOME_URL` and `base: SITE_BASE` from `site-config.mjs`. Production uses `https://biwoom.github.io/hub/` from `biwoom/hub`.
+   - Use the default GitHub Pages domain with the GitHub Actions source. The root site at `https://biwoom.github.io/` is the HOME destination.
+   - HUB's `ol-core/public/robots.txt` should point to `https://biwoom.github.io/hub/sitemap-index.xml`.
+   - Apply the `/hub` prefix to generated links, search results, downloads and canonical metadata. Keep registry routes HUB-relative.
 
 3. Search for stale deployment paths:
 
 ```sh
-rg "biwoom.github.io/(ol-home|biwoom)|/ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md AGENTS.md .agents
+rg 'biwoom\.github\.io|/ol-home|base:' astro.config.mjs site-config.mjs ol-core/public/robots.txt ol-core/src README.md AGENTS.md .agents
 ```
 
 4. Build locally:
@@ -48,24 +46,23 @@ sed -n '1,80p' dist/rss.xml
 6. If checking the live site, use HTTP headers first:
 
 ```sh
-curl -I -L https://biwoom.github.io/
-curl -I -L https://biwoom.github.io/sitemap-index.xml
+curl -I -L https://biwoom.github.io/hub/
+curl -I -L https://biwoom.github.io/hub/sitemap-index.xml
 ```
 
 ## Expected Results
 
 - Build succeeds.
-- Generated routes are root-relative, for example `/blog/`, not `/biwoom/blog/`.
-- Sitemap URLs start with `https://biwoom.github.io/`.
-- RSS item links start with `https://biwoom.github.io/`.
+- Generated site links use paths such as `/hub/blog/`.
+- Canonical, sitemap and RSS URLs start with `https://biwoom.github.io/hub/`.
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.
 
 ## Common Failure Modes
 
-- Repository is named `biwoom` instead of `biwoom.github.io`, causing project page URL `/biwoom/`.
-- Astro `base` is accidentally set after moving to a user Pages repository.
+- Astro `base` is omitted or the prefix is applied twice.
+- A root-relative link escapes HUB or a Pagefind result opens the former root path.
 - Browser cache or GitHub Pages CDN delay shows a stale 404.
 - Git remote still points at the pre-rename repository URL.
 - New content is not committed because it is untracked.
@@ -80,3 +77,9 @@ Report:
 - The generated route count if available.
 - Any remaining warnings.
 - Concrete next action for GitHub settings or push, if needed.
+
+## 수정 변경사항
+
+### 2026-11-25 — BIWOOM HUB
+
+- Verify the `/hub/` project deployment, site-relative registry, and HOME destination.

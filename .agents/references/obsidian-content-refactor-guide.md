@@ -1,9 +1,9 @@
 # Biwoom Obsidian 기반 콘텐츠 구조 개편 개발 가이드
 
-- 문서 버전: v0.13
-- 최신 수정일: 2026-11-11
-- 대상 프로젝트: Biwoom (OL 코어) (`biwoom/biwoom.github.io`)
-- 운영 URL: https://biwoom.github.io/
+- 문서 버전 v0.14
+- 최신 수정일 2026-11-25
+- 대상 프로젝트 BIWOOM HUB (OL 코어), `biwoom/hub`
+- 운영 URL https://biwoom.github.io/hub/
 - 상태: 2026-10-30 로컬 구현. 아래 계획의 기준 시점과 현재 적용 결과를 구분하며, GitHub 업로드·운영 배포는 수행하지 않았다.
 - 목적: 사용자가 Obsidian에서 제목과 본문을 작성하고 폴더를 관리하면, Astro가 사이트에 필요한 정보를 자동으로 해석하도록 전환한다.
 
@@ -235,7 +235,7 @@ src/content/
 
 - 정규화·정렬·경로 충돌·공개 제외·자산 이관처럼 실패 영향이 큰 규칙은 의미 있는 fixture로 검증한다.
 - `npm run check`와 `npm run build`를 실행한다. 실제 카테고리·문헌·문서 경로와 PDF 파일을 `dist/`에서 확인한다.
-- 루트 배포를 유지한다. 라우트 변경 시 `astro.config.mjs`, `public/robots.txt`, RSS, sitemap과 기존 URL 처리를 함께 확인한다. Astro `base`를 추가하지 않는다.
+- HUB를 Astro `base: "/hub"`로 배포한다. 라우트 변경 시 `astro.config.mjs`, `ol-core/public/robots.txt`, RSS, 사이트맵과 기존 URL 처리를 확인한다.
 - `dist/`, `.astro/`, `node_modules/`, `public/generated/`를 커밋하지 않는다.
 - GitHub 업로드와 배포 확인은 사용자가 요청할 때 별도로 수행한다.
 
@@ -261,6 +261,10 @@ src/content/
 - `npm run check:built`는 링크와 정적 UI 마크업·CSS 회귀를 검사한다. 브라우저의 실제 표시·조작 확인과는 별개다.
 
 ## 수정 변경사항
+
+### 2026-11-25 — BIWOOM HUB 이전
+
+- 프로젝트 배포 주소와 기존 레지스트리 경로의 관계를 반영했다.
 
 ### 2026-11-11 — BLOG
 

@@ -6,7 +6,7 @@ tags: ["design","works","인포그래픽","문서라이브러리","blog","infogr
 
 # DESIGN은 인포그래픽으로, WORKS는 문서 라이브러리로
 
-> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 현재 브랜드는 **Biwoom - 비움**, 공개 주소는 https://biwoom.github.io/ 입니다.
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 이 자료를 계승한 **BIWOOM HUB**의 공개 주소는 https://biwoom.github.io/hub/ 입니다.
 
 오늘 작업은 메뉴 두 개의 성격을 다시 잡는 일이었다. 하나는 DESIGN, 다른 하나는 WORKS다.
 

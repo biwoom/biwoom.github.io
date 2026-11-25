@@ -34,7 +34,7 @@ const label = section.toUpperCase();
         aria-label={`${series.label} 자료 바로가기`}
       >
         {series.parts.map((part, index) => (
-          <a href={part.entries[0].data.url}>
+          <a href={url(part.entries[0].data.url)}>
             <span>
               {section === "story"
                 ? `PART ${index + 1}`
@@ -86,7 +86,7 @@ const label = section.toUpperCase();
                       <ol>
                         {part.entries.map((entry, i) => (
                           <li>
-                            <a href={entry.data.url}>
+                            <a href={url(entry.data.url)}>
                               <span>{String(i + 1).padStart(2, "0")}</span>
                               <strong class="ol-kr">{entry.data.title}</strong>
                               {entry.data.format && (
@@ -99,7 +99,7 @@ const label = section.toUpperCase();
                     </section>
                     <a
                       class="ol-story-part-overview-start"
-                      href={part.entries[0].data.url}
+                      href={url(part.entries[0].data.url)}
                     >
                       {part.label} 첫 자료로 이동
                     </a>
