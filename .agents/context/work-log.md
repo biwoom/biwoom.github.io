@@ -1,5 +1,37 @@
 # Work Log
 
+## 2026-11-25 — STORY 태그 가나다 필터
+
+- Added initials to the central explorer controls and increased the initial batch and load-more increment to 30. Initials use canonical names and combine with the existing type and alias search.
+- Passed 117 fixtures, typecheck, build and generated-link checks. The generated catalog shows 30 of 1,742 cards initially and assigns 242 cards to 가.
+
+## 2026-11-25 — STORY 태그 첫 화면
+
+- Render the explorer columns, search/filter controls and first 12 cards in the initial HTML. Enable controls after setup and keep all tag links available when scripts are disabled.
+- Passed 116 fixtures, typecheck, build and generated-link checks. Confirmed the initial markup for 1,742 tags contains exactly 12 visible cards and shows 1,730 remaining.
+
+## 2026-11-25 — Gentium 개발 서버 경로
+
+- TEXT와 STORY의 Gentium 이탤릭 400·700 선언을 공용 리더 글꼴 컴포넌트로 옮겼다. 공용 URL 함수가 `/hub` 접두어를 적용하며, 격리된 개발 서버에서 두 문서와 WOFF2 파일의 HTTP 200 응답을 확인했다.
+- 기존 개발 서버에서도 두 문서의 글꼴 URL과 WOFF2 응답을 확인했다. 회귀 검사 116개, 타입 검사, 전체 빌드, 생성 결과 검사(HTML 2,540개, 문서 UI 706개)가 통과했다. 레지스트리 준비는 동일한 파일을 생성했으며, 커밋 여부 검사는 기존 미커밋 레지스트리 변경으로 실패했다.
+
+## 2026-11-25 — STORY 번역 배포본 교체
+
+- 번역 프로젝트의 마하붓다왐사 11파트 239편과 담마빠다이야기 26품 374편을 각각 붓다전기와 가르침과 일화로 옮겼다. 두 배포 목차는 시리즈의 `index.md`로 두고, 기존 미얀마본·ABT본 및 담마빠다이야기 구판 폴더를 제거했다. 검토 기준과 기록은 번역 프로젝트에 남겼다.
+- HUB의 인물·장소 태그는 같은 대상을 가리키는 표기를 통합하고 모호한 이칭을 색인에서 제외했다. 마하붓다왐사의 절 링크 한 곳을 생성된 앵커에 맞췄다. 두 시리즈 주소와 일대일로 대응하는 기존 문서의 주소·발행일을 유지하고, 삭제된 자료의 레지스트리 이력을 보존했다.
+- 콘텐츠·회귀 검사 116개, 타입 검사, 빌드, 생성 결과 검사를 통과했다. 생성 HTML에서 작품 목차 2개, 본문 613편, 유지된 주소와 삭제판 제외 여부를 확인했다.
+
+## 2026-11-25 — STORY 태그 탐색 화면
+
+- Reviewed the original NET explorer implementation and reference image in Git. Adapted the type filters, card grid and detail preview to the STORY tag directory, with a modal preview on narrower screens and direct links to full tag pages.
+- Checked the two translation releases with 613 tagged public chapters and 1,742 distinct typed tags. The directory shows 12 cards at a time and fetches up to four preview links from the selected tag page on demand.
+- Passed 116 fixtures, typecheck, the full release build and generated-link checks in an isolated copy. The 사리불 page lists 54 chapters across both series. The directory HTML fell from 2.47 MB to 0.87 MB with the same catalog.
+
+## 2026-11-25 — STORY 태그
+
+- Added typed STORY metadata, alias lookup and static tag pages grouped by edition and series. Applied the YAML to one ABT chapter and one Dhammapada Stories chapter while preserving their text and reader identities.
+- Passed 115 fixtures, typecheck, build and built-link checks. Verified the two chapters on the generated 사리불 page and exercised Korean and Pali alias search in the built script.
+
 ## 2026-11-25 — BIWOOM HUB
 
 - Moved the HUB deployment to `biwoom/hub` and the `/hub/` base. Kept registry IDs, source paths, first publication dates and route history. Updated public links, search, downloads, metadata and deployment checks for the project base.

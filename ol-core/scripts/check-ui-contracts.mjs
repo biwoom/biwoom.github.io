@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
+import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath } from "./lib/story-tags.mjs";
 import { BLOG, HOME_URL, REPOSITORY_URL, SITE_URL, hubPath } from "../../site-config.mjs";
 import {
   readRegistry,
@@ -66,27 +67,15 @@ rule(".ol-story-doc-page .ol-story-part-content .ol-prose", /font-family:var\(--
 rule(".ol-story-doc-page :is(.ol-prose,.ol-reader-footnotes-content) :is(em,i)", /font-family:var\(--ol-reader-pali-serif\),var\(--ol-reader-emphasis-fallback\)/);
 rule(".ol-story-doc-page .ol-reader-footnotes-content", /--ol-reader-emphasis-fallback:var\(--ol-font-ui\)/);
 rule(".ol-story-doc-page :is(.ol-prose,.ol-reader-footnotes-content) :is(em,i)", /font-feature-settings:normal/);
-const paliFaces = rules.filter(([, selector, body]) => selector.includes('@font-face') && /font-family:["']?Gentium/.test(body));
-assert.equal(paliFaces.length, 2, 'Gentium has only the two genuine italic faces');
-for (const [, , body] of paliFaces) {
-  assert.match(body, /font-style:italic/);
-  const ranges = body.match(/unicode-range:([^;}]+)/i)?.[1].split(',') ?? [];
-  const covers = codepoint => ranges.some(range => {
-    const [first, last = first] = range.trim().replace(/^u\+/i, '').split('-');
-    return codepoint >= parseInt(first.replaceAll('?', '0'), 16)
-      && codepoint <= parseInt(last.replaceAll('?', 'f'), 16);
-  });
-  for (const char of 'aāīūṅñṭḍṇḷṃṁ\u0304\u0307\u0323') assert.ok(covers(char.codePointAt(0)), `Pali character range missing: ${char}`);
-  assert.ok(!covers(0xac00) && !covers(0x1000), 'Korean and Myanmar retain their existing fonts');
-}
-for (const file of ['Gentium-Italic.woff2', 'Gentium-BoldItalic.woff2']) {
-  assert.ok(css.includes(hubPath(`/fonts/gentium/${file}`)), `Compiled font URL: ${file}`);
+const gentiumFiles = { 400: 'Gentium-Italic.woff2', 700: 'Gentium-BoldItalic.woff2' };
+for (const file of Object.values(gentiumFiles)) {
   const source = fs.readFileSync(path.join(projectPaths().public, 'fonts/gentium', file));
   const deployed = fs.readFileSync(path.join(dist, 'fonts/gentium', file));
   assert.equal(source.subarray(0, 4).toString(), 'wOF2');
   assert.deepEqual(deployed, source, `Unmodified font asset must be present: ${file}`);
 }
 assert.ok(fs.readFileSync(path.join(dist, 'fonts/gentium/OFL.txt'), 'utf8').includes('SIL OPEN FONT LICENSE'));
+assert.ok(!css.includes('/fonts/gentium/'), 'Gentium URLs are rendered in the reader head');
 rule(".ol-story-reader-page.ol-story-doc-page [data-reader-scalable]", /font-size:calc/);
 rule(".ol-story-doc-page [data-reader-original] pre", /font-size:18px/);
 rule(".ol-story-doc-page [data-reader-original] pre code", /font-size:calc\(1em\s*\*\s*var\(--ol-reader-font-scale,1\)\)/);
@@ -140,6 +129,7 @@ const registry = readRegistry();
 let count = 0;
 const publishedBlogTags = [];
 const publishedBlogCategories = [];
+const taggedStoryDocuments = [];
 const drawerCounts = { text: 0, story: 0 };
 for (const [source, record] of Object.entries(registry.files)) {
   const collection = source.split("/")[0],
@@ -152,12 +142,20 @@ for (const [source, record] of Object.entries(registry.files)) {
     continue;
   const data = normalize(source, fs.readFileSync(file, "utf8"), registry);
   if (!data.published || data.kind !== "document") continue;
+  if (collection === "story" && data.storyTags.length) taggedStoryDocuments.push(data);
   const html = fs.readFileSync(
     path.join(dist, record.url, "index.html"),
     "utf8",
   );
   const tagArea = html.match(/<div[^>]*data-document-tags[^>]*>([\s\S]*?)<\/div>/)?.[1];
-  const expectedTags = [...new Set(data.tags.map((tag) => tag.trim()))];
+  const typed = new Set(data.storyTags.map(tag => tag.label));
+  const expectedTags = [
+    ...[...new Set(data.tags.map(tag => tag.trim()))].filter(tag => !typed.has(tag.normalize("NFC"))),
+    ...data.storyTags.map(tag => tag.label),
+  ];
+  for (const tag of data.storyTags) {
+    assert.ok(tagArea?.includes(`href="${hubPath(storyTagPath(tag))}"`), `${source}: typed tag links to its STORY page`);
+  }
   assert.equal(Boolean(tagArea), expectedTags.length > 0, `${record.url}: tags must be optional and document-specific`);
   if (tagArea) {
     const pills = [...tagArea.matchAll(/class="ol-text-tag"/g)];
@@ -180,6 +178,26 @@ for (const [source, record] of Object.entries(registry.files)) {
   overlay(html, "ol-mobile-overlay", record.url);
   const isLibrary = collection === "text" || collection === "story";
   if (isLibrary) {
+    const head = html.slice(0, html.indexOf('</head>'));
+    const styles = [...head.matchAll(/<style\s+data-reader-gentium[^>]*>([\s\S]*?)<\/style>/g)];
+    assert.equal(styles.length, 1, `${record.url}: one Gentium stylesheet in the head`);
+    const faces = [...styles[0][1].matchAll(/@font-face\s*\{([^}]+)\}/g)].map(([, body]) => body);
+    assert.equal(faces.length, 2, `${record.url}: two genuine Gentium italic faces`);
+    for (const [weight, file] of Object.entries(gentiumFiles)) {
+      const face = faces.find(body => body.includes(`font-weight: ${weight};`));
+      assert.ok(face, `${record.url}: missing Gentium weight ${weight}`);
+      assert.ok(face.includes(`src: url('${hubPath(`/fonts/gentium/${file}`)}')`), `${record.url}: wrong URL for ${file}`);
+      assert.match(face, /font-family:\s*'Gentium';/);
+      assert.match(face, /font-style:\s*italic;/);
+      const ranges = face.match(/unicode-range:([^;}]+)/i)?.[1].split(',') ?? [];
+      const covers = codepoint => ranges.some(range => {
+        const [first, last = first] = range.trim().replace(/^u\+/i, '').split('-');
+        return codepoint >= parseInt(first.replaceAll('?', '0'), 16)
+          && codepoint <= parseInt(last.replaceAll('?', 'f'), 16);
+      });
+      for (const char of 'aāīūṅñṭḍṇḷṃṁ\u0304\u0307\u0323') assert.ok(covers(char.codePointAt(0)), `Pali character range missing: ${char}`);
+      assert.ok(!covers(0xac00) && !covers(0x1000), 'Korean and Myanmar retain their existing fonts');
+    }
     const fontInit = html.indexOf('data-reader-font-init');
     assert.ok(fontInit >= 0 && fontInit < html.indexOf('</head>'), `${record.url}: restore saved reading size before first paint`);
     const panelInit = html.indexOf('data-reader-panel-init');
@@ -295,6 +313,45 @@ for (const [source, record] of Object.entries(registry.files)) {
     `${record.url}: obsolete generic reader`,
   );
   count++;
+}
+const storyTagDirectory = fs.readFileSync(path.join(dist, storyTagsPath, "index.html"), "utf8");
+const storyTags = indexStoryTags(taggedStoryDocuments);
+if (storyTags.length) {
+  assert.ok(storyTagDirectory.includes('data-page-size="30"'), "STORY tag explorer shows 30 cards per batch");
+  assert.equal((storyTagDirectory.match(/<a\b[^>]*data-story-tag-card/g) ?? []).length, storyTags.length);
+  const initialCards = [...storyTagDirectory.matchAll(/<li\b[^>]*data-story-tag-entry="[^"]*"[^>]*>/g)].map(match => match[0]);
+  assert.deepEqual(initialCards.map(card => /\shidden(?=[\s>])/.test(card)),
+    storyTags.map((_, index) => index >= 30), "STORY explorer renders only its first batch before scripts");
+  const initialGroups = storyTags.map(tag => storyTagInitial(tag.label));
+  const initialButtons = [...storyTagDirectory.matchAll(/<button[^>]*\sdata-story-tag-initial(?:="([^"]*)")?(?=[\s>])/g)]
+    .map(match => match[1] ?? "");
+  assert.deepEqual(initialButtons, ["", ...storyTagInitials, ...(initialGroups.includes("other") ? ["other"] : [])]);
+  assert.deepEqual(initialCards.map(card => card.match(/\sdata-initial="([^"]*)"/)?.[1]).sort(), initialGroups.sort(),
+    "STORY tag cards carry the initial of their canonical name");
+  for (const control of ["story-tag-search", "story-tag-filters", "story-tag-initials", "loadmore-wrap"]) {
+    const element = storyTagDirectory.match(new RegExp(`<[^>]+data-${control}[^>]*>`))?.[0];
+    assert.ok(element?.includes(" inert"), `STORY explorer ${control} is inert until initialized`);
+    assert.equal(/\shidden(?=[\s>])/.test(element), control === "loadmore-wrap" && storyTags.length <= 30);
+  }
+  assert.ok(storyTagDirectory.includes(`data-loadmore-remaining`));
+  assert.match(storyTagDirectory, /<noscript>[\s\S]*?\[data-story-tag-entry\]\[hidden\][\s\S]*?<\/noscript>/,
+    "STORY explorer keeps all tag links available without scripts");
+  assert.match(storyTagDirectory, /<dialog[^>]*data-story-tag-dialog/);
+  assert.ok(storyTagDirectory.includes("data-story-tag-desktop"), "STORY tag explorer has a desktop preview");
+  rule(".ol-tag-desktop", /display:block/);
+  assert.doesNotMatch(css, /\[data-preview-ready\][^{]*\.ol-tag-desktop/);
+  assert.ok(!/<template\b/.test(storyTagDirectory), "STORY tag directory fetches preview fragments on selection");
+}
+for (const tag of storyTags) {
+  const route = storyTagPath(tag);
+  assert.ok(storyTagDirectory.includes(`href="${hubPath(route)}"`), `${route}: tag directory link`);
+  const html = fs.readFileSync(path.join(dist, decodeURIComponent(route), "index.html"), "utf8");
+  const fragment = html.match(/<template[^>]*data-story-tag-preview-fragment[^>]*>([\s\S]*?)<\/template>/)?.[1];
+  assert.ok(fragment, `${route}: preview fragment`);
+  const previewLinks = [...fragment.matchAll(/href="([^"]+)"/g)].map(match => match[1]);
+  assert.equal(previewLinks.length, Math.min(tag.documents.length, 4), `${route}: bounded preview links`);
+  const actual = [...html.matchAll(/href="([^"]+)" data-story-tag-document/g)].map((match) => match[1]);
+  assert.deepEqual(actual.sort(), tag.documents.map(doc => hubPath(doc.url)).sort(), `${route}: public tagged documents`);
 }
 for (const [collection, total] of Object.entries(drawerCounts)) {
   assert.ok(total > 0, `${collection}: no document TOC drawer generated`);

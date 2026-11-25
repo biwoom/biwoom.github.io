@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCategories, getLibrary, getRecentLibraryDocuments } from "../../lib/library";
 import type { Category, Section } from "../../lib/library";
 import { url } from "../../lib/url";
+import { storyTagsPath } from "../../../scripts/lib/story-tags.mjs";
 interface Props {
   section: Section;
   category?: Category;
@@ -77,6 +78,7 @@ const WorkHeading = category ? "h2" : "h3";
         <nav class="ol-library-view-nav" aria-label={`${label} 보기`}>
           <a href={url(`/${section}/`)} aria-current={showWorks ? "page" : undefined}>{workLabel}</a>
           <a href={categoriesUrl} aria-current={showCategories ? "page" : undefined}>카테고리</a>
+          {section === "story" && <a href={url(storyTagsPath)}>태그</a>}
         </nav>
       </div>
     )}

@@ -1,5 +1,11 @@
 # Decisions
 
+## 2026-11-25 — STORY structured tags
+
+- Keep plain tags alongside STORY-only canonical person/place/topic lists. Merge variants from public tagged chapters, reject ambiguous bindings within a type, and render one tag page per type and canonical name. Share the existing STORY publication filter and series order.
+- Adapt the former NET explorer layout for STORY tag browsing, using the existing tag catalog and detail pages. Combine type, canonical-name initial and alias search with the shared 30-card pagination. Show up to four related documents in the preview and link to the complete tag page.
+- Fetch preview fragments from the selected tag page on demand so the directory keeps only its card list as the catalog grows.
+
 ## 2026-11-25 — BIWOOM HUB project site
 
 - Publish this project from `biwoom/hub` under `https://biwoom.github.io/hub/`. Keep the existing root at `https://biwoom.github.io/` for future BIWOOM HOME and connect the existing site with HUB.

@@ -6,6 +6,7 @@ import * as yaml from "js-yaml";
 import { markdownTree } from "./markdown.mjs";
 export { markdownTree } from "./markdown.mjs";
 import { CONTENT_DEFAULTS } from "../../../site-config.mjs";
+import { readStoryTags, storyTagInputFields } from "./story-tags.mjs";
 
 export const collections = ["text", "story", "blog", "pages"];
 export const reserved = new Set(["assets", "_assets", "_drafts", "_templates"]);
@@ -104,10 +105,12 @@ export function hash(body) {
 export function shortId(value) {
   return hash(value.normalize("NFC")).slice(0, 14);
 }
-export const inputFields = new Set(["title", "description", "tags", "date", "published", "license", "licenseUrl", "rightsHolder", "copyrightNotice", "lang", "thumbnailAsset"]);
+export const inputFields = new Set(["title", "description", "tags", "date", "published", "license", "licenseUrl", "rightsHolder", "copyrightNotice", "lang", "thumbnailAsset", ...storyTagInputFields]);
 export function validateInput(data) {
+  if (storyTagInputFields.some(field => Object.hasOwn(data, field))) readStoryTags(data);
   for (const [key, value] of Object.entries(data)) {
     if (!inputFields.has(key)) throw new Error(`obsolete or unknown frontmatter field: ${key}`);
+    if (storyTagInputFields.includes(key)) continue;
     if (key === "tags") {
       if (!Array.isArray(value) || value.some(t => typeof t !== "string" || !t.trim())) throw new Error("tags must be a nonempty string array (or [])");
       if (value.some(t => t.includes("/"))) throw new Error("tags must use plain names without classification prefixes");
@@ -304,6 +307,7 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
   return {
     ...titleAndDescription(data, body, fallbackTitle),
     tags: data.tags ?? [],
+    storyTags: parts.collection === "story" && !intro ? readStoryTags(data) : [],
     published:
       data.published !== false && !ignored(relative) && !series?.hidden && isPublicSource(relative, registry, root),
     date: new Date(data.date ?? record.date ?? "1970-01-01"),

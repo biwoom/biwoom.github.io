@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import { validateInput } from './lib/content.mjs';
+import { indexStoryTags, readStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagSearchKey } from './lib/story-tags.mjs';
 
 function evaluate(source, imports = {}, globals = {}) {
   const module = { exports: {} };
@@ -36,6 +37,47 @@ test('blog tag counts count posts, not duplicate values, and filters match compl
   assert.equal(tags.matchesBlogFilters({ tags: [], year: '2026' }, '', 'all'), true);
 });
 
+test('STORY typed tags coexist with plain tags and normalize names; aliases need a local canonical tag', () => {
+  const input = {
+    tags: ['불전'],
+    personTags: [' 사리불 ', '사리불'.normalize('NFD')],
+    aliasTags: { person: { 사리불: ['Sa\u0304riputta', '사리뿟따'] } },
+  };
+  assert.doesNotThrow(() => validateInput(input));
+  assert.deepEqual(readStoryTags(input), [{ type: 'person', label: '사리불', aliases: ['Sāriputta', '사리뿟따'] }]);
+  assert.equal(storyTagSearchKey(' SĀRIPUTTA '), storyTagSearchKey(input.aliasTags.person.사리불[0]));
+  assert.throws(() => validateInput({ placeTags: '라자가하' }), /must be an array/);
+  assert.throws(() => validateInput({ personTags: ['인물/사리불'] }), /plain tag names/);
+  assert.throws(() => validateInput({ aliasTags: input.aliasTags }), /must also appear/);
+  assert.throws(() => validateInput({ aliasTags: { other: {} } }), /Unknown aliasTags type/);
+});
+
+test('STORY tag catalog merges aliases across series and rejects competing names within each type', () => {
+  const first = { source: 'first.md', storyTags: readStoryTags({
+    personTags: ['사리불'], aliasTags: { person: { 사리불: ['Sāriputta'] } },
+  }) };
+  const second = { source: 'second.md', storyTags: readStoryTags({
+    personTags: ['사리불'], topicTags: ['사리불'],
+    aliasTags: { person: { 사리불: ['사리뿟따', 'Sāriputta'] } },
+  }) };
+  const catalog = indexStoryTags([first, second]);
+  const person = catalog.find(tag => tag.type === 'person');
+  assert.equal(storyTagPath(person), '/story/tags/person/' + encodeURIComponent('사리불') + '/');
+  assert.deepEqual(person.aliases, ['Sāriputta', '사리뿟따']);
+  assert.deepEqual(person.documents, [first, second]);
+  assert.deepEqual(catalog.find(tag => tag.type === 'topic').documents, [second]);
+  const conflict = { source: 'conflict.md', storyTags: readStoryTags({ personTags: ['sāriputta'] }) };
+  assert.throws(() => indexStoryTags([first, conflict]), /first\.md.*conflict\.md/);
+});
+
+test('STORY tag initials group syllables, doubled consonants, standalone jamo and other names', () => {
+  assert.deepEqual(storyTagInitials.map(storyTagInitial), storyTagInitials);
+  assert.deepEqual(['깟사빠', '따라', '빨리어', '쌍의 품', '짜따까'].map(storyTagInitial), ['가', '다', '바', '사', '자']);
+  assert.equal(storyTagInitial(' ㄲ '), '가');
+  assert.equal(storyTagInitial('한글'.normalize('NFD')), '하');
+  assert.equal(storyTagInitial('Sāriputta'), 'other');
+});
+
 class Element {
   hidden = false;
   textContent = '';
@@ -50,6 +92,139 @@ class Element {
   click() { this.handlers.click?.(); }
   replaceChildren() {}
 }
+
+test('STORY tag explorer filters and pages cards, loads previews on demand, and moves them between layouts', async () => {
+  const { initStoryTagExplorer } = evaluate(fs.readFileSync('ol-core/src/lib/client/story-tag-explorer.ts', 'utf8'), {
+    '../../../scripts/lib/story-tags.mjs': { storyTagSearchKey },
+    './paginated-list': pagination,
+  }, { URL, URLSearchParams, AbortController, DOMParser: class {
+    parseFromString(text) { return { querySelector: () => ({ content: { cloneNode: () => text } }) }; }
+  } });
+  const node = (dataset) => Object.assign(new Element(dataset), {
+    focused: false,
+    removeAttribute(name) { delete this.attributes[name]; },
+    append(child) { child.parent = this; },
+    replaceChildren(...children) { this.children = children; },
+    focus() { this.focused = true; },
+  });
+  const card = (type, ...names) => {
+    const item = node({ type, initial: storyTagInitial(names[0]), storyTagEntry: JSON.stringify(names) });
+    const link = node();
+    link.href = `https://example.test/hub/story/tags/${type}/${encodeURIComponent(names[0])}/`;
+    link.closest = selector => selector === '[data-story-tag-card]' ? link : item;
+    item.link = link;
+    return item;
+  };
+  const person = card('person', '사리불', 'Sāriputta');
+  const place = card('place', '테스트 장소', 'Sāriputta');
+  const cards = [person, place, ...Array.from({ length: 29 }, (_, i) => card('topic', '주제 ' + i))];
+  const query = node();
+  const search = node();
+  query.value = '';
+  search.querySelector = () => query;
+  const button = (type) => node({ storyTagType: type });
+  const [all, people, places] = ['', 'person', 'place'].map(button);
+  const filters = node();
+  filters.querySelectorAll = () => [all, people, places];
+  const initials = node();
+  const [allInitials, sa, ja, ta] = ['', '사', '자', '타'].map(storyTagInitial => node({ storyTagInitial }));
+  initials.querySelectorAll = () => [allInitials, sa, ja, ta];
+  const status = node(), empty = node(), reset = node(), list = node();
+  const desktop = node(), placeholder = node(), preview = node(), dialog = node(), mobile = node();
+  const previewBody = node(), fullLink = node();
+  const more = node(), remaining = node(), loadMore = node();
+  list.querySelectorAll = () => cards;
+  dialog.querySelector = () => mobile;
+  dialog.showModal = () => { dialog.open = true; };
+  dialog.close = () => { dialog.open = false; dialog.handlers.close(); };
+  const selectors = {
+    'story-tag-filters': filters, 'story-tag-status': status, 'story-tag-empty': empty,
+    'story-tag-initials': initials,
+    'story-tag-reset': reset, 'story-tag-list': list, 'story-tag-desktop': desktop,
+    'story-tag-placeholder': placeholder, 'story-tag-preview': preview, 'story-tag-dialog': dialog,
+    'story-tag-preview-body': previewBody, 'story-tag-full': fullLink,
+    'loadmore-wrap': more, 'loadmore-button': loadMore, 'loadmore-remaining': remaining,
+  };
+  const root = node({ pageSize: '30' });
+  root.querySelector = selector => selectors[selector.slice(6, -1)];
+  const document = { querySelector: selector => selector.includes('directory') ? root : search };
+  const wide = node();
+  wide.matches = true;
+  const requests = [];
+  const browser = Object.assign(node(), {
+    location: new URL('https://example.test/hub/story/tags/?utm_source=test'),
+    history: { replaceState(_, __, url) { browser.location = new URL(url); } },
+    matchMedia: () => wide,
+    async fetch(href, { signal }) {
+      requests.push({ href, signal });
+      return { ok: true, text: async () => '사리불' };
+    },
+  });
+  initStoryTagExplorer(document, browser);
+  assert.equal(requests.length, 0);
+  assert.equal(cards.filter(card => !card.hidden).length, 30);
+  assert.equal(remaining.textContent, '(1)');
+  loadMore.click();
+  assert.ok(cards.every(card => !card.hidden));
+  ja.click();
+  assert.equal(cards.filter(card => !card.hidden).length, 29);
+  assert.equal(browser.location.searchParams.get('initial'), '자');
+  allInitials.click();
+  assert.equal(cards.filter(card => !card.hidden).length, 30);
+  query.value = 'SA\u0304RIPUTTA';
+  query.handlers.input();
+  assert.equal(status.textContent, '2개 태그');
+  people.click();
+  ta.click();
+  assert.equal(status.textContent, '0개 태그', 'alias search uses the initial of the canonical name');
+  sa.click();
+  assert.deepEqual(cards.filter(card => !card.hidden), [person]);
+  assert.equal(browser.location.searchParams.get('type'), 'person');
+  assert.equal(browser.location.searchParams.get('utm_source'), 'test');
+  const select = async (extra = {}) => {
+    const event = { button: 0, target: person.link, preventDefault() { this.defaultPrevented = true; }, ...extra };
+    await list.handlers.click(event);
+    return event.defaultPrevented;
+  };
+  assert.equal(await select({ metaKey: true }), undefined, 'modifier click follows the original href');
+  assert.equal(requests.length, 0);
+  assert.equal(await select(), true);
+  assert.deepEqual(previewBody.children, ['사리불']);
+  assert.equal(fullLink.href, person.link.href);
+  assert.equal(preview.parent, desktop);
+  assert.equal(preview.focused, true);
+  wide.matches = false;
+  wide.handlers.change();
+  assert.equal(preview.parent, mobile);
+  assert.ok(!dialog.open);
+  await select();
+  assert.equal(requests[0].signal.aborted, true);
+  assert.equal(dialog.open, true);
+  dialog.close();
+  assert.equal(person.link.attributes['aria-current'], undefined);
+  await select();
+  wide.matches = true;
+  wide.handlers.change();
+  assert.equal(dialog.open, false);
+  assert.equal(preview.parent, desktop);
+  preview.handlers.keydown({ key: 'Escape' });
+  assert.equal(person.link.focused, true);
+  browser.fetch = async () => ({ ok: false, text: async () => "" });
+  await select();
+  assert.equal(previewBody.textContent, '미리보기를 불러오지 못했습니다.');
+  assert.equal(fullLink.href, person.link.href);
+  places.click();
+  ta.click();
+  assert.deepEqual(cards.filter(card => !card.hidden), [place]);
+  reset.click();
+  assert.equal(cards.filter(card => !card.hidden).length, 30);
+  assert.equal(browser.location.searchParams.has('q'), false);
+  assert.equal(browser.location.searchParams.has('initial'), false);
+  browser.location = new URL('https://example.test/hub/story/tags/?type=person&initial=사&q=Sāriputta');
+  browser.handlers.popstate();
+  assert.equal(sa.attributes['aria-pressed'], 'true');
+  assert.deepEqual(cards.filter(card => !card.hidden), [person]);
+});
 
 test('blog UI combines tag/year filters, resets pagination, keeps untagged posts in All, and supports tag links', () => {
   const post = (tags, year, category = '일지') => new Element({ tags: JSON.stringify(tags), year, category });

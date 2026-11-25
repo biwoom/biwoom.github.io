@@ -20,7 +20,7 @@ BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
 - TEXT/STORY menu roots show work rows and story cards, respectively. Use real page links for 문헌/카테고리 and 이야기/카테고리; `/text/categories/` and `/story/categories/` show `ol-grid-3` category cards, and each category page lists its series. Category lists and work filters show only categories with a public work/series; a category index.md alone does not qualify. Preserve empty category sources and their direct category pages (track `.gitkeep` when needed). Menu roots end with up to three public Markdown documents linking to their existing readers, newest Seoul publication day first and one per work per round within each day.
-- TEXT/STORY category `index.md` files are category metadata, with authored title/description and canonical category URLs; exclude them from readers, series lists and document counts. Private category intros hide descendants/assets. STORY's 이야기불교 categories are 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. Keep the two existing Maha Buddhavamsa editions under 붓다전기; other categories currently have introductions only. Future works are added by the user.
+- TEXT/STORY category `index.md` files are category metadata, with authored title/description and canonical category URLs; exclude them from readers, series lists and document counts. Private category intros hide descendants/assets. STORY's 이야기불교 categories are 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. 마하붓다왐사 is under 붓다전기 and 담마빠다이야기 is under 가르침과 일화. Future works are added by the user.
 - TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and document TOC default open at >=1360px and closed below that width; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - TEXT/STORY document readers recognize explicitly fenced `original` blocks via one shared Markdown transform, toolbar and visibility controller. Start visible; show the toggle only with marked blocks, use an icon with accessible labels at <=980px, and leave ordinary code/inline code unchanged. Share original typography and font scaling; TEXT uses its soft panel background and STORY its themed secondary surface.
@@ -41,6 +41,7 @@ BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub
 - `_drafts`, `_templates`, dotfolders, and `.obsidian` must not appear in public content or search. `assets`/`_assets` are auxiliary files, not item cards.
 - Public menu documents are public by default; preserve explicit `published: false`. A nonpublic series intro hides its descendants.
 - Tags are optional plain string arrays, e.g. `tags: [수메다, 수밋따]`; do not use classification prefixes or singular `tag`. Do not reintroduce `prefixTags`, `entities`, `relations`, or `tagAliases`.
+- STORY documents also accept optional `personTags`, `placeTags`, `topicTags` and `aliasTags`. Write canonical names in the typed lists and record variant spellings under `aliasTags.person`, `aliasTags.place` or `aliasTags.topic` for canonical names used in that document. Index only public STORY documents, group results in existing series order, and report conflicts between canonical names and aliases within the same type.
 - Keep provenance and notes in body text. Preserve document-specific rights exceptions.
 - Private index.md directories exclude their attachments from deployment. `_assets` is the only underscore-prefixed attachment exception. Publicly shared attachments remain public; keep private per-document attachments in private index folders or `_drafts`.
 - Introduction canonical URLs equal library URLs. Deleted sources must not be restored or redirected to unrelated material; retain registry history and render redirects only to current public targets.
@@ -73,6 +74,14 @@ BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-25 — STORY translation releases
+
+- Replaced the earlier Maha Buddhavamsa editions and Dhammapada Stories chapters with the two translation-project releases in their respective categories.
+
+### 2026-11-25 — STORY structured tags
+
+- Added optional person, place, topic and alias fields, tag search, and series-grouped STORY tag pages.
 
 ### 2026-11-25 — BIWOOM HUB
 

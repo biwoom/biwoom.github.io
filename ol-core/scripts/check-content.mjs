@@ -5,6 +5,7 @@ import { visit } from "unist-util-visit";
 import { readMediaInformation } from "./lib/media-information.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
 import { prepare } from "./prepare-content.mjs";
+import { indexStoryTags, storyTagPath, storyTagsPath } from "./lib/story-tags.mjs";
 import { walk, normalize, parse, markdownPattern, mediaPattern, isIntroduction, markdownTree, referenceTarget, isPublicSource, categoryFolders } from "./lib/content.mjs";
 export function validate(root = PROJECT_ROOT) {
   const errors = [], base = projectPaths(root).content;
@@ -13,6 +14,7 @@ export function validate(root = PROJECT_ROOT) {
   try { readMediaInformation(root); } catch (error) { errors.push(error.message); }
   try { readBlogCatalog(root, registry); } catch (error) { errors.push(error.message); }
   const urls = new Map(), ids = new Map(), series = new Set();
+  const taggedStories = [];
   const claim = (url, source) => {
     if (!/^\/[\w\-/%\p{L}\p{N}.]+\/$/u.test(url) || url.includes("..")) errors.push(`${source}: invalid public URL ${url}`);
     if (urls.has(url) && urls.get(url) !== source) errors.push(`${source}: duplicate public URL ${url} (${urls.get(url)})`);
@@ -40,6 +42,8 @@ export function validate(root = PROJECT_ROOT) {
       }
       // Nonpublic writing may have unfinished references; it is never rendered.
       if (!published) continue;
+      if (info[0] === "story" && markdownPattern.test(relative) && normal.kind === "document")
+        taggedStories.push(normal);
       const checkReference = url => {
         if (/^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(url) && !url.startsWith("content-asset:") && !url.startsWith("design-asset:")) return;
         if (url.startsWith("design-asset:")) { errors.push(`${relative}: unmigrated asset ${url}`); return; }
@@ -53,6 +57,10 @@ export function validate(root = PROJECT_ROOT) {
   }
   for (const collection of ["text", "story"])
     for (const category of categoryFolders(collection, root)) claim(category.url, category.key);
+  try {
+    claim(storyTagsPath, "STORY tag directory");
+    for (const tag of indexStoryTags(taggedStories)) claim(storyTagPath(tag), `STORY tag ${tag.type}/${tag.label}`);
+  } catch (error) { errors.push(error.message); }
   for (const route of ["/", "/text/", "/story/", "/blog/", "/media/", "/partners/", "/404/"]) if (urls.has(route)) errors.push(`Content collides with reserved route ${route}`);
   for (const [from,to] of Object.entries(registry.redirects)) {
     if (urls.has(from)) errors.push(`Redirect collides with public URL ${from}`);

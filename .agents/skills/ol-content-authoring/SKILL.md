@@ -23,7 +23,13 @@ BIWOOM HUB is published from `biwoom/hub` at `https://biwoom.github.io/hub/`. Us
 12. BLOG series/category index.md holds title/description, optional thumbnailAsset and publication state; metadata is excluded from post counts/RSS. Each category belongs to one series. Optional series `## 읽는 순서` ordered relative post links override oldest-first order; keep TOC/previous-next identical. Preserve the empty essay series until the user adds content.
 13. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
+For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for canonical names alongside ordinary `tags`. Declare variants under `aliasTags.person`, `aliasTags.place`, or `aliasTags.topic` for a canonical name listed in the same document. See the authoring manual for the example and public index rules.
+
 ## 수정 변경사항
+
+### 2026-11-25 — STORY structured tags
+
+- Document the optional canonical lists and alias mappings for STORY bodies.
 
 ### 2026-11-25 — BIWOOM HUB
 

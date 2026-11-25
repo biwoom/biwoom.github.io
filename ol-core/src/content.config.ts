@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { markdownLoader, materialsLoader } from "./lib/content-loaders";
+import { storyTagTypes } from "../scripts/lib/story-tags.mjs";
 
 // This schema describes normalized data. Author-written frontmatter is optional.
 const schema = z.object({
@@ -8,6 +9,11 @@ const schema = z.object({
   description: z.string(),
   tags: z.array(z.string().trim().min(1).refine((tag) => !tag.includes("/"), "Use plain tag names without prefixes"))
     .transform((tags) => [...new Set(tags)]),
+  storyTags: z.array(z.object({
+    type: z.enum(storyTagTypes),
+    label: z.string().min(1),
+    aliases: z.array(z.string()),
+  })).default([]),
   published: z.boolean(),
   date: z.coerce.date(),
   readingTime: z.number(),
