@@ -1,0 +1,28 @@
+---
+import { previewParagraphs, storyCategories, type HomeArticle } from '../../lib/home-articles';
+import { storyTagPath } from '../../lib/home-story-tags';
+import { url } from '../../lib/url';
+import OLStoryBookmark from './OLStoryBookmark.astro';
+interface Props { story: HomeArticle }
+const { story } = Astro.props;
+const preview = previewParagraphs(story);
+---
+<section data-home-detail-template={story.id} hidden data-pagefind-ignore>
+  <div class="ol-home-detail-content">
+    {story.photo && <img src={story.photo.url} alt={story.photo.alt} loading="lazy" />}
+    <p class="ol-home-detail-topic">{storyCategories[story.category]} · {story.topicLabel} · {story.minutes}분 읽기</p>
+    <h2 tabindex="-1">{story.title}</h2>
+    <p class="ol-home-detail-summary">{story.blurb}</p>
+    {preview.length > 0 && <div class="ol-home-detail-excerpt" aria-label="본문 미리보기">
+      {preview.map(paragraph => <p>{paragraph}</p>)}
+    </div>}
+    {story.source && <p class="ol-home-detail-source">{story.source.url ? <a href={url(story.source.url)}>{story.source.title}</a> : story.source.title}</p>}
+    {story.storyTags.length > 0 && <ul class="ol-home-story-tags" aria-label="이야기 태그">
+      {story.storyTags.slice(0, 3).map(tag => <li><a href={url(storyTagPath(tag))}>{tag.label}</a></li>)}
+    </ul>}
+  </div>
+  <div class="ol-home-detail-actions">
+    <a href={url(`/stories/${story.id}/`)} class="ol-btn ol-btn-primary">아티클 읽기</a>
+    <OLStoryBookmark id={story.id} title={story.title} />
+  </div>
+</section>

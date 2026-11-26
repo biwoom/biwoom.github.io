@@ -2,7 +2,7 @@ import { projectPaths } from './lib/paths.mjs';
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { SITE_BASE, SITE_URL } from "../../site-config.mjs";
+import { LEGACY_HUB_BASE, SITE_URL } from "../../site-config.mjs";
 import { activeRedirects, readRegistry, walk } from "./lib/content.mjs";
 
 const root = projectPaths().dist;
@@ -12,8 +12,8 @@ let checked = 0;
 function verify(value, file) {
   const url = new URL(value);
   assert.equal(url.origin, origin, `${file}: unexpected production URL ${value}`);
-  assert.ok(url.pathname.startsWith(`${SITE_BASE}/`) && !url.pathname.startsWith(`${SITE_BASE}${SITE_BASE}/`),
-    `${file}: unexpected HUB path ${value}`);
+  assert.ok(url.pathname !== LEGACY_HUB_BASE && !url.pathname.startsWith(`${LEGACY_HUB_BASE}/`),
+    `${file}: old project path in canonical metadata ${value}`);
   checked++;
 }
 for (const file of walk(root, { assets: true })) {
@@ -32,7 +32,7 @@ for (const file of walk(root, { assets: true })) {
     for (const [, value] of urls) {
       verify(value, relative);
       if (relative.startsWith("sitemap")) {
-        assert.ok(!Object.hasOwn(redirects, new URL(value).pathname.slice(SITE_BASE.length)),
+        assert.ok(!Object.hasOwn(redirects, new URL(value).pathname),
           `${relative}: redirect should not be indexed ${value}`);
       }
     }
@@ -41,4 +41,4 @@ for (const file of walk(root, { assets: true })) {
 const robots = fs.readFileSync(path.join(root, "robots.txt"), "utf8");
 assert.deepEqual([...robots.matchAll(/^Sitemap:\s*(\S+)/gm)].map(([, value]) => value), [`${SITE_URL}/sitemap-index.xml`]);
 assert.ok(checked, "No production metadata found in dist");
-console.log(`Built BIWOOM HUB URLs verified in dist for ${SITE_URL}/ (${checked} metadata/feed/sitemap URLs and robots.txt).`);
+console.log(`Built BIWOOM URLs verified in dist for ${SITE_URL}/ (${checked} metadata/feed/sitemap URLs and robots.txt).`);

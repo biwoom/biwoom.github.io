@@ -1,12 +1,14 @@
 ---
 import { getDocuments } from "../../lib/library";
+import { getHomeArticles } from "../../lib/home-articles";
 import { getCollection } from "astro:content";
 import { url } from "../../lib/url";
 import { LIBRARY_LABELS } from "../../lib/site-config";
 const counts = await Promise.all([
-  getDocuments("text"),
-  getDocuments("story"),
-  getCollection("blog", (e) => e.data.published && e.data.kind === "document"),
+  getDocuments("text").then(entries => entries.filter(entry => entry.data.kind !== "series").length),
+  getDocuments("story").then(entries => entries.filter(entry => entry.data.kind !== "series").length),
+  getCollection("blog", (e) => e.data.published && e.data.kind === "document").then(entries => entries.length),
+  getHomeArticles().then(articles => articles.length),
 ]);
 const cards = [
   { name: LIBRARY_LABELS.text, href: "/text/", description: "문헌별 번역·연구·시각자료" },
@@ -16,27 +18,25 @@ const cards = [
     href: "/blog/series/",
     description: "사유의 길에 작은 틈을 내고, 일상의 여백을 모읍니다.",
   },
+  { name: "이야기 아티클", href: "/articles/", description: "삽화와 함께 읽는 짧은 불교 이야기" },
 ];
 ---
 
 <section class="ol-section">
   <div class="ol-container">
     <div class="ol-section-head">
-      <span class="ol-section-label">READ · BIWOOM HUB</span>
+      <span class="ol-section-label">READ · BIWOOM</span>
       <h2 class="ol-kr">비움이 만드는 불교콘텐츠</h2>
       <p>자료를 다시 이용할 때는 <a href={url('/pages/brand/#공개-자료와-이용-조건')}>공개 자료의 이용 조건</a>을 확인해 주세요.</p>
     </div>
-    <div class="ol-grid-3">
+    <div class="ol-grid-4">
       {cards.map((card, i) => (
         <a href={url(card.href)} class="ol-product-card">
-          <span class="ol-meta-label">
-            0{i + 1} / {card.name}
-          </span>
           <h3>{card.name}</h3>
           <p class="ol-kr">{card.description}</p>
           <div class="ol-product-foot">
             <span class="ol-meta-badge">
-              {counts[i].filter((e) => e.data.kind !== "series").length}개 자료
+              {counts[i]}개 자료
             </span>
             <span>→</span>
           </div>

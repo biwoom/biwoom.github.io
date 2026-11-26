@@ -5,7 +5,7 @@ import OLHeader from '../components/layout/OLHeader.astro';
 import OLFooter from '../components/layout/OLFooter.astro';
 import OLSearchModal from '../components/layout/OLSearchModal.astro';
 import { SITE_URL, BRAND } from '../lib/site-config';
-import { url, stripHubBase } from '../lib/url';
+import { url } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -15,6 +15,8 @@ interface Props {
   pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
   pagefindBody?: boolean;
   academic?: boolean;
+  articlePage?: boolean;
+  articleReader?: boolean;
 }
 
 const {
@@ -25,10 +27,12 @@ const {
   pagefindMeta = {},
   pagefindBody = true,
   academic = false,
+  articlePage = false,
+  articleReader = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} — ${BRAND.name}` : `${BRAND.name} — ${BRAND.tagline}`;
-const sectionPath = stripHubBase(Astro.url.pathname);
+const sectionPath = Astro.url.pathname;
 const siteSection = sectionPath === '/' ? 'home' : sectionPath.match(/^\/(text|story|blog)(?:\/|$)/)?.[1];
 const hasAccentTheme = ['home', 'text', 'story'].includes(siteSection ?? '');
 
@@ -85,6 +89,8 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
         document.documentElement.style.setProperty('--ol-reader-aid-preferred-width', `${width}px`);
       })();
     </script>
+  </>}
+  {(academic || articleReader) && <>
     <script is:inline data-reader-font-init>
       (function () {
         let percent = 100;
@@ -115,7 +121,8 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <!-- Dark mode init (prevents FOUC) -->
   <script is:inline>
     (function() {
-      const saved = localStorage.getItem('ol-theme');
+      let saved;
+      try { saved = localStorage.getItem('ol-theme'); } catch { /* Use the system theme. */ }
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme = saved || (prefersDark ? 'dark' : 'light');
       document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -132,7 +139,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
 </head>
 <body class="ol-kr" data-site-section={siteSection} data-accent-theme={hasAccentTheme ? true : undefined}>
   <div class="ol-app">
-    <OLHeader />
+    <OLHeader {articlePage} {articleReader} />
     <OLSearchModal />
     <div data-pagefind-body={pagefindBody ? true : undefined} data-pagefind-ignore={pagefindBody ? undefined : true}>
       <slot />

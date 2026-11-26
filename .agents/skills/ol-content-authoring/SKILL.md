@@ -1,22 +1,22 @@
 ---
 name: ol-content-authoring
-description: Create or revise BIWOOM HUB Markdown and assets in the Obsidian vault under content/.
+description: Create or revise BIWOOM Markdown and assets in the Obsidian vault under content/.
 ---
 
-# BIWOOM HUB Content Authoring
+# BIWOOM Content Authoring
 
 Latest update: 2026-11-26.
 
-BIWOOM HUB is published from `biwoom/hub` at `https://biwoom.github.io/hub/`. Use vault-relative Markdown links in authoring. The build adds the public `/hub` prefix and the registry keeps paths relative to HUB.
+BIWOOM is published from `biwoom/biwoom.github.io` at `https://biwoom.github.io/`. Use vault-relative Markdown links in authoring. The registry keeps root routes.
 
-1. Read `.agents/references/biwoom-hub-content-management-manual.md` and `ol-core/src/content.config.ts` before changing authoring rules.
+1. Read `.agents/references/biwoom-content-management-manual.md` and `ol-core/src/content.config.ts` before changing authoring rules.
 2. Use `content/` as the existing Obsidian vault. Do not install a CMS or edit personal `.obsidian` state.
 3. Place TEXT at `text/category/work/section/document.md`, STORY at `story/category/series/part/document.md`, BLOG at `blog/series/category/post.md` (or a per-post folder/index.md), and public permanent pages under `pages/`.
 4. Korean author-facing names are supported. Use optional numeric prefixes for order, such as `001.중관부`. Keep code and internal guide filenames ASCII.
 5. Prefer title/H1 and body only. `index.md` introductions and YAML are optional. Number-only filenames require an H1 title.
 6. Use the optional fields supported by the current schema/validator for exceptions only. Never add old hierarchy/order/entity/ontology fields or `prefixTags`. Tags are optional plain string arrays such as `tags: [수메다, 수밋따]`; classification prefixes and singular `tag` are not supported.
 7. Use `_drafts/` for unpublished work. Public menu documents are public by default, with explicit `published: false` preserved. Nonpublic intros hide descendants.
-8. Preserve dates, rights and provenance. Give the source, edition and location as available in body prose. HUB STORY covers source texts, traditions and translations. BIWOOM HOME covers stories written for a general audience. Confirm third-party terms before distribution and retain component-level notices in published ebooks. Keep restricted research, review and approval records outside the publishable repository. Defaults live in `site-config.mjs` and app config in `ol-core/src/lib/site-config.ts`.
+8. Preserve dates, rights and provenance. Give the source, edition and location as available in body prose. 불전문학 covers source texts, traditions and translations. 이야기 아티클 contains audience-facing stories under `content/article/`; preserve article IDs and illustration references. Confirm third-party terms before distribution and retain component-level notices in published ebooks. Keep restricted research, review and approval records outside the publishable repository. Defaults live in `site-config.mjs` and app config in `ol-core/src/lib/site-config.ts`.
 9. Keep shared images in `content/media/` with ordinary document-relative links. The first subfolder is the gallery category; root files are 미분류. Optional category index.md files hold multiple `## [Image title](relative-image-path)` sections whose bodies are rendered in image modals; retain sample indexes in the three existing categories and validate category-local targets/duplicates. Update references when moving files. The auxiliary /media/ gallery is linked from home statistics/footer only, without per-image content records or main-menu entries. Put listable PDFs/images/HTML directly in a material section. Put supporting files in `assets/` or `_assets/` and use relative Markdown links. Do not add DESIGN keys or generated URLs.
 10. Vault-relative paths are canonical NFC via shared paths helpers; physical NFD names remain supported without renaming sources or normalizing prose. Preserve `content-registry.json`. Moves with unchanged content retain identity; moved-and-edited files may require `npm run content:move -- old new` before preparation. Do not silently assign a replacement URL to a known moved document.
 11. Use shared DocumentTags for document-only optional tags below the title, without series inheritance. Series tag menus/modals are retired; BLOG tags filter alongside years/pagination. Do not create real tab switching; section buttons link to the first item, with expandable full lists.

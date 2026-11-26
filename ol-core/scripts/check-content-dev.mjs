@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { categoryUrl } from './lib/content.mjs';
 import { PROJECT_ROOT } from './lib/paths.mjs';
-import { hubPath } from '../../site-config.mjs';
+import { sitePath } from '../../site-config.mjs';
 import sharp from 'sharp';
 import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import {spawn} from 'node:child_process';
-const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'biwoom-hub-dev-'));
+const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'biwoom-dev-'));
 for(const f of ['ol-core','astro.config.mjs','site-config.mjs','package.json','tsconfig.json']) fs.cpSync(path.join(source,f),path.join(root,f),{recursive:true,filter:p=>!p.includes('ol-core/public/generated')});
 fs.symlinkSync(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');fs.writeFileSync(path.join(root,'content-registry.json'),JSON.stringify({version:1,files:{},folders:{},redirects:{},aliases:{}}));
 // Instrument only the disposable server copy to verify unchanged documents are reused.
@@ -33,7 +33,7 @@ await sharp({create:{width:20,height:30,channels:3,background:'red'}}).png().toF
 write('ebook/001.Sample/001.Book/book.pdf','%PDF-test');
 write('ebook/001.Sample/001.Book/index.md','# Live ebook');
 const child=spawn('npm',['run','dev','--','--host','127.0.0.1','--port','4399'],{cwd:root,stdio:['ignore','pipe','pipe'],detached:true});let log='';child.stdout.on('data',d=>log+=d);child.stderr.on('data',d=>log+=d);
-const liveUrl = (pathname) => 'http://127.0.0.1:4399' + hubPath(pathname);
+const liveUrl = (pathname) => 'http://127.0.0.1:4399' + sitePath(pathname);
 const get=async p=>{try{return await (await fetch(liveUrl(p))).text();}catch{return '';}};
 const until=async(fn,label,timeout=18000)=>{const deadline=Date.now()+timeout;while(Date.now()<deadline){if(await fn())return;await new Promise(r=>setTimeout(r,300));}throw new Error(label+'\n'+log.slice(-3500));};
 const cardTitles = html => [...html.matchAll(/<a\b[^>]*\bdata-library-item[^>]*>([\s\S]*?)<\/a>/g)]
@@ -55,14 +55,19 @@ const series=reg().folders['text/C/W'].url;
 const rights=reg().files['blog/rights.md'].url;
 const originalUrl=reg().files['story/001.Literature/010.First/010.Part/001.First.md'].url;
 const recentLinks = (html) => [...(html.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "").matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
-assert.deepEqual(recentLinks(await get('/text/')), [hubPath(reg().files['text/C/W/P/A.md'].url)], 'recent TEXT links exclude attachments and introductions');
+assert.deepEqual(recentLinks(await get('/text/')), [sitePath(reg().files['text/C/W/P/A.md'].url)], 'recent TEXT links exclude attachments and introductions');
 const recentStorySources = [
   'story/001.Literature/010.First/010.Part/004.Latest.md',
   'story/001.Literature/010.First/010.Part/002.New.md',
   'story/001.Literature/020.Second/010.Part/001.Second.md',
 ];
-assert.deepEqual(recentLinks(await get('/story/')), recentStorySources.map((source) => hubPath(reg().files[source].url)), 'recent STORY links prioritize date, then distinct works within the day');
+assert.deepEqual(recentLinks(await get('/story/')), recentStorySources.map((source) => sitePath(reg().files[source].url)), 'recent STORY links prioritize date, then distinct works within the day');
 await until(async()=>{const html=await get(originalUrl);return html.includes('data-original-toggle')&&(html.match(/data-reader-original(?=[\s=>])/g)??[]).length===2&&html.includes('원문 숨기기')&&html.includes('ordinary code')&&html.includes('inline original');},'STORY explicit original blocks and shared toggle');
+const gentiumPath = '/fonts/gentium/Gentium-Italic.woff2';
+assert.ok((await get(originalUrl)).includes(gentiumPath), 'Reader uses the root Gentium URL');
+const gentium = await fetch(liveUrl(gentiumPath));
+assert.equal(gentium.status, 200, 'The development router serves root font assets');
+assert.equal(Buffer.from(await gentium.arrayBuffer()).toString('ascii', 0, 4), 'wOF2');
 const plainStory=await get(reg().files['story/001.Literature/020.Second/010.Part/001.Second.md'].url);
 assert.ok(!plainStory.includes('data-original-toggle'),'Plain STORY pages must not show an original toggle');
 
@@ -90,14 +95,14 @@ const unicodeIntro='story/003.유니코드/001.마하붓다왐사/index.md';
 const unicodeAsset='story/003.유니코드/001.마하붓다왐사/01.자료/_assets/첨부.pdf';
 write(unicodeSource.normalize('NFD'),'# Unicode live document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
 write(unicodeNext.normalize('NFD'),'# Unicode next document');write(unicodeAsset.normalize('NFD'),'%PDF-unicode');
-await until(async()=>{const r=reg();if(!r.files[unicodeSource]||!r.files[unicodeNext])return false;const html=await get(r.files[unicodeSource].url);return html.includes('Unicode live document')&&html.includes('href="'+hubPath(r.files[unicodeNext].url)+'"')&&html.includes(encodeURIComponent('첨부.pdf'));},'NFD source discovery, canonical loader IDs and relative links');
+await until(async()=>{const r=reg();if(!r.files[unicodeSource]||!r.files[unicodeNext])return false;const html=await get(r.files[unicodeSource].url);return html.includes('Unicode live document')&&html.includes('href="'+sitePath(r.files[unicodeNext].url)+'"')&&html.includes(encodeURIComponent('첨부.pdf'));},'NFD source discovery, canonical loader IDs and relative links');
 const unicodeUrl=reg().files[unicodeSource].url;
 write(unicodeSource.normalize('NFD'),'# Unicode updated document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
 await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD edit without identity churn');
 assert.equal(reg().files[unicodeSource].url,unicodeUrl);assert.ok(Object.keys(reg().files).every(key=>key===key.normalize('NFC')));
 write(unicodeIntro.normalize('NFD'),'---\npublished: false\n---\n# Unicode private series');
 const unicodeCategory=categoryUrl('story/003.유니코드');
-await until(async()=>!(await get(unicodeCategory)).includes('href="'+hubPath(reg().folders['story/003.유니코드/001.마하붓다왐사'].url)+'"'),'NFD introduction privacy');
+await until(async()=>!(await get(unicodeCategory)).includes('href="'+sitePath(reg().folders['story/003.유니코드/001.마하붓다왐사'].url)+'"'),'NFD introduction privacy');
 const unicodeAssetUrl='/generated/content/'+unicodeAsset.split('/').map(encodeURIComponent).join('/');
 await until(async()=> (await fetch(liveUrl(unicodeAssetUrl))).status===404,'NFD private asset cleanup');
 write(unicodeIntro.normalize('NFD'),'# Unicode restored series');
@@ -105,7 +110,7 @@ await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document
 await until(async()=> (await fetch(liveUrl(unicodeAssetUrl))).status===200,'NFD public asset restore');
 
 write('text/C/W/index.md','---\npublished: false\n---\n# Work');
-await until(async()=> !(await get(textCategory)).includes('href="'+hubPath(series)+'"'),'hide series without restart');
+await until(async()=> !(await get(textCategory)).includes('href="'+sitePath(series)+'"'),'hide series without restart');
 write('text/C/W/index.md','# Work');
 await until(async()=> (await get(series)).includes('Live document') && (await get(series)).includes('PDF'),'restore docs and media without restart');
 write('text/C/New/P/New.md','# Added live');
@@ -141,5 +146,5 @@ write('story/002.Poems/First/index.md','---\npublished: false\n---\n# First poem
 await until(async()=> !cardTitles(await get('/story/categories/')).includes('Poems'), 'category disappears when its only work becomes private');
 write('story/002.Poems/First/index.md','# First poem work');
 await until(async()=> cardTitles(await get('/story/categories/')).includes('Poems'), 'category returns after its work is restored');
-console.log('Local BIWOOM HUB development checks passed: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
+console.log('Local BIWOOM development checks passed: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
 }finally{try{process.kill(-child.pid,'SIGTERM');}catch{}await new Promise(r=>setTimeout(r,500));fs.rmSync(root,{recursive:true,force:true});}

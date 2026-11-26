@@ -5,9 +5,10 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
+import { compareHomePublication, readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
 import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath } from "./lib/story-tags.mjs";
-import { BLOG, HOME_URL, REPOSITORY_URL, SITE_URL, hubPath } from "../../site-config.mjs";
+import { BLOG, REPOSITORY_URL, SITE_URL, sitePath } from "../../site-config.mjs";
 import {
   readRegistry,
   categoryFolders,
@@ -154,7 +155,7 @@ for (const [source, record] of Object.entries(registry.files)) {
     ...data.storyTags.map(tag => tag.label),
   ];
   for (const tag of data.storyTags) {
-    assert.ok(tagArea?.includes(`href="${hubPath(storyTagPath(tag))}"`), `${source}: typed tag links to its STORY page`);
+    assert.ok(tagArea?.includes(`href="${sitePath(storyTagPath(tag))}"`), `${source}: typed tag links to its STORY page`);
   }
   assert.equal(Boolean(tagArea), expectedTags.length > 0, `${record.url}: tags must be optional and document-specific`);
   if (tagArea) {
@@ -186,7 +187,7 @@ for (const [source, record] of Object.entries(registry.files)) {
     for (const [weight, file] of Object.entries(gentiumFiles)) {
       const face = faces.find(body => body.includes(`font-weight: ${weight};`));
       assert.ok(face, `${record.url}: missing Gentium weight ${weight}`);
-      assert.ok(face.includes(`src: url('${hubPath(`/fonts/gentium/${file}`)}')`), `${record.url}: wrong URL for ${file}`);
+      assert.ok(face.includes(`src: url('${sitePath(`/fonts/gentium/${file}`)}')`), `${record.url}: wrong URL for ${file}`);
       assert.match(face, /font-family:\s*'Gentium';/);
       assert.match(face, /font-style:\s*italic;/);
       const ranges = face.match(/unicode-range:([^;}]+)/i)?.[1].split(',') ?? [];
@@ -344,14 +345,14 @@ if (storyTags.length) {
 }
 for (const tag of storyTags) {
   const route = storyTagPath(tag);
-  assert.ok(storyTagDirectory.includes(`href="${hubPath(route)}"`), `${route}: tag directory link`);
+  assert.ok(storyTagDirectory.includes(`href="${sitePath(route)}"`), `${route}: tag directory link`);
   const html = fs.readFileSync(path.join(dist, decodeURIComponent(route), "index.html"), "utf8");
   const fragment = html.match(/<template[^>]*data-story-tag-preview-fragment[^>]*>([\s\S]*?)<\/template>/)?.[1];
   assert.ok(fragment, `${route}: preview fragment`);
   const previewLinks = [...fragment.matchAll(/href="([^"]+)"/g)].map(match => match[1]);
   assert.equal(previewLinks.length, Math.min(tag.documents.length, 4), `${route}: bounded preview links`);
   const actual = [...html.matchAll(/href="([^"]+)" data-story-tag-document/g)].map((match) => match[1]);
-  assert.deepEqual(actual.sort(), tag.documents.map(doc => hubPath(doc.url)).sort(), `${route}: public tagged documents`);
+  assert.deepEqual(actual.sort(), tag.documents.map(doc => sitePath(doc.url)).sort(), `${route}: public tagged documents`);
 }
 for (const [collection, total] of Object.entries(drawerCounts)) {
   assert.ok(total > 0, `${collection}: no document TOC drawer generated`);
@@ -364,9 +365,9 @@ for (const section of ["text", "story"]) {
   classes(categoryIndex, ["ol-grid-3"], `${section} categories`);
   assert.match(index, /data-library-view="series"/);
   assert.match(categoryIndex, /data-library-view="categories"/);
-  assert.ok(index.includes(`href="${hubPath(`/${section}/categories/`)}"`));
-  assert.ok(index.includes(`href="${hubPath(`/${section}/`)}" aria-current="page"`));
-  assert.ok(categoryIndex.includes(`href="${hubPath(`/${section}/categories/`)}" aria-current="page"`));
+  assert.ok(index.includes(`href="${sitePath(`/${section}/categories/`)}"`));
+  assert.ok(index.includes(`href="${sitePath(`/${section}/`)}" aria-current="page"`));
+  assert.ok(categoryIndex.includes(`href="${sitePath(`/${section}/categories/`)}" aria-current="page"`));
   assert.ok(!categoryIndex.includes('id="ol-library-recent-title"'));
   const series = new Map();
   const documents = new Map();
@@ -375,10 +376,10 @@ for (const section of ["text", "story"]) {
     const data = normalize(source, markdownPattern.test(source) ? fs.readFileSync(contentFile(source), "utf8") : "", registry);
     if (!data.published || data.kind === "category") continue;
     series.set(data.seriesKey, data.seriesUrl);
-    if (data.kind === "document" && markdownPattern.test(source)) documents.set(hubPath(data.url), data);
+    if (data.kind === "document" && markdownPattern.test(source)) documents.set(sitePath(data.url), data);
   }
   const workLinks = [...index.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*data-library-work-category=/g)].map(([, href]) => href);
-  assert.deepEqual(workLinks.sort(), [...series.values()].map(hubPath).sort(), `${section}: menu must list all public works`);
+  assert.deepEqual(workLinks.sort(), [...series.values()].map(sitePath).sort(), `${section}: menu must list all public works`);
   const recent = index.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "";
   const recentLinks = [...recent.matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
   assert.equal(new Set(recentLinks).size, recentLinks.length);
@@ -389,7 +390,7 @@ for (const section of ["text", "story"]) {
   assert.equal((categoryIndex.match(/data-library-category=/g) ?? []).length, listedCategories.length);
   for (const category of categories) {
     const listed = listedCategories.includes(category);
-    assert.equal(categoryIndex.includes(`href="${hubPath(category.url)}"`), listed, `${section}: incorrect category visibility ${category.label}`);
+    assert.equal(categoryIndex.includes(`href="${sitePath(category.url)}"`), listed, `${section}: incorrect category visibility ${category.label}`);
     assert.equal(index.includes(`data-library-filter="${category.key}"`), listed, `${section}: incorrect category filter ${category.label}`);
     const html = fs.readFileSync(path.join(dist, category.url, "index.html"), "utf8");
     assert.match(html, /data-library-view="series"/);
@@ -398,7 +399,7 @@ for (const section of ["text", "story"]) {
     const expected = [...series].filter(([key]) => key.startsWith(category.key + "/"));
     assert.equal((html.match(/data-library-item(?:\s|>|=)/g) ?? []).length, expected.length, `${category.label}: incorrect series count`);
     for (const [key, url] of series) {
-      assert.equal(html.includes(`href="${hubPath(url)}"`), key.startsWith(category.key + "/"), `${category.label}: incorrect series membership ${key}`);
+      assert.equal(html.includes(`href="${sitePath(url)}"`), key.startsWith(category.key + "/"), `${category.label}: incorrect series membership ${key}`);
       const detail = fs.readFileSync(path.join(dist, url, "index.html"), "utf8");
       assert.ok(!hasClass(detail, "ol-story-tag-area"), `${url}: retired series tag controls`);
       assert.ok(!hasClass(detail, "ol-tag-results-modal"), `${url}: retired series tag modal`);
@@ -441,48 +442,90 @@ const seriesIndex = fs.readFileSync(path.join(dist, "blog/series/index.html"), "
 assert.equal((seriesIndex.match(/data-series-card(?:\s|=|>)/g) ?? []).length, blogCatalog.filter(s => s.key !== BLOG.journalSeries).length);
 assert.ok(seriesIndex.indexOf('class="ol-blog-journal"') > seriesIndex.lastIndexOf('data-series-card'), "Journal stays below randomized covers");
 assert.ok(!seriesIndex.includes('role="tab"'), "BLOG views navigate to separate pages");
-assert.ok(seriesIndex.includes(`href="${hubPath("/blog/series/")}" aria-current="page"`));
+assert.ok(seriesIndex.includes(`href="${sitePath("/blog/series/")}" aria-current="page"`));
 const feed = fs.readFileSync(path.join(dist, "rss.xml"), "utf8");
 assert.equal((feed.match(/<item>/g) ?? []).length, publishedBlogCategories.length, "Metadata must not enter RSS");
 const homeHtml = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 const landingHeader = homeHtml.match(/<header class="ol-header"[\s\S]*?<\/header>/)?.[0] ?? "";
 const landingMobileMenu = homeHtml.match(/<nav class="ol-mobile-sheet"[\s\S]*?<\/nav>/)?.[0] ?? "";
-assert.ok(landingHeader.includes(`href="${hubPath("/")}" class="ol-brand"`), "HUB brand opens the HUB landing");
-assert.ok(landingHeader.includes('class="ol-brand-name">비움 HUB</span>'), "Header displays the Korean wordmark");
+assert.ok(landingHeader.includes(`href="${sitePath("/")}" class="ol-brand"`), "Biwoom brand opens the site landing");
+assert.ok(landingHeader.includes('class="ol-brand-name">비움</span>'), "Header displays the Korean wordmark");
 assert.ok(landingHeader.includes('class="ol-brand-meta">불교문헌 연구공간</span>'), "Header displays the research subtitle");
 const expectedPrimaryLinks = [
-  [HOME_URL, "홈"],
-  [hubPath("/text"), "경론"],
-  [hubPath("/story"), "문학"],
+  ["/", "홈"],
+  [sitePath("/text"), "경론"],
+  [sitePath("/story"), "문학"],
 ];
 for (const menu of [landingHeader, landingMobileMenu]) {
-  const links = Array.from(menu.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)">([^<]+)<\/a>/g),
+  const links = Array.from(menu.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)(?: active)?">([^<]+)<\/a>/g),
     ([, href, label]) => [href, label.trim()]);
   assert.deepEqual(links, expectedPrimaryLinks, "Primary navigation uses Korean labels and preserves its destinations");
 }
-assert.ok(homeHtml.includes(`href="${hubPath("/pages/brand")}">비움허브 소개</a>`), "Footer opens the HUB introduction");
-assert.ok(landingHeader.includes(`href="${REPOSITORY_URL}"`), "Header GitHub link opens HUB repository");
-assert.ok(homeHtml.includes(`data-pagefind-path="${hubPath("/pagefind/pagefind.js")}"`), "Search loads the HUB index");
+assert.ok(homeHtml.includes(`href="${sitePath("/pages/brand")}">비움 소개</a>`), "Footer opens the site introduction");
+assert.ok(landingHeader.includes(`href="${REPOSITORY_URL}"`), "Header GitHub link opens the site repository");
+assert.ok(homeHtml.includes(`data-pagefind-path="${sitePath("/pagefind/pagefind.js")}"`), "Search loads the site index");
 assert.ok(fs.existsSync(path.join(dist, "pagefind/pagefind.js")), "Pagefind script is published");
 const blogHomeCard = [...homeHtml.matchAll(/<a href="([^"]*)" class="ol-product-card">([\s\S]*?)<\/a>/g)]
-  .find(([, href]) => href === hubPath("/blog/series/"))?.[2];
+  .find(([, href]) => href === sitePath("/blog/series/"))?.[2];
 assert.ok(blogHomeCard, "Home BLOG product card must link to /blog/series/");
 assert.ok(blogHomeCard.includes(`${publishedBlogCategories.length}개 자료`), "Home product counts exclude BLOG metadata");
+
+const publishedArticles = readHomeArticles().filter(({ article }) => article.published);
+const articleIds = publishedArticles.map(({ article }) => article.id).sort();
+const articleCard = homeHtml.match(/<a href="\/articles\/" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1] ?? "";
+assert.match(articleCard, /이야기 아티클/);
+assert.ok(articleCard.includes(`${articleIds.length}개 자료`), "Home card counts public articles");
+const articleIndexHtml = fs.readFileSync(path.join(dist, "articles/index.html"), "utf8");
+const articleNav = articleIndexHtml.match(/<nav class="ol-home-menu"[\s\S]*?<\/nav>/)?.[0] ?? "";
+assert.deepEqual([...articleNav.matchAll(/href="([^"]+)"/g)].map(([, href]) => href),
+  ["/articles/", "/series/", "/topics/", "/tags/", "/saved/"]);
+const articleCatalog = articleIndexHtml.match(/<section class="ol-story-collection"[\s\S]*?<\/section>/)?.[0] ?? "";
+const articleCards = [...articleCatalog.matchAll(/<article\b[^>]*data-story-card="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
+assert.deepEqual(articleCards.map(([, id]) => id).sort(), articleIds, "One card per public article");
+const latestArticle = publishedArticles.map(({ article }) => article).sort(compareHomePublication)[0];
+assert.equal(articleIndexHtml.match(/data-home-today-story="([^"]+)"/)?.[1], latestArticle?.id);
+const recommendation = articleIndexHtml.match(/<section class="ol-home-recommended"[\s\S]*?<\/section>/)?.[0] ?? "";
+assert.deepEqual([...recommendation.matchAll(/data-story-card="([^"]+)"/g)].map(([, id]) => id),
+  readHomeArticleIndex().recommendedStories ?? []);
+const readerDir = path.join(dist, "stories");
+const articleReaders = walk(readerDir, { assets: true }).filter(file => path.basename(file) === "index.html");
+assert.deepEqual(articleReaders.map(file => path.basename(path.dirname(file))).sort(), articleIds);
+for (const [, id, card] of articleCards) {
+  assert.ok(card.includes(`href="/stories/${id}/"`), `${id}: direct article link`);
+  assert.ok(card.includes(`data-story-bookmark="${id}"`), `${id}: existing bookmark ID`);
+  const reader = fs.readFileSync(path.join(readerDir, id, "index.html"), "utf8");
+  for (const feature of ["data-reader-font-trigger", "data-reader-copy-source", "data-home-reader-share"]) {
+    assert.ok(reader.includes(feature), `${id}: missing ${feature}`);
+  }
+  assert.match(reader, /data-pagefind-meta="section\[content\]" content="ARTICLE"/);
+}
+for (const series of readHomeSeries()) {
+  assert.ok(fs.existsSync(path.join(dist, decodeURIComponent(series.path), "index.html")), `${series.path}: missing series`);
+}
+const illustrationRoot = path.join(dist, "generated/content/illustration");
+const expectedArt = new Map(publishedArticles.filter(({ illustrationFile }) => illustrationFile)
+  .map(({ article, illustrationFile }) => [article.illustration.file.slice("illustration/".length), illustrationFile]));
+const builtArt = walk(illustrationRoot, { assets: true });
+assert.deepEqual(builtArt.map(file => path.relative(illustrationRoot, file).split(path.sep).join("/").normalize("NFC")).sort(),
+  [...expectedArt.keys()].sort(), "Publish only illustrations referenced by public articles");
+for (const [relative, source] of expectedArt)
+  assert.deepEqual(fs.readFileSync(path.join(illustrationRoot, relative)), fs.readFileSync(source), relative);
+
 for (const series of blogCatalog) {
   const html = fs.readFileSync(path.join(dist, series.url, "index.html"), "utf8");
   assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1, `${series.url}: one page title`);
   const toc = html.match(/<ol class="ol-blog-series-toc">([\s\S]*?)<\/ol>/)?.[1] ?? "";
-  assert.deepEqual([...toc.matchAll(/href="([^"]+)"/g)].map(m => m[1]), series.entries.map(e => hubPath(e.data.url)), `${series.url}: rendered reading order`);
+  assert.deepEqual([...toc.matchAll(/href="([^"]+)"/g)].map(m => m[1]), series.entries.map(e => sitePath(e.data.url)), `${series.url}: rendered reading order`);
   if (!series.count) {
     assert.ok(html.includes("새로운 이야기를 준비하고 있습니다."));
     assert.ok(!html.includes("처음부터 읽기"), "An empty series cannot have a dead reading link");
   }
-  assert.ok(!feed.includes(`<link>${new URL(hubPath(series.url), SITE_URL).href}</link>`), "Series metadata is excluded from RSS");
+  assert.ok(!feed.includes(`<link>${new URL(sitePath(series.url), SITE_URL).href}</link>`), "Series metadata is excluded from RSS");
   for (const category of series.categories) {
     const categoryHtml = fs.readFileSync(path.join(dist, category.url, "index.html"), "utf8");
     assert.equal((categoryHtml.match(/<h1(?:\s|>)/g) ?? []).length, 1);
     assert.ok(categoryHtml.includes(category.description));
-    assert.ok(!feed.includes(`<link>${new URL(hubPath(category.url), SITE_URL).href}</link>`), "Category metadata is excluded from RSS");
+    assert.ok(!feed.includes(`<link>${new URL(sitePath(category.url), SITE_URL).href}</link>`), "Category metadata is excluded from RSS");
   }
   for (const [index, post] of series.entries.entries()) {
     const postHtml = fs.readFileSync(path.join(dist, post.data.url, "index.html"), "utf8");
@@ -491,8 +534,8 @@ for (const series of blogCatalog) {
     const next = postHtml.match(/<a[^>]*rel="next"[^>]*>/)?.[0];
     assert.equal(Boolean(previous), index > 0);
     assert.equal(Boolean(next), index < series.count - 1);
-    if (previous) assert.ok(previous.includes(`href="${hubPath(series.entries[index-1].data.url)}"`));
-    if (next) assert.ok(next.includes(`href="${hubPath(series.entries[index+1].data.url)}"`));
+    if (previous) assert.ok(previous.includes(`href="${sitePath(series.entries[index-1].data.url)}"`));
+    if (next) assert.ok(next.includes(`href="${sitePath(series.entries[index+1].data.url)}"`));
   }
 }
 console.log(`BLOG covers, ${blogCatalog.length} series, metadata pages, RSS exclusions and sequential reading verified.`);
@@ -517,21 +560,21 @@ assert.deepEqual(galleryCategories.slice().sort(), ["", ...getMediaCategories(me
 assert.deepEqual(fs.readdirSync(path.join(dist, "media")), ["index.html"], "MEDIA must not create detail pages");
 const home = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 const mediaStat = home.match(/<a[^>]*class="[^"]*ol-stat--media[^>]*>([\s\S]*?)<\/a>/)?.[0];
-assert.ok(mediaStat && mediaStat.includes(`href="${hubPath("/media/")}"`), "Home MEDIA stat must link to gallery");
+assert.ok(mediaStat && mediaStat.includes(`href="${sitePath("/media/")}"`), "Home MEDIA stat must link to gallery");
 assert.match(mediaStat, new RegExp(`data-media-stat-count>${mediaImages.length}<`));
 for (const html of [home, mediaHtml]) {
   const footer = html.match(/<footer\b[\s\S]*?<\/footer>/)?.[0] ?? "";
-  assert.ok(footer.includes(`href="${hubPath("/media/")}"`), "Footer MEDIA link missing");
+  assert.ok(footer.includes(`href="${sitePath("/media/")}"`), "Footer MEDIA link missing");
   const header = html.match(/<header\b[\s\S]*?<\/header>/)?.[0] ?? "";
-  assert.ok(!header.includes(`href="${hubPath("/media/")}"`), "MEDIA must stay out of main menu");
+  assert.ok(!header.includes(`href="${sitePath("/media/")}"`), "MEDIA must stay out of main menu");
   const sheet = html.match(/<nav[^>]*id="ol-mobile-sheet"[^>]*>([\s\S]*?)<\/nav>/)?.[1] ?? "";
-  assert.ok(!sheet.includes(`href="${hubPath("/media/")}"`), "MEDIA must stay out of mobile main menu");
+  assert.ok(!sheet.includes(`href="${sitePath("/media/")}"`), "MEDIA must stay out of mobile main menu");
 }
 rule(".ol-media-masonry", /(?:column-count|columns):3/);
 rule(".ol-media-card[hidden]", /display:none/);
 rule(".ol-media-dialog:not([open])", /display:none/);
 console.log(
-  `UI markup/CSS regression checks passed for ${count} documents and BLOG index (not a browser interaction test).`,
+  `UI markup/CSS regression checks passed for ${count} documents, ${articleIds.length} articles, and BLOG index (not a browser interaction test).`,
 );
 
 // Auxiliary ebook navigation and generated package controls must agree with source packages.
@@ -549,7 +592,7 @@ assert.equal([...ebookHtml.matchAll(/download="/g)].length, ebooks.reduce((count
 assert.ok(ebookHtml.includes('id="ebook-dialog"'));
 assert.ok(ebookHtml.includes('CC0'));
 const ebookFooter = ebookHtml.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
-assert.ok(ebookFooter.replaceAll(/>\s+</g, "><").includes(`>MEDIA</a><a href="${hubPath("/ebook/")}">EBOOK</a>`));
+assert.ok(ebookFooter.replaceAll(/>\s+</g, "><").includes(`>MEDIA</a><a href="${sitePath("/ebook/")}">EBOOK</a>`));
 assert.ok(!ebookHtml.split("</header>")[0].includes('>EBOOK<'));
 assert.ok(fs.readFileSync(path.join(dist, "sitemap-0.xml"), "utf8").includes('/ebook/'));
 console.log(`EBOOK controls and footer navigation verified for ${ebooks.length} books.`);

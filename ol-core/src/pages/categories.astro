@@ -1,0 +1,25 @@
+---
+import { storyCategories } from '../lib/home-articles';
+import { url } from '../lib/url';
+const directory = url('/series/#categories');
+const categories = Object.keys(storyCategories).join(' ');
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>이야기 묶음 · 비움</title>
+  </head>
+  <body>
+    <a href={directory} data-category-directory={url('/categories/')} data-category-ids={categories}>이야기 묶음으로 이동</a>
+    <script>
+      const link = document.querySelector<HTMLAnchorElement>('[data-category-directory]');
+      if (link) {
+        const category = location.hash.slice(1);
+        const known = link.dataset.categoryIds?.split(' ').includes(category);
+        location.replace(known ? `${link.dataset.categoryDirectory}${category}/` : link.href);
+      }
+    </script>
+  </body>
+</html>

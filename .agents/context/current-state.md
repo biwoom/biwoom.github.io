@@ -2,21 +2,13 @@
 
 Last updated: 2026-11-26
 
-## Brand
+## Brand and Deployment
 
-- BIWOOM HUB is the public platform for Buddhist texts, translations and research, story sources, media, ebooks and post series under the BIWOOM (비움) brand. OL is the internal core. Shared site settings supply the public site name, metadata and citation attribution.
-- The site header displays ‘비움 HUB’ with ‘불교문헌 연구공간’.
-- Existing symbol shapes are retained under ol-core/public/brand/biwoom-mark-monochrome.png and biwoom-mark-gold.png; derived icons and the Biwoom sharing image use npm run brand:assets.
-- HUB publishes at `https://biwoom.github.io/hub/`. Astro uses independent `HUB_ORIGIN` and `SITE_BASE` settings. `HOME_URL` is the HOME navigation destination. Registry routes stay HUB-relative, and the public-link helper adds the prefix at rendering.
-- Previous borido.org DNS/TLS investigation is historical evidence in `.agents/references/borido-https-investigation-2026-11-08.md`, not a current migration goal.
-- Historical BLOG articles and the completed BORIDO ebook sample retain authored titles and assets. Public pages identify HUB as BIWOOM's platform for text, research, and related content.
-
-## Project
-
-- HUB repository: `biwoom/hub`. Astro 6 static site with Pagefind and GitHub Actions publication.
-- HOME uses the existing root site `https://biwoom.github.io/` while the future HOME design is pending. The HUB wordmark links to `/hub/`; its HOME navigation opens the root site.
-- Primary navigation uses 홈, 경론 and 문학. The libraries are 불교경론 and 불전문학 at the established `/text/` and `/story/` routes. 불전문학 publishes source texts, traditions and translations. BIWOOM HOME covers stories written for a general audience. LAB is a planned internal HUB area. APP, READER and DHARMA FACTORY integrations are future work within their planning scope.
-- Latest inspected Actions runs: 2026-11-10 `7d6c9ed` and 2026-11-11 `4ccecdb` stopped at the committed-registry gate (211 STORY paths changed NFD/NFC spelling). The last inspected successful run is 2026-11-09 `6de2f4d`. Unicode handling is fixed locally; no new push, rerun or production deployment is included.
+- BIWOOM (비움) is the single site for Buddhist texts, translations, research, story articles, posts, media and ebooks. OL is the internal core. The header displays 비움 and 불교문헌 연구공간. The wordmark and 홈 both open the root.
+- The publication target is `https://biwoom.github.io/`, built by GitHub Actions in `biwoom/biwoom.github.io`. Astro uses `SITE_URL` with root routes. Static compatibility redirects handle previous `/hub/` addresses. Registry URLs and identities are stable. The consolidation was prepared on the `biwoom-unification` branch.
+- Existing brand symbols remain under `ol-core/public/brand/`. Use `npm run brand:assets` to regenerate icons and the social sharing image.
+- Public library names are 불교경론 and 불전문학 at `/text/` and `/story/`. The 홈·경론·문학 primary navigation links to the corresponding pages. The 이야기 아티클 home card opens `/articles/`; article readers, catalog pages and bookmarks retain their existing routes and IDs.
+- Article sources live in `content/article/`. Publish referenced illustrations from `content/illustration/`. The article and document library readers share font and copy controls.
 
 ## Menu Accents
 
@@ -75,7 +67,7 @@ Last updated: 2026-11-26
 - BLOG now uses series/category/post folders: 불교의 세계 → 교학 (3); 수행-몸과 마음 돌보기 → 수행 (1); 에세이-삶의 쉼표 → introduction only; 상상공장 → 인포그래픽 (3), 디자인 (1); 비움제작일지 → 비움 (2), 일지 (11). Categories have one series parent. All 21 post IDs/URLs/dates/frontmatter/body structure and 11 image bytes are preserved; relative references are rebased. Migration inventory is .agents/references/blog-series-migration.json.
 - `/blog/` uses A-style compact rows with optional right thumbnails and existing category/exact-tag/year pagination; selected category index prose is shown above results. `/blog/series/` uses four B-style covers with shuffled DOM order and two asymmetric desktop patterns before paint, one-column mobile, plus a fixed journal section controlled by site-config.mjs BLOG.journalSeries. Separate real-page navigation uses aria-current. C-style series pages show introduction, ordered TOC and first-post link; category routes show authored introductions and latest-first posts. Each post has series/category context, a folded full TOC, and previous/next in the series reading order.
 - BLOG series/category index.md supplies title/H1, description/excerpt, optional thumbnailAsset and public/private state through shared interpretation. Metadata is classified separately from documents and excluded from RSS/recent posts/home counts. Private parent intros hide descendants/assets; empty public series/categories remain discoverable. Reading order defaults oldest-first; optional `## 읽는 순서` ordered relative links take precedence, with unlisted posts appended by date. Reject duplicate category labels, duplicate/missing/cross-series reading-order links. The essay has no fabricated categories/posts.
-- Public content menus: TEXT/STORY/BLOG. HOME remains the landing page; `pages` contains the brand document and `support.md` donation guide. The footer links 비움 후원 below 기여 및 협력단체 using the public page's registry URL.
+- `pages` contains the 비움 소개 document and the `support.md` donation guide. The footer links 비움 소개 using its registry URL.
 - TEXT path: category/work/material-section/item. STORY path: category/series/part/item. `index.md` is an optional introduction.
 - TEXT starts with work rows and STORY with asymmetric work cards. Both roots provide work search and category filters above the list, then up to three recent public documents linking directly to readers. `/text/categories/` and `/story/categories/` contain the three-column category cards, including empty public categories. Cards link to existing category details and their series rows. Category detail routes use ASCII hashes; document and work routes continue to use their registry URLs.
 - Numeric name prefixes determine order and are hidden in labels. Translation and research are independent.

@@ -1,30 +1,25 @@
-export const HOME_URL = "https://biwoom.github.io/";
-export const HUB_ORIGIN = "https://biwoom.github.io";
-export const SITE_BASE = "/hub";
-export const SITE_URL = new URL(SITE_BASE, HUB_ORIGIN).href;
-export const REPOSITORY_URL = "https://github.com/biwoom/hub";
+export const SITE_URL = "https://biwoom.github.io";
+export const REPOSITORY_URL = "https://github.com/biwoom/biwoom.github.io";
+export const LEGACY_HUB_BASE = "/hub";
 
-// Registry and vault paths are independent of the public deployment prefix.
-export function hubPath(value) {
-  if (!value.startsWith("/") || value.startsWith("//")) return value;
-  const pathname = value.split(/[?#]/, 1)[0];
-  return pathname === SITE_BASE || pathname.startsWith(`${SITE_BASE}/`)
-    ? value
-    : `${SITE_BASE}${value}`;
-}
-
-export function stripHubBase(pathname) {
-  if (pathname === SITE_BASE) return "/";
-  return pathname.startsWith(`${SITE_BASE}/`) ? pathname.slice(SITE_BASE.length) : pathname;
+// Older Markdown may still cite a public address from the former project site.
+export function sitePath(value) {
+  const origin = value.startsWith(`${SITE_URL}/`) ? SITE_URL : "";
+  const route = value.slice(origin.length);
+  const pathname = route.split(/[?#]/, 1)[0];
+  if (pathname === LEGACY_HUB_BASE) return `${origin}/${route.slice(pathname.length)}`;
+  return pathname.startsWith(`${LEGACY_HUB_BASE}/`)
+    ? `${origin}${route.slice(LEGACY_HUB_BASE.length)}`
+    : value;
 }
 
 export const BRAND = {
-  name: "BIWOOM HUB",
+  name: "BIWOOM",
   nameKo: "비움",
   logoGold: "/brand/biwoom-mark-gold.png",
   logoMonochrome: "/brand/biwoom-mark-monochrome.png",
   tagline: "붓다의 지혜를 오늘의 삶으로",
-  description: "BIWOOM HUB는 불교경론의 번역·연구와 불전문학의 전기·설화·게송을 비롯해 미디어, 전자책과 포스트를 읽고 탐구하는 공간입니다.",
+  description: "비움은 불교경론과 불전문학, 이야기 아티클, 포스트, 미디어와 전자책을 읽고 탐구하는 공간입니다.",
 };
 export const LIBRARY_LABELS = { text: "불교경론", story: "불전문학" };
 export const CONTENT_DEFAULTS = { author: "비움", lang: "ko", license: "CC0" };

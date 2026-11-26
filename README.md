@@ -1,16 +1,15 @@
-# BIWOOM HUB
+# BIWOOM
 
-문서 버전 v1.11 · 2026-11-26 · BIWOOM HUB (OL 코어)
+문서 버전 v1.12 · 2026-11-26 · 비움 (OL 코어)
 
-BIWOOM HUB는 비움(BIWOOM)의 불교경론과 불전문학, 미디어와 전자책, 포스트 시리즈를 읽고 탐구하는 Astro 기반 플랫폼입니다. BIWOOM HOME은 비움의 대중 이야기 서비스로 기획 중입니다.
+비움(BIWOOM)은 불교경론, 불전문학, 이야기 아티클, 포스트 시리즈, 미디어와 전자책을 읽고 탐구하는 Astro 사이트입니다.
 
-- 사이트: https://biwoom.github.io/hub/
-- 저장소: `biwoom/hub`
-- HOME: https://biwoom.github.io/
+- 사이트: https://biwoom.github.io/
+- 저장소: `biwoom/biwoom.github.io`
 - Node.js: 22.12 이상
-- 배포: GitHub Actions → GitHub Pages 프로젝트 경로 `/hub/`
+- 배포: GitHub Actions → GitHub Pages 루트 `/`
 
-공개 주소는 `site-config.mjs`의 `HUB_ORIGIN`과 `SITE_BASE`에서 관리합니다. 개발·미리보기 주소도 `/hub/`에서 엽니다. 레지스트리 경로는 HUB 기준으로 보존하고, 생성하는 링크와 메타데이터에 `/hub`를 붙입니다. 배포는 `biwoom/hub`의 Settings → Pages에서 GitHub Actions를 소스로 사용합니다. HUB 로고는 HUB 첫 화면으로 이동합니다. 헤더의 HOME은 별도 설정인 `HOME_URL`을 통해 기존 루트 사이트로 이동합니다.
+공개 주소는 `site-config.mjs`의 `SITE_URL`에서 관리합니다. 공개·개발·미리보기는 루트에서 시작합니다. 레지스트리의 문서 경로는 유지하며 예전 `/hub/` 주소에는 이관 안내를 생성합니다. 배포는 `biwoom/biwoom.github.io`의 Settings → Pages에서 GitHub Actions를 소스로 사용합니다.
 
 ## 폴더 구조
 
@@ -113,17 +112,25 @@ npm run check:built
 
 DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 설명은 일반 자료로 이관한 뒤 사용자 요청으로 일부 삭제되었습니다. 현재 공개 목적지가 존재하는 과거 주소만 안내합니다. ATLAS 이관의 근거는 `.agents/references/content-migration-inventory.json`과 작업 기록에 남아 있습니다.
 
-자세한 집필 규칙은 [BIWOOM HUB 콘텐츠 관리 매뉴얼](.agents/references/biwoom-hub-content-management-manual.md), 개편 기록은 [Obsidian 구조 개편 가이드](.agents/references/obsidian-content-refactor-guide.md)를 확인하세요.
+자세한 집필 규칙은 [비움 콘텐츠 관리 매뉴얼](.agents/references/biwoom-content-management-manual.md), 개편 기록은 [Obsidian 구조 개편 가이드](.agents/references/obsidian-content-refactor-guide.md)를 확인하세요.
+
+## 이야기 아티클
+
+첫 화면의 **이야기 아티클** 카드는 `/articles/`로 연결됩니다. 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둡니다. 공개할 원고에는 `published: true`를 지정합니다. 원고의 `id`는 상세 주소와 보관함에 쓰입니다. 삽화는 `content/illustration/`에 두고, 원고의 `illustration.file`과 `illustration.alt`에 경로와 대체 텍스트를 적습니다.
 
 ## 브랜드 자산
 
-BIWOOM HUB는 비움의 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 표기는 `BIWOOM HUB`이며 OL은 내부 코어 이름입니다.
+비움은 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 영문 표기는 `BIWOOM`이며 OL은 내부 코어 이름입니다.
 
 ## 전자책
 
-`content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. HUB에서 CC0로 공개할 수 있는 책을 등록하고, 번역·표지·삽화·글꼴의 재배포 조건을 확인합니다. 별도 권리가 적용되는 요소는 배포 파일과 `index.md`의 서지·소개에 명시합니다. 푸터 MEDIA 아래의 EBOOK에서 접근하며, 책을 선택하면 다운로드 모달이 열립니다.
+`content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 비움에서 CC0로 공개할 수 있는 책을 등록하고, 번역·표지·삽화·글꼴의 재배포 조건을 확인합니다. 별도 권리가 적용되는 요소는 배포 파일과 `index.md`의 서지·소개에 명시합니다. 푸터 MEDIA 아래의 EBOOK에서 접근하며, 책을 선택하면 다운로드 모달이 열립니다.
 
 ## 수정 변경사항
+
+### 2026-11-26 — v1.12
+
+- 문헌과 이야기 아티클을 단일 사이트로 통합하고 루트 배포 주소를 기록했습니다.
 
 ### 2026-11-26 — v1.11
 

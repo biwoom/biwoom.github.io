@@ -1,9 +1,9 @@
 ---
 name: ol-deploy-check
-description: Verify BIWOOM HUB build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing links at https://biwoom.github.io/hub/.
+description: Verify BIWOOM build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing links at https://biwoom.github.io/.
 ---
 
-# BIWOOM HUB Deploy Check
+# BIWOOM Deploy Check
 
 ## Workflow
 
@@ -14,11 +14,10 @@ git remote -v
 git status --short --branch
 ```
 
-2. Confirm GitHub Pages project configuration:
-   - `astro.config.mjs` uses `site: HUB_ORIGIN` and `base: SITE_BASE` from `site-config.mjs`. Production uses `https://biwoom.github.io/hub/` from `biwoom/hub`. `HOME_URL` is the separate navigation destination.
-   - Use the default GitHub Pages domain with the GitHub Actions source. The root site at `https://biwoom.github.io/` is the HOME destination.
-   - HUB's `ol-core/public/robots.txt` should point to `https://biwoom.github.io/hub/sitemap-index.xml`.
-   - Apply the `/hub` prefix to generated links, search results, downloads and canonical metadata. Keep registry routes HUB-relative.
+2. Confirm the root GitHub Pages configuration:
+   - `astro.config.mjs` uses `site: SITE_URL` without a path prefix. The production target is `https://biwoom.github.io/` from `biwoom/biwoom.github.io`. Use GitHub Actions as the Pages source.
+   - Use root URLs for canonicals, internal links, search and downloads, and verify the root sitemap in robots.txt.
+   - Build compatibility redirects for older `/hub/` pages after generating Pagefind, and check that they land on existing root pages.
 
 3. Search for stale deployment paths:
 
@@ -48,23 +47,23 @@ sed -n '1,80p' dist/rss.xml
 6. If checking the live site, use HTTP headers first:
 
 ```sh
-curl -I -L https://biwoom.github.io/hub/
-curl -I -L https://biwoom.github.io/hub/sitemap-index.xml
+curl -I -L https://biwoom.github.io/
+curl -I -L https://biwoom.github.io/sitemap-index.xml
 ```
 
 ## Expected Results
 
 - Build succeeds.
-- Generated site links use paths such as `/hub/blog/`.
-- Canonical, sitemap and RSS URLs start with `https://biwoom.github.io/hub/`.
+- Generated site links use paths such as `/blog/`.
+- Canonical, sitemap and RSS URLs start with `https://biwoom.github.io/`.
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.
 
 ## Common Failure Modes
 
-- Astro `base` is omitted or the prefix is applied twice.
-- A root-relative link escapes HUB or a Pagefind result opens the former root path.
+- Astro `base` or an obsolete prefix is reintroduced.
+- A stale link or indexed Pagefind result uses the old deployment prefix.
 - Browser cache or GitHub Pages CDN delay shows a stale 404.
 - Git remote still points at the pre-rename repository URL.
 - New content is not committed because it is untracked.

@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-26 — One BIWOOM site and repository
+
+- Publish Biwoom from `biwoom/biwoom.github.io` at `https://biwoom.github.io/`. Remove the Astro deployment prefix. Preserve the library registry and generate noindex redirects from former `/hub/` page addresses, with query and fragment forwarding.
+- Bring the root story project into the single site through the 이야기 아티클 card at `/articles/`. Preserve article data, route IDs and bookmark storage. Existing article reader, series, category, topic, tag and saved links stay valid.
+
 ## 2026-11-26 — Korean library labels
 
 - Use 홈, 경론 and 문학 in the primary navigation. Use 불교경론 and 불전문학 as the public library names. Preserve the `text` and `story` collections, public routes, category names and authored work titles.

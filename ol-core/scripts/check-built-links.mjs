@@ -2,7 +2,7 @@ import { PROJECT_ROOT, projectPaths, isMainModule } from './lib/paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import { walk, readRegistry, activeRedirects } from "./lib/content.mjs";
-import { hubPath, stripHubBase } from "../../site-config.mjs";
+import { sitePath } from "../../site-config.mjs";
 export function checkBuiltLinks(projectRoot = PROJECT_ROOT) {
   const root = projectPaths(projectRoot).dist,
     errors = [];
@@ -31,12 +31,8 @@ export function checkBuiltLinks(projectRoot = PROJECT_ROOT) {
       let target;
       try {
         const pathname = raw.split("?")[0];
-        if (pathname.startsWith("/") && stripHubBase(pathname) === pathname) {
-          errors.push(`${path.relative(root, file)}: ${attribute} outside the HUB base ${value}`);
-          continue;
-        }
         target = pathname.startsWith("/")
-          ? path.join(root, decodeURIComponent(stripHubBase(pathname)))
+          ? path.join(root, decodeURIComponent(pathname))
           : raw
             ? path.resolve(
                 path.dirname(file),
@@ -79,8 +75,8 @@ export function checkBuiltLinks(projectRoot = PROJECT_ROOT) {
     const redirect = path.join(root, route, "index.html");
     if (!fs.existsSync(target))
       errors.push(`redirect ${route}: missing target ${to}`);
-    if (!fs.existsSync(redirect) || !readPage(redirect).includes(`content="0;url=${hubPath(to)}"`))
-      errors.push(`redirect ${route}: missing refresh to ${hubPath(to)}`);
+    if (!fs.existsSync(redirect) || !readPage(redirect).includes(`content="0;url=${sitePath(to)}"`))
+      errors.push(`redirect ${route}: missing refresh to ${sitePath(to)}`);
   }
   return { errors: [...new Set(errors)], pageCount: htmlFiles.length, redirectCount: Object.keys(redirects).length };
 }

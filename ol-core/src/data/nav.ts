@@ -1,4 +1,3 @@
-import { HOME_URL } from "../lib/site-config";
 import { url } from "../lib/url";
 
 export interface NavItem {
@@ -7,7 +6,7 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { href: HOME_URL, label: "홈" },
+  { href: url("/"), label: "홈" },
   { href: url("/text"), label: "경론" },
   { href: url("/story"), label: "문학" },
 ];

@@ -2,11 +2,10 @@
 
 ## Project
 
-BIWOOM HUB is BIWOOM's public platform for Buddhist texts, translations and research, story sources, media, ebooks and post series. This Astro site is deployed from `biwoom/hub` through GitHub Actions at `https://biwoom.github.io/hub/`. Use BIWOOM (비움) for the umbrella brand, BIWOOM HUB for this site and OL for the internal core.
+BIWOOM (비움) is the public Astro site for Buddhist texts, translations, research, story articles, posts, media and ebooks. Publish to `https://biwoom.github.io/` through GitHub Actions in `biwoom/biwoom.github.io`. OL names the internal core.
 
-- HUB's 불전문학 publishes source texts, traditions and translations. BIWOOM HOME is the service for stories written for a general audience. Link the two when an actual public source or story is available and preserve each work's identity. The HUB wordmark opens the HUB landing page. The 홈 menu opens the existing root site at `https://biwoom.github.io/` while the new HOME is in development.
-- BIWOOM LAB is a planned internal HUB area. Its first experiment and public routes are future decisions. BIWOOM SPACE is a reserved name. APP owns the personal reading experience, READER owns shared content and reading contracts, and DHARMA FACTORY owns production and approval workflows. HUB integration should build on its existing public content and identifiers.
-- Use the BIWOOM brand definition, integrated plan and HUB plan in the sibling `biwoom-docs/BIWOOM_기획문서/` collection for service scope and editorial direction. Consult this file, `.agents/context/current-state.md` and the code for implemented behavior. Keep planned features and implemented behavior distinct in permanent guidance.
+- Use 불전문학 for source texts, traditions and translations, and 이야기 아티클 for stories written for a general audience. Link an article to the actual edition, chapter, verse or translation when available. The wordmark and 홈 menu both open `/`.
+- For editorial direction, see the sibling `biwoom-docs/BIWOOM_기획문서/` collection. Follow the 2026-11-26 integration decision and the code for the deployed architecture and implemented behavior.
 
 ## Browser Testing
 
@@ -20,6 +19,7 @@ BIWOOM HUB is BIWOOM's public platform for Buddhist texts, translations and rese
 
 - `content/` is both the content source and the user's Obsidian vault.
 - Desktop and mobile primary navigation uses 홈, 경론, 문학. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
+- The 이야기 아티클 home card links to `/articles/`. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Preserve article metadata and publish only illustrations referenced by public articles.
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
@@ -57,13 +57,13 @@ BIWOOM HUB is BIWOOM's public platform for Buddhist texts, translations and rese
 - EBOOK is an auxiliary `/ebook/` download library linked only below MEDIA in the footer, never the primary/mobile menu. Use `content/ebook/category/book/`: top-level folders are ordered categories and each child folder is one book with optional index.md bibliography, cover and EPUB/PDF files. Show category/count filter buttons above the ebook list, intersecting search and format filters; retain empty public categories and hide descendants of private categories. Publish only books eligible for the library's CC0 policy. Verify redistribution rights for all components and retain any separately licensed material's notices in the book and its bibliography. EBOOK has no individual routes/registry records; exclude private/draft packages and publish only selected cover/download assets.
 - `content/media/` is the shared public asset namespace. The auxiliary `/media/` gallery is linked from home statistics and the footer, never the primary/mobile menu. Derive image categories from the first subfolder (numeric prefixes only order); root images are 미분류. Keep original assets under `/generated/content/media/`, generated previews under `/generated/media-gallery/`, and no per-image documents/frontmatter/registry records. Optional category index.md files hold multiple `## [Image title](relative-image-path)` sections; use each section body as modal Markdown information and its title as the card/modal title. Missing information falls back to filenames; validate existing category-local image targets and duplicates. Keep metadata refresh independent of preview caching.
 - Keep source attachments inside the vault. Use relative Markdown links; the shared remark plugin resolves them. Unsupported Obsidian wikilinks/blocks must not be described as working.
-- Use `site-config.mjs` for shared fixed settings and `ol-core/src/lib/site-config.ts` in app code. `HUB_ORIGIN` and `SITE_BASE` control HUB deployment. `HOME_URL` controls the HOME navigation. Do not restore retired DESIGN environment variables.
+- Use `site-config.mjs` for shared fixed settings and `ol-core/src/lib/site-config.ts` in app code. `SITE_URL` sets the production origin. Do not restore retired DESIGN environment variables.
 - Use shared `DocumentTags.astro` to display only the current document’s optional tags below its title. Series tag controls/modals are retired. BLOG tag buttons filter exact tags together with year archives and shared pagination.
 
 ## Preservation and Verification
 
 - Preserve existing unpublished states, dates, rights, body text and assets when migrating content. Review `.agents/references/content-migration-inventory.json` for the original migration mapping.
-- Keep GitHub Pages project deployment at Astro `base: "/hub"`. Paths such as `/text/` in the registry and in routing rules are relative to the HUB site. Apply the deployment prefix at link and metadata output via the shared path helper in `site-config.mjs`. Preserve registry IDs and existing path keys.
+- Keep Astro at the root using `SITE_URL` from `site-config.mjs`. Use root routes such as `/text/` in public links and metadata. `sitePath` maps older internal links to the root, and the build emits compatibility redirects under `/hub/`. Preserve registry IDs, URLs, dates and existing path keys.
 - Run `npm run check`, `npm run typecheck`, and `npm run build` for content/route/layout/config changes.
 - Verify actual `dist` pages and local targets, plus RSS/sitemap/robots when routing changes.
 - Keep `dist/`, `.astro/`, `node_modules/`, and `ol-core/public/generated/` out of commits. Do not edit generated assets as source.
@@ -73,13 +73,17 @@ BIWOOM HUB is BIWOOM's public platform for Buddhist texts, translations and rese
 ## Continuity and Skills
 
 - Before major work read `.agents/context/current-state.md`, `.agents/context/decisions.md`, and recent `.agents/context/work-log.md` entries.
-- Authoring manual: `.agents/references/biwoom-hub-content-management-manual.md`.
+- Authoring manual: `.agents/references/biwoom-content-management-manual.md`.
 - Refactor guide: `.agents/references/obsidian-content-refactor-guide.md`.
 - Update current state when architecture/status/risks change, decisions for durable choices, and work-log after meaningful implementation/documentation work. Keep records concise.
 - Use `$ol-content-authoring` for content, `$ol-doc-maintenance` for guidance, `$ol-deploy-check` for deployment-related changes, and `$ol-github-upload-log` for requested GitHub uploads.
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-26 — Unified BIWOOM site
+
+- Consolidate the root site and document libraries. Preserve existing routes and expose 이야기 아티클 through a home card.
 
 ### 2026-11-26 — Korean navigation and library names
 

@@ -6,7 +6,7 @@ tags: ["net","개발","entity","text","story","blog","ol-home","development"]
 
 # NET 메뉴 1차 구현 기록 — 이름카드 탐색과 TEXT/STORY 연동
 
-> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 이 자료를 계승한 **BIWOOM HUB**의 공개 주소는 https://biwoom.github.io/hub/ 입니다.
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 이 자료를 계승한 **비움**의 공개 주소는 https://biwoom.github.io/ 입니다.
 
 이번 작업의 목표는 두 가지였다. 첫째는 BORIDO HOME 안에 `NET` 메뉴를 실제 탐색 화면으로 세우는 것, 둘째는 여기서 만든 이름카드 경험을 `TEXT`와 `STORY` 읽기 화면으로 옮기는 것이었다.
 

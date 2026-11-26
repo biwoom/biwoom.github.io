@@ -1,9 +1,9 @@
 ---
 name: ol-doc-maintenance
-description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md, and project rules. Use for durable guidance, content management manuals, brand definitions, and change histories.
+description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and project rules. Use for durable guidance, content management manuals, brand definitions, and change histories.
 ---
 
-# BIWOOM HUB Doc Maintenance
+# BIWOOM Doc Maintenance
 
 ## Workflow
 
@@ -15,7 +15,7 @@ description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md,
    - Codex local workflow: `.agents/skills/{name}/SKILL.md`.
    - Codex execution setting: `.codex/config.toml` or `.codex/rules/*.rules`.
 2. Read the current version before editing.
-3. Use the BIWOOM brand definition, integrated plan and HUB plan for service scope. Use the current codebase and `.agents/context/current-state.md` to verify what is implemented. Write current guides using BIWOOM HUB for the site and BIWOOM (비움) for the umbrella brand.
+3. Use the BIWOOM brand definition and integration decision for service scope. Verify what is implemented in the current codebase and `.agents/context/current-state.md`. Use BIWOOM (비움) as the site name.
 4. Keep internal operating manuals under `.agents/references/` when they are for Codex or maintainers rather than public visitors.
 5. Public manuals may omit YAML and use an H1 title. Keep any optional frontmatter within the current allowed input fields; preserve existing descriptions and rights exceptions.
 
@@ -23,10 +23,10 @@ description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md,
 7. Add or update a bottom section named `수정 변경사항`.
 8. Run `npm run build` after public content changes.
 
-## Current BIWOOM HUB Facts
+## Current BIWOOM Facts
 
-- HUB uses `https://biwoom.github.io/hub/`, repository `biwoom/hub` and Astro `base: "/hub"`. The root site at `https://biwoom.github.io/` is the HOME destination.
-- `content/` is the Obsidian vault. The primary menu is 홈, 경론, 문학. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The HUB wordmark opens the HUB landing. 홈 opens the existing root site.
+- The production target is `https://biwoom.github.io/` from `biwoom/biwoom.github.io`. The build preserves older `/hub/` links through redirects.
+- `content/` is the Obsidian vault. The primary menu is 홈, 경론, 문학. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The wordmark and 홈 open the root landing. The 이야기 아티클 card leads to `/articles/`.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
@@ -40,7 +40,7 @@ description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md,
 ## Document Placement
 
 - Brand definition: `content/pages/brand.md`.
-- Content management manual: `.agents/references/biwoom-hub-content-management-manual.md`.
+- Content management manual: `.agents/references/biwoom-content-management-manual.md`.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
 - `content/pages/` should stay visitor-facing; internal operating manuals do not belong there.

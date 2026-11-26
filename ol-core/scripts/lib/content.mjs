@@ -64,11 +64,15 @@ export function walk(root, { assets = false } = {}) {
   });
 }
 export function parse(source) {
+  const parsed = parseFrontmatter(source);
+  validateInput(parsed.data);
+  return parsed;
+}
+export function parseFrontmatter(source) {
   const m = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   const data = m ? (yaml.load(m[1]) ?? {}) : {};
   if (typeof data !== "object" || Array.isArray(data))
     throw new Error("frontmatter must be an object");
-  validateInput(data);
   return { data, body: m ? source.slice(m[0].length) : source };
 }
 export function readRegistry(root = PROJECT_ROOT) {

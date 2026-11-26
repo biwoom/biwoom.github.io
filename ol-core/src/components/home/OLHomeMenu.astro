@@ -1,0 +1,26 @@
+---
+import { url } from '../../lib/url';
+const pathname = Astro.url.pathname.replace(/\/$/, '');
+const menu = [
+  { label: '이야기 아티클', path: '/articles/' },
+  { label: '시리즈', path: '/series/' },
+  { label: '주제별', path: '/topics/' },
+  { label: '태그', path: '/tags/' },
+  { label: '보관함', path: '/saved/', icon: 'saved' },
+];
+---
+<nav class="ol-home-menu" aria-label="이야기 아티클 탐색" data-pagefind-ignore>
+  {menu.map(({ label, path, icon }) => {
+    const href = url(path);
+    const current = pathname === href.replace(/\/$/, '') ? 'page'
+      : (['/series/', '/tags/'].includes(path) && pathname.startsWith(href))
+        || (path === '/series/' && pathname.startsWith(url('/categories/')))
+        || (path === '/articles/' && pathname.startsWith(url('/stories/'))) ? 'true' : undefined;
+    return (
+      <a href={href} aria-current={current}>
+        {icon === 'saved' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" aria-hidden="true"><path d="M6.5 5.1a1.5 1.5 0 0 1 1.5-1.5h8a1.5 1.5 0 0 1 1.5 1.5v15.4L12 16.8l-5.5 3.7Z" /></svg>}
+        <span>{label}</span>
+      </a>
+    );
+  })}
+</nav>

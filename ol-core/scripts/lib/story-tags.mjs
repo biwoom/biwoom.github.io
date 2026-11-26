@@ -29,9 +29,9 @@ export function storyTagSearchKey(text) {
 }
 
 /** @param {Pick<StoryTag, "type" | "label">} tag */
-export function storyTagPath({ type, label }) {
+export function storyTagPath({ type, label }, base = storyTagsPath) {
   const segment = encodeURIComponent(label).replace(/[.!'()*]/g, char => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
-  return `${storyTagsPath}${type}/${segment}/`;
+  return `${base}${type}/${segment}/`;
 }
 
 function readMap(value, field) {

@@ -1,0 +1,120 @@
+---
+import OLStoryPostcard from './OLStoryPostcard.astro';
+import { readHomeTopics, type HomeArticle } from '../../lib/home-articles';
+import { compareHomePublication, homeTopicTagId } from '../../../scripts/lib/home-articles.mjs';
+import { indexStoryTags } from '../../../scripts/lib/story-tags.mjs';
+import { url } from '../../lib/url';
+interface Props { stories: HomeArticle[]; mode?: 'home' | 'topics' | 'category' | 'saved' | 'tag' }
+const { stories, mode = 'home' } = Astro.props;
+const saved = mode === 'saved';
+const topics = mode === 'topics';
+const pageSize = 30;
+const groups = topics ? Object.entries(readHomeTopics()).map(([id, title]) => ({
+  id, title, count: stories.filter(story => story.topic === id).length,
+})) : [];
+const topicTags = topics ? indexStoryTags(stories.map(story => ({
+  source: story.entry.id, storyTags: story.storyTags.filter(tag => tag.type === 'topic'),
+}))) : [];
+const sortOptions = [{ key: 'published', title: '최신' }, { key: 'created', title: '제작일순' }, { key: 'title', title: '이름순' }];
+const cards = stories.map((story, rank) => ({ story, rank }))
+  .sort((a, b) => compareHomePublication(a.story, b.story));
+const label = topics ? '모든 주제' : mode === 'category' ? '수록 이야기' : saved ? '보관한 이야기' : mode === 'tag' ? '관련 이야기' : '이야기를 찾아 읽다';
+---
+<section class="ol-story-collection" aria-labelledby="ol-story-collection-title" data-home-catalog={mode} data-page-size={pageSize}>
+  {topics && <h2 class="ol-home-topic-group-heading" id="ol-home-main-topics">메인 주제</h2>}
+  {topics && <div class="ol-home-topic-tiles ol-home-main-topic-tiles" role="group" aria-labelledby="ol-home-main-topics">
+    {groups.map(({ id, title, count }) => (
+      <button class="ol-home-topic-tile" id={id} type="button" data-home-filter={id} data-filter-title={title} aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          {id === 'grief' && <path d="M3 8c2 0 2-2 4.5-2S10 8 12 8s2-2 4.5-2S19 8 21 8M3 14c2 0 2-2 4.5-2s2.5 2 4.5 2 2-2 4.5-2 2.5 2 4.5 2M3 20c2 0 2-2 4.5-2s2.5 2 4.5 2 2-2 4.5-2 2.5 2 4.5 2" />}
+          {id === 'kindness' && <path d="M12 20S4 15.5 3.5 10c-.5-5 6-7 8.5-2 2.5-5 9-3 8.5 2C20 15.5 12 20 12 20Z" />}
+          {id === 'presence' && <><circle cx="12" cy="12" r="4" /><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.5 5.5 7 7m10 10 1.5 1.5m0-13L17 7M7 17l-1.5 1.5" /></>}
+          {id === 'practice' && <path d="M6 18C3 12 7 7 12 6c2.5-.5 5-1 7-2 0 5 0 10-3 13-3 3-7 3-10 1zm-2 2 9-9" />}
+          {!['grief', 'kindness', 'presence', 'practice'].includes(id) && <path d="M12 3 21 12l-9 9-9-9Z" />}
+        </svg>
+        <strong>{title}</strong><span>{count}편</span>
+      </button>
+    ))}
+  </div>}
+  {topics && <section class="ol-home-topic-tags" aria-labelledby="ol-home-topic-tags">
+    <h2 class="ol-home-topic-group-heading" id="ol-home-topic-tags">세부 주제</h2>
+    <div class="ol-home-topic-chips" role="group" aria-labelledby="ol-home-topic-tags">
+      {topicTags.map(({ label, documents }) => {
+        const id = homeTopicTagId(label);
+        return <button id={id} type="button" data-home-filter={id} data-home-filter-tag data-filter-title={label} aria-pressed="false">
+          {label} <span aria-label={`${documents.length}편`}>{documents.length}</span>
+        </button>;
+      })}
+    </div>
+    {topicTags.length === 0 && <p>등록된 세부 주제가 없습니다.</p>}
+  </section>}
+  <div class="ol-home-catalog-heading">
+    <div>
+      <h2 id="ol-story-collection-title" tabindex="-1" data-home-catalog-title={label}>{label}</h2>
+      <span data-home-catalog-count role="status">{saved ? 0 : stories.length}편</span>
+    </div>
+    <div class="ol-home-catalog-tools">
+      {topics && <button type="button" class="ol-btn ol-btn-ghost ol-btn-sm ol-home-show-all" data-home-filter="" aria-pressed="true">전체보기</button>}
+      {mode === 'category' && <a class="ol-btn ol-btn-ghost ol-btn-sm" href={url('/series/#categories')}>모든 묶음</a>}
+      <form role="search" data-home-catalog-search>
+        <label class="sr-only" for="ol-home-catalog-search">이야기 검색</label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.3 15.3 4.5 4.5"/></svg>
+        <input id="ol-home-catalog-search" type="search" placeholder="이야기 검색" autocomplete="off" />
+      </form>
+      <div class="ol-home-view-tools" role="group" aria-label="보기 방식">
+        <button type="button" data-home-view="cards" aria-pressed="true" aria-label="카드 보기" title="카드 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" aria-hidden="true"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg></button>
+        <button type="button" data-home-view="list" aria-pressed="false" aria-label="목록 보기" title="목록 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h1m-1 6h1m-1 6h1"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="ol-home-sort-tools" role="group" aria-label="이야기 정렬">
+    {sortOptions.map(({ key, title }) => <button type="button" data-home-sort={key} aria-pressed={key === 'published' ? 'true' : 'false'}>{title}</button>)}
+  </div>
+  <div id="ol-home-catalog-grid" class="ol-postcard-grid" data-home-catalog-grid data-view="cards" hidden={saved}>
+    {cards.map(({ story, rank }, index) => <OLStoryPostcard story={story} {rank} hidden={index >= pageSize} />)}
+  </div>
+  {cards.length > pageSize && <div class="ol-list-loadmore" data-loadmore-wrap hidden>
+    <button class="ol-btn ol-btn-outline" type="button" data-loadmore-button aria-controls="ol-home-catalog-grid">
+      더보기 <span data-loadmore-remaining></span>
+    </button>
+  </div>}
+  {!saved && cards.length > pageSize && <noscript>
+    <style is:inline>.ol-story-collection [data-home-catalog-grid] .ol-postcard[hidden] { display: block; }</style>
+  </noscript>}
+  {mode === 'home' && <script is:inline>
+    (() => {
+      const catalog = document.currentScript.closest('[data-home-catalog]');
+      const grid = catalog.querySelector('[data-home-catalog-grid]');
+      const rowChoices = [];
+
+      // Keep each row's random choice for this visit, including through search and sorting.
+      function spanFor(index, count, rowSize) {
+        const row = Math.floor(index / rowSize);
+        const size = Math.min(rowSize, count - row * rowSize);
+        if (size === 1) return 12;
+        const choice = rowChoices[row] ??= Math.random();
+        const isWide = index % rowSize === Math.floor(choice * size);
+        return size === 2 ? (isWide ? 7 : 5) : (isWide ? 6 : 3);
+      }
+
+      function applyWidths() {
+        const cards = [...grid.querySelectorAll('[data-story-card]:not([hidden])')];
+        cards.forEach((card, index) => {
+          card.style.setProperty('--home-postcard-span', spanFor(index, cards.length, 3));
+          card.style.setProperty('--home-postcard-pair-span', spanFor(index, cards.length, 2));
+        });
+      }
+
+      applyWidths();
+      grid.setAttribute('data-home-random-widths', '');
+      catalog.addEventListener('home-catalog-updated', applyWidths);
+    })();
+  </script>}
+  <div class="ol-story-saved-empty" data-home-catalog-empty hidden={!saved}>
+    <p data-home-empty-note>{saved ? '아직 보관한 이야기가 없습니다. 이야기 카드의 책갈피를 눌러 담아 보세요.' : '일치하는 이야기가 없습니다.'}</p>
+    {saved && <a href={url('/articles/')}>모든 이야기 보기</a>}
+  </div>
+</section>
+<script>
+  import '../../lib/client/home-story-catalog';
+</script>

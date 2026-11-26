@@ -1,1 +1,1 @@
-export { hubPath as url, stripHubBase } from "../../../site-config.mjs";
+export { sitePath as url } from "../../../site-config.mjs";

@@ -74,7 +74,7 @@ const pagefindPath = url("/pagefind/pagefind.js");
   let activeSection = "ALL";
   let currentResults: any[] = [];
 
-  const sectionOrder = ["TEXT", "STORY", "BLOG", "PAGES"];
+  const sectionOrder = ["TEXT", "STORY", "ARTICLE", "BLOG", "PAGES"];
 
   async function loadPagefind() {
     if (pagefind) return pagefind;
@@ -178,7 +178,8 @@ const pagefindPath = url("/pagefind/pagefind.js");
           section === "ALL"
             ? currentResults.length
             : (counts.get(section) ?? 0);
-        const label = section === "ALL" ? "전체" : section === "STORY" ? LIBRARY_LABELS.story : section;
+        const sectionLabels: Record<string, string> = { ALL: "전체", STORY: LIBRARY_LABELS.story, ARTICLE: "이야기 아티클" };
+        const label = sectionLabels[section] ?? section;
         return `
         <button
           type="button"

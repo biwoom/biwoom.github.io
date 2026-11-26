@@ -6,7 +6,7 @@ tags: ["개발","필터","페이지네이션","blog","ol-home","development","fi
 
 # Phase 4 — 필터, 페이지네이션, Pages 컬렉션, 사이트 설정 통합
 
-> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 이 자료를 계승한 **BIWOOM HUB**의 공개 주소는 https://biwoom.github.io/hub/ 입니다.
+> 이 글은 이전 브랜드와 구현을 다룬 작업 기록입니다. 이 자료를 계승한 **비움**의 공개 주소는 https://biwoom.github.io/ 입니다.
 
 오늘 BORIDO HOME에 적용한 작업들을 정리한다. 페이지별 필터와 페이지네이션 통일, 구조적 개선, 그리고 몇 가지 새로운 기능 추가.
 

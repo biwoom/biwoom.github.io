@@ -3,15 +3,18 @@ import { BRAND, REPOSITORY_URL } from "../../lib/site-config";
 import { navItems } from "../../data/nav";
 import { url } from "../../lib/url";
 
+const { articlePage = false, articleReader = false } = Astro.props;
+const articleLanding = articlePage && Astro.url.pathname === "/articles/";
 const currentPath = Astro.url.pathname;
-const wordmark = `${BRAND.nameKo} HUB`;
+const wordmark = BRAND.nameKo;
 
 function isActive(href: string): boolean {
-  return currentPath === href || currentPath.startsWith(`${href}/`);
+  return currentPath === href || (href !== "/" && currentPath.startsWith(`${href}/`));
 }
 ---
 
-<header class="ol-header" data-pagefind-ignore>
+<header class="ol-header" data-home-header={articlePage || undefined} data-home-landing-header={articleLanding || undefined}
+  data-home-reader-header={articleReader || undefined} data-pagefind-ignore>
   <div class="ol-container ol-header-inner">
     <!-- Brand -->
     <a href={url("/")} class="ol-brand" aria-label={`${wordmark} 첫 화면`}>
@@ -248,12 +251,36 @@ function isActive(href: string): boolean {
 </script>
 
 <script>
+  const scrollHeader = document.querySelector<HTMLElement>('[data-home-landing-header], [data-home-reader-header]');
+  if (scrollHeader) {
+    const landing = scrollHeader.hasAttribute('data-home-landing-header');
+    let lastY = Math.max(0, window.scrollY);
+    let frame = 0;
+    window.addEventListener('scroll', () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const y = Math.max(0, window.scrollY);
+        const nearTop = y <= (landing ? 8 : scrollHeader.offsetHeight);
+        if (!nearTop && Math.abs(y - lastY) < 5) return;
+        scrollHeader.toggleAttribute('data-scroll-hidden', !nearTop && y > lastY);
+        lastY = y;
+      });
+    }, { passive: true });
+    window.addEventListener('pageshow', () => {
+      lastY = Math.max(0, window.scrollY);
+      scrollHeader.removeAttribute('data-scroll-hidden');
+    });
+  }
+
   const btn = document.getElementById("ol-theme-toggle");
+  btn?.setAttribute("aria-pressed", String(document.documentElement.classList.contains("dark")));
   btn?.addEventListener("click", () => {
     const root = document.documentElement;
     root.classList.add("theme-switching");
     const isDark = root.classList.toggle("dark");
-    localStorage.setItem("ol-theme", isDark ? "dark" : "light");
+    btn.setAttribute("aria-pressed", String(isDark));
+    try { localStorage.setItem("ol-theme", isDark ? "dark" : "light"); } catch { /* Keep the theme for this page. */ }
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         root.classList.remove("theme-switching");

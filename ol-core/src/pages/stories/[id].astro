@@ -1,0 +1,101 @@
+---
+import OLHomeShell from '../../components/home/OLHomeShell.astro';
+import OLStoryBookmark from '../../components/home/OLStoryBookmark.astro';
+import OLStoryPostcard from '../../components/home/OLStoryPostcard.astro';
+import ReaderFontControl from '../../components/common/ReaderFontControl.astro';
+import ReaderCopyControl from '../../components/common/ReaderCopyControl.astro';
+import { render } from 'astro:content';
+import { getHomeArticles, homeSeriesPath, storyCategories, type HomeArticle } from '../../lib/home-articles';
+import { url } from '../../lib/url';
+import { storyTagPath } from '../../lib/home-story-tags';
+
+export async function getStaticPaths() {
+  const articles = await getHomeArticles();
+  return articles.map(story => {
+    const related = articles.filter(item => item.id !== story.id && item.category === story.category);
+    if (story.series) related.sort((a, b) => Number(b.series === story.series) - Number(a.series === story.series));
+    return { params: { id: story.id }, props: { story, related: related.slice(0, 2) } };
+  });
+}
+interface Props { story: HomeArticle; related: HomeArticle[] }
+const { story, related } = Astro.props;
+const { Content } = await render(story.entry);
+const topic = story.topicLabel;
+const currentUrl = url(`/stories/${story.id}/`);
+---
+<OLHomeShell title={`${story.title}`} description={story.blurb} ogImage={story.photo?.url} reader
+  pagefindMeta={{ title: story.title, section: 'ARTICLE', sectionLabel: '이야기 아티클', category: topic }}>
+  <div class="ol-home-reader">
+    <article>
+      <div class="ol-home-reader-nav" data-pagefind-ignore>
+        <a href={url('/articles/')}>이야기 목록</a>
+        <div class="ol-home-reader-tools">
+          <OLStoryBookmark id={story.id} title={story.title} />
+          <ReaderFontControl />
+        </div>
+      </div>
+      <header class="ol-home-reader-heading">
+        <a href={url(`/categories/${story.category}/`)}>{storyCategories[story.category]}</a><span aria-hidden="true"> · </span>
+        <a href={url(`/topics/#${story.topic}`)}>{topic}</a>
+        {story.series && <><span aria-hidden="true"> · </span><a href={url(homeSeriesPath(story.category, story.series))}>{story.series}</a></>}
+        <h1>{story.title}</h1>
+        <p>{story.blurb}</p>
+      </header>
+      {story.photo && <img class="ol-home-reader-art" src={story.photo.url} alt={story.photo.alt} />}
+      <div class="ol-prose ol-home-reader-copy">
+        <Content />
+      </div>
+      <ul class="ol-home-story-tags" aria-label="이야기 태그">
+        {story.storyTags.map(tag => <li><a href={url(storyTagPath(tag))}>{tag.label}</a></li>)}
+      </ul>
+      {story.source && <aside class="ol-home-reader-source" aria-label="출전">
+        <span>출전</span>
+        {story.source.url ? <a href={url(story.source.url)}>{story.source.title}</a> : <span>{story.source.title}</span>}
+      </aside>}
+      {story.sample && <p class="ol-home-reader-note" data-pagefind-ignore>비움의 시범 아티클입니다.</p>}
+      <div class="ol-home-reader-footer" data-pagefind-ignore>
+        <p class="ol-home-reader-feedback" role="status" data-reader-feedback></p>
+        <div class="ol-home-reader-tools">
+          <button class="ol-text-tool-btn" type="button" data-home-reader-share={currentUrl}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V3m-4 4 4-4 4 4M5 12v8h14v-8"/></svg>
+            공유
+          </button>
+          <ReaderCopyControl {currentUrl} title={story.title} label="복사" />
+        </div>
+        <template data-reader-copy-source>{story.entry.body ?? ''}</template>
+      </div>
+    </article>
+    {related.length > 0 && <section class="ol-home-reader-related" aria-labelledby="ol-home-related-title" data-pagefind-ignore>
+      <h2 id="ol-home-related-title">이어 읽을 이야기</h2>
+      <div class="ol-home-related-grid">
+        {related.map(item => <OLStoryPostcard story={item} direct />)}
+      </div>
+    </section>}
+  </div>
+</OLHomeShell>
+
+<script>
+  import { copyReaderText, initReaderCopy, tellReader } from '../../lib/client/reader-copy';
+  import { initReaderFont } from '../../lib/client/reader-tools';
+
+  const reader = document.querySelector<HTMLElement>('.ol-home-reader');
+  if (reader) {
+    initReaderFont(reader, '.ol-home-reader-heading h1, .ol-home-reader-copy, .ol-home-reader-copy :is(h1,h2,h3,h4,h5,h6,pre code,table,th)');
+    initReaderCopy(reader);
+    const share = reader.querySelector<HTMLButtonElement>('[data-home-reader-share]');
+    const feedback = reader.querySelector<HTMLElement>('[data-reader-feedback]');
+    const title = reader.querySelector('h1')?.textContent ?? document.title;
+    share?.addEventListener('click', async () => {
+      const address = new URL(share.dataset.homeReaderShare ?? location.pathname, location.origin).href;
+      if (typeof navigator.share === 'function') {
+        try {
+          await navigator.share({ title, url: address });
+          return;
+        } catch (error) {
+          if (error instanceof DOMException && error.name === 'AbortError') return;
+        }
+      }
+      if (await copyReaderText(address, feedback)) tellReader(feedback, '공유 링크를 복사했습니다.');
+    });
+  }
+</script>

@@ -1,4 +1,4 @@
 interface:
-  display_name: "BIWOOM HUB GitHub Upload"
+  display_name: "BIWOOM GitHub Upload"
   short_description: "Push changes to the HUB repository"
-  default_prompt: "Use $ol-github-upload-log to upload the requested changes to biwoom/hub."
+  default_prompt: "Use $ol-github-upload-log to upload the requested changes to biwoom/biwoom.github.io."

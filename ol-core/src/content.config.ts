@@ -1,4 +1,9 @@
 import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { projectPaths, normalizeContentPath } from "../scripts/lib/paths.mjs";
+import { articlePattern, homeArticleSchema } from "../scripts/lib/home-articles.mjs";
 import { z } from "astro/zod";
 import { markdownLoader, materialsLoader } from "./lib/content-loaders";
 import { storyTagTypes } from "../scripts/lib/story-tags.mjs";
@@ -41,6 +46,14 @@ function collection(name: string) {
   return defineCollection({ schema, loader: markdownLoader(name) });
 }
 export const collections = {
+  article: defineCollection({
+    schema: homeArticleSchema,
+    loader: glob({
+      base: pathToFileURL(path.join(projectPaths().content, "article")),
+      pattern: articlePattern,
+      generateId: ({ entry }) => normalizeContentPath(entry),
+    }),
+  }),
   text: collection("text"),
   story: collection("story"),
   blog: collection("blog"),

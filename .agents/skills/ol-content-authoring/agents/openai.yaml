@@ -1,4 +1,4 @@
 interface:
-  display_name: "BIWOOM HUB Content Authoring"
+  display_name: "BIWOOM Content Authoring"
   short_description: "Create and update HUB content"
-  default_prompt: "Use $ol-content-authoring to add or revise BIWOOM HUB content."
+  default_prompt: "Use $ol-content-authoring to add or revise BIWOOM content."
