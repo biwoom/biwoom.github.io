@@ -67,7 +67,7 @@ const pagefindPath = url("/pagefind/pagefind.js");
 
 <script>
   import { url } from "../../lib/url";
-  import { BRAND, LIBRARY_LABELS } from "../../lib/site-config";
+  import { ARTICLE_LABEL, BRAND, LIBRARY_LABELS } from "../../lib/site-config";
 
   let pagefind: any = null;
   let selectedIndex = -1;
@@ -178,7 +178,7 @@ const pagefindPath = url("/pagefind/pagefind.js");
           section === "ALL"
             ? currentResults.length
             : (counts.get(section) ?? 0);
-        const sectionLabels: Record<string, string> = { ALL: "전체", STORY: LIBRARY_LABELS.story, ARTICLE: "이야기 아티클" };
+        const sectionLabels: Record<string, string> = { ALL: "전체", STORY: LIBRARY_LABELS.story, ARTICLE: ARTICLE_LABEL };
         const label = sectionLabels[section] ?? section;
         return `
         <button

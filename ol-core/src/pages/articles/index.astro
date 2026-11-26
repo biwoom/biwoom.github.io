@@ -6,11 +6,12 @@ import OLHomeTodayCard from '../../components/home/OLHomeTodayCard.astro';
 import { getHomeArticles } from '../../lib/home-articles';
 import { compareHomePublication, readHomeArticleIndex, selectRecommendedStories } from '../../../scripts/lib/home-articles.mjs';
 import { url } from '../../lib/url';
+import { ARTICLE_LABEL } from '../../lib/site-config';
 const articles = await getHomeArticles();
 const today = [...articles].sort(compareHomePublication)[0];
 const recommended = selectRecommendedStories(readHomeArticleIndex(), articles);
 ---
-<OLHomeShell title="이야기 아티클" detailStories={articles}>
+<OLHomeShell title={ARTICLE_LABEL} detailStories={articles}>
   <header slot="intro" class="ol-home-intro ol-home-hero">
     <div class="ol-home-hero-intro">
       <h1>이야기로 만나는 붓다의 가르침</h1>

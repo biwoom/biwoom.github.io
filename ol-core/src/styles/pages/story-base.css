@@ -2,12 +2,9 @@
    OL STORY — Series reader
    ============================================================ */
 
-.ol-story-reader-page {
-  width: min(1760px, calc(100% - 48px));
-  margin: 0 auto;
-  padding: 20px 0 120px;
-  overflow-x: hidden;
-}
+.ol-story-series-page { padding-block: 20px 120px; }
+.ol-story-series-page,
+.ol-story-reader-page { overflow-x: hidden; }
 
 .ol-story-series-hero {
   margin: 0 auto 76px;

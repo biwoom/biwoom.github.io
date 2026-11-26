@@ -8,7 +8,7 @@ import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import { compareHomePublication, readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
 import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath } from "./lib/story-tags.mjs";
-import { BLOG, REPOSITORY_URL, SITE_URL, sitePath } from "../../site-config.mjs";
+import { ARTICLE_LABEL, BLOG, BRAND, REPOSITORY_URL, SERIES_LABELS, SITE_URL, sitePath } from "../../site-config.mjs";
 import {
   readRegistry,
   categoryFolders,
@@ -52,6 +52,17 @@ function overlay(html, id, label) {
     `${label}: ${id} must start aria-hidden`,
   );
 }
+rule(":root", /--ol-page-width:1600px/);
+const pageFrame = "body:not(:has(.ol-story-doc-page)) .ol-container:not(:where(.ol-footer *))";
+rule(pageFrame, /max-width:var\(--ol-page-width\)/);
+rule(pageFrame, /padding-inline:var\(--ol-page-gutter\)/);
+rule(".ol-container", /max-width:1200px/);
+rule(".ol-reading-column", /max-width:656px/);
+rule(".ol-home-reader", /max-width:704px/);
+rule(".ol-home-reader-back", /min-height:44px/);
+rule(".ol-home-reader-heading", /margin-block:clamp\(32px/);
+rule(".ol-home-reader-heading h1", /margin-block:clamp\(18px/);
+const readingFrame = /<div\b[^>]*\bclass="ol-container"[^>]*>\s*<div\b[^>]*\bclass="ol-reading-column"[^>]*>/;
 rule(".ol-search-overlay", /position:fixed/);
 rule(".ol-search-overlay[hidden]", /display:none/);
 rule(".ol-mobile-overlay", /position:fixed/);
@@ -170,6 +181,7 @@ for (const [source, record] of Object.entries(registry.files)) {
     assert.ok(html.indexOf("data-document-tags") < html.indexOf('class="ol-prose'), `${record.url}: tags belong above body`);
   }
   if (collection === "blog") {
+    assert.ok(readingFrame.test(html), `${record.url}: reading column inside the page container`);
     publishedBlogTags.push(expectedTags);
     const category = { label: data.category, order: data.categoryOrder };
     assert.ok(data.seriesKey === "blog/standalone" || data.categoryKey.startsWith(data.seriesKey + "/"), `${source}: category must belong to its series`);
@@ -380,6 +392,11 @@ for (const section of ["text", "story"]) {
   }
   const workLinks = [...index.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*data-library-work-category=/g)].map(([, href]) => href);
   assert.deepEqual(workLinks.sort(), [...series.values()].map(sitePath).sort(), `${section}: menu must list all public works`);
+  const workContainer = section === "text" ? "ol-text-library-grid" : "ol-story-series-page";
+  for (const url of series.values()) {
+    const detail = fs.readFileSync(path.join(dist, url, "index.html"), "utf8");
+    assert.ok(detail.includes(`class="ol-container ${workContainer}"`), `${url}: uses the shared page container`);
+  }
   const recent = index.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "";
   const recentLinks = [...recent.matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
   assert.equal(new Set(recentLinks).size, recentLinks.length);
@@ -442,26 +459,34 @@ const seriesIndex = fs.readFileSync(path.join(dist, "blog/series/index.html"), "
 assert.equal((seriesIndex.match(/data-series-card(?:\s|=|>)/g) ?? []).length, blogCatalog.filter(s => s.key !== BLOG.journalSeries).length);
 assert.ok(seriesIndex.indexOf('class="ol-blog-journal"') > seriesIndex.lastIndexOf('data-series-card'), "Journal stays below randomized covers");
 assert.ok(!seriesIndex.includes('role="tab"'), "BLOG views navigate to separate pages");
-assert.ok(seriesIndex.includes(`href="${sitePath("/blog/series/")}" aria-current="page"`));
+assert.ok(seriesIndex.includes(`href="${sitePath("/blog/series/")}" aria-current="page">${SERIES_LABELS.blog}</a>`));
+assert.equal(seriesIndex.match(/<h1>([^<]*)<\/h1>/)?.[1].trim(), SERIES_LABELS.blog);
 const feed = fs.readFileSync(path.join(dist, "rss.xml"), "utf8");
 assert.equal((feed.match(/<item>/g) ?? []).length, publishedBlogCategories.length, "Metadata must not enter RSS");
 const homeHtml = fs.readFileSync(path.join(dist, "index.html"), "utf8");
+const brandHtml = fs.readFileSync(path.join(dist, registry.files["pages/brand.md"].url, "index.html"), "utf8");
+assert.ok(readingFrame.test(brandHtml), "Brand page keeps a reading column inside the page container");
 const landingHeader = homeHtml.match(/<header class="ol-header"[\s\S]*?<\/header>/)?.[0] ?? "";
 const landingMobileMenu = homeHtml.match(/<nav class="ol-mobile-sheet"[\s\S]*?<\/nav>/)?.[0] ?? "";
 assert.ok(landingHeader.includes(`href="${sitePath("/")}" class="ol-brand"`), "Biwoom brand opens the site landing");
 assert.ok(landingHeader.includes('class="ol-brand-name">비움</span>'), "Header displays the Korean wordmark");
-assert.ok(landingHeader.includes('class="ol-brand-meta">불교문헌 연구공간</span>'), "Header displays the research subtitle");
+assert.ok(landingHeader.includes(`class="ol-brand-meta">${BRAND.tagline}</span>`), "Header displays the brand tagline");
 const expectedPrimaryLinks = [
-  ["/", "홈"],
   [sitePath("/text"), "경론"],
   [sitePath("/story"), "문학"],
+  [sitePath("/articles/"), "카드"],
 ];
 for (const menu of [landingHeader, landingMobileMenu]) {
   const links = Array.from(menu.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)(?: active)?">([^<]+)<\/a>/g),
     ([, href, label]) => [href, label.trim()]);
   assert.deepEqual(links, expectedPrimaryLinks, "Primary navigation uses Korean labels and preserves its destinations");
 }
-assert.ok(homeHtml.includes(`href="${sitePath("/pages/brand")}">비움 소개</a>`), "Footer opens the site introduction");
+const footer = homeHtml.match(/<footer\b[\s\S]*?<\/footer>/)?.[0] ?? "";
+assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
+  .map(([, href, label]) => [href, label])
+  .filter(([, label]) => ["BLOG · 시리즈", ARTICLE_LABEL, "비움 소개"].includes(label)),
+  [[sitePath("/blog/series/"), "BLOG · 시리즈"], [sitePath("/articles/"), ARTICLE_LABEL], [sitePath("/pages/brand"), "비움 소개"]],
+  "Footer links to the cards directly below BLOG series");
 assert.ok(landingHeader.includes(`href="${REPOSITORY_URL}"`), "Header GitHub link opens the site repository");
 assert.ok(homeHtml.includes(`data-pagefind-path="${sitePath("/pagefind/pagefind.js")}"`), "Search loads the site index");
 assert.ok(fs.existsSync(path.join(dist, "pagefind/pagefind.js")), "Pagefind script is published");
@@ -473,12 +498,27 @@ assert.ok(blogHomeCard.includes(`${publishedBlogCategories.length}개 자료`), 
 const publishedArticles = readHomeArticles().filter(({ article }) => article.published);
 const articleIds = publishedArticles.map(({ article }) => article.id).sort();
 const articleCard = homeHtml.match(/<a href="\/articles\/" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1] ?? "";
-assert.match(articleCard, /이야기 아티클/);
+assert.ok(articleCard.includes(ARTICLE_LABEL), "Home card displays the public article name");
 assert.ok(articleCard.includes(`${articleIds.length}개 자료`), "Home card counts public articles");
+const articleStat = [...homeHtml.matchAll(/<a\b[^>]*\bclass="ol-stat"[^>]*>[\s\S]*?<\/a>/g)]
+  .find(([link]) => link.includes(`href="${sitePath("/articles/")}"`))?.[0];
+assert.ok(articleStat?.includes(ARTICLE_LABEL) && articleStat.includes(`data-article-stat-count>${articleIds.length}<`),
+  "Home story-card stat links to the article catalog and counts public articles");
 const articleIndexHtml = fs.readFileSync(path.join(dist, "articles/index.html"), "utf8");
+assert.deepEqual(
+  [...articleIndexHtml.matchAll(/<a href="\/articles\/" class="(ol-nav-link|ol-mobile-sheet-link) active">\s*카드\s*<\/a>/g)]
+    .map(([, name]) => name),
+  ["ol-nav-link", "ol-mobile-sheet-link"],
+  "Both headers mark the card menu active on /articles/",
+);
+assert.ok(articleIndexHtml.includes('class="ol-container ol-home-workspace"'), "Story card uses the page container");
 const articleNav = articleIndexHtml.match(/<nav class="ol-home-menu"[\s\S]*?<\/nav>/)?.[0] ?? "";
 assert.deepEqual([...articleNav.matchAll(/href="([^"]+)"/g)].map(([, href]) => href),
   ["/articles/", "/series/", "/topics/", "/tags/", "/saved/"]);
+assert.ok(articleNav.includes(`<span>${SERIES_LABELS.article}</span>`));
+const articleSeriesIndex = fs.readFileSync(path.join(dist, "series/index.html"), "utf8");
+assert.equal(articleSeriesIndex.match(/<h1>([^<]*)<\/h1>/)?.[1].trim(), SERIES_LABELS.article);
+assert.ok(articleSeriesIndex.includes('id="ol-home-categories-title">이야기 묶음</h2>'));
 const articleCatalog = articleIndexHtml.match(/<section class="ol-story-collection"[\s\S]*?<\/section>/)?.[0] ?? "";
 const articleCards = [...articleCatalog.matchAll(/<article\b[^>]*data-story-card="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
 assert.deepEqual(articleCards.map(([, id]) => id).sort(), articleIds, "One card per public article");
@@ -494,13 +534,19 @@ for (const [, id, card] of articleCards) {
   assert.ok(card.includes(`href="/stories/${id}/"`), `${id}: direct article link`);
   assert.ok(card.includes(`data-story-bookmark="${id}"`), `${id}: existing bookmark ID`);
   const reader = fs.readFileSync(path.join(readerDir, id, "index.html"), "utf8");
+  assert.ok(!hasClass(reader, "ol-home-menu"), `${id}: story reader navigation uses the return link`);
+  const backLink = reader.match(/<a\b[^>]*class="[^"]*\bol-home-reader-back\b[^"]*"[^>]*>[\s\S]*?<\/a>/)?.[0];
+  assert.ok(backLink?.includes('href="/articles/"') && backLink.includes("이야기 목록"), `${id}: labeled return link`);
   for (const feature of ["data-reader-font-trigger", "data-reader-copy-source", "data-home-reader-share"]) {
     assert.ok(reader.includes(feature), `${id}: missing ${feature}`);
   }
   assert.match(reader, /data-pagefind-meta="section\[content\]" content="ARTICLE"/);
+  assert.ok(reader.includes(`data-pagefind-meta="sectionLabel[content]" content="${ARTICLE_LABEL}"`));
 }
 for (const series of readHomeSeries()) {
-  assert.ok(fs.existsSync(path.join(dist, decodeURIComponent(series.path), "index.html")), `${series.path}: missing series`);
+  const html = fs.readFileSync(path.join(dist, decodeURIComponent(series.path), "index.html"), "utf8");
+  assert.ok(html.includes(` · ${SERIES_LABELS.article} — BIWOOM</title>`), `${series.path}: series title includes the collection`);
+  assert.ok(html.includes(`← ${SERIES_LABELS.article} 목록</a>`), `${series.path}: named series index link`);
 }
 const illustrationRoot = path.join(dist, "generated/content/illustration");
 const expectedArt = new Map(publishedArticles.filter(({ illustrationFile }) => illustrationFile)
@@ -514,6 +560,8 @@ for (const [relative, source] of expectedArt)
 for (const series of blogCatalog) {
   const html = fs.readFileSync(path.join(dist, series.url, "index.html"), "utf8");
   assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1, `${series.url}: one page title`);
+  assert.ok(html.includes(` · ${SERIES_LABELS.blog} — BIWOOM</title>`), `${series.url}: series title includes the collection`);
+  assert.ok(html.includes(`← ${SERIES_LABELS.blog} 목록</a>`), `${series.url}: named series index link`);
   const toc = html.match(/<ol class="ol-blog-series-toc">([\s\S]*?)<\/ol>/)?.[1] ?? "";
   assert.deepEqual([...toc.matchAll(/href="([^"]+)"/g)].map(m => m[1]), series.entries.map(e => sitePath(e.data.url)), `${series.url}: rendered reading order`);
   if (!series.count) {

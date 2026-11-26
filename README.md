@@ -1,8 +1,8 @@
 # BIWOOM
 
-문서 버전 v1.12 · 2026-11-26 · 비움 (OL 코어)
+문서 버전 v1.13 · 2026-11-26 · 비움 (OL 코어)
 
-비움(BIWOOM)은 불교경론, 불전문학, 이야기 아티클, 포스트 시리즈, 미디어와 전자책을 읽고 탐구하는 Astro 사이트입니다.
+비움(BIWOOM)은 불교경론, 불전문학, 이야기카드, 포스트 시리즈, 미디어와 전자책을 읽고 탐구하는 Astro 사이트입니다.
 
 - 사이트: https://biwoom.github.io/
 - 저장소: `biwoom/biwoom.github.io`
@@ -114,9 +114,9 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 자세한 집필 규칙은 [비움 콘텐츠 관리 매뉴얼](.agents/references/biwoom-content-management-manual.md), 개편 기록은 [Obsidian 구조 개편 가이드](.agents/references/obsidian-content-refactor-guide.md)를 확인하세요.
 
-## 이야기 아티클
+## 이야기카드
 
-첫 화면의 **이야기 아티클** 카드는 `/articles/`로 연결됩니다. 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둡니다. 공개할 원고에는 `published: true`를 지정합니다. 원고의 `id`는 상세 주소와 보관함에 쓰입니다. 삽화는 `content/illustration/`에 두고, 원고의 `illustration.file`과 `illustration.alt`에 경로와 대체 텍스트를 적습니다.
+상단 **카드** 메뉴와 첫 화면·푸터의 **이야기카드** 링크는 `/articles/`로 연결됩니다. 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둡니다. 공개할 원고에는 `published: true`를 지정합니다. 원고의 `id`는 상세 주소와 보관함에 쓰입니다. 삽화는 `content/illustration/`에 두고, 원고의 `illustration.file`과 `illustration.alt`에 경로와 대체 텍스트를 적습니다.
 
 ## 브랜드 자산
 
@@ -128,9 +128,13 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 ## 수정 변경사항
 
+### 2026-11-26 — v1.13
+
+- 경론·문학·카드 메뉴와 이야기카드 명칭을 반영했습니다.
+
 ### 2026-11-26 — v1.12
 
-- 문헌과 이야기 아티클을 단일 사이트로 통합하고 루트 배포 주소를 기록했습니다.
+- 문헌과 대중용 이야기를 단일 사이트로 통합하고 루트 배포 주소를 기록했습니다.
 
 ### 2026-11-26 — v1.11
 

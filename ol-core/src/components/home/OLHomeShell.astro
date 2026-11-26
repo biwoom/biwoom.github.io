@@ -10,10 +10,10 @@ interface Props { title: string; description?: string; ogImage?: string; pagefin
 const { title, description, ogImage, pagefindMeta, detailStories, reader = false } = Astro.props;
 ---
 <BaseLayout {title} {description} {ogImage} {pagefindMeta} pagefindBody={Boolean(pagefindMeta)} articlePage articleReader={reader}>
-  <div class="ol-home-workspace" data-home-workspace data-home-reader={reader || undefined}>
+  <div class="ol-container ol-home-workspace" data-home-workspace>
     <main class="ol-home-main">
       <slot name="intro" />
-      <OLHomeMenu />
+      {!reader && <OLHomeMenu />}
       <slot />
     </main>
     {detailStories && <OLStoryDetail stories={detailStories} />}

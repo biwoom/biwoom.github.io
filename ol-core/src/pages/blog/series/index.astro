@@ -4,14 +4,13 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogNav from "../../../components/blog/BlogNav.astro";
 import BlogSeriesCard from "../../../components/blog/BlogSeriesCard.astro";
 import { getBlogLibrary } from "../../../lib/blog";
-import { BLOG } from "../../../lib/site-config";
+import { BLOG, SERIES_LABELS } from "../../../lib/site-config";
 const library = await getBlogLibrary();
 const featured = library.filter(s => s.key !== BLOG.journalSeries);
 const journal = library.find(s => s.key === BLOG.journalSeries);
 ---
-<BaseLayout title="시리즈 · BLOG" description="하나의 주제를 따라 이어 읽는 비움의 블로그 시리즈입니다." pagefindBody={false}>
+<BaseLayout title={SERIES_LABELS.blog} description="하나의 주제를 따라 이어 읽는 비움의 블로그 시리즈입니다." pagefindBody={false}>
   <main class="ol-blog-page"><BlogNav active="series" /><section class="ol-section-tight"><div class="ol-container">
-    <div class="ol-blog-section-heading"><h2>연속된 생각을 따라 읽다</h2><span>주제별 시리즈</span></div>
     <div class="ol-blog-series-grid" data-random-series data-pattern="0">
       {featured.map((series, index) => <BlogSeriesCard series={series} coverIndex={index} />)}
       <script is:inline>

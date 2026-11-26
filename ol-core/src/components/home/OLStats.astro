@@ -2,11 +2,13 @@
 import { getDocuments } from "../../lib/library";
 import { getCollection } from "astro:content";
 import { getMediaGallery } from "../../lib/media";
+import { getHomeArticles } from "../../lib/home-articles";
 import { url } from "../../lib/url";
-import { LIBRARY_LABELS } from "../../lib/site-config";
+import { ARTICLE_LABEL, LIBRARY_LABELS } from "../../lib/site-config";
 const labels = [LIBRARY_LABELS.text, LIBRARY_LABELS.story, "기록 BLOG"];
-const media = await getMediaGallery();
-const groups = await Promise.all([
+const [media, articles, ...groups] = await Promise.all([
+  getMediaGallery(),
+  getHomeArticles(),
   getDocuments("text"),
   getDocuments("story"),
   getCollection("blog", (e) => e.data.published && e.data.kind === "document"),
@@ -27,6 +29,10 @@ const groups = await Promise.all([
       <a class="ol-stat ol-stat--media" href={url("/media/")} aria-label={`미디어 이미지 ${media.length}개, 미디어 페이지로 이동`}>
         <div class="n"><em data-media-stat-count>{media.length}</em></div>
         <div class="l">미디어 MEDIA <span aria-hidden="true">→</span></div>
+      </a>
+      <a class="ol-stat" href={url("/articles/")} aria-label={`${ARTICLE_LABEL} ${articles.length}편, 이야기 목록으로 이동`}>
+        <div class="n"><em data-article-stat-count>{articles.length}</em></div>
+        <div class="l">{ARTICLE_LABEL} <span aria-hidden="true">→</span></div>
       </a>
     </div>
   </div>

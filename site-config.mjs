@@ -13,13 +13,16 @@ export function sitePath(value) {
     : value;
 }
 
+export const ARTICLE_LABEL = "이야기카드";
+export const SERIES_LABELS = { article: `${ARTICLE_LABEL} 시리즈`, blog: "블로그 시리즈" };
+
 export const BRAND = {
   name: "BIWOOM",
   nameKo: "비움",
   logoGold: "/brand/biwoom-mark-gold.png",
   logoMonochrome: "/brand/biwoom-mark-monochrome.png",
   tagline: "붓다의 지혜를 오늘의 삶으로",
-  description: "비움은 불교경론과 불전문학, 이야기 아티클, 포스트, 미디어와 전자책을 읽고 탐구하는 공간입니다.",
+  description: `비움은 불교경론과 불전문학, ${ARTICLE_LABEL}, 포스트, 미디어와 전자책을 읽고 탐구하는 공간입니다.`,
 };
 export const LIBRARY_LABELS = { text: "불교경론", story: "불전문학" };
 export const CONTENT_DEFAULTS = { author: "비움", lang: "ko", license: "CC0" };

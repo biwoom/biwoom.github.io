@@ -4,7 +4,7 @@
 
 BIWOOM (비움) is the public Astro site for Buddhist texts, translations, research, story articles, posts, media and ebooks. Publish to `https://biwoom.github.io/` through GitHub Actions in `biwoom/biwoom.github.io`. OL names the internal core.
 
-- Use 불전문학 for source texts, traditions and translations, and 이야기 아티클 for stories written for a general audience. Link an article to the actual edition, chapter, verse or translation when available. The wordmark and 홈 menu both open `/`.
+- Use 불전문학 for source texts, traditions and translations, and 이야기카드 for stories written for a general audience. Link an article to the actual edition, chapter, verse or translation when available. The wordmark opens `/`.
 - For editorial direction, see the sibling `biwoom-docs/BIWOOM_기획문서/` collection. Follow the 2026-11-26 integration decision and the code for the deployed architecture and implemented behavior.
 
 ## Browser Testing
@@ -18,8 +18,8 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - Define filesystem paths in `ol-core/scripts/lib/paths.mjs`, anchored to the module location rather than process.cwd(). Vault-relative keys use NFC Unicode and POSIX separators: use normalizeContentPath/relativeContentPath for keys and contentFile for physical source lookup. Normalize legacy registry keys/series/category paths and aliases without changing IDs, URLs, dates, hashes or redirects; reject conflicting normalized paths. Do not rename vault files or rewrite prose to fix normalization. Load Markdown using glob() with an absolute content base. Keep registry keys relative to the vault (text/..., story/..., blog/...); a physical vault move must not change IDs, URLs, dates or hashes.
 
 - `content/` is both the content source and the user's Obsidian vault.
-- Desktop and mobile primary navigation uses 홈, 경론, 문학. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
-- The 이야기 아티클 home card links to `/articles/`. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Preserve article metadata and publish only illustrations referenced by public articles.
+- Desktop and mobile primary navigation uses 경론, 문학, 카드, in that order. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
+- The 카드 menu, 이야기카드 home card and footer link below BLOG series open `/articles/`. Label the `/series/` navigation and index 이야기카드 시리즈. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Preserve article metadata and publish only illustrations referenced by public articles.
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
@@ -32,7 +32,7 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - STORY document aids use the shared TEXT-style dock at >=1360px: one persistent right panel with 본문 목차/각주 switching and the same background as the article. Below that width, move the original nodes back to native modals; do not duplicate IDs or auto-open a modal on resize. STORY focus hides both the left chapter list and right aid rail, then restores the selected aid.
 - TEXT/STORY right aid docks share ReaderPanelResize and reader-panel-resize: drag the article/panel boundary or use the keyboard separator at >=1360px. Default 300px, range 240–520px with at least 480px for the article; retain the 780px prose cap. Share the saved preferred width across readers, restore it before paint, and retain it through temporary viewport constraints, panel switching, focus and modal transitions. Cancel interrupted drags and hide the handle in modals/print.
 - BLOG uses `content/blog/series/category/post`: each category belongs to exactly one series. 불교의 세계 → 교학; 수행-몸과 마음 돌보기 → 수행; 상상공장 → 디자인·인포그래픽; 비움제작일지 → 비움·일지. 에세이-삶의 쉼표 intentionally has only its introduction until the user adds categories/posts. Keep per-post folders/attachments together; preserve IDs/URLs/dates/rights and rebase relative links when moving.
-- BLOG `/blog/` uses compact post rows; `/blog/series/` randomizes the four non-journal covers and asymmetric sizes once before paint, with a fixed journal section below. Mobile uses one column. Series detail uses an ordered TOC; category detail uses its authored introduction and posts. Use real page links with aria-current for 포스트/시리즈.
+- BLOG `/blog/` uses compact post rows; `/blog/series/` randomizes the four non-journal covers and asymmetric sizes once before paint, with a fixed journal section below. Mobile uses one column. Series detail uses an ordered TOC; category detail uses its authored introduction and posts. Use real page links with aria-current for 포스트/블로그 시리즈.
 - BLOG series/category `index.md` supplies title/H1, description/first paragraph, optional thumbnailAsset and published state; classify these as metadata, never posts/RSS/recent-post/statistics. Private intros hide descendants/assets. Optional series `## 읽는 순서` ordered Markdown links override oldest-first reading order; unlisted public posts follow by date. Use the same order for TOC and previous/next. Reject duplicate category labels across series, duplicate reading-order links and cross-series membership. No tag inheritance.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
@@ -83,7 +83,7 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 
 ### 2026-11-26 — Unified BIWOOM site
 
-- Consolidate the root site and document libraries. Preserve existing routes and expose 이야기 아티클 through a home card.
+- Consolidate the root site and document libraries. Preserve existing routes and expose the public stories through a home card.
 
 ### 2026-11-26 — Korean navigation and library names
 

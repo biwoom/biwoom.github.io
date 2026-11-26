@@ -36,7 +36,7 @@ html.dark body:has(.ol-text-academic) {
 .ol-text-crumb a { color: inherit; text-decoration: none; }
 .ol-text-crumb a:hover { color: var(--ol-accent); text-decoration: underline; }
 .ol-text-eyebrow { color: var(--ol-accent); font: 600 12px var(--ol-font-ui); letter-spacing: .05em; }
-.ol-text-work-head { max-width: 1600px; margin: auto; padding: 26px 36px 0; }
+.ol-text-work-head { padding-block-start: 26px; }
 .ol-text-work-title { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .ol-text-work-title h1 { margin: 12px 0; font: 600 clamp(30px, 3vw, 40px)/1.5 var(--ol-text-serif); }
 .ol-text-work-title p { color: var(--ol-muted); margin: 0 0 22px; }
@@ -47,7 +47,7 @@ html.dark .ol-text-primary { color: #17232c; }
 .ol-text-parts a > span { font-size: 12px; }
 .ol-text-parts a.active, .ol-text-parts a:hover { color: var(--ol-accent); background: transparent; }
 .ol-text-parts small { padding: 1px 7px; border-radius: 12px; background: var(--ol-text-soft); color: var(--ol-muted); font-size: 12px; }
-.ol-text-library-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 270px; max-width: 1600px; margin: auto; padding: 0 36px 80px; }
+.ol-text-library-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 270px; padding-block-end: 80px; }
 .ol-text-library-nav { padding: 30px 20px 30px 0; border-right: 1px solid var(--ol-border); }
 .ol-text-library-nav h2, .ol-text-bibliography h2 { font-size: 14px; margin: 0 0 18px; }
 .ol-text-library-nav h3 { font-size: 12px; color: var(--ol-muted); margin: 28px 10px 10px; }
@@ -152,10 +152,10 @@ body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px
 }
 @media (max-width: 980px) {
   .ol-text-reader .ol-reader-toc-prefix { display: none; }
-  .ol-text-work-head { padding: 22px 20px 0; }
+  .ol-text-work-head { padding-block-start: 22px; }
   .ol-text-work-title { align-items: flex-start; flex-direction: column; gap: 0; }
   .ol-text-primary { margin-bottom: 14px; }
-  .ol-text-library-grid { display: block; padding: 0 20px 50px; }
+  .ol-text-library-grid { display: block; padding-block-end: 50px; }
   .ol-text-library-nav { display: none; }
   .ol-text-library-main { padding: 26px 0; }
   .ol-text-library-grid > .ol-text-bibliography { padding: 24px 0; }

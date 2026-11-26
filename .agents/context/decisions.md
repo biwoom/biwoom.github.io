@@ -1,9 +1,21 @@
 # Decisions
 
+## 2026-11-26 — Series names by section
+
+- Use 이야기카드 시리즈 at `/series/` and 블로그 시리즈 at `/blog/series/` in navigation, list titles and detail-page context. 이야기 묶음 continues to name the story-card categories.
+
+## 2026-11-26 — Shared page width
+
+- Use the 1600px page-width token and responsive gutter for the top header and page content. Keep the inner reading columns for BLOG posts, permanent pages and story articles. TEXT/STORY individual readers retain their existing layout.
+
+## 2026-11-26 — 이야기카드 navigation and name
+
+- The desktop and mobile header order is 경론, 문학, 카드. The wordmark opens the landing page. 카드, the home card and the footer link below BLOG series all open `/articles/`. Use 이야기카드 in the rest of the public interface and brand document.
+
 ## 2026-11-26 — One BIWOOM site and repository
 
 - Publish Biwoom from `biwoom/biwoom.github.io` at `https://biwoom.github.io/`. Remove the Astro deployment prefix. Preserve the library registry and generate noindex redirects from former `/hub/` page addresses, with query and fragment forwarding.
-- Bring the root story project into the single site through the 이야기 아티클 card at `/articles/`. Preserve article data, route IDs and bookmark storage. Existing article reader, series, category, topic, tag and saved links stay valid.
+- Bring the root story project into the single site through a home card at `/articles/`. Preserve article data, route IDs and bookmark storage. Existing article reader, series, category, topic, tag and saved links stay valid.
 
 ## 2026-11-26 — Korean library labels
 

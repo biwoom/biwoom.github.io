@@ -4,10 +4,10 @@ Last updated: 2026-11-26
 
 ## Brand and Deployment
 
-- BIWOOM (비움) is the single site for Buddhist texts, translations, research, story articles, posts, media and ebooks. OL is the internal core. The header displays 비움 and 불교문헌 연구공간. The wordmark and 홈 both open the root.
+- BIWOOM (비움) is the single site for Buddhist texts, translations, research, story articles, posts, media and ebooks. OL is the internal core. The header displays 비움 and 붓다의 지혜를 오늘의 삶으로. The wordmark opens the root.
 - The publication target is `https://biwoom.github.io/`, built by GitHub Actions in `biwoom/biwoom.github.io`. Astro uses `SITE_URL` with root routes. Static compatibility redirects handle previous `/hub/` addresses. Registry URLs and identities are stable. The consolidation was prepared on the `biwoom-unification` branch.
 - Existing brand symbols remain under `ol-core/public/brand/`. Use `npm run brand:assets` to regenerate icons and the social sharing image.
-- Public library names are 불교경론 and 불전문학 at `/text/` and `/story/`. The 홈·경론·문학 primary navigation links to the corresponding pages. The 이야기 아티클 home card opens `/articles/`; article readers, catalog pages and bookmarks retain their existing routes and IDs.
+- Public library names are 불교경론 and 불전문학 at `/text/` and `/story/`. Primary navigation is 경론·문학·카드. 카드 and the 이야기카드 links on the landing page and below BLOG series in the footer open `/articles/`. The home statistics link to the story-card catalog and count public articles. Article readers, catalog pages and bookmarks retain their existing routes and IDs.
 - Article sources live in `content/article/`. Publish referenced illustrations from `content/illustration/`. The article and document library readers share font and copy controls.
 
 ## Menu Accents
@@ -15,7 +15,7 @@ Last updated: 2026-11-26
 - Landing ol-manifest shares HOME hero’s cyan radial/linear gradient (18%/7% accent mixing) and theme-aware text. Random menu-color selection and bfcache recoloring are removed.
 
 - HOME #00d3f3, TEXT menu/category #f0b100, STORY #7ccf00; BLOG retains its existing palette. TEXT work/document views use sample slate blue #274e65 (dark #9cbed2); document footnote emphasis alone retains gold. TEXT work/document and STORY document views selectively load Noto Serif KR 400/600 for reading; UI keeps Pretendard.
-- BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
+- BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list headings and descriptions stay left-aligned. The top header and page containers share a 1600px maximum width and responsive inline gutters. TEXT/STORY individual readers retain their existing header and workspace. BLOG posts and permanent pages keep their existing readable inner column, and story articles keep their 704px reader.
 
 ## Current Architecture
 
@@ -31,7 +31,7 @@ Last updated: 2026-11-26
 
 - 2026-11-13 internal audit: normalized schema remains in `src/content.config.ts`; `src/lib/content-loaders.ts` owns loading and refresh-scoped registry snapshots. Markdown parser configuration is reused with fresh ASTs, title/description share one parse, and development assets use the shared serialized watcher. Retired TOC CSS and redundant dark rules were removed without changing active declarations. Built-link validation now matches literal percent-encoded footnote IDs before decoding. Evidence: `.agents/references/ol-core-maintenance-audit-2026-11-13.md`.
 
-- Desktop/mobile header BLOG menus enter /blog/series/ first. Keep /blog/ as the posts list with the existing real-page 포스트/시리즈 tabs and explicit post-list links.
+- Desktop/mobile header BLOG menus enter /blog/series/ first. Keep /blog/ as the posts list with real-page 포스트/블로그 시리즈 tabs and explicit post-list links. The `/series/` index and tab use 이야기카드 시리즈.
 
 - TEXT/STORY modal TOC/footnote shells use overflow: clip so native autofocus cannot horizontally scroll the wrapper around the animated right-hand panel. Clear shell scroll offsets immediately after showModal; retain the resting transform, 360ms entrance/280ms exit, reduced motion, internal content scrolling and the shared desktop dock.
 

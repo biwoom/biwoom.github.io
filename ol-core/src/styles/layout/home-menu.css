@@ -1,8 +1,3 @@
-:root {
-  --ol-home-width: 1600px;
-  --ol-home-gutter: clamp(16px, 3vw, 44px);
-}
-.ol-header[data-home-header] .ol-header-inner { max-width: var(--ol-home-width); padding-inline: var(--ol-home-gutter); }
 .ol-header[data-home-header] .ol-header-right { flex: none; }
 .ol-header[data-home-landing-header], .ol-header[data-home-landing-header]:hover {
   background: var(--ol-bg);

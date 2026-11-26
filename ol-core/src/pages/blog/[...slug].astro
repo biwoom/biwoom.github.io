@@ -42,36 +42,38 @@ const pagefindBreadcrumb = ["BLOG", entry.data.category]
 >
   <main>
     <section class="ol-section">
-      <div class="ol-container ol-container--readable">
-        {series && <nav class="ol-blog-breadcrumb" aria-label="현재 위치"><a href={url("/blog/")}>BLOG</a><span aria-hidden="true"> / </span><a href={url(series.url)}>{series.title}</a>{category && <><span aria-hidden="true"> / </span><a href={url(category.url)}>{category.title}</a></>}</nav>}
-        <header class="ol-blog-detail-header">
-          {entry.data.category && (
-            <span class="ol-badge">{entry.data.category}</span>
-          )}
-          <h1 class="ol-kr ol-blog-detail-title">{entry.data.title}</h1>
-          <DocumentTags tags={entry.data.tags} blogLinks />
-          <div class="ol-blog-detail-meta">
-            <span>{entry.data.date.toLocaleDateString("ko-KR")}</span>
-            {entry.data.readingTime && (
-              <span>· {entry.data.readingTime}분 읽기</span>
+      <div class="ol-container">
+        <div class="ol-reading-column">
+          {series && <nav class="ol-blog-breadcrumb" aria-label="현재 위치"><a href={url("/blog/")}>BLOG</a><span aria-hidden="true"> / </span><a href={url(series.url)}>{series.title}</a>{category && <><span aria-hidden="true"> / </span><a href={url(category.url)}>{category.title}</a></>}</nav>}
+          <header class="ol-blog-detail-header">
+            {entry.data.category && (
+              <span class="ol-badge">{entry.data.category}</span>
             )}
+            <h1 class="ol-kr ol-blog-detail-title">{entry.data.title}</h1>
+            <DocumentTags tags={entry.data.tags} blogLinks />
+            <div class="ol-blog-detail-meta">
+              <span>{entry.data.date.toLocaleDateString("ko-KR")}</span>
+              {entry.data.readingTime && (
+                <span>· {entry.data.readingTime}분 읽기</span>
+              )}
+            </div>
+          </header>
+          {series && <details class="ol-blog-reading-context"><summary><span>{series.title}</span><span>시리즈 목차 · {position + 1} / {series.count}</span></summary><ol>{series.entries.map(post => <li><a href={url(post.data.url)} aria-current={post.id === entry.id ? 'page' : undefined}>{post.data.title}</a></li>)}</ol></details>}
+          <div class="ol-prose">
+            <Content />
           </div>
-        </header>
-        {series && <details class="ol-blog-reading-context"><summary><span>{series.title}</span><span>시리즈 목차 · {position + 1} / {series.count}</span></summary><ol>{series.entries.map(post => <li><a href={url(post.data.url)} aria-current={post.id === entry.id ? 'page' : undefined}>{post.data.title}</a></li>)}</ol></details>}
-        <div class="ol-prose">
-          <Content />
+          <ContentRights data={entry.data} />
+          <footer class="ol-blog-detail-footer">
+            {series && <nav class="ol-blog-sequence" aria-label="시리즈 이어 읽기">
+              {previous ? <a href={url(previous.data.url)} rel="prev"><span>← 이전 글</span><strong>{previous.data.title}</strong></a> : <div><span>시리즈의 첫 글입니다.</span></div>}
+              {next ? <a href={url(next.data.url)} rel="next"><span>다음 글 →</span><strong>{next.data.title}</strong></a> : <a href={url("/blog/series/")}><span>마지막 글까지 읽으셨습니다.</span><strong>다른 시리즈 둘러보기 →</strong></a>}
+            </nav>}
+            {series && <a href={url(series.url)} class="ol-blog-detail-back">시리즈 전체 목차 →</a>}
+            <a href={url("/blog")} class="ol-blog-detail-back">
+              ← 목록으로
+            </a>
+          </footer>
         </div>
-        <ContentRights data={entry.data} />
-        <footer class="ol-blog-detail-footer">
-          {series && <nav class="ol-blog-sequence" aria-label="시리즈 이어 읽기">
-            {previous ? <a href={url(previous.data.url)} rel="prev"><span>← 이전 글</span><strong>{previous.data.title}</strong></a> : <div><span>시리즈의 첫 글입니다.</span></div>}
-            {next ? <a href={url(next.data.url)} rel="next"><span>다음 글 →</span><strong>{next.data.title}</strong></a> : <a href={url("/blog/series/")}><span>마지막 글까지 읽으셨습니다.</span><strong>다른 시리즈 둘러보기 →</strong></a>}
-          </nav>}
-          {series && <a href={url(series.url)} class="ol-blog-detail-back">시리즈 전체 목차 →</a>}
-          <a href={url("/blog")} class="ol-blog-detail-back">
-            ← 목록으로
-          </a>
-        </footer>
       </div>
     </section>
   </main>

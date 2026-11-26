@@ -204,9 +204,6 @@
 .ol-blog-sidebar-series h2 { font-size: 13px; color: var(--ol-muted); margin: 0 0 18px; }
 .ol-blog-sidebar-series a { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; padding: 10px 0; font-size: 13px; text-decoration: none; line-height: 1.6; }
 .ol-blog-sidebar-series a span { color: var(--ol-muted); font-size: 11px; flex-shrink: 0; }
-.ol-blog-section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin: 0 0 24px; }
-.ol-blog-section-heading h2 { font-size: 23px; letter-spacing: -.035em; }
-.ol-blog-section-heading > span { font-size: 12px; color: var(--ol-muted); }
 .ol-blog-series-grid { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); grid-auto-rows: minmax(205px,auto); gap: 16px; }
 .ol-blog-series-card { --cover-bg: #e9ede6; --cover-line: #afbea6; position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 36px; overflow: hidden; border-radius: 5px; padding: 26px; color: #20251f; background: var(--cover-bg); text-decoration: none; min-width: 0; }
 .ol-blog-series-card[data-tone="2"] { --cover-bg: #f0e9dd; --cover-line: #bd9e77; }
@@ -268,7 +265,6 @@
 .ol-blog-category-information h2 { font-size: 19px; margin: 0 0 8px; }
 .ol-blog-category-information .ol-prose { font-size: 14px; }
 .ol-blog-category-information > a { font-size: 12px; text-underline-offset: 4px; }
-.ol-blog-category-page { max-width: 960px; }
 .ol-blog-reading-context { border-block: 1px solid var(--ol-border); padding: 16px 0; margin-bottom: 32px; }
 .ol-blog-reading-context summary { display: flex; justify-content: space-between; gap: 14px; cursor: pointer; font-size: 13px; line-height: 1.8; }
 .ol-blog-reading-context summary::after { content: '⌄'; }
@@ -297,8 +293,6 @@
   .ol-blog-hero h1 { font-size: 33px; }
   .ol-blog-hero p { font-size: 13px; }
   .ol-blog-view-nav a { font-size: 16px; }
-  .ol-blog-section-heading h2 { font-size: 20px; }
-  .ol-blog-section-heading > span { display: none; }
   .ol-post.ol-blog-post-row { grid-template-columns: minmax(0,1fr) 92px; gap: 16px; padding: 22px 0; }
   .ol-blog-post-row h3 { font-size: 17px; }
   .ol-blog-post-row p { font-size: 13px; -webkit-line-clamp: 1; }

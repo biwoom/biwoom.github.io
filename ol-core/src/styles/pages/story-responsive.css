@@ -1,8 +1,5 @@
 @media (max-width: 980px) {
-  .ol-story-reader-page {
-    width: min(100% - 24px, 760px);
-    padding: 20px 0 84px;
-  }
+  .ol-story-series-page { padding-block-end: 84px; }
 
   .ol-story-series-hero {
     margin-bottom: 42px;

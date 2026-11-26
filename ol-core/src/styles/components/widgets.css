@@ -1,7 +1,7 @@
 /* ===== Stats ===== */
 .ol-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   border: 1px solid var(--ol-border);
   border-radius: var(--ol-r);
   background: var(--ol-surface);
@@ -110,6 +110,6 @@
   box-shadow: var(--ol-shadow-sm);
 }
 
-.ol-stat--media { display: block; text-decoration: none; color: inherit; }
-.ol-stat--media:hover { background: var(--ol-surface-2); }
-.ol-stats .ol-stat--media:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+a.ol-stat { display: block; text-decoration: none; color: inherit; }
+a.ol-stat:hover { background: var(--ol-surface-2); }
+a.ol-stat:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }

@@ -7,7 +7,7 @@ mainTopics:
 recommendedStories: [mustard, lake]
 ---
 
-# 이야기 아티클 설정
+# 이야기카드 설정
 
 `mainTopics`의 키를 각 원고의 `topic`에 사용합니다. 목록에 적힌 순서로 ‘주제별’ 화면의 메인 주제가 표시됩니다.
 

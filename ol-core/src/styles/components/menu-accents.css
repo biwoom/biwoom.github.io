@@ -95,13 +95,7 @@ body:is([data-site-section="text"], [data-site-section="story"])
   font-size: 40px;
   line-height: 1.2;
 }
-.ol-library-index-page .ol-container {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 32px;
-  box-sizing: border-box;
-  text-align: left;
-}
+.ol-library-index-page .ol-container { text-align: left; }
 .ol-library-index-page .ol-hero .ol-lead {
   margin-left: 0;
   margin-right: 0;

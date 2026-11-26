@@ -14,7 +14,9 @@
   .ol-stats { grid-template-columns: 1fr 1fr; }
   .ol-stat { border-left: none; border-top: 1px solid var(--ol-border); }
   .ol-stat:first-child, .ol-stat:nth-child(2) { border-top: none; }
-  .ol-container { padding: 0 20px; }
+  .ol-stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .ol-container { padding-inline: 20px; }
+  .ol-reading-column { max-width: 680px; }
   .ol-section-grid-2 { grid-template-columns: 1fr; }
   .ol-section-grid-sidebar { grid-template-columns: 1fr; }
 

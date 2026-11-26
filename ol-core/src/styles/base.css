@@ -96,10 +96,17 @@ a { color: inherit; }
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding-inline: 32px;
 }
-.ol-container--readable {
-  max-width: 720px;
+/* Keep the shared header and content edges aligned outside the academic readers. */
+body:not(:has(.ol-story-doc-page)) .ol-container:not(:where(.ol-footer *)) {
+  max-width: var(--ol-page-width);
+  padding-inline: var(--ol-page-gutter);
+}
+.ol-reading-column {
+  /* The former 720px container included 32px gutters on both sides. */
+  max-width: 656px;
+  margin-inline: auto;
 }
 .ol-row { display: flex; align-items: center; gap: 12px; }
 .ol-col { display: flex; flex-direction: column; gap: 12px; }
@@ -167,7 +174,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  padding: 80px 24px;
+  padding-block: 80px;
   text-align: center;
 }
 .ol-not-found-code {
@@ -384,9 +391,6 @@ a { color: inherit; }
 }
 .ol-hero--compact {
   /* padding-bottom: 50px; */
-}
-.ol-hero .ol-container {
-  max-width: 920px;
 }
 .ol-hero .ol-section-label {
   display: inline-flex;

@@ -7,6 +7,7 @@ import ReaderCopyControl from '../../components/common/ReaderCopyControl.astro';
 import { render } from 'astro:content';
 import { getHomeArticles, homeSeriesPath, storyCategories, type HomeArticle } from '../../lib/home-articles';
 import { url } from '../../lib/url';
+import { ARTICLE_LABEL } from '../../lib/site-config';
 import { storyTagPath } from '../../lib/home-story-tags';
 
 export async function getStaticPaths() {
@@ -24,11 +25,13 @@ const topic = story.topicLabel;
 const currentUrl = url(`/stories/${story.id}/`);
 ---
 <OLHomeShell title={`${story.title}`} description={story.blurb} ogImage={story.photo?.url} reader
-  pagefindMeta={{ title: story.title, section: 'ARTICLE', sectionLabel: '이야기 아티클', category: topic }}>
+  pagefindMeta={{ title: story.title, section: 'ARTICLE', sectionLabel: ARTICLE_LABEL, category: topic }}>
   <div class="ol-home-reader">
     <article>
       <div class="ol-home-reader-nav" data-pagefind-ignore>
-        <a href={url('/articles/')}>이야기 목록</a>
+        <a href={url('/articles/')} class="ol-btn ol-btn-outline ol-home-reader-back">
+          <span aria-hidden="true">←</span> 이야기 목록
+        </a>
         <div class="ol-home-reader-tools">
           <OLStoryBookmark id={story.id} title={story.title} />
           <ReaderFontControl />
@@ -52,7 +55,7 @@ const currentUrl = url(`/stories/${story.id}/`);
         <span>출전</span>
         {story.source.url ? <a href={url(story.source.url)}>{story.source.title}</a> : <span>{story.source.title}</span>}
       </aside>}
-      {story.sample && <p class="ol-home-reader-note" data-pagefind-ignore>비움의 시범 아티클입니다.</p>}
+      {story.sample && <p class="ol-home-reader-note" data-pagefind-ignore>비움의 시범 원고입니다.</p>}
       <div class="ol-home-reader-footer" data-pagefind-ignore>
         <p class="ol-home-reader-feedback" role="status" data-reader-feedback></p>
         <div class="ol-home-reader-tools">
