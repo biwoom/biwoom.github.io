@@ -1,4 +1,4 @@
 interface:
-  display_name: "Biwoom GitHub Upload"
-  short_description: "Push Biwoom changes without work-log coupling or deploy checks."
-  default_prompt: "Use $ol-github-upload-log to push Biwoom changes only."
+  display_name: "BIWOOM HOME GitHub Upload"
+  short_description: "Push BIWOOM HOME changes to the approved target"
+  default_prompt: "Use $ol-github-upload-log to push BIWOOM HOME changes to the remote and branch I specify."

@@ -14,6 +14,9 @@ interface Props {
   pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
   pagefindBody?: boolean;
   academic?: boolean;
+  readingSerif?: boolean;
+  homeMenu?: boolean;
+  homeReader?: boolean;
 }
 
 const {
@@ -24,6 +27,9 @@ const {
   pagefindMeta = {},
   pagefindBody = true,
   academic = false,
+  readingSerif = academic,
+  homeMenu = false,
+  homeReader = false,
 } = Astro.props;
 
 const sectionPath = Astro.url.pathname;
@@ -85,6 +91,8 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
         document.documentElement.style.setProperty('--ol-reader-aid-preferred-width', `${width}px`);
       })();
     </script>
+  </>}
+  {(academic || homeReader) && <>
     <script is:inline data-reader-font-init>
       (function () {
         let percent = 100;
@@ -95,6 +103,8 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
         document.documentElement.style.setProperty('--ol-reader-initial-scale', String(percent / 100));
       })();
     </script>
+  </>}
+  {readingSerif && <>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet" />
@@ -115,7 +125,8 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <!-- Dark mode init (prevents FOUC) -->
   <script is:inline>
     (function() {
-      const saved = localStorage.getItem('ol-theme');
+      let saved;
+      try { saved = localStorage.getItem('ol-theme'); } catch { /* Follow the system theme. */ }
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme = saved || (prefersDark ? 'dark' : 'light');
       document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -132,7 +143,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
 </head>
 <body class="ol-kr" data-site-section={siteSection} data-accent-theme={hasAccentTheme ? true : undefined}>
   <div class="ol-app">
-    <OLHeader />
+    <OLHeader {homeMenu} {homeReader} />
     <OLSearchModal />
     <div data-pagefind-body={pagefindBody ? true : undefined} data-pagefind-ignore={pagefindBody ? undefined : true}>
       <slot />

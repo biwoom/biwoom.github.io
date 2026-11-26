@@ -1,0 +1,21 @@
+---
+interface Props {
+  entries: { href: string; title: string; description: string; category: string; minutes: number }[];
+}
+const { entries } = Astro.props;
+---
+<div class="ol-blog-toc-heading"><h2>시리즈 목차</h2><span>읽는 순서</span></div>
+<ol class="ol-blog-series-toc">
+  {entries.map(({ href, title, description, category, minutes }, index) => (
+    <li>
+      <span class="ol-blog-ordinal" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <div><a href={href}><h3>{title}</h3></a><p>{description}</p></div>
+      <span class="ol-blog-toc-meta"><span>{category}</span><span>{minutes}분</span></span>
+    </li>
+  ))}
+</ol>
+{!entries.length && <div class="ol-blog-coming-soon">
+  <span aria-hidden="true">…</span>
+  <h3>새로운 이야기를 준비하고 있습니다.</h3>
+  <p>글이 준비되면 이곳에서 차례대로 읽으실 수 있습니다.</p>
+</div>}

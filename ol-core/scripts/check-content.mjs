@@ -4,6 +4,7 @@ import path from "node:path";
 import { visit } from "unist-util-visit";
 import { readMediaInformation } from "./lib/media-information.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
+import { readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
 import { prepare } from "./prepare-content.mjs";
 import { walk, normalize, parse, markdownPattern, mediaPattern, isIntroduction, markdownTree, referenceTarget, isPublicSource, categoryFolders } from "./lib/content.mjs";
 export function validate(root = PROJECT_ROOT) {
@@ -12,6 +13,8 @@ export function validate(root = PROJECT_ROOT) {
   try { registry = prepare(root); } catch (error) { return [error.message]; }
   try { readMediaInformation(root); } catch (error) { errors.push(error.message); }
   try { readBlogCatalog(root, registry); } catch (error) { errors.push(error.message); }
+  try { readHomeArticles(root); } catch (error) { errors.push(error.message); }
+  try { readHomeSeries(root); } catch (error) { errors.push(error.message); }
   const urls = new Map(), ids = new Map(), series = new Set();
   const claim = (url, source) => {
     if (!/^\/[\w\-/%\p{L}\p{N}.]+\/$/u.test(url) || url.includes("..")) errors.push(`${source}: invalid public URL ${url}`);

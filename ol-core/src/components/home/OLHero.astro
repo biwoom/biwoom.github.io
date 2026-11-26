@@ -1,14 +1,14 @@
 ---
 import { url } from '../../lib/url';
+import { BRAND } from '../../lib/site-config';
 ---
 <section class="ol-hero ol-grid-bg ol-grid-bg--home">
   <div class="ol-container">
-    <span class="ol-section-label">Biwoom · 비움 · 열린 불교 콘텐츠</span>
     <h1 class="ol-kr">
-      <em>열린 불교 콘텐츠 </em><br>
+      <em>{BRAND.name}</em>
     </h1>
     <p class="ol-lead ol-kr">
-      비움은 불교경론(TEXT), 불전문학(STORY), 틈과 여백(BLOG)을 통해 불교의 지혜를 읽고 사유하며 삶에서 실천하는 길을 함께 찾습니다.
+      {BRAND.description}
     </p>
     <div class="ol-hero-actions">
       <a href={url('/text')} class="ol-btn ol-btn-accent">

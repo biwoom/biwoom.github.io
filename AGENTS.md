@@ -1,15 +1,19 @@
 # AGENTS.md
 
-## Project
+## BIWOOM HOME
 
-Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.github.io/`, deployed from `biwoom/biwoom.github.io` through GitHub Actions.
+이 작업 폴더의 프로젝트는 **BIWOOM HOME**이다. 불교를 잘 모르는 독자도 완결된 이야기 속에서 인물과 가르침을 만나는 공개 독서 사이트를 만든다. 기준은 `../biwoom-docs/BIWOOM_기획문서/`의 통합 기획서, HOME 기획서, HOME 디자인 조사안이다.
+
+- HOME 아티클 원본 위치는 `content/article/`이다. 아티클을 검수한 뒤 같은 승인본에서 이야기 카드를 파생한다. 출전·각색·권리와 실제 HUB 원전 링크를 확인한다. 기본 읽기에는 회원 가입이나 AI 이용이 필요하지 않다.
+- 기존 문헌·연구·미디어·전자책은 BIWOOM HUB의 책임 범위다. 아래 OL Core 규칙은 가져온 코드의 유지보수와 이전 맥락에 적용한다. HOME용 아티클에는 별도 편집·공개 규격을 정한다.
+- `ol-core/`가 현재 Astro 실행 기반이다. `origin`과 `SITE_URL`, Pages 워크플로는 가져온 원본의 설정이다. HOME의 운영 주소와 배포 대상은 기획상 미결이다. 기존 `origin/main`에 푸시하면 현재 비움 사이트의 Pages 배포를 시작할 수 있다.
 
 ## Browser Testing
 
 - 사용자가 별도로 명시적으로 요청하기 전에는 로컬 웹브라우저를 열거나, 이미 열린 브라우저·탭을 조작하여 사이트 열람·스크린샷·UI/시각 테스트를 수행하지 않는다. 인앱 브라우저, 컴퓨터 사용 도구와 헤드리스 브라우저 자동화를 이용한 로컬 사이트 테스트도 같은 제한을 적용한다.
 - 일반적인 구현·수정·검증·빌드·커밋 요청은 브라우저 테스트를 허용한 것으로 해석하지 않는다. 기본 검증은 필요한 CLI 검사·타입 검사·빌드·생성 파일 및 링크 확인으로 수행하며, 브라우저 화면 점검은 사용자가 담당한다.
 
-## Current Architecture
+## Inherited OL Core architecture
 
 - Repository root remains the Astro/npm execution root. Authoring lives in `content/`; implementation lives in `ol-core/src/`, `ol-core/scripts/`, and `ol-core/public/`. Root `astro.config.mjs`, package files, `site-config.mjs`, and `content-registry.json` remain in place; output stays `dist/`.
 - Define filesystem paths in `ol-core/scripts/lib/paths.mjs`, anchored to the module location rather than process.cwd(). Vault-relative keys use NFC Unicode and POSIX separators: use normalizeContentPath/relativeContentPath for keys and contentFile for physical source lookup. Normalize legacy registry keys/series/category paths and aliases without changing IDs, URLs, dates, hashes or redirects; reject conflicting normalized paths. Do not rename vault files or rewrite prose to fix normalization. Load Markdown using glob() with an absolute content base. Keep registry keys relative to the vault (text/..., story/..., blog/...); a physical vault move must not change IDs, URLs, dates or hashes.
@@ -32,7 +36,7 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - BLOG series/category `index.md` supplies title/H1, description/first paragraph, optional thumbnailAsset and published state; classify these as metadata, never posts/RSS/recent-post/statistics. Private intros hide descendants/assets. Optional series `## 읽는 순서` ordered Markdown links override oldest-first reading order; unlisted public posts follow by date. Use the same order for TOC and previous/next. Reject duplicate category labels across series, duplicate reading-order links and cross-series membership. No tag inheritance.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
-## Content Rules
+## Inherited OL Core content rules
 
 - Authors may write Markdown without YAML. Title priority: optional `title` override → first H1 → descriptive filename.
 - Derive hierarchy and order from folders/files. Parse numeric prefixes such as `001.Name`, hide the prefix in labels, and accept numeric-only filenames when an H1 supplies the title.
@@ -56,7 +60,7 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 ## Preservation and Verification
 
 - Preserve existing unpublished states, dates, rights, body text and assets when migrating content. Review `.agents/references/content-migration-inventory.json` for the original migration mapping.
-- Keep GitHub Pages root deployment; never add Astro `base`.
+- 기존 OL Core의 루트 경로와 레지스트리 이력은 유지한다. HOME의 배포 대상이 정해지는 시점에 `SITE_URL`, Astro `base`, robots.txt, RSS와 사이트맵을 함께 검토한다.
 - Run `npm run check`, `npm run typecheck`, and `npm run build` for content/route/layout/config changes.
 - Verify actual `dist` pages and local targets, plus RSS/sitemap/robots when routing changes.
 - Keep `dist/`, `.astro/`, `node_modules/`, and `ol-core/public/generated/` out of commits. Do not edit generated assets as source.
@@ -73,6 +77,10 @@ Biwoom - 비움 is a static Astro site built on the OL core at `https://biwoom.g
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-26 — BIWOOM HOME 준비
+
+- HOME의 편집 목적과 `content/article/` 원본 위치를 명시하고, 가져온 OL Core의 유지보수 규칙과 배포 설정에 적용 범위를 표시했다.
 
 ### 2026-11-15 — Empty TEXT/STORY category lists
 

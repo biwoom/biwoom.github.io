@@ -1,9 +1,13 @@
 ---
 name: ol-deploy-check
-description: Verify Biwoom (OL 코어) build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, root/base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing 404s and broken links on https://biwoom.github.io/.
+description: Verify the BIWOOM HOME build and review the inherited GitHub Pages configuration before any hosting changes.
 ---
 
-# OL Deploy Check
+# BIWOOM HOME 빌드·배포 검사
+
+2026-11-26 · BIWOOM HOME · 공개 주소 미정
+
+현재 `origin`, `SITE_URL`과 Pages 워크플로는 원본 사이트 설정이다. 아래 도메인 기준은 가져온 설정의 일관성 검사에 적용한다. HOME 배포를 다룰 때는 실제 대상 저장소와 주소에 맞춰 경로·워크플로를 검토한다. 기존 `origin/main`의 푸시는 원본 사이트 배포를 시작할 수 있다.
 
 ## Workflow
 
@@ -80,3 +84,9 @@ Report:
 - The generated route count if available.
 - Any remaining warnings.
 - Concrete next action for GitHub settings or push, if needed.
+
+## 수정 변경사항
+
+### 2026-11-26 — HOME 배포 대상 상태
+
+- 기존 Pages 설정은 원본 사이트 기준이며 HOME의 공개 주소와 저장소는 미결임을 명시했다.

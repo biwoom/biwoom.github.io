@@ -1,6 +1,11 @@
 import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { markdownLoader, materialsLoader } from "./lib/content-loaders";
+import { articlePattern, homeArticleSchema } from "../scripts/lib/home-articles.mjs";
+import { normalizeContentPath, projectPaths } from "../scripts/lib/paths.mjs";
 
 // This schema describes normalized data. Author-written frontmatter is optional.
 const schema = z.object({
@@ -35,6 +40,14 @@ function collection(name: string) {
   return defineCollection({ schema, loader: markdownLoader(name) });
 }
 export const collections = {
+  article: defineCollection({
+    schema: homeArticleSchema,
+    loader: glob({
+      base: pathToFileURL(path.join(projectPaths().content, "article")),
+      pattern: articlePattern,
+      generateId: ({ entry }) => normalizeContentPath(entry),
+    }),
+  }),
   text: collection("text"),
   story: collection("story"),
   blog: collection("blog"),

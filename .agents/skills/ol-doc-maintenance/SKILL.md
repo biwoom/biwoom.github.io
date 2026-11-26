@@ -1,14 +1,16 @@
 ---
 name: ol-doc-maintenance
-description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, README.md, and project rule documents. Use when updating durable project guidance, Codex rules, content management manuals, brand definitions, changelog sections inside docs, or documentation that governs how Biwoom (OL 코어) should be operated.
+description: Maintain BIWOOM HOME manuals, brand documents, AGENTS.md, README.md, Codex rules, and notes on the inherited OL Core.
 ---
 
-# OL Doc Maintenance
+# BIWOOM HOME 문서 관리
+
+2026-11-26 · BIWOOM HOME · 공개 주소 미정
 
 ## Workflow
 
 1. Classify the document:
-   - Public permanent document: `content/pages/{slug}.md`.
+   - HOME 이야기 원본과 편집 자료: `content/article/`. 영구 안내 페이지는 HOME 구조가 확정되면 그 구조를 따른다.
    - Internal Codex reference: `.agents/references/{name}.md`.
    - Repository operating rule: `AGENTS.md`.
    - Contributor overview: `README.md`.
@@ -23,7 +25,12 @@ description: Maintain Biwoom (OL 코어) manuals, brand documents, AGENTS.md, RE
 7. Add or update a bottom section named `수정 변경사항`.
 8. Run `npm run build` after public content changes.
 
-## Current Biwoom (OL 코어) Facts
+## HOME 문서 기준
+
+- `../biwoom-docs/BIWOOM_기획문서/`의 통합 기획서와 HOME 기획서를 기준으로 프로젝트의 역할을 기록한다. 논의용 디자인안과 미정인 공개 주소·배포 저장소는 그 상태를 명시한다.
+- `content/article/`을 아티클 원본 위치로 기록한다. 로더와 발행 스키마의 구현 상태는 실제 코드를 기준으로 설명한다.
+
+## 가져온 OL Core 운영 사실
 
 - Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
 - `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
@@ -66,6 +73,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-26 — BIWOOM HOME 적용
+
+- HOME 기획의 기준 문서, 로컬 원본 위치, 기존 OL Core 문서의 적용 범위를 명시했다.
 
 ### 2026-11-13 — TEXT/STORY menus
 

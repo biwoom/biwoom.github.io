@@ -11,7 +11,7 @@
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node ol-core/scripts/sync-content-assets.mjs && node ol-core/scripts/sync-media-gallery.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",
-    "build:site": "npm run prepare:content && npm run sync:assets && astro build && npx pagefind --site dist",
+    "build:site": "npm run prepare:content && npm run sync:assets && astro build && node ol-core/scripts/build-search.mjs",
     "build": "npm run check:content && npm run build:site",
     "preview": "astro preview",
     "astro": "astro",

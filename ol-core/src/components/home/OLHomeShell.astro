@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OLHomeMenu from './OLHomeMenu.astro';
+import OLStoryDetail from './OLStoryDetail.astro';
+import type { HomeArticle } from '../../lib/home-articles';
+import '../../styles/pages/home-postcards.css';
+
+interface Props { title: string; description?: string; ogImage?: string; pagefindMeta?: Record<string, string>; detailStories?: HomeArticle[]; reader?: boolean }
+const { title, description, ogImage, pagefindMeta, detailStories, reader = false } = Astro.props;
+---
+<BaseLayout {title} {description} {ogImage} {pagefindMeta} pagefindBody={Boolean(pagefindMeta)} homeMenu homeReader={reader}>
+  <div class="ol-home-workspace" data-home-workspace data-home-reader={reader || undefined}>
+    <main class="ol-home-main">
+      <slot name="intro" />
+      <OLHomeMenu />
+      <slot />
+    </main>
+    {detailStories && <OLStoryDetail stories={detailStories} />}
+  </div>
+</BaseLayout>

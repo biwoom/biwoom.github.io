@@ -1,9 +1,11 @@
-# Biwoom 콘텐츠 관리 매뉴얼
+# 가져온 OL Core 콘텐츠 관리 매뉴얼
 
 - 문서 버전: v4.8
 - 최신 수정일: 2026-11-15
 - 대상 프로젝트: Biwoom (OL 코어)
 - 배포 URL: https://biwoom.github.io/
+
+**2026-11-26 BIWOOM HOME 적용 범위** · 이 매뉴얼은 가져온 OL Core와 기존 비움 사이트의 운영 참고 자료다. HOME의 현재 원본 위치는 `content/article/`이며 HOME 집필 범위는 [콘텐츠 집필 스킬](../skills/ol-content-authoring/SKILL.md)이 안내한다. HOME의 공개 주소는 미정이다.
 
 ## 콘텐츠와 OL 코어의 위치
 
@@ -248,6 +250,10 @@ YAML 없는 글, 제목, 경로 계층, 중복 주소, 링크와 자산, 초안 
 GitHub Pages 루트 배포를 유지하며 Astro `base`는 설정하지 않는다. 라우트 변경 시 robots·RSS·사이트맵을 함께 검사한다. 업로드 요청은 요청된 push까지만 수행하며 배포 확인·후속 로그 커밋을 자동으로 하지 않는다.
 
 ## 수정 변경사항
+
+### 2026-11-26 — HOME 작업에서의 적용 범위
+
+- 기존 문헌·시리즈 집필 경로를 OL Core 참고 자료로 표시하고 현재 HOME 집필 규칙을 연결했다.
 
 ### 2026-11-15 — 빈 TEXT/STORY 카테고리 목록 숨김
 

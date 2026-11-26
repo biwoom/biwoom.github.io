@@ -1,17 +1,33 @@
-# Biwoom - 비움
+# BIWOOM HOME
 
-문서 버전: v1.8 · 최종 업데이트: 2026-11-13 · 대상: Biwoom (OL 코어)
+문서 버전 v1.9 · 2026-11-26 · BIWOOM HOME 개발 준비
 
-불교 문헌·이야기·작업 기록을 읽는 Astro 정적 사이트입니다.
+BIWOOM HOME은 부처님과 불교를 만나 살아가는 사람들의 이야기를 전하는 공개 독서 사이트입니다. 원고를 검수한 뒤 이야기 카드를 만들고, 독자가 출전을 확인할 수 있도록 BIWOOM HUB의 원전·번역·연구에 연결합니다.
 
-- 사이트: https://biwoom.github.io/
-- 저장소: `biwoom/biwoom.github.io`
-- Node.js: 22.12 이상
-- 배포: GitHub Actions → GitHub Pages 루트
+- `content/article/`의 Markdown이 HOME의 카드·전문·태그·검색 원본입니다. 시범 원고 7편과 `content/illustration/`의 원본 삽화로 운영 흐름을 시험할 수 있습니다.
+- `ol-core/`에 기존 Astro 실행 코드와 검증 도구가 있습니다. 저장소 루트에서 Node.js 22.12 이상으로 `npm ci`, `npm run dev`, `npm run build`를 실행합니다.
+- HOME의 배포 주소와 저장소는 미결입니다. 현재 `origin`은 원본 `biwoom/biwoom.github.io`를 가리키며, 가져온 워크플로는 `main` 푸시에서 GitHub Pages 배포를 시작합니다.
+- 기획 기준은 `../biwoom-docs/BIWOOM_기획문서/`에 있고, 작업 규칙은 [AGENTS.md](AGENTS.md)에 있습니다.
+
+## HOME 원고 작성
+
+- Markdown 원고는 `content/article/카테고리/`에 둡니다. `붓다전기`, `전생이야기`, `고승전기`, `가르침과 일화`, `설화와 전승`, `구법과 순례`, `시와 게송`, `에세이` 폴더가 ‘묶음’ 분류를 정합니다. YAML의 `topic`은 ‘주제별’ 탐색에 사용합니다.
+- 시리즈를 추가하려면 `content/article/카테고리/시리즈명/` 폴더를 만듭니다. 폴더명이 시리즈 제목이 되고, 선택적으로 그 안의 `index.md`에 `order`와 `description`을 적을 수 있습니다. 이 위치의 `index.md`는 시리즈 설정 문서입니다. 폴더에 공개 원고가 없으면 ‘준비 중’으로 표시됩니다.
+- 파일 상단 YAML에 `id`, `title`, `topic`, `blurb`를 두고 본문은 Markdown으로 작성합니다. 아티클과 보관함의 기존 주소를 유지하려면 제목이나 파일명을 바꿔도 `id`는 그대로 둡니다.
+- 메인 주제는 [원고 폴더의 index.md](content/article/index.md)에 있는 `mainTopics`에 표시 순서대로 적습니다. 원고의 `topic`에는 해당 키를 넣고, 공개 원고의 `topicTags`는 세부 주제에 자동 반영됩니다.
+- 태그는 `personTags`, `placeTags`, `topicTags`에 작성합니다. 이칭은 같은 원고의 `aliasTags`에 기록합니다. [겨자씨 한 줌](<content/article/가르침과 일화/mustard.md>)에서 출전과 삽화 참조까지 확인할 수 있습니다.
+- 삽화 원본은 `content/illustration/`에 두고 `illustration.file`에 `illustration/mustard.webp`처럼 `content/` 기준 경로를 넣습니다. 대체 텍스트는 `illustration.alt`에 씁니다.
+- ‘오늘의 이야기’는 공개일이 가장 최근인 공개 원고를 자동으로 표시합니다. 공개일이 같거나 모두 비어 있으면 기존 `order`를 따릅니다. 추천 이야기 두 편의 ID는 `content/article/index.md`의 `recommendedStories`에 표시 순서대로 적습니다.
+- 첫 화면 목록의 ‘최신’은 `publishedAt`, ‘제작일순’은 `createdAt`을 사용합니다. 날짜는 `YYYY-MM-DD`로 적습니다. 해당 날짜가 없는 원고는 날짜가 있는 원고 뒤에서 기존 `order` 순서로 표시됩니다.
+- `published: true`인 원고와 그 원고가 참조한 삽화만 빌드 결과에 포함됩니다. 내용을 바꾼 뒤 `npm run build`와 `npm run check:built`로 카드·본문·태그·검색 반영을 확인합니다.
+
+## 가져온 OL Core의 구성과 운영 이력
+
+아래 집필 경로와 메뉴 설명은 기존 비움 사이트와 재사용 코드의 참고 자료입니다. 이 작업 폴더의 아티클 규격과 HOME 배포 대상은 위 개발 준비 항목을 따릅니다.
 
 공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 기본 GitHub Pages 도메인을 사용하므로 CNAME 파일과 사용자 도메인용 DNS 설정은 필요하지 않습니다. 기존 사용자 도메인이 연결되어 있으면 저장소 Settings → Pages → Custom domain에서 제거해야 합니다. [GitHub 공식 안내](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#removing-a-custom-domain)를 참고하세요.
 
-## 폴더 구조
+### 기존 폴더 구조
 
 ```text
 content/                 # Obsidian 보관함·문서·원본 첨부
@@ -118,6 +134,18 @@ Biwoom - 비움의 심볼은 `ol-core/public/brand/biwoom-mark-monochrome.png`(�
 `content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
 
 ## 수정 변경사항
+
+### 2026-11-26 — HOME 원고 파일 연동
+
+- 시범 원고와 삽화를 각각 `content/article/`과 `content/illustration/`으로 이동하고, 원고의 YAML을 카드·전문·태그 생성에 연결했다.
+
+### 2026-11-26 — 엽서형 이야기 탐색
+
+- 시범 이야기 카드와 전문, 주제별 탐색, 브라우저 보관함을 추가하고 상단 메뉴를 정리했다.
+
+### 2026-11-26 — BIWOOM HOME 개발 준비
+
+- 아티클 원본 위치를 `content/article/`로 잡고, 빈 원본 폴더에서도 정적 빌드와 링크 검사가 동작하게 했다.
 
 ### 2026-11-13 — TEXT·STORY 메뉴
 

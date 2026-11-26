@@ -1,5 +1,9 @@
 # Decisions
 
+## 2026-11-26 — BIWOOM HOME 원본 위치
+
+- `biwoom-home`은 대중 이야기 사이트의 작업 폴더로 사용한다. HOME 원본은 `content/article/`에 두고, 가져온 콘텐츠 주소·ID의 레지스트리 이력은 보존한다. 사용자 지정 폴더 위치는 공개 저장소나 도메인 결정과 별개다.
+
 ## 2026-11-15 — List only categories with public works
 
 - Filter TEXT/STORY category cards and menu filters/counts by public library membership, not category introductions or raw folder presence. A work introduction counts as a registered work even with no body documents. Preserve category metadata, canonical routes and empty direct pages. BLOG/EBOOK category rules remain unchanged.

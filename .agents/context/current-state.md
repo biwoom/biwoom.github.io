@@ -1,8 +1,15 @@
 # Current State
 
-Last updated: 2026-11-15
+Last updated: 2026-11-26
 
-## Brand
+## BIWOOM HOME
+
+- 현재 프로젝트는 공개 이야기 사이트 BIWOOM HOME이다. 기획 기준은 `../biwoom-docs/BIWOOM_기획문서/`에 있다.
+- `content/article/`의 Markdown 7편과 `content/illustration/`의 원본 7점을 연결했다. `published: true` 원고의 메타데이터가 카드·태그·전문을 구성하고, 참조한 삽화만 생성 폴더로 복사한다. `id`로 기존 전문 주소와 보관함 연결을 유지한다.
+- HOME의 이야기·주제별·태그·보관함 탐색은 데스크톱 왼쪽 메뉴와 모바일 하단 드로어에서 제공한다. 태그는 원고 YAML에 기록하고 HUB의 분류·이칭·초성 규칙을 따른다. 공개 저장소와 배포 주소는 후속 과제다.
+- 원본 Astro 6.3.8과 Sharp 0.34.5의 보안 업데이트가 필요하다. 감사 결과는 Critical 1, High 9, Moderate 1, Low 2 패키지였다.
+
+## 가져온 OL Core 브랜드 설정
 
 - Public brand: Biwoom - 비움 (English: Biwoom; Korean: 비움). OL remains the source-code core name. Name/description live in site-config.mjs.
 - Existing symbol shapes are retained under ol-core/public/brand/biwoom-mark-monochrome.png and biwoom-mark-gold.png; derived icons and the Biwoom sharing image use npm run brand:assets.
@@ -10,7 +17,7 @@ Last updated: 2026-11-15
 - Previous borido.org DNS/TLS investigation is historical evidence in `.agents/references/borido-https-investigation-2026-11-08.md`, not a current migration goal.
 - Historical BLOG articles and the completed BORIDO ebook sample retain authored titles/assets with current-brand notices. Public brand/support pages and the active manifesto describe Biwoom - 비움.
 
-## Project
+## 가져온 OL Core 프로젝트
 
 - Biwoom - 비움, powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
 - Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.

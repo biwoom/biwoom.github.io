@@ -1,0 +1,30 @@
+---
+import type { GetStaticPaths } from 'astro';
+import OLHomeShell from '../../../components/home/OLHomeShell.astro';
+import OLStoryCatalog from '../../../components/home/OLStoryCatalog.astro';
+import { getHomeTagIndex, storyTagTypeLabels } from '../../../lib/home-story-tags';
+import { url } from '../../../lib/url';
+
+export const getStaticPaths = (async () => (await getHomeTagIndex()).map(item => ({
+  params: { type: item.type, tag: item.label }, props: { item },
+}))) satisfies GetStaticPaths;
+const { item } = Astro.props;
+const typeLabel = storyTagTypeLabels[item.type];
+---
+<OLHomeShell title={`${item.label} · ${typeLabel} 태그 · 비움 홈`} detailStories={item.documents}>
+  <header class="ol-home-intro">
+    <a class="ol-home-backlink" href={url('/tags/')}>태그 목록</a>
+    <h1>{item.label}</h1>
+    <p>{typeLabel} · {item.documents.length}편</p>
+    {item.aliases.length > 0 && <p>이칭 · {item.aliases.join(', ')}</p>}
+  </header>
+  <OLStoryCatalog stories={item.documents} mode="tag" />
+  <div data-story-tag-preview-fragment hidden>
+    <div class="ol-tag-preview-heading"><span>{typeLabel} · {item.documents.length}편</span><h2>{item.label}</h2></div>
+    {item.aliases.length > 0 && <p class="ol-tag-aliases">이칭 · {item.aliases.join(', ')}</p>}
+    <h3>관련 이야기</h3>
+    <ul class="ol-tag-preview-links">
+      {item.documents.slice(0, 4).map(story => <li><a href={url(`/stories/${story.id}/`)}>{story.title}</a></li>)}
+    </ul>
+  </div>
+</OLHomeShell>

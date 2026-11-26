@@ -1,0 +1,18 @@
+---
+interface Props { currentUrl: string; title: string; label: string; academic?: boolean }
+const { currentUrl, title, label, academic = false } = Astro.props;
+---
+<div class="ol-copy-dropdown" data-copy-dropdown data-copy-url={currentUrl} data-copy-title={title}>
+  <button class="ol-text-tool-btn" type="button" aria-expanded="false" aria-controls="ol-reader-copy-panel">
+    <span class="ol-text-tool-symbol" aria-hidden="true">⧉</span>
+    <span class="ol-text-tool-label">{label}</span>
+  </button>
+  <div id="ol-reader-copy-panel" class="ol-copy-panel">
+    <button type="button" data-copy-kind="link">링크 복사</button>
+    <button type="button" data-copy-kind="markdown">마크다운 복사</button>
+    {academic && <>
+      <button type="button" data-copy-kind="section">현재 절 링크 복사</button>
+      <button type="button" data-copy-kind="citation">선택문 인용 복사</button>
+    </>}
+  </div>
+</div>

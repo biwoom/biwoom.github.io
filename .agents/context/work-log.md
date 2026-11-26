@@ -1,5 +1,26 @@
 # Work Log
 
+## 2026-11-26 — HOME 원고와 삽화 운영 테스트
+
+- 시범 원고 7편을 `content/article/`의 Markdown으로, 삽화 7점을 `content/illustration/`으로 옮겼다. 원고 YAML에 삽화 참조와 태그를 옮겼으며 기존 아티클 ID를 유지했다.
+- 임시 원고를 작성하고 파일명을 바꾼 뒤 공개 빌드를 실행해 카드·본문·태그·삽화와 검색을 확인했다. 미공개로 돌린 뒤 생성물에서 모두 빠지고 원본 삽화는 남는 것도 확인했다.
+
+## 2026-11-26 — HOME 세로 메뉴와 이야기 상세 패널
+
+- `BIWOOM_HOME_sample_03.html`의 글 중심 카드와 주제 필터를 복원했다. 왼쪽 메뉴와 모바일 하단 드로어에 이야기·주제별·태그·보관함을 배치했다. 넓은 화면에서는 오른쪽 상세 패널, 좁은 화면에서는 하단 상세 보기를 사용한다.
+- HUB 태그 도구를 바탕으로 시범 이야기 7편의 태그 17개를 구성했다. 정적 페이지 38개, 타입·링크·레지스트리 검사와 검색 색인을 검증했다. 주제 필터, 보관 상태 동기화와 상세 패널 개폐는 Node에서 동작을 확인했다.
+
+## 2026-11-26 — BIWOOM HOME 엽서형 화면
+
+- HOME 샘플과 이미지 자료를 바탕으로 투명 상단 메뉴, 엽서형 카드 7장, 주제별 탐색·전문 화면·브라우저 보관함을 적용했다. 기존 프로젝트 링크는 하단에 배치했다.
+- 시범 원고와 삽화는 HTML 샘플에서 가져왔다. 기존 콘텐츠 검증, 타입 검사, 정적 빌드와 HTTP 응답, 한국어 검색 색인 7건, 보관 상태와 포커스 이동을 확인했다.
+
+## 2026-11-26 — BIWOOM HOME 콘텐츠 원본 초기화
+
+- HOME 기획과 기존 OL Core를 대조했다. Git 복구 지점 `90dfb17`을 확인하고 기존 콘텐츠 폴더 여섯 개를 삭제했다. 빈 `content/article/`을 두고 프로젝트 지침과 로컬 브랜드 표시를 HOME으로 정리했다.
+- 빈 검색 색인과 기존 안내 문서 부재를 처리했다. 테스트 113개, 타입 검사, 빈 원본 빌드 11페이지와 레지스트리·링크 검사를 통과했다. 임시 폴더에서 기존 원본으로 425페이지와 한국어 검색 347건도 검증했다.
+- 4323번 정적 미리보기에서 HOME 200과 삭제한 기존 이야기의 404를 확인했다. npm 감사와 Astro·Sharp 공지를 검토했다. 잠금 파일은 그대로다.
+
 ## 2026-11-12 — TEXT/STORY 보조 패널 너비 조절
 
 - Added one ReaderPanelResize component and reader-panel-resize controller for the existing >=1360px right TOC/footnote docks. An 8px boundary handle updates the grid/article together; preserve the 780px prose cap, 300px default, 240–520px panel range and at least 480px article allocation. The left list and native modal widths retain their existing behavior.

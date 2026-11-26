@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from 'astro';
+import OLHomeShell from '../../../components/home/OLHomeShell.astro';
+import SeriesReadingOrder from '../../../components/common/SeriesReadingOrder.astro';
+import { getHomeSeries, storyCategories } from '../../../lib/home-articles';
+import { url } from '../../../lib/url';
+
+export const getStaticPaths = (async () => (await getHomeSeries()).map(series => ({
+  params: { category: series.category, name: series.title }, props: { series },
+}))) satisfies GetStaticPaths;
+const { series } = Astro.props;
+const category = storyCategories[series.category];
+const entries = series.stories.map(story => ({
+  href: url(`/stories/${story.id}/`), title: story.title, description: story.blurb, category, minutes: story.minutes,
+}));
+const totalMinutes = entries.reduce((minutes, entry) => minutes + entry.minutes, 0);
+---
+<OLHomeShell title={`${series.title} · 비움 홈`} description={series.description} ogImage={series.cover?.url}>
+  <a class="ol-blog-breadcrumb" href={url('/series/')}>← 모든 시리즈</a>
+  <div class="ol-blog-series-workspace ol-home-series-detail">
+    <aside class="ol-blog-series-aside">
+      <h2>이 시리즈의 묶음</h2>
+      <a href={url(`/categories/${series.category}/`)}><strong>{category}</strong></a>
+    </aside>
+    <div class="ol-blog-series-main">
+      <header class="ol-blog-series-intro">
+        <span class="ol-section-label">시리즈 · 이어 읽기</span>
+        <h1>{series.title}</h1>
+        {series.description && <p>{series.description}</p>}
+        {series.stories.some(story => story.sample) && <p class="ol-home-series-note">시리즈 배치를 확인하기 위한 시범 원고가 포함되어 있습니다.</p>}
+        <div class="ol-blog-series-actions">
+          <span>{entries.length}편{totalMinutes > 0 && ` · 약 ${totalMinutes}분`}</span>
+          {entries[0] && <a class="ol-btn ol-btn-outline" href={entries[0].href}>처음부터 읽기 →</a>}
+        </div>
+      </header>
+      <SeriesReadingOrder {entries} />
+    </div>
+  </div>
+</OLHomeShell>

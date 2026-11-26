@@ -41,10 +41,6 @@ body[data-accent-theme] .ol-hero .ol-section-label {
   border-color: var(--ol-accent-border);
   color: var(--ol-ink);
 }
-body[data-accent-theme] .ol-nav-link.active {
-  background: var(--ol-accent-soft);
-  box-shadow: inset 0 -2px var(--ol-accent);
-}
 body[data-accent-theme] .ol-btn-accent {
   background: var(--ol-accent);
   border-color: var(--ol-accent);

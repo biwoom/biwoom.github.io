@@ -1,0 +1,22 @@
+---
+import type { GetStaticPaths } from 'astro';
+import OLHomeShell from '../../components/home/OLHomeShell.astro';
+import OLStoryCatalog from '../../components/home/OLStoryCatalog.astro';
+import { getHomeArticles, storyCategories } from '../../lib/home-articles';
+import { url } from '../../lib/url';
+
+export const getStaticPaths = (async () => {
+  const articles = await getHomeArticles();
+  return Object.entries(storyCategories).map(([id, label]) => ({
+    params: { id }, props: { label, stories: articles.filter(story => story.category === id) },
+  }));
+}) satisfies GetStaticPaths;
+const { label, stories } = Astro.props;
+---
+<OLHomeShell title={`${label} · 이야기 묶음 · 비움 홈`} detailStories={stories}>
+  <header slot="intro" class="ol-home-intro">
+    <a class="ol-home-backlink" href={url('/series/#categories')}>← 이야기 묶음</a>
+    <h1>{label}</h1>
+  </header>
+  {stories.length ? <OLStoryCatalog {stories} mode="category" /> : <p>이 묶음의 이야기를 준비하고 있습니다.</p>}
+</OLHomeShell>
