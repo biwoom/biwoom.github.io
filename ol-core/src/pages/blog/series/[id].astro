@@ -13,7 +13,7 @@ const { series } = Astro.props;
 const rendered = series.meta ? await render(series.meta) : null;
 const Intro = rendered?.Content;
 ---
-<BaseLayout title={`${series.title} — Biwoom BLOG`} description={series.description} pagefindMeta={{ title: series.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `BLOG · 시리즈 · ${series.title}` }}>
+<BaseLayout title={`${series.title} · BLOG`} description={series.description} pagefindMeta={{ title: series.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `BLOG · 시리즈 · ${series.title}` }}>
   <main class="ol-blog-page"><BlogNav active="series" compact />
     <section class="ol-section-tight"><div class="ol-container">
       <a class="ol-blog-breadcrumb" href={url("/blog/series/")}>← 모든 시리즈</a>

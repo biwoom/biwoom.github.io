@@ -1,8 +1,8 @@
-# Allow routine OL HOME verification commands outside the sandbox when Codex requests them.
+# Allow routine BIWOOM HUB verification commands outside the sandbox when Codex requests them.
 prefix_rule(
     pattern = ["npm", "run", "build"],
     decision = "allow",
-    justification = "OL HOME build verification is expected after site, content, or config changes.",
+    justification = "BIWOOM HUB build verification is expected after site, content, or config changes.",
     match = [
         "npm run build",
     ],
@@ -20,7 +20,7 @@ prefix_rule(
 prefix_rule(
     pattern = ["git", "push", "origin", "main"],
     decision = "allow",
-    justification = "User-requested OL HOME uploads use origin main as the default publishing target.",
+    justification = "User-requested BIWOOM HUB uploads use origin main as the default publishing target.",
     match = [
         "git push origin main",
     ],

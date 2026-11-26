@@ -300,12 +300,22 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
   const parts = folderParts(relative);
   const series = registry.folders[parts.seriesPath];
   const intro = isIntroduction(relative);
-  const fallbackTitle = nameInfo(path.basename(parts.collection === "blog" && intro ? path.dirname(relative) : relative)).label;
+  const filename = path.basename(relative);
+  const fileInfo = nameInfo(filename);
+  const fallbackTitle = parts.collection === "blog" && intro ? nameInfo(path.basename(path.dirname(relative))).label : fileInfo.label;
+  const metadata = titleAndDescription(data, body, fallbackTitle);
+  // Treat a compound number repeated from the filename as a chapter label.
+  const chapterPrefix = parts.collection === "story" && !intro && !data.title?.trim()
+    ? metadata.title.match(/^(\d+(?:-\d+)+)(?:\s+|-)\s*(?=\S)/)
+    : null;
+  if (chapterPrefix && filename.startsWith(`${chapterPrefix[1]}-`)) {
+    metadata.title = metadata.title.slice(chapterPrefix[0].length);
+  }
   const categoryKey = collectionKey(parts);
   const categoryMeta = categoryKey ? folderMetadata(categoryKey, root) : null;
   const seriesMeta = parts.collection === "blog" && parts.seriesPath !== "blog/standalone" ? folderMetadata(parts.seriesPath, root) : null;
   return {
-    ...titleAndDescription(data, body, fallbackTitle),
+    ...metadata,
     tags: data.tags ?? [],
     storyTags: parts.collection === "story" && !intro ? readStoryTags(data) : [],
     published:
@@ -323,7 +333,7 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     seriesUrl: series?.url ?? `/${parts.collection}/`,
     part: parts.part ? nameInfo(parts.part).label : "자료",
     partKey: parts.part || "자료",
-    order: nameInfo(path.basename(relative)).order,
+    order: fileInfo.order,
     license: data.license ?? CONTENT_DEFAULTS.license,
     rightsHolder: data.rightsHolder ?? CONTENT_DEFAULTS.author,
     licenseUrl: data.licenseUrl,

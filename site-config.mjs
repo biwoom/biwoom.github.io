@@ -1,6 +1,7 @@
 export const HOME_URL = "https://biwoom.github.io/";
+export const HUB_ORIGIN = "https://biwoom.github.io";
 export const SITE_BASE = "/hub";
-export const SITE_URL = new URL(SITE_BASE, HOME_URL).href;
+export const SITE_URL = new URL(SITE_BASE, HUB_ORIGIN).href;
 export const REPOSITORY_URL = "https://github.com/biwoom/hub";
 
 // Registry and vault paths are independent of the public deployment prefix.
@@ -20,11 +21,11 @@ export function stripHubBase(pathname) {
 export const BRAND = {
   name: "BIWOOM HUB",
   nameKo: "비움",
-  displayName: "BIWOOM HUB",
   logoGold: "/brand/biwoom-mark-gold.png",
   logoMonochrome: "/brand/biwoom-mark-monochrome.png",
   tagline: "붓다의 지혜를 오늘의 삶으로",
-  description: "BIWOOM HUB는 불교 문헌과 번역·연구, 이야기의 원전, 미디어, 전자책과 포스트를 함께 읽고 탐구하는 종합 콘텐츠 플랫폼입니다.",
+  description: "BIWOOM HUB는 불교경론의 번역·연구와 불전문학의 전기·설화·게송을 비롯해 미디어, 전자책과 포스트를 읽고 탐구하는 공간입니다.",
 };
+export const LIBRARY_LABELS = { text: "불교경론", story: "불전문학" };
 export const CONTENT_DEFAULTS = { author: "비움", lang: "ko", license: "CC0" };
 export const BLOG = { journalSeries: "blog/005.비움제작일지" };

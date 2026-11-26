@@ -3,7 +3,7 @@ name: ol-deploy-check
 description: Verify BIWOOM HUB build and GitHub Pages deployment readiness. Use when changing Astro config, GitHub Pages settings, deployment workflows, repository names, base paths, robots.txt, RSS, sitemap, public assets, or when diagnosing links at https://biwoom.github.io/hub/.
 ---
 
-# OL Deploy Check
+# BIWOOM HUB Deploy Check
 
 ## Workflow
 
@@ -15,7 +15,7 @@ git status --short --branch
 ```
 
 2. Confirm GitHub Pages project configuration:
-   - `astro.config.mjs` uses `site: HOME_URL` and `base: SITE_BASE` from `site-config.mjs`. Production uses `https://biwoom.github.io/hub/` from `biwoom/hub`.
+   - `astro.config.mjs` uses `site: HUB_ORIGIN` and `base: SITE_BASE` from `site-config.mjs`. Production uses `https://biwoom.github.io/hub/` from `biwoom/hub`. `HOME_URL` is the separate navigation destination.
    - Use the default GitHub Pages domain with the GitHub Actions source. The root site at `https://biwoom.github.io/` is the HOME destination.
    - HUB's `ol-core/public/robots.txt` should point to `https://biwoom.github.io/hub/sitemap-index.xml`.
    - Apply the `/hub` prefix to generated links, search results, downloads and canonical metadata. Keep registry routes HUB-relative.
@@ -42,6 +42,8 @@ npm run check:registry
 sed -n '1,80p' dist/sitemap-index.xml
 sed -n '1,80p' dist/rss.xml
 ```
+
+   `check:built` verifies the local `dist/` output. `npm run check:dev` exercises content changes on a temporary local server.
 
 6. If checking the live site, use HTTP headers first:
 
@@ -79,6 +81,10 @@ Report:
 - Concrete next action for GitHub settings or push, if needed.
 
 ## 수정 변경사항
+
+### 2026-11-26 — HUB address and verification scope
+
+- Record the independent HUB origin and the local artifact and development checks.
 
 ### 2026-11-25 — BIWOOM HUB
 

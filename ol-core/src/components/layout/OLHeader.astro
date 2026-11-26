@@ -4,6 +4,7 @@ import { navItems } from "../../data/nav";
 import { url } from "../../lib/url";
 
 const currentPath = Astro.url.pathname;
+const wordmark = `${BRAND.nameKo} HUB`;
 
 function isActive(href: string): boolean {
   return currentPath === href || currentPath.startsWith(`${href}/`);
@@ -13,10 +14,10 @@ function isActive(href: string): boolean {
 <header class="ol-header" data-pagefind-ignore>
   <div class="ol-container ol-header-inner">
     <!-- Brand -->
-    <a href={url("/")} class="ol-brand" aria-label="BIWOOM HUB 첫 화면">
+    <a href={url("/")} class="ol-brand" aria-label={`${wordmark} 첫 화면`}>
       <!-- <img class="ol-brand-symbol ol-brand-symbol--monochrome" src={url(BRAND.logoMonochrome)} width="38" height="38" alt="" /> -->
-      <span class="ol-brand-name">{BRAND.name}</span>
-      <span class="ol-brand-meta">{BRAND.nameKo}</span>
+      <span class="ol-brand-name">{wordmark}</span>
+      <span class="ol-brand-meta">불교문헌 연구공간</span>
     </a>
 
     <!-- Nav -->

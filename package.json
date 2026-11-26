@@ -20,7 +20,8 @@
     "typecheck": "astro check",
     "check:built": "node ol-core/scripts/check-built-links.mjs && node ol-core/scripts/check-ui-contracts.mjs && node ol-core/scripts/check-built-domain.mjs",
     "check:registry": "node ol-core/scripts/check-registry.mjs",
-    "check:live": "node ol-core/scripts/check-content-live.mjs",
+    "check:dev": "node ol-core/scripts/check-content-dev.mjs",
+    "check:live": "npm run check:dev",
     "brand:assets": "node ol-core/scripts/build-brand-assets.mjs"
   },
   "dependencies": {

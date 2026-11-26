@@ -41,4 +41,4 @@ for (const file of walk(root, { assets: true })) {
 const robots = fs.readFileSync(path.join(root, "robots.txt"), "utf8");
 assert.deepEqual([...robots.matchAll(/^Sitemap:\s*(\S+)/gm)].map(([, value]) => value), [`${SITE_URL}/sitemap-index.xml`]);
 assert.ok(checked, "No production metadata found in dist");
-console.log(`Production site verified: ${SITE_URL}/ (${checked} metadata/feed/sitemap URLs and robots.txt).`);
+console.log(`Built BIWOOM HUB URLs verified in dist for ${SITE_URL}/ (${checked} metadata/feed/sitemap URLs and robots.txt).`);

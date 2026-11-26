@@ -3,7 +3,7 @@ name: ol-github-upload-log
 description: Push BIWOOM HUB changes to GitHub. Use when the user asks to upload, push, publish, or deploy changes to GitHub. Verify deployment when explicitly requested.
 ---
 
-# OL GitHub Upload
+# BIWOOM HUB GitHub Upload
 
 ## Scope
 

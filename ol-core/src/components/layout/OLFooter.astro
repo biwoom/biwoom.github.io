@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { url } from '../../lib/url';
-import { BRAND } from "../../lib/site-config";
+import { BRAND, LIBRARY_LABELS } from "../../lib/site-config";
 import { site } from '../../lib/site';
 const currentYear = new Date().getFullYear();
 const supportPage = (await getCollection('pages', (entry) => entry.data.published))
@@ -38,8 +38,8 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
       <!-- Projects -->
       <div>
         <h4>PROJECTS</h4>
-        <a href={url('/text')}>TEXT</a>
-        <a href={url('/story')}>STORY</a>
+        <a href={url('/text')}>{LIBRARY_LABELS.text}</a>
+        <a href={url('/story')}>{LIBRARY_LABELS.story}</a>
         <a href={url('/media/')}>MEDIA</a>
         <a href={url('/ebook/')}>EBOOK</a>
       </div>
@@ -48,7 +48,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
       <div>
         <h4>READ</h4>
         <a href={url('/blog/series/')}>BLOG · 시리즈</a>
-        <a href={url('/pages/brand')}>{BRAND.nameKo} 소개</a>
+        <a href={url('/pages/brand')}>비움허브 소개</a>
         <a href={url('/partners')}>기여 및 협력단체</a>
         {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원</a>}
       </div>
@@ -57,7 +57,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
       <div>
         <h4>OPEN</h4>
         <a href={site.github} target="_blank" rel="noopener">GitHub 저장소</a>
-        <a href={site.license} target="_blank" rel="noopener">CC0 · 라이선스</a>
+        <a href={site.license} target="_blank" rel="noopener">CC0 적용 자료의 이용 조건</a>
         <a href={`mailto:${site.email}`}>문의 및 기여</a>
       </div>
     </div>

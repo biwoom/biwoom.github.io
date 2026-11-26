@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-11-26 — Korean library labels
+
+- Use 홈, 경론 and 문학 in the primary navigation. Use 불교경론 and 불전문학 as the public library names. Preserve the `text` and `story` collections, public routes, category names and authored work titles.
+
+## 2026-11-26 — HUB identity and service scope
+
+- Apply the BIWOOM brand definition v2.0, integrated plan v0.9 and HUB plan v0.1 to service scope. Record implemented behavior in AGENTS.md, the current state and the code. Use BIWOOM for the umbrella brand, BIWOOM HUB for this site and OL for the internal core. Keep the public section names and framework identifiers.
+- Record HOME's audience-facing stories separately from HUB STORY's source texts, traditions and translations. Keep LAB as a planned internal HUB area and use the existing registry and validated links for future service integrations.
+- Set the Astro site origin independently of the HOME destination. Use the local development and built artifact checks to verify their respective inputs, and distinguish these results from checking a deployed site.
+- Publish ebooks eligible for the HUB CC0 policy and keep separate rights notices for redistributable components. Use access-controlled storage outside the publishable repository for restricted research, review and approval records.
+
 ## 2026-11-25 — STORY structured tags
 
 - Keep plain tags alongside STORY-only canonical person/place/topic lists. Merge variants from public tagged chapters, reject ambiguous bindings within a type, and render one tag page per type and canonical name. Share the existing STORY publication filter and series order.

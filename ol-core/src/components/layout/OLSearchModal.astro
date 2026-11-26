@@ -67,6 +67,7 @@ const pagefindPath = url("/pagefind/pagefind.js");
 
 <script>
   import { url } from "../../lib/url";
+  import { BRAND, LIBRARY_LABELS } from "../../lib/site-config";
 
   let pagefind: any = null;
   let selectedIndex = -1;
@@ -128,14 +129,14 @@ const pagefindPath = url("/pagefind/pagefind.js");
       ]
         .filter(Boolean)
         .join(" · ");
-    return breadcrumb || "Biwoom";
+    return breadcrumb || BRAND.name;
   }
 
   function resultSection(result: any) {
     const section = String(
-      result.meta?.section ?? result.meta?.sectionLabel ?? "Biwoom",
+      result.meta?.section ?? result.meta?.sectionLabel ?? BRAND.name,
     ).toUpperCase();
-    return section || "Biwoom";
+    return section || BRAND.name;
   }
 
   function sectionCounts(results: any[]) {
@@ -177,7 +178,7 @@ const pagefindPath = url("/pagefind/pagefind.js");
           section === "ALL"
             ? currentResults.length
             : (counts.get(section) ?? 0);
-        const label = section === "ALL" ? "전체" : section;
+        const label = section === "ALL" ? "전체" : section === "STORY" ? LIBRARY_LABELS.story : section;
         return `
         <button
           type="button"
@@ -195,7 +196,7 @@ const pagefindPath = url("/pagefind/pagefind.js");
     const resultList = filteredResults
       .map((r: any, i: number) => {
         const meta = r.meta ?? {};
-        const section = meta.sectionLabel || meta.section || "Biwoom";
+        const section = meta.sectionLabel || meta.section || BRAND.name;
         const title = meta.title || "제목 없음";
         const path = displayPath(r.url);
         const kicker = resultKicker(r);

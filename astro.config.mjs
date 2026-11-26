@@ -7,14 +7,14 @@ import rehypeReaderFootnotes from "./ol-core/scripts/rehype-reader-footnotes.mjs
 import contentDevelopment from "./ol-core/scripts/dev-content.mjs";
 import { readRegistry } from "./ol-core/scripts/lib/content.mjs";
 import { projectPaths } from "./ol-core/scripts/lib/paths.mjs";
-import { HOME_URL, SITE_BASE, stripHubBase } from "./site-config.mjs";
+import { HUB_ORIGIN, SITE_BASE, stripHubBase } from "./site-config.mjs";
 
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 const paths = projectPaths();
 
 export default defineConfig({
-  site: HOME_URL,
+  site: HUB_ORIGIN,
   base: SITE_BASE,
   srcDir: paths.src,
   publicDir: paths.public,

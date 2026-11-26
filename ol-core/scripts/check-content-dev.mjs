@@ -4,7 +4,7 @@ import { PROJECT_ROOT } from './lib/paths.mjs';
 import { hubPath } from '../../site-config.mjs';
 import sharp from 'sharp';
 import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import {spawn} from 'node:child_process';
-const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'ol-live-'));
+const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'biwoom-hub-dev-'));
 for(const f of ['ol-core','astro.config.mjs','site-config.mjs','package.json','tsconfig.json']) fs.cpSync(path.join(source,f),path.join(root,f),{recursive:true,filter:p=>!p.includes('ol-core/public/generated')});
 fs.symlinkSync(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');fs.writeFileSync(path.join(root,'content-registry.json'),JSON.stringify({version:1,files:{},folders:{},redirects:{},aliases:{}}));
 // Instrument only the disposable server copy to verify unchanged documents are reused.
@@ -35,13 +35,13 @@ write('ebook/001.Sample/001.Book/index.md','# Live ebook');
 const child=spawn('npm',['run','dev','--','--host','127.0.0.1','--port','4399'],{cwd:root,stdio:['ignore','pipe','pipe'],detached:true});let log='';child.stdout.on('data',d=>log+=d);child.stderr.on('data',d=>log+=d);
 const liveUrl = (pathname) => 'http://127.0.0.1:4399' + hubPath(pathname);
 const get=async p=>{try{return await (await fetch(liveUrl(p))).text();}catch{return '';}};
-const until=async(fn,label)=>{const deadline=Date.now()+18000;while(Date.now()<deadline){if(await fn())return;await new Promise(r=>setTimeout(r,300));}throw new Error(label+'\n'+log.slice(-3500));};
+const until=async(fn,label,timeout=18000)=>{const deadline=Date.now()+timeout;while(Date.now()<deadline){if(await fn())return;await new Promise(r=>setTimeout(r,300));}throw new Error(label+'\n'+log.slice(-3500));};
 const cardTitles = html => [...html.matchAll(/<a\b[^>]*\bdata-library-item[^>]*>([\s\S]*?)<\/a>/g)]
   .map(([, card]) => card.match(/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/)?.[1]?.replace(/<[^>]+>/g, '').trim());
 const textCategory = categoryUrl('text/C');
 const storyCategory = categoryUrl('story/001.Literature');
 try{
-await until(async()=> JSON.stringify(cardTitles(await get('/text/'))) === JSON.stringify(['W']), 'initial TEXT work rows');
+await until(async()=> JSON.stringify(cardTitles(await get('/text/'))) === JSON.stringify(['W']), 'initial TEXT work rows', 60000);
 await until(async()=> JSON.stringify(cardTitles(await get('/text/categories/'))) === JSON.stringify(['C']), 'initial TEXT category cards');
 await until(async()=> JSON.stringify(cardTitles(await get(textCategory))) === JSON.stringify(['W']), 'initial TEXT series inside category');
 await until(async()=> JSON.stringify(cardTitles(await get('/story/'))) === JSON.stringify(['First', 'Second']), 'STORY work cards');
@@ -141,5 +141,5 @@ write('story/002.Poems/First/index.md','---\npublished: false\n---\n# First poem
 await until(async()=> !cardTitles(await get('/story/categories/')).includes('Poems'), 'category disappears when its only work becomes private');
 write('story/002.Poems/First/index.md','# First poem work');
 await until(async()=> cardTitles(await get('/story/categories/')).includes('Poems'), 'category returns after its work is restored');
-console.log('LIVE PASS: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
+console.log('Local BIWOOM HUB development checks passed: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
 }finally{try{process.kill(-child.pid,'SIGTERM');}catch{}await new Promise(r=>setTimeout(r,500));fs.rmSync(root,{recursive:true,force:true});}

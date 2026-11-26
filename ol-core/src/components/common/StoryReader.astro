@@ -16,6 +16,7 @@ import {
 } from "../../lib/library";
 import DocumentTags from "./DocumentTags.astro";
 import { url } from "../../lib/url";
+import { LIBRARY_LABELS } from "../../lib/site-config";
 import { hasOriginalBlocks } from "../../../scripts/lib/markdown.mjs";
 import { readerTocHeadings } from "../../lib/reader-toc";
 interface Props {
@@ -24,7 +25,7 @@ interface Props {
   section?: Section;
 }
 const { entry, series, section = "story" } = Astro.props;
-const sectionLabel = section.toUpperCase();
+const sectionLabel = LIBRARY_LABELS[section];
 const rendered = entry.data.format
   ? undefined
   : await render(entry as CollectionEntry<"text" | "story">);
@@ -58,12 +59,12 @@ const hasToc = headings.length > 0;
 
 <BaseLayout
   academic
-  title={`${entry.data.title} — ${series?.label ?? entry.data.series ?? `Biwoom ${sectionLabel}`}`}
+  title={[entry.data.title, series.label || entry.data.series, sectionLabel].filter(Boolean).join(" · ")}
   lang={entry.data.lang}
   description={entry.data.description}
   pagefindMeta={{
     title: entry.data.title,
-    section: sectionLabel,
+    section: section.toUpperCase(),
     sectionLabel,
     category: entry.data.category,
     series: series?.label ?? entry.data.series,

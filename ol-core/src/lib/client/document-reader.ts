@@ -1,3 +1,4 @@
+import { BRAND } from "../site-config";
 import { createReaderDrawer } from "./reader-drawer";
 import { initReaderTools } from "./reader-tools";
 import { initOriginalToggle } from "./reader-original";
@@ -120,7 +121,7 @@ export function initDocumentReader() {
         const selected = selection?.toString().trim() ?? "";
         const source = selection?.anchorNode?.parentElement?.closest(".ol-story-chapter");
         if (!selected || !source) { tell("본문에서 인용할 문장을 먼저 선택해 주세요."); return; }
-        value = `${selected}\n\n${title} — Biwoom TEXT\n${href}`;
+        value = `${selected}\n\n${title} — ${BRAND.name} · TEXT\n${href}`;
       }
       try {
         if (!navigator.clipboard) throw new Error("Clipboard unavailable");

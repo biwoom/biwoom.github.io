@@ -448,8 +448,19 @@ const homeHtml = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 const landingHeader = homeHtml.match(/<header class="ol-header"[\s\S]*?<\/header>/)?.[0] ?? "";
 const landingMobileMenu = homeHtml.match(/<nav class="ol-mobile-sheet"[\s\S]*?<\/nav>/)?.[0] ?? "";
 assert.ok(landingHeader.includes(`href="${hubPath("/")}" class="ol-brand"`), "HUB brand opens the HUB landing");
-assert.ok(landingHeader.includes(`href="${HOME_URL}"`), "Desktop HOME opens the root site");
-assert.ok(landingMobileMenu.includes(`href="${HOME_URL}"`), "Mobile HOME opens the root site");
+assert.ok(landingHeader.includes('class="ol-brand-name">비움 HUB</span>'), "Header displays the Korean wordmark");
+assert.ok(landingHeader.includes('class="ol-brand-meta">불교문헌 연구공간</span>'), "Header displays the research subtitle");
+const expectedPrimaryLinks = [
+  [HOME_URL, "홈"],
+  [hubPath("/text"), "경론"],
+  [hubPath("/story"), "문학"],
+];
+for (const menu of [landingHeader, landingMobileMenu]) {
+  const links = Array.from(menu.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)">([^<]+)<\/a>/g),
+    ([, href, label]) => [href, label.trim()]);
+  assert.deepEqual(links, expectedPrimaryLinks, "Primary navigation uses Korean labels and preserves its destinations");
+}
+assert.ok(homeHtml.includes(`href="${hubPath("/pages/brand")}">비움허브 소개</a>`), "Footer opens the HUB introduction");
 assert.ok(landingHeader.includes(`href="${REPOSITORY_URL}"`), "Header GitHub link opens HUB repository");
 assert.ok(homeHtml.includes(`data-pagefind-path="${hubPath("/pagefind/pagefind.js")}"`), "Search loads the HUB index");
 assert.ok(fs.existsSync(path.join(dist, "pagefind/pagefind.js")), "Pagefind script is published");

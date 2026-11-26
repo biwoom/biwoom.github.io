@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { url } from "../../../lib/url";
+import { LIBRARY_LABELS } from "../../../lib/site-config";
 import { getStoryTags, storyTagTypeLabels } from "../../../lib/story-tags";
 import { storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath, storyTagTypes } from "../../../../scripts/lib/story-tags.mjs";
 
@@ -21,7 +22,7 @@ const filters = [
 ];
 ---
 
-<BaseLayout title="이야기 태그 — BIWOOM HUB" pagefindBody={false}>
+<BaseLayout title={`${LIBRARY_LABELS.story} 태그`} pagefindBody={false}>
   <main class="ol-section ol-tag-explorer">
     <noscript>
       <style is:inline>
@@ -35,13 +36,13 @@ const filters = [
       </style>
     </noscript>
     <div class="ol-container">
-      <nav class="ol-library-view-nav" aria-label="STORY 보기">
-        <a href={url("/story/")}>이야기</a>
+      <nav class="ol-library-view-nav" aria-label={`${LIBRARY_LABELS.story} 보기`}>
+        <a href={url("/story/")}>{LIBRARY_LABELS.story}</a>
         <a href={url("/story/categories/")}>카테고리</a>
         <a href={url(storyTagsPath)} aria-current="page">태그</a>
       </nav>
       <header class="ol-tag-heading">
-        <h1>이야기 태그</h1>
+        <h1>{LIBRARY_LABELS.story} 태그</h1>
         {tags.length > 0 && (
           <form class="ol-library-search ol-tag-search" role="search" data-story-tag-search inert>
             <label class="sr-only" for="story-tag-query">태그 이름 또는 이칭 검색</label>
@@ -49,7 +50,7 @@ const filters = [
           </form>
         )}
       </header>
-      {tags.length === 0 ? <p>등록된 이야기 태그가 없습니다.</p> : (
+      {tags.length === 0 ? <p>등록된 태그가 없습니다.</p> : (
         <div class="ol-tag-columns" data-story-tag-directory data-page-size={pageSize}>
           <aside class="ol-tag-panel ol-tag-filters" data-story-tag-filters inert>
             <h2>유형</h2>
@@ -99,10 +100,10 @@ const filters = [
             </div>
           </section>
           <aside class="ol-tag-panel ol-tag-desktop" data-story-tag-desktop aria-label="선택한 태그">
-            <p data-story-tag-placeholder>태그를 선택하면 이칭과 관련 이야기를 볼 수 있습니다.</p>
+            <p data-story-tag-placeholder>태그를 선택하면 이칭과 관련 자료를 볼 수 있습니다.</p>
             <div data-story-tag-preview tabindex="-1" hidden>
               <div data-story-tag-preview-body aria-live="polite"></div>
-              <a class="ol-btn ol-btn-outline ol-btn-sm" data-story-tag-full>관련 이야기 전체 보기</a>
+              <a class="ol-btn ol-btn-outline ol-btn-sm" data-story-tag-full>관련 자료 전체 보기</a>
             </div>
           </aside>
           <dialog class="ol-tag-dialog" aria-label="선택한 태그" data-story-tag-dialog>

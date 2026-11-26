@@ -2,17 +2,18 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { categoryUrl } from "../../lib/library";
 import { url } from "../../lib/url";
+import { LIBRARY_LABELS } from "../../lib/site-config";
 import type { Library, Section } from "../../lib/library";
 interface Props {
   series: Library;
   section: Section;
 }
 const { series, section } = Astro.props;
-const label = section.toUpperCase();
+const label = LIBRARY_LABELS[section];
 ---
 
 <BaseLayout
-  title={`${series.label} — Biwoom ${label}`}
+  title={`${series.label} · ${label}`}
   description={series.description}
   pagefindBody={false}
 >
@@ -23,7 +24,7 @@ const label = section.toUpperCase();
         {series.category && <><span>/</span><a href={url(categoryUrl(series.categoryKey))}>{series.category}</a></>}
       </nav>
       <span class="ol-section-label">
-        {series.category || `${label} SERIES`}
+        {series.category || `${label} 시리즈`}
       </span>
       <h1 class="ol-kr">{series.label}</h1>
       {series.description && <p class="ol-kr">{series.description}</p>}
@@ -54,7 +55,7 @@ const label = section.toUpperCase();
       >
         <section class="ol-story-cover-panel">
           <div class="ol-story-book-cover">
-            <span>Biwoom {label}</span>
+            <span>{label}</span>
             <strong class="ol-kr">{series.label}</strong>
             <em>{series.count}개 자료</em>
           </div>

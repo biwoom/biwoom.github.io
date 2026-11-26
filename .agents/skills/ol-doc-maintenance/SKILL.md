@@ -3,7 +3,7 @@ name: ol-doc-maintenance
 description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md, and project rules. Use for durable guidance, content management manuals, brand definitions, and change histories.
 ---
 
-# OL Doc Maintenance
+# BIWOOM HUB Doc Maintenance
 
 ## Workflow
 
@@ -15,7 +15,7 @@ description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md,
    - Codex local workflow: `.agents/skills/{name}/SKILL.md`.
    - Codex execution setting: `.codex/config.toml` or `.codex/rules/*.rules`.
 2. Read the current version before editing.
-3. Align content with the current codebase, not older project names or routes.
+3. Use the BIWOOM brand definition, integrated plan and HUB plan for service scope. Use the current codebase and `.agents/context/current-state.md` to verify what is implemented. Write current guides using BIWOOM HUB for the site and BIWOOM (비움) for the umbrella brand.
 4. Keep internal operating manuals under `.agents/references/` when they are for Codex or maintainers rather than public visitors.
 5. Public manuals may omit YAML and use an H1 title. Keep any optional frontmatter within the current allowed input fields; preserve existing descriptions and rights exceptions.
 
@@ -26,7 +26,7 @@ description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md,
 ## Current BIWOOM HUB Facts
 
 - HUB uses `https://biwoom.github.io/hub/`, repository `biwoom/hub` and Astro `base: "/hub"`. The root site at `https://biwoom.github.io/` is the HOME destination.
-- `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus. The HUB wordmark takes readers to the HUB landing, and HOME opens the root site.
+- `content/` is the Obsidian vault. The primary menu is 홈, 경론, 문학. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The HUB wordmark opens the HUB landing. 홈 opens the existing root site.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
@@ -40,7 +40,7 @@ description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md,
 ## Document Placement
 
 - Brand definition: `content/pages/brand.md`.
-- Content management manual: `.agents/references/ol-home-content-management-manual.md`.
+- Content management manual: `.agents/references/biwoom-hub-content-management-manual.md`.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
 - `content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
@@ -66,6 +66,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-26 — HUB identity
+
+- Record the planning and implementation references and the renamed current authoring manual.
 
 ### 2026-11-25 — BIWOOM HUB
 

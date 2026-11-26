@@ -7,7 +7,7 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { href: HOME_URL, label: "HOME" },
-  { href: url("/text"), label: "TEXT" },
-  { href: url("/story"), label: "STORY" },
+  { href: HOME_URL, label: "홈" },
+  { href: url("/text"), label: "경론" },
+  { href: url("/story"), label: "문학" },
 ];

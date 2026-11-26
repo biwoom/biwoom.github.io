@@ -2,7 +2,11 @@
 
 ## Project
 
-BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub/`, deployed from `biwoom/hub` through GitHub Actions. The existing root site at `https://biwoom.github.io/` is reserved for BIWOOM HOME. Its current site stays available while HOME development is pending.
+BIWOOM HUB is BIWOOM's public platform for Buddhist texts, translations and research, story sources, media, ebooks and post series. This Astro site is deployed from `biwoom/hub` through GitHub Actions at `https://biwoom.github.io/hub/`. Use BIWOOM (비움) for the umbrella brand, BIWOOM HUB for this site and OL for the internal core.
+
+- HUB's 불전문학 publishes source texts, traditions and translations. BIWOOM HOME is the service for stories written for a general audience. Link the two when an actual public source or story is available and preserve each work's identity. The HUB wordmark opens the HUB landing page. The 홈 menu opens the existing root site at `https://biwoom.github.io/` while the new HOME is in development.
+- BIWOOM LAB is a planned internal HUB area. Its first experiment and public routes are future decisions. BIWOOM SPACE is a reserved name. APP owns the personal reading experience, READER owns shared content and reading contracts, and DHARMA FACTORY owns production and approval workflows. HUB integration should build on its existing public content and identifiers.
+- Use the BIWOOM brand definition, integrated plan and HUB plan in the sibling `biwoom-docs/BIWOOM_기획문서/` collection for service scope and editorial direction. Consult this file, `.agents/context/current-state.md` and the code for implemented behavior. Keep planned features and implemented behavior distinct in permanent guidance.
 
 ## Browser Testing
 
@@ -15,12 +19,12 @@ BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub
 - Define filesystem paths in `ol-core/scripts/lib/paths.mjs`, anchored to the module location rather than process.cwd(). Vault-relative keys use NFC Unicode and POSIX separators: use normalizeContentPath/relativeContentPath for keys and contentFile for physical source lookup. Normalize legacy registry keys/series/category paths and aliases without changing IDs, URLs, dates, hashes or redirects; reject conflicting normalized paths. Do not rename vault files or rewrite prose to fix normalization. Load Markdown using glob() with an absolute content base. Keep registry keys relative to the vault (text/..., story/..., blog/...); a physical vault move must not change IDs, URLs, dates or hashes.
 
 - `content/` is both the content source and the user's Obsidian vault.
-- Public content menus are TEXT, STORY, BLOG. The HUB wordmark opens the HUB landing page; the header and mobile HOME menu open the root site. `pages` holds visitor-facing permanent documents.
+- Desktop and mobile primary navigation uses 홈, 경론, 문학. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
-- TEXT/STORY menu roots show work rows and story cards, respectively. Use real page links for 문헌/카테고리 and 이야기/카테고리; `/text/categories/` and `/story/categories/` show `ol-grid-3` category cards, and each category page lists its series. Category lists and work filters show only categories with a public work/series; a category index.md alone does not qualify. Preserve empty category sources and their direct category pages (track `.gitkeep` when needed). Menu roots end with up to three public Markdown documents linking to their existing readers, newest Seoul publication day first and one per work per round within each day.
-- TEXT/STORY category `index.md` files are category metadata, with authored title/description and canonical category URLs; exclude them from readers, series lists and document counts. Private category intros hide descendants/assets. STORY's 이야기불교 categories are 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. 마하붓다왐사 is under 붓다전기 and 담마빠다이야기 is under 가르침과 일화. Future works are added by the user.
+- TEXT/STORY menu roots show work rows and story cards, respectively. Use real page links for 문헌/카테고리 and 불전문학/카테고리/태그. The `/text/categories/` and `/story/categories/` pages show `ol-grid-3` category cards, and each category page lists its series. Category lists and work filters show only categories with a public work/series; a category index.md alone does not qualify. Preserve empty category sources and their direct category pages (track `.gitkeep` when needed). Menu roots end with up to three public Markdown documents linking to their existing readers, newest Seoul publication day first and one per work per round within each day.
+- TEXT/STORY category `index.md` files are category metadata, with authored title/description and canonical category URLs; exclude them from readers, series lists and document counts. Private category intros hide descendants/assets. The 불전문학 categories are 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. 마하붓다왐사 is under 붓다전기 and 담마빠다이야기 is under 가르침과 일화. Future works are added by the user.
 - TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
 - TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and document TOC default open at >=1360px and closed below that width; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - TEXT/STORY document readers recognize explicitly fenced `original` blocks via one shared Markdown transform, toolbar and visibility controller. Start visible; show the toggle only with marked blocks, use an icon with accessible labels at <=980px, and leave ordinary code/inline code unchanged. Share original typography and font scaling; TEXT uses its soft panel background and STORY its themed secondary surface.
@@ -36,22 +40,24 @@ BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub
 
 - Authors may write Markdown without YAML. Title priority: optional `title` override → first H1 → descriptive filename.
 - Derive hierarchy and order from folders/files. Parse numeric prefixes such as `001.Name`, hide the prefix in labels, and accept numeric-only filenames when an H1 supplies the title.
+- In STORY document display titles, hide compound chapter numbers such as `01-01-2` when the H1 or filename-derived title repeats the filename prefix. Keep explicit `title` overrides and source Markdown.
 - Korean author-facing folder and document names are allowed. Keep code filenames and route implementation files ASCII.
 - `index.md` is an optional work/series introduction. Do not require one to generate a library.
 - `_drafts`, `_templates`, dotfolders, and `.obsidian` must not appear in public content or search. `assets`/`_assets` are auxiliary files, not item cards.
 - Public menu documents are public by default; preserve explicit `published: false`. A nonpublic series intro hides its descendants.
 - Tags are optional plain string arrays, e.g. `tags: [수메다, 수밋따]`; do not use classification prefixes or singular `tag`. Do not reintroduce `prefixTags`, `entities`, `relations`, or `tagAliases`.
 - STORY documents also accept optional `personTags`, `placeTags`, `topicTags` and `aliasTags`. Write canonical names in the typed lists and record variant spellings under `aliasTags.person`, `aliasTags.place` or `aliasTags.topic` for canonical names used in that document. Index only public STORY documents, group results in existing series order, and report conflicts between canonical names and aliases within the same type.
-- Keep provenance and notes in body text. Preserve document-specific rights exceptions.
+- Keep provenance and notes in body text. Record the source, edition and location as available, and distinguish translation, interpretation and retelling. Preserve document-specific rights exceptions and confirm redistribution terms for any third-party text, translation, image, font or file before publication.
+- `_drafts` and `published: false` control site output. Keep restricted research, review and approval records in access-controlled storage outside the publishable repository.
 - Private index.md directories exclude their attachments from deployment. `_assets` is the only underscore-prefixed attachment exception. Publicly shared attachments remain public; keep private per-document attachments in private index folders or `_drafts`.
 - Introduction canonical URLs equal library URLs. Deleted sources must not be restored or redirected to unrelated material; retain registry history and render redirects only to current public targets.
 - Source schema/normalized data: `ol-core/src/content.config.ts`. Shared interpretation: `ol-core/scripts/lib/content.mjs`. Share these rules with validation instead of maintaining divergent defaults.
 - Restore a missing registry from Git; `prepare:content -- --init` is only for new vaults. Commit prepared registry changes with content; CI runs `check:registry`. First-publication preparation dates use Asia/Seoul.
 - `content-registry.json` is durable source metadata, not disposable build output. Commit it with content changes. It preserves URLs, first-publication preparation dates, previous paths and hashes.
-- EBOOK is an auxiliary `/ebook/` download library linked only below MEDIA in the footer, never the primary/mobile menu. Use `content/ebook/category/book/`: top-level folders are ordered categories and each child folder is one book with optional index.md bibliography, cover and EPUB/PDF files. Show category/count filter buttons above the ebook list, intersecting search and format filters; retain empty public categories and hide descendants of private categories. Use CC0 for every ebook, no individual routes/registry records; exclude private/draft packages and publish only selected cover/download assets.
+- EBOOK is an auxiliary `/ebook/` download library linked only below MEDIA in the footer, never the primary/mobile menu. Use `content/ebook/category/book/`: top-level folders are ordered categories and each child folder is one book with optional index.md bibliography, cover and EPUB/PDF files. Show category/count filter buttons above the ebook list, intersecting search and format filters; retain empty public categories and hide descendants of private categories. Publish only books eligible for the library's CC0 policy. Verify redistribution rights for all components and retain any separately licensed material's notices in the book and its bibliography. EBOOK has no individual routes/registry records; exclude private/draft packages and publish only selected cover/download assets.
 - `content/media/` is the shared public asset namespace. The auxiliary `/media/` gallery is linked from home statistics and the footer, never the primary/mobile menu. Derive image categories from the first subfolder (numeric prefixes only order); root images are 미분류. Keep original assets under `/generated/content/media/`, generated previews under `/generated/media-gallery/`, and no per-image documents/frontmatter/registry records. Optional category index.md files hold multiple `## [Image title](relative-image-path)` sections; use each section body as modal Markdown information and its title as the card/modal title. Missing information falls back to filenames; validate existing category-local image targets and duplicates. Keep metadata refresh independent of preview caching.
 - Keep source attachments inside the vault. Use relative Markdown links; the shared remark plugin resolves them. Unsupported Obsidian wikilinks/blocks must not be described as working.
-- Use `site-config.mjs` for shared fixed settings and `ol-core/src/lib/site-config.ts` in app code. Do not restore retired DESIGN environment variables.
+- Use `site-config.mjs` for shared fixed settings and `ol-core/src/lib/site-config.ts` in app code. `HUB_ORIGIN` and `SITE_BASE` control HUB deployment. `HOME_URL` controls the HOME navigation. Do not restore retired DESIGN environment variables.
 - Use shared `DocumentTags.astro` to display only the current document’s optional tags below its title. Series tag controls/modals are retired. BLOG tag buttons filter exact tags together with year archives and shared pagination.
 
 ## Preservation and Verification
@@ -67,13 +73,21 @@ BIWOOM HUB is the static Astro content platform at `https://biwoom.github.io/hub
 ## Continuity and Skills
 
 - Before major work read `.agents/context/current-state.md`, `.agents/context/decisions.md`, and recent `.agents/context/work-log.md` entries.
-- Authoring manual: `.agents/references/ol-home-content-management-manual.md`.
+- Authoring manual: `.agents/references/biwoom-hub-content-management-manual.md`.
 - Refactor guide: `.agents/references/obsidian-content-refactor-guide.md`.
 - Update current state when architecture/status/risks change, decisions for durable choices, and work-log after meaningful implementation/documentation work. Keep records concise.
 - Use `$ol-content-authoring` for content, `$ol-doc-maintenance` for guidance, `$ol-deploy-check` for deployment-related changes, and `$ol-github-upload-log` for requested GitHub uploads.
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-26 — Korean navigation and library names
+
+- Name the primary links 홈, 경론, 문학. Use 불교경론 and 불전문학 for the libraries and retain the established routes and collection IDs.
+
+### 2026-11-26 — BIWOOM HUB identity and operating guidance
+
+- Align service roles, editorial and rights guidance, public branding, and local deployment checks with the BIWOOM plans and the current HUB.
 
 ### 2026-11-25 — STORY translation releases
 
