@@ -1,8 +1,26 @@
 # Decisions
 
-## 2026-11-26 — BIWOOM HOME 원본 위치
+## 2026-11-26 — Korean library labels
 
-- `biwoom-home`은 대중 이야기 사이트의 작업 폴더로 사용한다. HOME 원본은 `content/article/`에 두고, 가져온 콘텐츠 주소·ID의 레지스트리 이력은 보존한다. 사용자 지정 폴더 위치는 공개 저장소나 도메인 결정과 별개다.
+- Use 홈, 경론 and 문학 in the primary navigation. Use 불교경론 and 불전문학 as the public library names. Preserve the `text` and `story` collections, public routes, category names and authored work titles.
+
+## 2026-11-26 — HUB identity and service scope
+
+- Apply the BIWOOM brand definition v2.0, integrated plan v0.9 and HUB plan v0.1 to service scope. Record implemented behavior in AGENTS.md, the current state and the code. Use BIWOOM for the umbrella brand, BIWOOM HUB for this site and OL for the internal core. Keep the public section names and framework identifiers.
+- Record HOME's audience-facing stories separately from HUB STORY's source texts, traditions and translations. Keep LAB as a planned internal HUB area and use the existing registry and validated links for future service integrations.
+- Set the Astro site origin independently of the HOME destination. Use the local development and built artifact checks to verify their respective inputs, and distinguish these results from checking a deployed site.
+- Publish ebooks eligible for the HUB CC0 policy and keep separate rights notices for redistributable components. Use access-controlled storage outside the publishable repository for restricted research, review and approval records.
+
+## 2026-11-25 — STORY structured tags
+
+- Keep plain tags alongside STORY-only canonical person/place/topic lists. Merge variants from public tagged chapters, reject ambiguous bindings within a type, and render one tag page per type and canonical name. Share the existing STORY publication filter and series order.
+- Adapt the former NET explorer layout for STORY tag browsing, using the existing tag catalog and detail pages. Combine type, canonical-name initial and alias search with the shared 30-card pagination. Show up to four related documents in the preview and link to the complete tag page.
+- Fetch preview fragments from the selected tag page on demand so the directory keeps only its card list as the catalog grows.
+
+## 2026-11-25 — BIWOOM HUB project site
+
+- Publish this project from `biwoom/hub` under `https://biwoom.github.io/hub/`. Keep the existing root at `https://biwoom.github.io/` for future BIWOOM HOME and connect the existing site with HUB.
+- Keep the registry's HUB-relative routes and render public links with the `/hub` deployment prefix. The HUB wordmark opens HUB; HOME opens the existing root.
 
 ## 2026-11-15 — List only categories with public works
 

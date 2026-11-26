@@ -200,28 +200,15 @@ a { color: inherit; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: transparent;
-  transition: background-color 160ms ease;
-}
-@media (hover: hover) {
-  .ol-header:hover {
-    background: color-mix(in oklab, var(--ol-bg) 76%, transparent);
-    backdrop-filter: blur(6px);
-  }
+  background: color-mix(in oklab, var(--ol-bg) 92%, transparent);
+  backdrop-filter: saturate(140%) blur(8px);
 }
 .ol-header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--ol-sp-3);
   height: 64px;
 }
-.ol-header-left {
-  display: flex;
-  align-items: center;
-  gap: clamp(12px, 3vw, 34px);
-}
-.ol-header .ol-brand-name { font-size: 1.35rem; }
 .ol-brand {
   display: flex;
   align-items: center;
@@ -255,27 +242,21 @@ a { color: inherit; }
   align-items: center;
 }
 .ol-nav-link {
-  font-size: .9rem;
+  font-size: 13.5px;
   color: var(--ol-muted);
   text-decoration: none;
   padding: 7px 12px;
   border-radius: var(--ol-r-sm);
   font-weight: 500;
   letter-spacing: 0;
-  white-space: nowrap;
   transition: color 120ms ease, background 120ms ease;
 }
 .ol-nav-link:hover { color: var(--ol-ink); background: var(--ol-surface-2); }
-.ol-nav-link[aria-current] { color: var(--ol-ink); font-weight: 700; }
+.ol-nav-link.active { color: var(--ol-ink); background: var(--ol-surface-2); }
 .ol-header-right {
   display: flex;
   align-items: center;
   gap: 6px;
-  flex: none;
-}
-.ol-header :is(.ol-brand, .ol-nav-link, .ol-btn):focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--ol-accent-home) 55%, var(--ol-ink));
-  outline-offset: 3px;
 }
 
 /* ===== Buttons ===== */

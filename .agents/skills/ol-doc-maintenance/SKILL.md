@@ -1,23 +1,21 @@
 ---
 name: ol-doc-maintenance
-description: Maintain BIWOOM HOME manuals, brand documents, AGENTS.md, README.md, Codex rules, and notes on the inherited OL Core.
+description: Maintain BIWOOM HUB manuals, brand documents, AGENTS.md, README.md, and project rules. Use for durable guidance, content management manuals, brand definitions, and change histories.
 ---
 
-# BIWOOM HOME 문서 관리
-
-2026-11-26 · BIWOOM HOME · 공개 주소 미정
+# BIWOOM HUB Doc Maintenance
 
 ## Workflow
 
 1. Classify the document:
-   - HOME 이야기 원본과 편집 자료: `content/article/`. 영구 안내 페이지는 HOME 구조가 확정되면 그 구조를 따른다.
+   - Public permanent document: `content/pages/{slug}.md`.
    - Internal Codex reference: `.agents/references/{name}.md`.
    - Repository operating rule: `AGENTS.md`.
    - Contributor overview: `README.md`.
    - Codex local workflow: `.agents/skills/{name}/SKILL.md`.
    - Codex execution setting: `.codex/config.toml` or `.codex/rules/*.rules`.
 2. Read the current version before editing.
-3. Align content with the current codebase, not older project names or routes.
+3. Use the BIWOOM brand definition, integrated plan and HUB plan for service scope. Use the current codebase and `.agents/context/current-state.md` to verify what is implemented. Write current guides using BIWOOM HUB for the site and BIWOOM (비움) for the umbrella brand.
 4. Keep internal operating manuals under `.agents/references/` when they are for Codex or maintainers rather than public visitors.
 5. Public manuals may omit YAML and use an H1 title. Keep any optional frontmatter within the current allowed input fields; preserve existing descriptions and rights exceptions.
 
@@ -25,15 +23,10 @@ description: Maintain BIWOOM HOME manuals, brand documents, AGENTS.md, README.md
 7. Add or update a bottom section named `수정 변경사항`.
 8. Run `npm run build` after public content changes.
 
-## HOME 문서 기준
+## Current BIWOOM HUB Facts
 
-- `../biwoom-docs/BIWOOM_기획문서/`의 통합 기획서와 HOME 기획서를 기준으로 프로젝트의 역할을 기록한다. 논의용 디자인안과 미정인 공개 주소·배포 저장소는 그 상태를 명시한다.
-- `content/article/`을 아티클 원본 위치로 기록한다. 로더와 발행 스키마의 구현 상태는 실제 코드를 기준으로 설명한다.
-
-## 가져온 OL Core 운영 사실
-
-- Production: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`; do not add Astro `base`.
-- `content/` is the Obsidian vault. TEXT/STORY/BLOG are the content menus; HOME is the entry page.
+- HUB uses `https://biwoom.github.io/hub/`, repository `biwoom/hub` and Astro `base: "/hub"`. The root site at `https://biwoom.github.io/` is the HOME destination.
+- `content/` is the Obsidian vault. The primary menu is 홈, 경론, 문학. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The HUB wordmark opens the HUB landing. 홈 opens the existing root site.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
@@ -47,7 +40,7 @@ description: Maintain BIWOOM HOME manuals, brand documents, AGENTS.md, README.md
 ## Document Placement
 
 - Brand definition: `content/pages/brand.md`.
-- Content management manual: `.agents/references/ol-home-content-management-manual.md`.
+- Content management manual: `.agents/references/biwoom-hub-content-management-manual.md`.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
 - `content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
@@ -74,9 +67,13 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 
 ## 수정 변경사항
 
-### 2026-11-26 — BIWOOM HOME 적용
+### 2026-11-26 — HUB identity
 
-- HOME 기획의 기준 문서, 로컬 원본 위치, 기존 OL Core 문서의 적용 범위를 명시했다.
+- Record the planning and implementation references and the renamed current authoring manual.
+
+### 2026-11-25 — BIWOOM HUB
+
+- Record the HUB project address and the separate HOME destination.
 
 ### 2026-11-13 — TEXT/STORY menus
 

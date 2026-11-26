@@ -1,4 +1,4 @@
 interface:
-  display_name: "BIWOOM HOME Doc Maintenance"
-  short_description: "Maintain BIWOOM HOME manuals and project rules"
-  default_prompt: "Use $ol-doc-maintenance to update the BIWOOM HOME project guidance."
+  display_name: "BIWOOM HUB Doc Maintenance"
+  short_description: "Maintain BIWOOM HUB manuals and docs"
+  default_prompt: "Use $ol-doc-maintenance to update BIWOOM HUB project documents."

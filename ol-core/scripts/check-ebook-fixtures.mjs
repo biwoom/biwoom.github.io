@@ -5,6 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 import vm from 'node:vm';
 import ts from 'typescript';
+import { SITE_URL } from '../../site-config.mjs';
 import { getEbooks, getEbookLibrary } from './lib/ebooks.mjs';
 import { syncAssets } from './sync-content-assets.mjs';
 
@@ -64,7 +65,7 @@ class Element {
   close() { this.open = false; this.emit('close'); }
   getBoundingClientRect() { return {left: 10, right: 500, top: 10, bottom: 500}; }
 }
-function clientFixture(initial = 'https://biwoom.github.io/ebook/') {
+function clientFixture(initial = `${SITE_URL}/ebook/`) {
   const items = [new Element({ebookId: 'one', ebookCategory: '001.문헌', ebookSearchText: '문헌 길장', ebookFormats: 'EPUB PDF'}), new Element({ebookId: 'two', ebookCategory: '002.이야기', ebookSearchText: '이야기 비움', ebookFormats: 'PDF'})];
   const buttons = items.map(item => { const button = new Element(); button.parent = item; item.querySelector = selector => selector === '[data-ebook-open]' ? button : {content: {cloneNode: () => ({title: item.dataset.ebookSearchText})}}; return button; });
   const filters = ['', 'EPUB', 'PDF'].map(ebookFilter => new Element({ebookFilter}));
@@ -89,8 +90,8 @@ test('ebook search intersects format filters and modal restores focus/scroll and
   f.dialog.emit('click', {target: f.dialog, clientX: 100, clientY: 100}); assert.equal(f.dialog.open, true);
   f.dialog.emit('click', {target: f.dialog, clientX: 0, clientY: 0}); assert.equal(f.dialog.open, false); assert.equal(f.body.style.overflow, 'auto'); assert.equal(f.buttons[1].focused, true); assert.equal(f.content.children.length, 0);
   assert.equal(new URL(f.browser.location.href).searchParams.has('book'), false);
-  const shared = clientFixture('https://biwoom.github.io/ebook/?book=one'); assert.equal(shared.dialog.open, true);
-  shared.browser.location.href = 'https://biwoom.github.io/ebook/'; shared.browser.popstate(); assert.equal(shared.dialog.open, false);
+  const shared = clientFixture(`${SITE_URL}/ebook/?book=one`); assert.equal(shared.dialog.open, true);
+  shared.browser.location.href = `${SITE_URL}/ebook/`; shared.browser.popstate(); assert.equal(shared.dialog.open, false);
 } );
 
 test('ebook categories follow folder order, retain empty folders and hide private category descendants', () => fixture((root, write) => {

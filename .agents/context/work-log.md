@@ -1,25 +1,60 @@
 # Work Log
 
-## 2026-11-26 — HOME 원고와 삽화 운영 테스트
+## 2026-11-26 — 비움 HUB 헤더와 불전문학 문서 제목
 
-- 시범 원고 7편을 `content/article/`의 Markdown으로, 삽화 7점을 `content/illustration/`으로 옮겼다. 원고 YAML에 삽화 참조와 태그를 옮겼으며 기존 아티클 ID를 유지했다.
-- 임시 원고를 작성하고 파일명을 바꾼 뒤 공개 빌드를 실행해 카드·본문·태그·삽화와 검색을 확인했다. 미공개로 돌린 뒤 생성물에서 모두 빠지고 원본 삽화는 남는 것도 확인했다.
+- 헤더에 ‘비움 HUB’와 ‘불교문헌 연구공간’을 표시한다.
+- 불전문학 문서의 표시 제목에서 파일명과 일치하는 복합 순번을 숨긴다. 담마빠다이야기 374편의 번호 없는 제목과 마하붓다왐사 239편의 기존 제목을 확인했다. 원문과 문서 주소를 보존했다.
+- 회귀 검사 118개, 타입 검사, 전체 빌드와 생성 결과 검사를 통과했다. 담마빠다이야기 374편의 제목을 생성 HTML에서 확인했고, 개발 서버의 문서 응답도 새 헤더와 제목을 표시한다.
 
-## 2026-11-26 — HOME 세로 메뉴와 이야기 상세 패널
+## 2026-11-26 — 홈·경론·문학 메뉴
 
-- `BIWOOM_HOME_sample_03.html`의 글 중심 카드와 주제 필터를 복원했다. 왼쪽 메뉴와 모바일 하단 드로어에 이야기·주제별·태그·보관함을 배치했다. 넓은 화면에서는 오른쪽 상세 패널, 좁은 화면에서는 하단 상세 보기를 사용한다.
-- HUB 태그 도구를 바탕으로 시범 이야기 7편의 태그 17개를 구성했다. 정적 페이지 38개, 타입·링크·레지스트리 검사와 검색 색인을 검증했다. 주제 필터, 보관 상태 동기화와 상세 패널 개폐는 Node에서 동작을 확인했다.
+- 데스크톱과 모바일의 상단 링크를 홈·경론·문학으로 표시한다. 불전문학의 이름을 HUB 첫 화면과 목록·시리즈·본문·태그 탐색에 반영하고, 카테고리 소개 문단은 갈래에 맞게 다듬었다.
+- 공개 문서를 비움 허브 소개로 개정하고 푸터에서는 ‘비움허브 소개’로 안내한다. 레지스트리 비교 결과 소개문과 카테고리 소개 3편의 해시만 달라졌으며 주소·식별자·발행일·리디렉션은 같다.
+- 회귀 검사 117개, 타입 검사, 빌드와 생성 결과 검사를 통과했다. 생성된 HTML에서 데스크톱·모바일 메뉴 세 링크, 불전문학 목록·카테고리·태그, 소개문 연결을 확인했다.
 
-## 2026-11-26 — BIWOOM HOME 엽서형 화면
+## 2026-11-26 — BIWOOM HUB 운영 기준 정비
 
-- HOME 샘플과 이미지 자료를 바탕으로 투명 상단 메뉴, 엽서형 카드 7장, 주제별 탐색·전문 화면·브라우저 보관함을 적용했다. 기존 프로젝트 링크는 하단에 배치했다.
-- 시범 원고와 삽화는 HTML 샘플에서 가져왔다. 기존 콘텐츠 검증, 타입 검사, 정적 빌드와 HTTP 응답, 한국어 검색 색인 7건, 보관 상태와 포커스 이동을 확인했다.
+- 통합 브랜드·HUB 기획과 현행 사이트를 대조해 AGENTS, README, Codex 규칙과 스킬의 역할·표기를 통일했다. 콘텐츠 관리 매뉴얼 이름과 현행 참조를 갱신했다.
+- 공개 소개에 HUB STORY와 HOME 이야기의 역할, CC0 적용 범위와 별도 이용 조건을 적었다. 공용 레이아웃·검색·인용 복사에서 BIWOOM HUB 이름을 사용한다. 공개 소개의 레지스트리 해시를 다시 준비했다.
+- HUB 배포 기준과 HOME 목적지를 분리했다. 임시 로컬 서버 검사에는 `check:dev`를 사용하고 `check:live`는 호환 별칭으로 유지했다.
+- 회귀 검사 117개, 타입 검사, 로컬 개발 서버 검사, 전체 빌드와 생성 결과 검사를 통과했다. HTML 2,540개와 리디렉션 45개를 검사했다. 레지스트리 재준비 결과는 동일했고, 미커밋 소개문 해시 때문에 `check:registry`의 HEAD 대조는 실패했다.
 
-## 2026-11-26 — BIWOOM HOME 콘텐츠 원본 초기화
+## 2026-11-25 — STORY 태그 가나다 필터
 
-- HOME 기획과 기존 OL Core를 대조했다. Git 복구 지점 `90dfb17`을 확인하고 기존 콘텐츠 폴더 여섯 개를 삭제했다. 빈 `content/article/`을 두고 프로젝트 지침과 로컬 브랜드 표시를 HOME으로 정리했다.
-- 빈 검색 색인과 기존 안내 문서 부재를 처리했다. 테스트 113개, 타입 검사, 빈 원본 빌드 11페이지와 레지스트리·링크 검사를 통과했다. 임시 폴더에서 기존 원본으로 425페이지와 한국어 검색 347건도 검증했다.
-- 4323번 정적 미리보기에서 HOME 200과 삭제한 기존 이야기의 404를 확인했다. npm 감사와 Astro·Sharp 공지를 검토했다. 잠금 파일은 그대로다.
+- Added initials to the central explorer controls and increased the initial batch and load-more increment to 30. Initials use canonical names and combine with the existing type and alias search.
+- Passed 117 fixtures, typecheck, build and generated-link checks. The generated catalog shows 30 of 1,742 cards initially and assigns 242 cards to 가.
+
+## 2026-11-25 — STORY 태그 첫 화면
+
+- Render the explorer columns, search/filter controls and first 12 cards in the initial HTML. Enable controls after setup and keep all tag links available when scripts are disabled.
+- Passed 116 fixtures, typecheck, build and generated-link checks. Confirmed the initial markup for 1,742 tags contains exactly 12 visible cards and shows 1,730 remaining.
+
+## 2026-11-25 — Gentium 개발 서버 경로
+
+- TEXT와 STORY의 Gentium 이탤릭 400·700 선언을 공용 리더 글꼴 컴포넌트로 옮겼다. 공용 URL 함수가 `/hub` 접두어를 적용하며, 격리된 개발 서버에서 두 문서와 WOFF2 파일의 HTTP 200 응답을 확인했다.
+- 기존 개발 서버에서도 두 문서의 글꼴 URL과 WOFF2 응답을 확인했다. 회귀 검사 116개, 타입 검사, 전체 빌드, 생성 결과 검사(HTML 2,540개, 문서 UI 706개)가 통과했다. 레지스트리 준비는 동일한 파일을 생성했으며, 커밋 여부 검사는 기존 미커밋 레지스트리 변경으로 실패했다.
+
+## 2026-11-25 — STORY 번역 배포본 교체
+
+- 번역 프로젝트의 마하붓다왐사 11파트 239편과 담마빠다이야기 26품 374편을 각각 붓다전기와 가르침과 일화로 옮겼다. 두 배포 목차는 시리즈의 `index.md`로 두고, 기존 미얀마본·ABT본 및 담마빠다이야기 구판 폴더를 제거했다. 검토 기준과 기록은 번역 프로젝트에 남겼다.
+- HUB의 인물·장소 태그는 같은 대상을 가리키는 표기를 통합하고 모호한 이칭을 색인에서 제외했다. 마하붓다왐사의 절 링크 한 곳을 생성된 앵커에 맞췄다. 두 시리즈 주소와 일대일로 대응하는 기존 문서의 주소·발행일을 유지하고, 삭제된 자료의 레지스트리 이력을 보존했다.
+- 콘텐츠·회귀 검사 116개, 타입 검사, 빌드, 생성 결과 검사를 통과했다. 생성 HTML에서 작품 목차 2개, 본문 613편, 유지된 주소와 삭제판 제외 여부를 확인했다.
+
+## 2026-11-25 — STORY 태그 탐색 화면
+
+- Reviewed the original NET explorer implementation and reference image in Git. Adapted the type filters, card grid and detail preview to the STORY tag directory, with a modal preview on narrower screens and direct links to full tag pages.
+- Checked the two translation releases with 613 tagged public chapters and 1,742 distinct typed tags. The directory shows 12 cards at a time and fetches up to four preview links from the selected tag page on demand.
+- Passed 116 fixtures, typecheck, the full release build and generated-link checks in an isolated copy. The 사리불 page lists 54 chapters across both series. The directory HTML fell from 2.47 MB to 0.87 MB with the same catalog.
+
+## 2026-11-25 — STORY 태그
+
+- Added typed STORY metadata, alias lookup and static tag pages grouped by edition and series. Applied the YAML to one ABT chapter and one Dhammapada Stories chapter while preserving their text and reader identities.
+- Passed 115 fixtures, typecheck, build and built-link checks. Verified the two chapters on the generated 사리불 page and exercised Korean and Pali alias search in the built script.
+
+## 2026-11-25 — BIWOOM HUB
+
+- Moved the HUB deployment to `biwoom/hub` and the `/hub/` base. Kept registry IDs, source paths, first publication dates and route history. Updated public links, search, downloads, metadata and deployment checks for the project base.
+- The HUB wordmark opens its own landing page. The HOME navigation uses the existing root site reserved for BIWOOM HOME. Updated the HUB operating guides and live-address notices.
 
 ## 2026-11-12 — TEXT/STORY 보조 패널 너비 조절
 

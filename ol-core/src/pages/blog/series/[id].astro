@@ -1,8 +1,8 @@
 ---
+import { url } from "../../../lib/url";
 import { render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogNav from "../../../components/blog/BlogNav.astro";
-import SeriesReadingOrder from "../../../components/common/SeriesReadingOrder.astro";
 import { getBlogLibrary } from "../../../lib/blog";
 import type { BlogSeries } from "../../../lib/blog";
 export async function getStaticPaths() {
@@ -12,26 +12,25 @@ interface Props { series: BlogSeries; }
 const { series } = Astro.props;
 const rendered = series.meta ? await render(series.meta) : null;
 const Intro = rendered?.Content;
-const entries = series.entries.map(({ data }) => ({
-  href: data.url, title: data.title, description: data.description, category: data.category, minutes: data.readingTime,
-}));
 ---
-<BaseLayout title={`${series.title} — Biwoom BLOG`} description={series.description} pagefindMeta={{ title: series.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `BLOG · 시리즈 · ${series.title}` }}>
+<BaseLayout title={`${series.title} · BLOG`} description={series.description} pagefindMeta={{ title: series.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `BLOG · 시리즈 · ${series.title}` }}>
   <main class="ol-blog-page"><BlogNav active="series" compact />
     <section class="ol-section-tight"><div class="ol-container">
-      <a class="ol-blog-breadcrumb" href="/blog/series/">← 모든 시리즈</a>
+      <a class="ol-blog-breadcrumb" href={url("/blog/series/")}>← 모든 시리즈</a>
       <div class="ol-blog-series-workspace">
         <aside class="ol-blog-series-aside"><h2>이 시리즈의 카테고리</h2>
-          {series.categories.map(category => <a href={category.url}><strong>{category.title}</strong><span>{category.description}</span></a>)}
+          {series.categories.map(category => <a href={url(category.url)}><strong>{category.title}</strong><span>{category.description}</span></a>)}
           {!series.categories.length && <p>새로운 글과 카테고리를 준비하고 있습니다.</p>}
         </aside>
         <div class="ol-blog-series-main">
           <header class="ol-blog-series-intro"><span class="ol-section-label">SERIES · 이어 읽기</span><h1>{series.title}</h1>
-            {series.coverUrl && <img class="ol-blog-category-cover" src={series.coverUrl} alt="" />}
+            {series.coverUrl && <img class="ol-blog-category-cover" src={url(series.coverUrl)} alt="" />}
             {Intro ? <div class="ol-prose ol-blog-series-prose"><Intro /></div> : <p>{series.description}</p>}
-            <div class="ol-blog-series-actions"><span>{series.count}편{series.count > 0 && ` · 약 ${series.readingTime}분`}</span>{series.entries[0] && <a class="ol-btn ol-btn-outline" href={series.entries[0].data.url}>처음부터 읽기 →</a>}</div>
+            <div class="ol-blog-series-actions"><span>{series.count}편{series.count > 0 && ` · 약 ${series.readingTime}분`}</span>{series.entries[0] && <a class="ol-btn ol-btn-outline" href={url(series.entries[0].data.url)}>처음부터 읽기 →</a>}</div>
           </header>
-          <SeriesReadingOrder {entries} />
+          <div class="ol-blog-toc-heading"><h3>시리즈 목차</h3><span>읽는 순서</span></div>
+          <ol class="ol-blog-series-toc">{series.entries.map((post,index) => <li><span class="ol-blog-ordinal" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><div><a href={url(post.data.url)}><h3>{post.data.title}</h3></a><p>{post.data.description}</p></div><span class="ol-blog-toc-meta"><span>{post.data.category}</span><span>{post.data.readingTime}분</span></span></li>)}</ol>
+          {!series.count && <div class="ol-blog-coming-soon"><span aria-hidden="true">…</span><h3>새로운 이야기를 준비하고 있습니다.</h3><p>글이 준비되면 이곳에서 차례대로 읽으실 수 있습니다.</p></div>}
         </div>
       </div>
     </div></section>

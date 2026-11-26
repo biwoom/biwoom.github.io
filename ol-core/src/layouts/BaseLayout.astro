@@ -1,10 +1,11 @@
 ---
 import '../styles/global.css';
+import ReaderFonts from '../components/common/ReaderFonts.astro';
 import OLHeader from '../components/layout/OLHeader.astro';
 import OLFooter from '../components/layout/OLFooter.astro';
 import OLSearchModal from '../components/layout/OLSearchModal.astro';
-import { SITE_URL_ORIGIN, BRAND } from '../lib/site-config';
-import { url } from '../lib/url';
+import { SITE_URL, BRAND } from '../lib/site-config';
+import { url, stripHubBase } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -14,33 +15,25 @@ interface Props {
   pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
   pagefindBody?: boolean;
   academic?: boolean;
-  readingSerif?: boolean;
-  homeMenu?: boolean;
-  homeReader?: boolean;
 }
 
 const {
-  title = `${BRAND.displayName} — ${BRAND.tagline}`,
+  title,
   description = BRAND.description,
   ogImage,
   lang = 'ko',
   pagefindMeta = {},
   pagefindBody = true,
   academic = false,
-  readingSerif = academic,
-  homeMenu = false,
-  homeReader = false,
 } = Astro.props;
 
-const sectionPath = Astro.url.pathname;
+const pageTitle = title ? `${title} — ${BRAND.name}` : `${BRAND.name} — ${BRAND.tagline}`;
+const sectionPath = stripHubBase(Astro.url.pathname);
 const siteSection = sectionPath === '/' ? 'home' : sectionPath.match(/^\/(text|story|blog)(?:\/|$)/)?.[1];
 const hasAccentTheme = ['home', 'text', 'story'].includes(siteSection ?? '');
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? SITE_URL_ORIGIN;
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImageUrl = ogImage
-  ? new URL(ogImage, siteUrl).toString()
-  : new URL(url('/og-image.png'), siteUrl).toString();
+const canonicalUrl = new URL(url(sectionPath), SITE_URL).href;
+const ogImageUrl = new URL(url(ogImage ?? '/og-image.png'), SITE_URL).href;
 const pagefindMetaEntries = Object.entries(pagefindMeta)
   .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
   .map(([key, value]) => [key, String(value)] as const);
@@ -52,16 +45,16 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
-  <title>{title}</title>
+  <title>{pageTitle}</title>
   <link rel="canonical" href={canonicalUrl} />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content={title} />
+  <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImageUrl} />
-  <meta property="og:site_name" content={BRAND.displayName} />
+  <meta property="og:site_name" content={BRAND.name} />
   <meta property="og:locale" content="ko_KR" />
 
   {pagefindMetaEntries.map(([key, value]) => (
@@ -70,7 +63,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
+  <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogImageUrl} />
 
@@ -81,6 +74,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <link rel="apple-touch-icon" sizes="180x180" href={url('/apple-touch-icon.png')} />
 
   {academic && <>
+    <ReaderFonts />
     <script is:inline data-reader-panel-init>
       (function () {
         let width = 300;
@@ -91,8 +85,6 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
         document.documentElement.style.setProperty('--ol-reader-aid-preferred-width', `${width}px`);
       })();
     </script>
-  </>}
-  {(academic || homeReader) && <>
     <script is:inline data-reader-font-init>
       (function () {
         let percent = 100;
@@ -103,8 +95,6 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
         document.documentElement.style.setProperty('--ol-reader-initial-scale', String(percent / 100));
       })();
     </script>
-  </>}
-  {readingSerif && <>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet" />
@@ -125,8 +115,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   <!-- Dark mode init (prevents FOUC) -->
   <script is:inline>
     (function() {
-      let saved;
-      try { saved = localStorage.getItem('ol-theme'); } catch { /* Follow the system theme. */ }
+      const saved = localStorage.getItem('ol-theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const theme = saved || (prefersDark ? 'dark' : 'light');
       document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -143,7 +132,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
 </head>
 <body class="ol-kr" data-site-section={siteSection} data-accent-theme={hasAccentTheme ? true : undefined}>
   <div class="ol-app">
-    <OLHeader {homeMenu} {homeReader} />
+    <OLHeader />
     <OLSearchModal />
     <div data-pagefind-body={pagefindBody ? true : undefined} data-pagefind-ignore={pagefindBody ? undefined : true}>
       <slot />

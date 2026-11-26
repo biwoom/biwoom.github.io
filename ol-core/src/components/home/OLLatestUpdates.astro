@@ -34,7 +34,7 @@ function formatDate(date: Date): string {
     {recentPosts.length > 0 ? (
       <div class="ol-grid-3">
         {recentPosts.map((post) => (
-          <a href={post.data.url} class="ol-card ol-card-tight ol-latest-card">
+          <a href={url(post.data.url)} class="ol-card ol-card-tight ol-latest-card">
             <span class="ol-meta-label">
               {formatDate(post.data.date)}
               {post.data.category ? ` · ${post.data.category}` : ""}

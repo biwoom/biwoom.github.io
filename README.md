@@ -1,33 +1,18 @@
-# BIWOOM HOME
+# BIWOOM HUB
 
-문서 버전 v1.9 · 2026-11-26 · BIWOOM HOME 개발 준비
+문서 버전 v1.11 · 2026-11-26 · BIWOOM HUB (OL 코어)
 
-BIWOOM HOME은 부처님과 불교를 만나 살아가는 사람들의 이야기를 전하는 공개 독서 사이트입니다. 원고를 검수한 뒤 이야기 카드를 만들고, 독자가 출전을 확인할 수 있도록 BIWOOM HUB의 원전·번역·연구에 연결합니다.
+BIWOOM HUB는 비움(BIWOOM)의 불교경론과 불전문학, 미디어와 전자책, 포스트 시리즈를 읽고 탐구하는 Astro 기반 플랫폼입니다. BIWOOM HOME은 비움의 대중 이야기 서비스로 기획 중입니다.
 
-- `content/article/`의 Markdown이 HOME의 카드·전문·태그·검색 원본입니다. 시범 원고 7편과 `content/illustration/`의 원본 삽화로 운영 흐름을 시험할 수 있습니다.
-- `ol-core/`에 기존 Astro 실행 코드와 검증 도구가 있습니다. 저장소 루트에서 Node.js 22.12 이상으로 `npm ci`, `npm run dev`, `npm run build`를 실행합니다.
-- HOME의 배포 주소와 저장소는 미결입니다. 현재 `origin`은 원본 `biwoom/biwoom.github.io`를 가리키며, 가져온 워크플로는 `main` 푸시에서 GitHub Pages 배포를 시작합니다.
-- 기획 기준은 `../biwoom-docs/BIWOOM_기획문서/`에 있고, 작업 규칙은 [AGENTS.md](AGENTS.md)에 있습니다.
+- 사이트: https://biwoom.github.io/hub/
+- 저장소: `biwoom/hub`
+- HOME: https://biwoom.github.io/
+- Node.js: 22.12 이상
+- 배포: GitHub Actions → GitHub Pages 프로젝트 경로 `/hub/`
 
-## HOME 원고 작성
+공개 주소는 `site-config.mjs`의 `HUB_ORIGIN`과 `SITE_BASE`에서 관리합니다. 개발·미리보기 주소도 `/hub/`에서 엽니다. 레지스트리 경로는 HUB 기준으로 보존하고, 생성하는 링크와 메타데이터에 `/hub`를 붙입니다. 배포는 `biwoom/hub`의 Settings → Pages에서 GitHub Actions를 소스로 사용합니다. HUB 로고는 HUB 첫 화면으로 이동합니다. 헤더의 HOME은 별도 설정인 `HOME_URL`을 통해 기존 루트 사이트로 이동합니다.
 
-- Markdown 원고는 `content/article/카테고리/`에 둡니다. `붓다전기`, `전생이야기`, `고승전기`, `가르침과 일화`, `설화와 전승`, `구법과 순례`, `시와 게송`, `에세이` 폴더가 ‘묶음’ 분류를 정합니다. YAML의 `topic`은 ‘주제별’ 탐색에 사용합니다.
-- 시리즈를 추가하려면 `content/article/카테고리/시리즈명/` 폴더를 만듭니다. 폴더명이 시리즈 제목이 되고, 선택적으로 그 안의 `index.md`에 `order`와 `description`을 적을 수 있습니다. 이 위치의 `index.md`는 시리즈 설정 문서입니다. 폴더에 공개 원고가 없으면 ‘준비 중’으로 표시됩니다.
-- 파일 상단 YAML에 `id`, `title`, `topic`, `blurb`를 두고 본문은 Markdown으로 작성합니다. 아티클과 보관함의 기존 주소를 유지하려면 제목이나 파일명을 바꿔도 `id`는 그대로 둡니다.
-- 메인 주제는 [원고 폴더의 index.md](content/article/index.md)에 있는 `mainTopics`에 표시 순서대로 적습니다. 원고의 `topic`에는 해당 키를 넣고, 공개 원고의 `topicTags`는 세부 주제에 자동 반영됩니다.
-- 태그는 `personTags`, `placeTags`, `topicTags`에 작성합니다. 이칭은 같은 원고의 `aliasTags`에 기록합니다. [겨자씨 한 줌](<content/article/가르침과 일화/mustard.md>)에서 출전과 삽화 참조까지 확인할 수 있습니다.
-- 삽화 원본은 `content/illustration/`에 두고 `illustration.file`에 `illustration/mustard.webp`처럼 `content/` 기준 경로를 넣습니다. 대체 텍스트는 `illustration.alt`에 씁니다.
-- ‘오늘의 이야기’는 공개일이 가장 최근인 공개 원고를 자동으로 표시합니다. 공개일이 같거나 모두 비어 있으면 기존 `order`를 따릅니다. 추천 이야기 두 편의 ID는 `content/article/index.md`의 `recommendedStories`에 표시 순서대로 적습니다.
-- 첫 화면 목록의 ‘최신’은 `publishedAt`, ‘제작일순’은 `createdAt`을 사용합니다. 날짜는 `YYYY-MM-DD`로 적습니다. 해당 날짜가 없는 원고는 날짜가 있는 원고 뒤에서 기존 `order` 순서로 표시됩니다.
-- `published: true`인 원고와 그 원고가 참조한 삽화만 빌드 결과에 포함됩니다. 내용을 바꾼 뒤 `npm run build`와 `npm run check:built`로 카드·본문·태그·검색 반영을 확인합니다.
-
-## 가져온 OL Core의 구성과 운영 이력
-
-아래 집필 경로와 메뉴 설명은 기존 비움 사이트와 재사용 코드의 참고 자료입니다. 이 작업 폴더의 아티클 규격과 HOME 배포 대상은 위 개발 준비 항목을 따릅니다.
-
-공개 주소는 `site-config.mjs`의 `SITE_URL`로 관리하며 robots.txt의 사이트맵 주소도 함께 맞춥니다. Astro `base`는 설정하지 않습니다. 기본 GitHub Pages 도메인을 사용하므로 CNAME 파일과 사용자 도메인용 DNS 설정은 필요하지 않습니다. 기존 사용자 도메인이 연결되어 있으면 저장소 Settings → Pages → Custom domain에서 제거해야 합니다. [GitHub 공식 안내](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#removing-a-custom-domain)를 참고하세요.
-
-### 기존 폴더 구조
+## 폴더 구조
 
 ```text
 content/                 # Obsidian 보관함·문서·원본 첨부
@@ -45,6 +30,8 @@ content-registry.json    # 문서 식별자·주소·날짜·이력
 
 ## 집필
 
+상단과 모바일 메뉴는 **홈 · 경론 · 문학**입니다. 불교경론은 `/text/`, 불전문학은 `/story/`에서 엽니다. Obsidian의 집필 폴더 이름도 각각 `text`, `story`입니다.
+
 Obsidian에서 `content/`를 보관함으로 엽니다. Vault CMS나 다른 CMS는 필요하지 않습니다.
 
 ```text
@@ -52,7 +39,7 @@ content/
 ├── text/001.중관부/001.대승현론/
 │   ├── 01.번역/001.1권.md
 │   └── 02.연구/001.대승현론 제1권 연구.md
-├── story/001.불전문학/010.붓다 스토리/010.먼 과거의 서원/001.이야기.md
+├── story/001.붓다전기/001.마하붓다왐사/01.서문/01-01-예경과 저술의 서원.md
 ├── blog/005.비움제작일지/006.일지/작업 기록.md
 ├── pages/brand.md
 └── media/001.인포그래픽/lamrim-preview1.jpg
@@ -81,6 +68,7 @@ BLOG는 `blog/시리즈/카테고리/포스트` 구조이며 카테고리는 하
 - `_drafts/`와 `_templates/`, `.obsidian/`은 사이트에서 제외합니다.
 - 공개용 메뉴 폴더의 문서는 기본 공개 대상입니다. 로컬 편집 내용은 업로드·배포 후 실제 사이트에 반영됩니다.
 - 기존 `published: false`는 유지됩니다. 시리즈의 `index.md`가 비공개이면 하위 문서도 숨깁니다.
+- `_drafts`와 `published: false`는 사이트 출력 범위를 정합니다. 접근 제한이 필요한 조사·검수·승인 기록은 배포 저장소 밖의 제한된 공간에 보관합니다.
 - 개별 자료로 보여줄 PDF·이미지·HTML은 자료 구분 폴더에 직접 둡니다.
 - 여러 문서에서 쓰는 이미지는 `content/media/`에 보관합니다. 최상위 폴더가 미디어 카테고리가 됩니다. 현재 이미지는 `001.인포그래픽`(5개), `002.문양`(5개), `003.일러스트`(2개)에 분류되어 있습니다. 숫자는 정렬에만 쓰며, 루트에 직접 놓은 이미지는 미분류로 표시됩니다. `blog/기록.md`에서는 `![설명](../media/001.인포그래픽/lamrim-preview1.jpg)`처럼 일반 Markdown 상대 링크로 참조합니다. 상단 메뉴에는 표시하지 않으며 홈의 미디어 통계와 푸터에서 `/media/` 모음으로 이동할 수 있습니다. 카테고리 버튼으로 masonry 목록을 분류하고 이미지를 누르면 같은 페이지의 모달에서 원본을 확대합니다. 카테고리의 `index.md`에 `## [이미지 제목](파일명)`과 설명을 여러 항목으로 작성하면 각 이미지 모달에 표시됩니다. 세 카테고리의 index.md를 작성 예시로 참고할 수 있습니다. 자산별 상세 문서·검색 항목은 생성하지 않습니다.
 - 문서 전용 보조 파일은 문서 옆 `assets/`에 두고 일반 Markdown 상대 링크로 연결합니다.
@@ -113,6 +101,8 @@ npm run build
 npm run check:built
 ```
 
+`npm run check:dev`는 임시 프로젝트와 로컬 개발 서버로 콘텐츠 갱신을 확인합니다. `check:live`는 기존 명령의 호환 별칭입니다. `check:built`는 로컬 `dist/`를 대상으로 합니다.
+
 - `ol-core/scripts/lib/content.mjs`: 이름·본문·경로의 공통 해석
 - `ol-core/src/content.config.ts`: 정규화된 데이터 스키마와 로더
 - `ol-core/scripts/prepare-content.mjs`: 고정 주소·날짜 색인 관리
@@ -121,31 +111,31 @@ npm run check:built
 - `ol-core/scripts/sync-content-assets.mjs`: 일반 첨부파일 동기화
 - `ol-core/public/generated/content/`: 파생 자산. 직접 수정하거나 커밋하지 않음
 
-DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 설명은 일반 자료로 이관한 뒤 사용자 요청으로 일부 삭제되었습니다. 삭제 자료는 복원하지 않으며 현재 공개 목적지가 존재하는 과거 주소만 안내합니다. 이전 ATLAS HTML은 `.agents/archive/atlas/`에 보존하며 배포하지 않습니다.
+DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존 시각자료와 설명은 일반 자료로 이관한 뒤 사용자 요청으로 일부 삭제되었습니다. 현재 공개 목적지가 존재하는 과거 주소만 안내합니다. ATLAS 이관의 근거는 `.agents/references/content-migration-inventory.json`과 작업 기록에 남아 있습니다.
 
-자세한 집필 규칙은 `.agents/references/ol-home-content-management-manual.md`, 개편 기록은 `.agents/references/obsidian-content-refactor-guide.md`를 확인하세요.
+자세한 집필 규칙은 [BIWOOM HUB 콘텐츠 관리 매뉴얼](.agents/references/biwoom-hub-content-management-manual.md), 개편 기록은 [Obsidian 구조 개편 가이드](.agents/references/obsidian-content-refactor-guide.md)를 확인하세요.
 
 ## 브랜드 자산
 
-Biwoom - 비움의 심볼은 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)입니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 브랜드 설정은 `site-config.mjs`에서 관리합니다. 기존 심볼의 모양은 유지하며 공유 이미지의 영문 표기는 Biwoom입니다. 영문명은 Biwoom, 한글명은 비움이며 함께 쓸 때는 `Biwoom - 비움`으로 표기합니다. OL은 내부 코어 이름입니다.
+BIWOOM HUB는 비움의 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 표기는 `BIWOOM HUB`이며 OL은 내부 코어 이름입니다.
 
 ## 전자책
 
-`content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 서지정보·소개는 선택적인 `index.md`에 작성합니다. 전자책은 CC0로 제공하며, 푸터 MEDIA 아래의 EBOOK에서 접근합니다. 책 선택 시 상세페이지 대신 다운로드 모달이 열립니다. 자세한 집필·비공개 규칙은 콘텐츠 관리 매뉴얼을 참고하세요.
+`content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. HUB에서 CC0로 공개할 수 있는 책을 등록하고, 번역·표지·삽화·글꼴의 재배포 조건을 확인합니다. 별도 권리가 적용되는 요소는 배포 파일과 `index.md`의 서지·소개에 명시합니다. 푸터 MEDIA 아래의 EBOOK에서 접근하며, 책을 선택하면 다운로드 모달이 열립니다.
 
 ## 수정 변경사항
 
-### 2026-11-26 — HOME 원고 파일 연동
+### 2026-11-26 — v1.11
 
-- 시범 원고와 삽화를 각각 `content/article/`과 `content/illustration/`으로 이동하고, 원고의 YAML을 카드·전문·태그 생성에 연결했다.
+- 한국어 메뉴와 불교경론·불전문학의 공개 이름을 반영했습니다.
 
-### 2026-11-26 — 엽서형 이야기 탐색
+### 2026-11-26 — v1.10
 
-- 시범 이야기 카드와 전문, 주제별 탐색, 브라우저 보관함을 추가하고 상단 메뉴를 정리했다.
+- HUB와 HOME의 역할 및 주소 설정, 현행 집필 경로, 전자책 공개 조건, 로컬 검증 명령을 반영했습니다.
 
-### 2026-11-26 — BIWOOM HOME 개발 준비
+### 2026-11-25 — v1.9
 
-- 아티클 원본 위치를 `content/article/`로 잡고, 빈 원본 폴더에서도 정적 빌드와 링크 검사가 동작하게 했다.
+- HUB 저장소·공개 배포 경로와 HOME 연결을 반영했습니다.
 
 ### 2026-11-13 — TEXT·STORY 메뉴
 

@@ -112,10 +112,6 @@ export function initReaderTools() {
     followHash();
   }
 
-  initReaderFont(reader, ".ol-story-part-content-head :is(h1,h2), .ol-story-chapter > .ol-prose, .ol-story-chapter > .ol-prose :is(h1,h2,h3,h4,h5,h6,pre code,table,th), .ol-reader-footnotes-content, .ol-reader-footnotes-content .footnotes");
-}
-
-export function initReaderFont(reader: HTMLElement, targetSelector: string) {
   const font = reader.querySelector<HTMLElement>("[data-reader-font]");
   const fontTrigger = font?.querySelector<HTMLButtonElement>("[data-reader-font-trigger]");
   const panel = font?.querySelector<HTMLElement>(".ol-reader-font-panel");
@@ -129,8 +125,9 @@ export function initReaderFont(reader: HTMLElement, targetSelector: string) {
     if (Number.isFinite(saved) && saved >= 80 && saved <= 150) percent = saved;
   } catch { /* Reading controls also work when storage is unavailable. */ }
   // Measure the existing cascade, including responsive heading/table/code sizes.
-  const targets = Array.from(reader.querySelectorAll<HTMLElement>(targetSelector))
-    .filter(el => !el.closest('[data-reader-original]'));
+  const targets = Array.from(reader.querySelectorAll<HTMLElement>(
+    ".ol-story-part-content-head :is(h1,h2), .ol-story-chapter > .ol-prose, .ol-story-chapter > .ol-prose :is(h1,h2,h3,h4,h5,h6,pre code,table,th), .ol-reader-footnotes-content, .ol-reader-footnotes-content .footnotes",
+  )).filter(el => !el.closest('[data-reader-original]'));
   const measure = () => {
     // Initial CSS already uses the saved scale. Measure at 100% to avoid
     // multiplying it a second time, including after a responsive resize.

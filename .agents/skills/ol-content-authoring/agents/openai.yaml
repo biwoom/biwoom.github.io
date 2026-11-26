@@ -1,4 +1,4 @@
 interface:
-  display_name: "BIWOOM HOME Content Authoring"
-  short_description: "Prepare BIWOOM HOME story articles and assets"
-  default_prompt: "Use $ol-content-authoring to prepare a BIWOOM HOME story article under content/article/."
+  display_name: "BIWOOM HUB Content Authoring"
+  short_description: "Create and update HUB content"
+  default_prompt: "Use $ol-content-authoring to add or revise BIWOOM HUB content."

@@ -1,9 +1,9 @@
-# Biwoom Obsidian 기반 콘텐츠 구조 개편 개발 가이드
+# BIWOOM HUB Obsidian 기반 콘텐츠 구조 개편 개발 가이드
 
-- 문서 버전: v0.13
-- 최신 수정일: 2026-11-11
-- 대상 프로젝트: Biwoom (OL 코어) (`biwoom/biwoom.github.io`)
-- 운영 URL: https://biwoom.github.io/
+- 문서 버전 v0.15
+- 최신 수정일 2026-11-26
+- 대상 프로젝트 BIWOOM HUB (OL 코어), `biwoom/hub`
+- 운영 URL https://biwoom.github.io/hub/
 - 상태: 2026-10-30 로컬 구현. 아래 계획의 기준 시점과 현재 적용 결과를 구분하며, GitHub 업로드·운영 배포는 수행하지 않았다.
 - 목적: 사용자가 Obsidian에서 제목과 본문을 작성하고 폴더를 관리하면, Astro가 사이트에 필요한 정보를 자동으로 해석하도록 전환한다.
 
@@ -11,7 +11,7 @@
 
 1. 2026-11-09 사용자 요청에 따라 보관함은 저장소 루트 `content/`, 구현은 `ol-core/`로 분리한다. 별도 콘텐츠 저장소는 만들지 않는다. 이 문서의 과거 분석·이관 경로는 당시 상태의 기록이며, 현재 경로는 콘텐츠 관리 매뉴얼을 따른다.
 2. Vault CMS, Front Matter, Decap CMS는 이번 개편에 도입하지 않는다. 기존 Astro `glob()` 기반 콘텐츠 읽기를 활용한다.
-3. 공개 콘텐츠 메뉴는 TEXT, STORY, BLOG 중심으로 축소한다. HOME은 시작 화면 역할을 유지할 수 있으나 별도 콘텐츠 작성 체계로 확대하지 않는다.
+3. 공개 콘텐츠 메뉴는 TEXT, STORY, BLOG 중심으로 구성한다. HUB 첫 화면은 로고로 열고, HOME 메뉴는 기존 루트 사이트로 연결한다. BIWOOM HOME의 대중 이야기 집필은 HOME 기획 범위에서 관리한다.
 4. DESIGN·NET 메뉴와 그 전용 기능을 제거한다. 엔터티와 온톨로지 구상도 이 프로젝트에서 폐지하고 관련 콘텐츠·스키마·조회·UI를 제거한다.
 5. TEXT와 STORY 모두 최상위 카테고리를 사용한다. 그 아래는 TEXT의 문헌 → 자료 구분 → 개별 자료, STORY의 series → part → chapter 구조다.
 6. TEXT 문헌·문서 화면은 학술형 전용 템플릿을 사용하고, STORY와 Markdown/각주/글자 크기/복사 동작을 공유한다. 자료 구분은 첫 자료로 이동하는 링크이며 실제 탭 패널 전환은 구현하지 않는다.
@@ -19,7 +19,7 @@
 8. 폴더·파일 이름의 숫자 접두어에서 순서를 추출한다. 문서마다 순서 메타데이터를 입력하도록 요구하지 않는다.
 9. 불필요한 frontmatter와 데이터 스키마를 함께 정리한다. YAML 없는 새 Markdown 문서가 유효한 작성 입력이어야 한다.
 
-현재 운영 규칙에는 기존 DESIGN·엔터티·태그 규칙 등이 남아 있다. 이 가이드는 합의된 **전환 목표**이며, 현행 구현과 이미 일치한다고 간주하지 않는다. 실제 구현 단계에서 관련 규칙·매뉴얼·스킬을 함께 갱신한다.
+이 가이드는 개편 당시의 전환 목표와 이후 적용 확인을 기록한다. 현행 규칙은 `AGENTS.md`와 [BIWOOM HUB 콘텐츠 관리 매뉴얼](biwoom-hub-content-management-manual.md)을 따른다.
 
 ## 2. 개편 전 구현에서 확인했던 제약
 
@@ -235,7 +235,7 @@ src/content/
 
 - 정규화·정렬·경로 충돌·공개 제외·자산 이관처럼 실패 영향이 큰 규칙은 의미 있는 fixture로 검증한다.
 - `npm run check`와 `npm run build`를 실행한다. 실제 카테고리·문헌·문서 경로와 PDF 파일을 `dist/`에서 확인한다.
-- 루트 배포를 유지한다. 라우트 변경 시 `astro.config.mjs`, `public/robots.txt`, RSS, sitemap과 기존 URL 처리를 함께 확인한다. Astro `base`를 추가하지 않는다.
+- HUB를 Astro `base: "/hub"`로 배포한다. 라우트 변경 시 `astro.config.mjs`, `ol-core/public/robots.txt`, RSS, 사이트맵과 기존 URL 처리를 확인한다.
 - `dist/`, `.astro/`, `node_modules/`, `public/generated/`를 커밋하지 않는다.
 - GitHub 업로드와 배포 확인은 사용자가 요청할 때 별도로 수행한다.
 
@@ -261,6 +261,14 @@ src/content/
 - `npm run check:built`는 링크와 정적 UI 마크업·CSS 회귀를 검사한다. 브라우저의 실제 표시·조작 확인과는 별개다.
 
 ## 수정 변경사항
+
+### 2026-11-26 — v0.15
+
+- HUB 첫 화면과 BIWOOM HOME의 역할, 현행 매뉴얼 참조를 갱신했다.
+
+### 2026-11-25 — BIWOOM HUB 이전
+
+- 프로젝트 배포 주소와 기존 레지스트리 경로의 관계를 반영했다.
 
 ### 2026-11-11 — BLOG
 

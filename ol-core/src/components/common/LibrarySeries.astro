@@ -2,17 +2,18 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { categoryUrl } from "../../lib/library";
 import { url } from "../../lib/url";
+import { LIBRARY_LABELS } from "../../lib/site-config";
 import type { Library, Section } from "../../lib/library";
 interface Props {
   series: Library;
   section: Section;
 }
 const { series, section } = Astro.props;
-const label = section.toUpperCase();
+const label = LIBRARY_LABELS[section];
 ---
 
 <BaseLayout
-  title={`${series.label} — Biwoom ${label}`}
+  title={`${series.label} · ${label}`}
   description={series.description}
   pagefindBody={false}
 >
@@ -23,7 +24,7 @@ const label = section.toUpperCase();
         {series.category && <><span>/</span><a href={url(categoryUrl(series.categoryKey))}>{series.category}</a></>}
       </nav>
       <span class="ol-section-label">
-        {series.category || `${label} SERIES`}
+        {series.category || `${label} 시리즈`}
       </span>
       <h1 class="ol-kr">{series.label}</h1>
       {series.description && <p class="ol-kr">{series.description}</p>}
@@ -34,7 +35,7 @@ const label = section.toUpperCase();
         aria-label={`${series.label} 자료 바로가기`}
       >
         {series.parts.map((part, index) => (
-          <a href={part.entries[0].data.url}>
+          <a href={url(part.entries[0].data.url)}>
             <span>
               {section === "story"
                 ? `PART ${index + 1}`
@@ -54,7 +55,7 @@ const label = section.toUpperCase();
       >
         <section class="ol-story-cover-panel">
           <div class="ol-story-book-cover">
-            <span>Biwoom {label}</span>
+            <span>{label}</span>
             <strong class="ol-kr">{series.label}</strong>
             <em>{series.count}개 자료</em>
           </div>
@@ -86,7 +87,7 @@ const label = section.toUpperCase();
                       <ol>
                         {part.entries.map((entry, i) => (
                           <li>
-                            <a href={entry.data.url}>
+                            <a href={url(entry.data.url)}>
                               <span>{String(i + 1).padStart(2, "0")}</span>
                               <strong class="ol-kr">{entry.data.title}</strong>
                               {entry.data.format && (
@@ -99,7 +100,7 @@ const label = section.toUpperCase();
                     </section>
                     <a
                       class="ol-story-part-overview-start"
-                      href={part.entries[0].data.url}
+                      href={url(part.entries[0].data.url)}
                     >
                       {part.label} 첫 자료로 이동
                     </a>

@@ -1,0 +1,25 @@
+---
+import { url } from '../../lib/url';
+
+// SIL Gentium 7.000 covers Latin and combining marks in reader emphasis.
+const unicodeRange = 'U+0000-024F, U+0300-036F, U+1AB0-1AFF, U+1DC0-1DFF, U+1E00-1EFF, U+2000-206F';
+const faces = [
+  { file: 'Gentium-Italic.woff2', weight: 400 },
+  { file: 'Gentium-BoldItalic.woff2', weight: 700 },
+];
+
+// Resolve the public URLs before rendering so dev and build share the same base.
+const css = faces.map(({ file, weight }) => {
+  const src = url(`/fonts/gentium/${file}`);
+  return `
+@font-face {
+  font-family: 'Gentium';
+  src: url('${src}') format('woff2');
+  font-style: italic;
+  font-weight: ${weight};
+  font-display: swap;
+  unicode-range: ${unicodeRange};
+}`;
+}).join('');
+---
+<style is:inline data-reader-gentium set:html={css}></style>

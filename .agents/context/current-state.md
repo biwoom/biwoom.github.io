@@ -2,25 +2,20 @@
 
 Last updated: 2026-11-26
 
-## BIWOOM HOME
+## Brand
 
-- 현재 프로젝트는 공개 이야기 사이트 BIWOOM HOME이다. 기획 기준은 `../biwoom-docs/BIWOOM_기획문서/`에 있다.
-- `content/article/`의 Markdown 7편과 `content/illustration/`의 원본 7점을 연결했다. `published: true` 원고의 메타데이터가 카드·태그·전문을 구성하고, 참조한 삽화만 생성 폴더로 복사한다. `id`로 기존 전문 주소와 보관함 연결을 유지한다.
-- HOME의 이야기·주제별·태그·보관함 탐색은 데스크톱 왼쪽 메뉴와 모바일 하단 드로어에서 제공한다. 태그는 원고 YAML에 기록하고 HUB의 분류·이칭·초성 규칙을 따른다. 공개 저장소와 배포 주소는 후속 과제다.
-- 원본 Astro 6.3.8과 Sharp 0.34.5의 보안 업데이트가 필요하다. 감사 결과는 Critical 1, High 9, Moderate 1, Low 2 패키지였다.
-
-## 가져온 OL Core 브랜드 설정
-
-- Public brand: Biwoom - 비움 (English: Biwoom; Korean: 비움). OL remains the source-code core name. Name/description live in site-config.mjs.
+- BIWOOM HUB is the public platform for Buddhist texts, translations and research, story sources, media, ebooks and post series under the BIWOOM (비움) brand. OL is the internal core. Shared site settings supply the public site name, metadata and citation attribution.
+- The site header displays ‘비움 HUB’ with ‘불교문헌 연구공간’.
 - Existing symbol shapes are retained under ol-core/public/brand/biwoom-mark-monochrome.png and biwoom-mark-gold.png; derived icons and the Biwoom sharing image use npm run brand:assets.
-- Production target: `https://biwoom.github.io/`, with root routes and no Astro base. Local source/metadata/docs now target this URL; no push, hosting setting change or live deployment verification is included in this change. GitHub Pages Custom domain must be empty before using the default domain.
+- HUB publishes at `https://biwoom.github.io/hub/`. Astro uses independent `HUB_ORIGIN` and `SITE_BASE` settings. `HOME_URL` is the HOME navigation destination. Registry routes stay HUB-relative, and the public-link helper adds the prefix at rendering.
 - Previous borido.org DNS/TLS investigation is historical evidence in `.agents/references/borido-https-investigation-2026-11-08.md`, not a current migration goal.
-- Historical BLOG articles and the completed BORIDO ebook sample retain authored titles/assets with current-brand notices. Public brand/support pages and the active manifesto describe Biwoom - 비움.
+- Historical BLOG articles and the completed BORIDO ebook sample retain authored titles and assets. Public pages identify HUB as BIWOOM's platform for text, research, and related content.
 
-## 가져온 OL Core 프로젝트
+## Project
 
-- Biwoom - 비움, powered by the OL core: `https://biwoom.github.io/`, repository `biwoom/biwoom.github.io`.
-- Astro 6 static site; Pagefind search; GitHub Actions → GitHub Pages root deployment, no Astro `base`.
+- HUB repository: `biwoom/hub`. Astro 6 static site with Pagefind and GitHub Actions publication.
+- HOME uses the existing root site `https://biwoom.github.io/` while the future HOME design is pending. The HUB wordmark links to `/hub/`; its HOME navigation opens the root site.
+- Primary navigation uses 홈, 경론 and 문학. The libraries are 불교경론 and 불전문학 at the established `/text/` and `/story/` routes. 불전문학 publishes source texts, traditions and translations. BIWOOM HOME covers stories written for a general audience. LAB is a planned internal HUB area. APP, READER and DHARMA FACTORY integrations are future work within their planning scope.
 - Latest inspected Actions runs: 2026-11-10 `7d6c9ed` and 2026-11-11 `4ccecdb` stopped at the committed-registry gate (211 STORY paths changed NFD/NFC spelling). The last inspected successful run is 2026-11-09 `6de2f4d`. Unicode handling is fixed locally; no new push, rerun or production deployment is included.
 
 ## Menu Accents
@@ -31,6 +26,10 @@ Last updated: 2026-11-26
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list containers use max-width 1200px and 32px horizontal padding, with left-aligned headings/descriptions.
 
 ## Current Architecture
+
+- STORY body frontmatter accepts optional person, place, topic and alias tags. The public tag directory supports alias lookup, and detail pages group tagged chapters in their existing series order. Both translation releases supply structured tags.
+- STORY's display title omits the compound chapter prefix when it matches the filename and the title comes from the H1 or filename. The Dhammapada Stories release keeps its numbered source filenames and headings.
+- The STORY tag directory uses the historical NET explorer layout with type and initial filters, a 30-card batch and a selected-tag preview. The preview loads from the full tag page on demand and appears in a right-hand panel at 1180px and wider or in a dialog below that width. Card links lead to the full tag page when opened directly.
 
 - TEXT/STORY category cards, menu filters and displayed category counts include only categories with a public work/series. Category-only introductions remain authored metadata and direct category pages remain available; a public work introduction qualifies even before its first body document.
 
@@ -54,7 +53,7 @@ Last updated: 2026-11-26
 
 - TEXT now has ten ordered category folders with index.md introductions: 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야. The existing 중관부/대승현론 work, original bytes and registry identities remain in place; the other nine categories contain only introductions. Reuse the shared TEXT/STORY category metadata handling; future works/body texts are supplied by the user.
 
-- STORY 이야기불교 now has seven ordered category folders with index.md introductions: 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. Existing Myanmar/ABT Maha Buddhavamsa editions moved together from 불전문학 to 붓다전기; preserve their source bytes, IDs, URLs, dates and rights. Removed only the old empty 선시 category. 가르침과 일화 now contains the user-added 담마빠다이야기 (one preface and fourteen 쌍의 품 chapters); the other five categories have introductions only. Its raw/prepared source-file citations are plain text, while document TOC and external references remain linked. TEXT/STORY share category-index classification and authored title/description/privacy; indexes resolve to category routes and are excluded from readers/libraries/counts. The old 불전문학 category URL redirects to 붓다전기.
+- 불전문학 has seven ordered category folders with index.md introductions: 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. 붓다전기 contains the 마하붓다왐사 Myanmar-based release with 239 chapters in 11 parts. 가르침과 일화 contains the 담마빠다이야기 release with 374 chapters in 26 parts, including its preface. Both series have an index.md with the release table of contents. The other five categories have introductions only. TEXT/STORY share category-index classification and authored title/description/privacy; indexes resolve to category routes and are excluded from readers/libraries/counts. The historical 불전문학 category URL redirects to 붓다전기.
 
 - TEXT/STORY right aid docks now share ReaderPanelResize/reader-panel-resize at >=1360px. The 8px boundary handle adjusts the grid and article together, with keyboard arrows/Home/End, Enter/double-click reset, 300px default and 240–520px bounds reserving a 480px article. Prose retains its 780px cap. Both readers share the saved preferred width restored in the head; CSS applies temporary viewport limits without replacing the preference. Focus, hidden aids, modal transitions and print remove the handle; interrupted drags restore the prior preference and release pointer capture/selection locks.
 
@@ -95,18 +94,19 @@ Last updated: 2026-11-26
 - `ol-core/scripts/lib/content.mjs` provides shared parsing/normalization, with `ol-core/src/content.config.ts` defining normalized schema and loaders.
 - `content-registry.json` is committed, auto-maintained source metadata for stable URLs/dates/previous paths. `ol-core/scripts/prepare-content.mjs` updates it.
 - `_drafts`/templates/dotfolders are excluded. Public folders default to published; explicit false and hidden series intros are preserved.
+- The public introduction explains reuse and separate licenses. The ebook registration guidance covers rights for text, translations, covers, illustrations and fonts. Restricted research, review and approval materials belong in access-controlled storage outside the publishable repository.
 - `content/media/` remains a public asset namespace with no per-image content records. The auxiliary `/media/` gallery has first-subfolder categories (numeric prefixes hidden), a root-file 미분류 category, responsive CSS-column masonry and native-dialog original-image viewing with fit/original zoom. The current 12 images are classified under 001.인포그래픽 (5), 002.문양 (5), and 003.일러스트 (2); category buttons follow this order. Five BLOG sources now use the new relative paths; all source image bytes and document identities/dates are preserved. The original 15-image path/checksum mapping is .agents/references/media-category-migration.json; the three *-thumb.jpg source assets and their information sections were subsequently removed per user request. Optional category index.md files now supply multiple H2 image-link titles and Markdown modal descriptions; all three category indexes remain as editable examples covering all 12 images. Missing entries use filenames. Validate category-local existing public image targets and duplicates, reuse the common Markdown/relative-link pipeline, and reread metadata independently of image preview caches. Desktop information sits to the right; <=900px places it below the image. Metadata adds no document routes, raw Markdown downloads or registry entries. MEDIA defaults to CC0 unless an image has a separately stated license; the gallery introduction explains this policy and exceptions belong in the image information. Home statistics count gallery source images and link to it; the footer also links, while desktop/mobile main menus omit MEDIA. Previews are cached WebP derivatives under `ol-core/public/generated/media-gallery/`; `.astro/media-gallery-cache.json` is private generated metadata. Asset sync/dev refresh prepare thumbnails; page/stat reads share preparation and generated previews never affect counts.
 - Historical path/checksum mapping remains `.agents/references/shared-media-migration.json`; the old media/ATLAS archives have since been deleted by the user and are not restored.
 - General source attachments are synced to `ol-core/public/generated/content/` and relative Markdown links are resolved by `ol-core/scripts/remark-content.mjs`.
 - DESIGN/NET/Entity/Ontology active collections, UI and provider settings are removed. Migrated ordinary TEXT visual/reference material was subsequently deleted by the user. Deleted sources are not restored; only redirects with a currently public destination are rendered. Original migration inventory remains historical evidence.
 - User deletions of historical archive material remain in place; archive references in old work logs describe earlier states.
 - Common settings: `site-config.mjs`, app entry `ol-core/src/lib/site-config.ts`. No DESIGN asset env vars are required.
-- Validation: `npm run check`, `npm run typecheck`, `npm run build`, `npm run check:built`, `npm run check:registry`; optional `npm run check:live` runs a temporary project/server and cleans up afterward. Built checks cover static attachment HTML dependencies and UI contracts. Shared pagination remains; DocumentTags renders optional document-only plain tags, and BLOG filters exact tags with year archives. Series tag modals are retired.
+- Validation: `npm run check`, `npm run typecheck`, `npm run build`, `npm run check:built`, `npm run check:registry`. Optional `npm run check:dev` runs a temporary local project and server and cleans up afterward. `check:live` is its compatibility alias. Built checks cover static attachment HTML dependencies and UI contracts. Shared pagination remains; DocumentTags renders optional document-only plain tags, and BLOG filters exact tags with year archives. Series tag modals are retired.
 - Search and mobile-sheet styles are shared files independent of retired ATLAS CSS. Closed overlays start with `hidden`/`inert` and keep their `aria-hidden` state synchronized.
 
 ## Documentation
 
-- Authoring: `.agents/references/ol-home-content-management-manual.md`.
+- Authoring: `.agents/references/biwoom-hub-content-management-manual.md`.
 - Refactor guide and implementation notes: `.agents/references/obsidian-content-refactor-guide.md`.
 - Original migration mapping: `.agents/references/content-migration-inventory.json`.
 - Subsequent deletion and migration status: `.agents/references/content-deletion-followup.json`.

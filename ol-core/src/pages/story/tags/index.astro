@@ -1,0 +1,270 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { url } from "../../../lib/url";
+import { LIBRARY_LABELS } from "../../../lib/site-config";
+import { getStoryTags, storyTagTypeLabels } from "../../../lib/story-tags";
+import { storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath, storyTagTypes } from "../../../../scripts/lib/story-tags.mjs";
+
+const tags = await getStoryTags();
+const pageSize = 30;
+const remaining = Math.max(tags.length - pageSize, 0);
+const cards = tags.map(tag => ({ tag, initial: storyTagInitial(tag.label) }));
+const initialFilters = [
+  { value: "", label: "전체" },
+  ...storyTagInitials.map(label => ({ value: label, label })),
+  ...(cards.some(card => card.initial === "other") ? [{ value: "other", label: "기타" }] : []),
+];
+const filters = [
+  { type: "", label: "전체", count: tags.length },
+  ...storyTagTypes.map(type => ({
+    type, label: storyTagTypeLabels[type], count: tags.filter(tag => tag.type === type).length,
+  })),
+];
+---
+
+<BaseLayout title={`${LIBRARY_LABELS.story} 태그`} pagefindBody={false}>
+  <main class="ol-section ol-tag-explorer">
+    <noscript>
+      <style is:inline>
+        .ol-tag-explorer .ol-tag-search,
+        .ol-tag-explorer [data-story-tag-directory] > .ol-tag-filters,
+        .ol-tag-explorer [data-story-tag-directory] > .ol-tag-desktop,
+        .ol-tag-explorer [data-story-tag-initials],
+        .ol-tag-explorer [data-loadmore-wrap] { display: none; }
+        .ol-tag-explorer .ol-tag-columns { grid-template-columns: minmax(0, 1fr); }
+        .ol-tag-explorer [data-story-tag-entry][hidden] { display: list-item; }
+      </style>
+    </noscript>
+    <div class="ol-container">
+      <nav class="ol-library-view-nav" aria-label={`${LIBRARY_LABELS.story} 보기`}>
+        <a href={url("/story/")}>{LIBRARY_LABELS.story}</a>
+        <a href={url("/story/categories/")}>카테고리</a>
+        <a href={url(storyTagsPath)} aria-current="page">태그</a>
+      </nav>
+      <header class="ol-tag-heading">
+        <h1>{LIBRARY_LABELS.story} 태그</h1>
+        {tags.length > 0 && (
+          <form class="ol-library-search ol-tag-search" role="search" data-story-tag-search inert>
+            <label class="sr-only" for="story-tag-query">태그 이름 또는 이칭 검색</label>
+            <input id="story-tag-query" name="q" type="search" placeholder="태그 이름이나 이칭 검색" />
+          </form>
+        )}
+      </header>
+      {tags.length === 0 ? <p>등록된 태그가 없습니다.</p> : (
+        <div class="ol-tag-columns" data-story-tag-directory data-page-size={pageSize}>
+          <aside class="ol-tag-panel ol-tag-filters" data-story-tag-filters inert>
+            <h2>유형</h2>
+            <div class="ol-tag-type-list" role="group" aria-label="태그 유형">
+              {filters.map(({ type, label, count }) => (
+                <button type="button" data-story-tag-type={type} aria-pressed={type === "" ? "true" : "false"}>
+                  <span>{label}</span><span>{count}</span>
+                </button>
+              ))}
+            </div>
+          </aside>
+          <section class="ol-tag-panel ol-tag-list" aria-labelledby="story-tag-list-title">
+            <div class="ol-tag-toolbar">
+              <h2 id="story-tag-list-title">태그 목록</h2>
+              <p data-story-tag-status role="status">{tags.length}개 태그</p>
+              <button class="ol-btn ol-btn-ghost ol-btn-sm" type="button" data-story-tag-reset hidden>초기화</button>
+            </div>
+            <div class="ol-tag-initials" role="group" aria-label="태그 초성" data-story-tag-initials inert>
+              {initialFilters.map(({ value, label }) => (
+                <button type="button" data-story-tag-initial={value} aria-pressed={value === "" ? "true" : "false"}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <p data-story-tag-empty hidden>일치하는 태그가 없습니다.</p>
+            <ul class="ol-tag-grid" data-story-tag-list>
+              {cards.map(({ tag, initial }, index) => {
+                const href = url(storyTagPath(tag));
+                return (
+                  <li data-story-tag-entry={JSON.stringify([tag.label, ...tag.aliases])} data-type={tag.type} data-initial={initial}
+                    hidden={index >= pageSize}>
+                    <a class="ol-tag-card" href={href} data-story-tag-card>
+                      <span class="ol-tag-card-meta">
+                        <span>{storyTagTypeLabels[tag.type]}</span><span>{tag.documents.length}편</span>
+                      </span>
+                      <strong>{tag.label}</strong>
+                      {tag.aliases.length > 0 && <span class="ol-tag-card-alias">{tag.aliases.slice(0, 2).join(" · ")}</span>}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+            <div class="ol-tag-more" data-loadmore-wrap hidden={remaining === 0} inert>
+              <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-loadmore-button>
+                더 보기 <span data-loadmore-remaining>({remaining})</span>
+              </button>
+            </div>
+          </section>
+          <aside class="ol-tag-panel ol-tag-desktop" data-story-tag-desktop aria-label="선택한 태그">
+            <p data-story-tag-placeholder>태그를 선택하면 이칭과 관련 자료를 볼 수 있습니다.</p>
+            <div data-story-tag-preview tabindex="-1" hidden>
+              <div data-story-tag-preview-body aria-live="polite"></div>
+              <a class="ol-btn ol-btn-outline ol-btn-sm" data-story-tag-full>관련 자료 전체 보기</a>
+            </div>
+          </aside>
+          <dialog class="ol-tag-dialog" aria-label="선택한 태그" data-story-tag-dialog>
+            <div class="ol-tag-dialog-inner">
+              <form method="dialog" class="ol-tag-dialog-actions">
+                <button class="ol-btn ol-btn-ghost ol-btn-sm" type="submit">닫기</button>
+              </form>
+              <div data-story-tag-mobile></div>
+            </div>
+          </dialog>
+        </div>
+      )}
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { initStoryTagExplorer } from "../../../lib/client/story-tag-explorer";
+  initStoryTagExplorer();
+</script>
+
+<style>
+  .ol-tag-explorer > .ol-container { max-width: 1440px; }
+
+  .ol-tag-heading,
+  .ol-tag-toolbar,
+  .ol-tag-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .ol-tag-heading { flex-wrap: wrap; margin-block: 1.5rem 1rem; }
+  .ol-tag-heading h1 { font-size: clamp(1.65rem, 3vw, 2.25rem); margin: 0; }
+  .ol-tag-search { flex: 0 1 24rem; }
+
+  .ol-tag-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .ol-tag-panel,
+  .ol-tag-dialog {
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    background: var(--ol-surface);
+    color: var(--ol-ink);
+  }
+
+  .ol-tag-panel { min-width: 0; padding: 1rem; }
+  .ol-tag-panel h2 { margin: 0; font-size: 1rem; }
+  .ol-tag-filters h2 { margin-bottom: 0.65rem; }
+
+  .ol-tag-type-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .ol-tag-type-list button, .ol-tag-initials button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r-sm);
+    background: var(--ol-bg);
+    color: var(--ol-ink);
+    cursor: pointer;
+  }
+
+  .ol-tag-type-list button[aria-pressed="true"],
+  .ol-tag-initials button[aria-pressed="true"],
+  .ol-tag-card[aria-current="true"] {
+    border-color: var(--ol-accent);
+    background: color-mix(in srgb, var(--ol-accent) 9%, var(--ol-surface));
+  }
+
+  .ol-tag-toolbar { justify-content: flex-start; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .ol-tag-toolbar p { margin: 0; color: var(--ol-muted); font-size: 0.84rem; }
+  .ol-tag-toolbar button { margin-inline-start: auto; }
+  .ol-tag-initials { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem; }
+  .ol-tag-initials button { justify-content: center; min-width: 2rem; min-height: 2rem; padding: 0.25rem 0.5rem; font-size: 0.84rem; }
+
+  .ol-tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+    gap: 0.65rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ol-tag-grid li { min-width: 0; }
+  .ol-tag-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-height: 5.75rem;
+    height: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r-sm);
+    background: var(--ol-bg);
+    color: var(--ol-ink);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .ol-tag-card:hover { border-color: var(--ol-accent); }
+  .ol-tag-card-meta, .ol-tag-card-alias { font-size: 0.78rem; color: var(--ol-muted); }
+  .ol-tag-card-alias { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ol-tag-more { margin-top: 1rem; text-align: center; }
+
+  .ol-tag-desktop { display: none; }
+  .ol-tag-desktop > p { margin: 0; color: var(--ol-muted); }
+  [data-story-tag-preview-body] { margin-bottom: 0.9rem; }
+  [data-story-tag-preview] :global(.ol-tag-preview-heading span),
+  [data-story-tag-preview] :global(.ol-tag-aliases),
+  [data-story-tag-preview] :global(.ol-tag-preview-series) { color: var(--ol-muted); }
+  [data-story-tag-preview] :global(.ol-tag-preview-heading h2) { font-size: 1.35rem; margin-top: 0.25rem; }
+  [data-story-tag-preview] :global(.ol-tag-preview-heading h2),
+  [data-story-tag-preview] :global(.ol-tag-aliases) { overflow-wrap: anywhere; }
+  [data-story-tag-preview] :global(.ol-tag-preview-links) { margin-block: 0.5rem 1rem; padding-inline-start: 1.15rem; }
+  [data-story-tag-preview] :global(.ol-tag-preview-links li + li) { margin-top: 0.55rem; }
+  [data-story-tag-preview] :global(.ol-tag-preview-links a) { text-decoration: underline; text-underline-offset: 0.16em; }
+  [data-story-tag-preview] :global(.ol-tag-preview-series) { display: block; font-size: 0.83rem; }
+
+  .ol-tag-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(calc(100% - 2rem), 32rem);
+    max-height: min(80dvh, 42rem);
+    padding: 0;
+    overflow: auto;
+  }
+  .ol-tag-dialog::backdrop { background: rgb(0 0 0 / 0.5); }
+  :global(body:has(.ol-tag-dialog[open])) { overflow: hidden; }
+  .ol-tag-dialog-inner { padding: 1rem; }
+  .ol-tag-dialog-actions { text-align: end; }
+  .ol-tag-explorer [hidden] { display: none; }
+
+  @media (min-width: 760px) {
+    .ol-tag-columns {
+      grid-template-columns: minmax(9rem, 11rem) minmax(0, 1fr);
+    }
+
+    .ol-tag-type-list { flex-direction: column; }
+  }
+
+  @media (min-width: 1180px) {
+    .ol-tag-columns {
+      grid-template-columns: minmax(9rem, 11rem) minmax(0, 1fr) minmax(15rem, 19rem);
+    }
+
+    .ol-tag-desktop {
+      display: block;
+      position: sticky;
+      top: calc(var(--ol-header-h, 64px) + 1rem);
+      max-height: calc(100dvh - var(--ol-header-h, 64px) - 2rem);
+      overflow: auto;
+    }
+  }
+</style>

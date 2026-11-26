@@ -9,6 +9,7 @@
   .ol-grid-2 { grid-template-columns: 1fr; }
   .ol-hero h1 { font-size: 40px; }
   .ol-footer-grid { grid-template-columns: 1fr 1fr; }
+  .ol-nav { display: none; }
   .ol-post { grid-template-columns: 1fr; }
   .ol-stats { grid-template-columns: 1fr 1fr; }
   .ol-stat { border-left: none; border-top: 1px solid var(--ol-border); }
@@ -17,17 +18,15 @@
   .ol-section-grid-2 { grid-template-columns: 1fr; }
   .ol-section-grid-sidebar { grid-template-columns: 1fr; }
 
+  /* ── 헤더: 모바일 메뉴 ── */
+  .ol-mobile-menu-trigger { display: flex; }
+  .ol-header-right .ol-btn-outline,
+  .ol-header-right .ol-btn-primary { display: none; }
   .ol-header-right { gap: 4px; }
 }
 
 /* Small Mobile: 600px 이하 */
 @media (max-width: 600px) {
-  .ol-header .ol-header-inner { padding-inline: 16px; height: 58px; gap: 6px; }
-  .ol-header-left { gap: 8px; }
-  .ol-header .ol-brand-name { font-size: 1.12rem; }
-  .ol-header .ol-nav { gap: 0; }
-  .ol-header .ol-nav-link { padding: 9px 6px; }
-
   /* ── 일반 레이아웃 ── */
   .ol-grid-3, .ol-grid-4 { grid-template-columns: 1fr; }
   .ol-hero { padding: 64px 0 40px; }
@@ -42,4 +41,10 @@
     border-radius: 0;
     border: none;
   }
+}
+
+/* Desktop Only: 901px 이상 */
+@media (min-width: 901px) {
+  /* 모바일 메뉴 완전 숨김 */
+  .ol-mobile-overlay { display: none !important; }
 }

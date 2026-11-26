@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { visit } from "unist-util-visit";
 import { readRegistry, referenceTarget, textOf } from "./lib/content.mjs";
 import { isOriginalBlock } from "./lib/markdown.mjs";
+import { hubPath } from "../../site-config.mjs";
 export function resolveReference(source, url, registry = readRegistry(), root = PROJECT_ROOT) {
   if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(url) && !url.startsWith("content-asset:")) return url;
   const [raw, fragment] = url.split("#");
@@ -85,7 +86,7 @@ export default function remarkContent({ root = PROJECT_ROOT } = {}) {
           node.type === "definition") &&
         node.url
       )
-        node.url = resolveReference(source, node.url, registry, root);
+        node.url = hubPath(resolveReference(source, node.url, registry, root));
     });
   };
 }

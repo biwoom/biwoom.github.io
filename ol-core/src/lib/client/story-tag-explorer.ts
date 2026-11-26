@@ -70,6 +70,7 @@ export function initStoryTagExplorer(document: Document = window.document, brows
     for (const button of initialButtons) {
       button.setAttribute("aria-pressed", String(button.dataset.storyTagInitial === initial));
     }
+    reset.hidden = !type && !initial && !query;
     paginator.reset(cards.filter(card =>
       (!type || card.type === type) && (!initial || card.initial === initial)
       && card.names.some(name => name.includes(query))
@@ -116,7 +117,6 @@ export function initStoryTagExplorer(document: Document = window.document, brows
     applyFilters();
   });
   reset.addEventListener("click", () => {
-    clearPreview();
     type = "";
     initial = "";
     input.value = "";
@@ -150,9 +150,9 @@ export function initStoryTagExplorer(document: Document = window.document, brows
         const response = await browser.fetch(link.href, { signal: request.signal, redirect: "error" });
         if (!response.ok) throw new Error("Tag page unavailable");
         const html = new DOMParser().parseFromString(await response.text(), "text/html");
-        const fragment = html.querySelector<HTMLElement>("[data-story-tag-preview-fragment]");
+        const fragment = html.querySelector<HTMLTemplateElement>("[data-story-tag-preview-fragment]");
         if (!fragment) throw new Error("Tag preview unavailable");
-        if (selected?.request === request) previewBody.replaceChildren(...[...fragment.childNodes].map(node => node.cloneNode(true)));
+        if (selected?.request === request) previewBody.replaceChildren(fragment.content.cloneNode(true));
       } catch {
         if (selected?.request === request) previewBody.textContent = "미리보기를 불러오지 못했습니다.";
       }

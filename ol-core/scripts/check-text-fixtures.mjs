@@ -9,6 +9,7 @@ import { markdownRemarkPlugins } from './lib/markdown.mjs';
 import rehypeReaderFootnotes from './rehype-reader-footnotes.mjs';
 import { contentFile } from './lib/paths.mjs';
 import { pathToFileURL } from 'node:url';
+import { BRAND } from '../../site-config.mjs';
 function evaluate(file, globals={}, imports={}) {
   const module={exports:{}};
   const source=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
@@ -102,28 +103,22 @@ test('TEXT print uses the original footnotes once, then restores the research wo
 
 test('shared document copy tools copy the selected quote with provenance, section URL, and report clipboard failures', async()=>{
   const document=new El(),feedback=new El(),prose={innerText:'본문 단락'},note={innerText:'각주 설명'};
-  const dropdown=new El(),trigger=new El();
-  dropdown.dataset={copyTitle:'문서 제목',copyUrl:'/text/read/example/'};
-  dropdown.select={button:trigger};
   const heading={id:'현재-h5-절',tagName:'H5',getBoundingClientRect:()=>({top:120})};
-  document.select={'[data-reader-feedback]':feedback,'.ol-prose':prose,'.ol-reader-footnotes-content .footnotes':note};
-  document.lists={'[data-copy-dropdown]':[dropdown],'.ol-story-chapter > .ol-prose :is(h2,h3,h4,h5)':[heading]};
+  document.querySelector=s=>s==='[data-reader-feedback]'?feedback:s==='.ol-prose'?prose:s==='.ol-reader-footnotes-content .footnotes'?note:null;
+  document.querySelectorAll=s=>s==='.ol-story-chapter > .ol-prose :is(h2,h3,h4,h5)'?[heading]:[];
   const copied=[];let selected='',clipboardFails=false;
   const navigator={clipboard:{async writeText(text){if(clipboardFails)throw Error('denied');copied.push(text);}}};
-  const location={pathname:'/text/read/example/',origin:'https://example.test'};
-  const window={location,addEventListener(){},setTimeout(){},getSelection:()=>({toString:()=>selected,anchorNode:{parentElement:{closest:()=>selected?{}:null}}})};
-  const copy=evaluate('ol-core/src/lib/client/reader-copy.ts',{document,window,navigator,location,URL});
-  evaluate('ol-core/src/lib/client/document-reader.ts',{document,window},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}},'./reader-original':{initOriginalToggle(){}},'./reader-copy':copy}).initDocumentReader();
+  const window={location:{pathname:'/text/read/example/',origin:'https://example.test'},addEventListener(){},setTimeout(){},getSelection:()=>({toString:()=>selected,anchorNode:{parentElement:{closest:()=>selected?{}:null}}})};
+  evaluate('ol-core/src/lib/client/document-reader.ts',{document,window,navigator,URL},{'../site-config':{BRAND},'./reader-drawer':{},'./reader-tools':{initReaderTools(){}},'./reader-original':{initOriginalToggle(){}}}).initDocumentReader();
+  const dropdown={dataset:{copyTitle:'문서 제목',copyUrl:'/text/read/example/'},querySelector:()=>new El()};
   const click=async kind=>{
-    const button=new El();button.dataset.copyKind=kind;button.closest=()=>button;
-    await dropdown.handlers.click[0]({target:button});
+    const button=new El();button.dataset.copyKind=kind;button.closest=()=>dropdown;
+    await document.handlers.click[0]({target:{closest:()=>button},stopPropagation(){}});
   };
   await click('citation');assert.equal(copied.length,0);assert.match(feedback.textContent,/먼저 선택/);
-  selected='선택한 문장';await click('citation');assert.equal(copied.at(-1),'선택한 문장\n\n문서 제목 — Biwoom TEXT\nhttps://example.test/text/read/example/');
+  selected='선택한 문장';await click('citation');assert.equal(copied.at(-1),'선택한 문장\n\n문서 제목 — BIWOOM HUB · TEXT\nhttps://example.test/text/read/example/');
   await click('section');assert.equal(new URL(copied.at(-1)).hash,`#${encodeURIComponent(heading.id)}`);
   await click('markdown');assert.equal(copied.at(-1),'# 문서 제목\n\n본문 단락\n\n각주 설명');
-  document.select['[data-reader-copy-source]']={content:{textContent:'**원고의 본문**\n\n[링크](/)\n'}};
-  await click('markdown');assert.equal(copied.at(-1),'# 문서 제목\n\n**원고의 본문**\n\n[링크](/)');
   clipboardFails=true;await click('link');assert.match(feedback.textContent,/복사할 수 없습니다/);
 });
 
@@ -160,7 +155,7 @@ test('STORY focus toggles its chapter sidebar layout and restores the default mo
   root.select={'[data-story-focus]':button};button.select={'[data-text-focus-label]':label};
   document.select={'.ol-story-doc-page:not(.ol-text-reader)':root};
   const window={addEventListener(){}};
-  evaluate('ol-core/src/lib/client/document-reader.ts',{document,window,Event:class{constructor(type){this.type=type;}}},{'./reader-drawer':{},'./reader-tools':{initReaderTools(){}},'./reader-original':{initOriginalToggle(){}},'./reader-copy':{initReaderCopy(){}}}).initDocumentReader();
+  evaluate('ol-core/src/lib/client/document-reader.ts',{document,window,Event:class{constructor(type){this.type=type;}}},{'../site-config':{BRAND},'./reader-drawer':{},'./reader-tools':{initReaderTools(){}},'./reader-original':{initOriginalToggle(){}}}).initDocumentReader();
   assert.equal(root.hasAttribute('data-story-focus'),false);
   button.fire('click');assert.ok(root.hasAttribute('data-story-focus'));
   assert.equal(button.attrs['aria-pressed'],'true');assert.equal(label.textContent,'기본');

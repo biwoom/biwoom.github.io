@@ -3,6 +3,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCategories, getLibrary, getRecentLibraryDocuments } from "../../lib/library";
 import type { Category, Section } from "../../lib/library";
 import { url } from "../../lib/url";
+import { LIBRARY_LABELS } from "../../lib/site-config";
+import { storyTagsPath } from "../../../scripts/lib/story-tags.mjs";
 interface Props {
   section: Section;
   category?: Category;
@@ -17,29 +19,29 @@ const showStoryCards = showWorks && section === "story";
 const showTextAside = showWorks && section === "text" && library.length > 0;
 const usePostPaginationStyle = showCategories && section === "text";
 const recent = showWorks ? getRecentLibraryDocuments(library) : [];
-const label = section.toUpperCase();
-const workLabel = section === "text" ? "문헌" : "이야기";
+const label = section === "text" ? "TEXT" : LIBRARY_LABELS.story;
+const workLabel = section === "text" ? "문헌" : LIBRARY_LABELS.story;
 const categoriesUrl = url(`/${section}/categories/`);
 const pageTitle = category?.label ?? (showCategories ? "카테고리" : "");
 const heroDesign = section === "text"
   ? { label: "TEXT ARCHIVE · 01", first: "한 권의 문헌에서", second: "깊은 사유까지", caption: "Translation / Original / Study" }
-  : { label: "STORY LIBRARY · 02", first: "한 편의 이야기에서", second: "삶을 돌아보다", caption: "Life / Journey / Wisdom" };
+  : { label: "불전문학 · 02", first: "전기와 설화에서", second: "삶을 돌아보다", caption: "전기 / 전승 / 게송" };
 const listTitle = section === "text"
   ? (showCategories ? "분야에 따라 문헌을 읽다" : "문헌을 찾아 읽다")
-  : (showCategories ? "주제에 따라 이야기를 만나다" : "이야기를 찾아 읽다");
+  : (showCategories ? "갈래별로 보는 불전문학" : "불전문학 작품을 찾아 읽다");
 const listDescription = section === "text"
   ? (showCategories ? "경전과 논서의 사상적·문헌적 분류를 따라 탐색합니다." : "번역과 원문, 연구를 함께 읽을 수 있는 문헌들을 찾아보세요.")
-  : (showCategories ? "인물의 삶과 가르침, 설화와 전승을 일곱 영역에서 찾아보세요." : "한 편의 이야기에서 시작해 인물과 사건, 가르침의 흐름을 따라 읽어보세요.");
+  : (showCategories ? "전기, 일화, 설화와 전승, 순례기와 게송을 갈래별로 살펴봅니다." : "인물과 사건의 흐름을 따라가며 문헌에 전하는 가르침과 삶의 선택을 읽습니다.");
 const listCount = showCategories ? `${categories.length}개 카테고리`
   : `${library.length}개 ${section === "text" ? "문헌" : "작품"} · ${categories.length}개 카테고리`;
 const WorkHeading = category ? "h2" : "h3";
 ---
 
 <BaseLayout
-  title={pageTitle ? `${pageTitle} — Biwoom ${label}` : `Biwoom ${label}`}
+  title={pageTitle ? `${pageTitle} · ${label}` : label}
   description={category
-    ? category.description || `${category.label}의 ${section === "text" ? "문헌" : "이야기"} 시리즈`
-    : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "불교의 인물과 가르침을 만나는 이야기"}
+    ? category.description || (section === "text" ? `${category.label}의 문헌 시리즈` : `${category.label} 분류의 불전문학 작품`)
+    : section === "text" ? "불교 문헌의 번역·연구·시각자료" : "붓다와 고승의 전기, 본생담과 설화, 순례기와 게송의 원전과 번역"}
   pagefindBody={false}
 >
   <main class="ol-library-index-page" data-library-index>
@@ -54,12 +56,12 @@ const WorkHeading = category ? "h2" : "h3";
             <nav class="ol-text-breadcrumb" aria-label="현재 위치">
               <a href={url(`/${section}/`)}>{label}</a><span>/</span><a href={categoriesUrl}>카테고리</a><span>/</span><span>{category.label}</span>
             </nav>
-          ) : <span class="ol-section-label">Biwoom {label}</span>}
-          <h1 class="ol-kr">{pageTitle || (section === "text" ? "불교 문헌을 읽고 연구하다." : "이야기로 만나는 불교.")}</h1>
+          ) : <span class="ol-section-label">{label}</span>}
+          <h1 class="ol-kr">{pageTitle || (section === "text" ? "불교 문헌을 읽고 연구하다." : "불전문학을 읽다")}</h1>
           <p class="ol-lead ol-kr">
             {category ? `${category.series.length}개 시리즈 · ${category.count}개 자료`
               : section === "text" ? "불교 문헌을 현대 한국어로 읽고 원문과 번역, 연구를 함께 살펴봅니다."
-              : "붓다와 수행자의 생애, 삶의 선택과 변화를 담은 이야기를 따라 읽습니다."}
+              : "붓다와 고승의 전기, 본생담과 설화, 순례기와 게송을 원전과 번역으로 읽습니다."}
           </p>
           {category?.description && <p class="ol-lead ol-kr">{category.description}</p>}
         </div>
@@ -77,6 +79,7 @@ const WorkHeading = category ? "h2" : "h3";
         <nav class="ol-library-view-nav" aria-label={`${label} 보기`}>
           <a href={url(`/${section}/`)} aria-current={showWorks ? "page" : undefined}>{workLabel}</a>
           <a href={categoriesUrl} aria-current={showCategories ? "page" : undefined}>카테고리</a>
+          {section === "story" && <a href={url(storyTagsPath)}>태그</a>}
         </nav>
       </div>
     )}
@@ -127,7 +130,7 @@ const WorkHeading = category ? "h2" : "h3";
                 </a>
               )) : categories.map((item) => (
                 <a class="ol-card ol-story-library-card" href={url(item.url)} data-library-item data-library-category={item.key}>
-                  <span class="ol-meta-label">{label} CATEGORY</span>
+                  <span class="ol-meta-label">{section === "text" ? "TEXT CATEGORY" : "불전문학 카테고리"}</span>
                   <h3 class="ol-kr">{item.label}</h3>
                   {item.description && <p class="ol-kr">{item.description}</p>}
                   <span class="ol-meta-label">{item.series.length}개 시리즈 · {item.count}개 자료</span>

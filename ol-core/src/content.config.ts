@@ -1,11 +1,7 @@
 import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
 import { markdownLoader, materialsLoader } from "./lib/content-loaders";
-import { articlePattern, homeArticleSchema } from "../scripts/lib/home-articles.mjs";
-import { normalizeContentPath, projectPaths } from "../scripts/lib/paths.mjs";
+import { storyTagTypes } from "../scripts/lib/story-tags.mjs";
 
 // This schema describes normalized data. Author-written frontmatter is optional.
 const schema = z.object({
@@ -13,6 +9,11 @@ const schema = z.object({
   description: z.string(),
   tags: z.array(z.string().trim().min(1).refine((tag) => !tag.includes("/"), "Use plain tag names without prefixes"))
     .transform((tags) => [...new Set(tags)]),
+  storyTags: z.array(z.object({
+    type: z.enum(storyTagTypes),
+    label: z.string().min(1),
+    aliases: z.array(z.string()),
+  })).default([]),
   published: z.boolean(),
   date: z.coerce.date(),
   readingTime: z.number(),
@@ -40,14 +41,6 @@ function collection(name: string) {
   return defineCollection({ schema, loader: markdownLoader(name) });
 }
 export const collections = {
-  article: defineCollection({
-    schema: homeArticleSchema,
-    loader: glob({
-      base: pathToFileURL(path.join(projectPaths().content, "article")),
-      pattern: articlePattern,
-      generateId: ({ entry }) => normalizeContentPath(entry),
-    }),
-  }),
   text: collection("text"),
   story: collection("story"),
   blog: collection("blog"),

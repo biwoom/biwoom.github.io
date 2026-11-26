@@ -8,6 +8,7 @@ import path from 'node:path';
 import remarkContent from './remark-content.mjs';
 import { hasOriginalBlocks } from './lib/markdown.mjs';
 import { checkBuiltLinks } from './check-built-links.mjs';
+import { hubPath } from '../../site-config.mjs';
 import fs from 'node:fs';
 import os from 'node:os';
 
@@ -39,13 +40,14 @@ test('built link validation accepts generated Unicode footnotes and still report
   const page = path.join(root, 'dist/index.html');
   const rendered = await html('본문[^한글각주]\n\n[^한글각주]: 설명');
   const links = '<h2 id="한글">제목</h2><a href="#%ED%95%9C%EA%B8%80">제목</a><i id="literal%broken"></i><a href="#literal%broken">원형 ID</a>';
-  fs.writeFileSync(page, rendered + links);
+  fs.writeFileSync(page, rendered + links + `<a href="${hubPath('/')}#한글">공개 주소</a>`);
   assert.deepEqual(checkBuiltLinks(root), { errors: [], pageCount: 1, redirectCount: 0 });
-  fs.appendFileSync(page, '<a href="#missing">누락</a><a href="#%xx">잘못된 인코딩</a><a href="/missing/">없는 페이지</a>');
+  fs.appendFileSync(page, `<a href="#missing">누락</a><a href="#%xx">잘못된 인코딩</a><a href="${hubPath('/missing/')}">없는 페이지</a><a href="/missing/">배포 경로를 벗어난 링크</a>`);
   assert.deepEqual(checkBuiltLinks(root).errors, [
     'index.html: missing anchor #missing',
     'index.html: missing anchor #%xx',
-    'index.html: missing href /missing/',
+    `index.html: missing href ${hubPath('/missing/')}`,
+    'index.html: href outside the HUB base /missing/',
   ]);
 });
 

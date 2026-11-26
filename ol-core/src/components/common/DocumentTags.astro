@@ -1,16 +1,24 @@
 ---
 import { url } from "../../lib/url";
+import { storyTagPath, type StoryTag } from "../../../scripts/lib/story-tags.mjs";
+import { storyTagTypeLabels } from "../../lib/story-tags";
 interface Props {
   tags: string[];
   blogLinks?: boolean;
+  storyTags?: StoryTag[];
 }
-const { tags, blogLinks = false } = Astro.props;
-const labels = [...new Set(tags.map((tag) => tag.trim()).filter(Boolean))];
+const { tags, blogLinks = false, storyTags = [] } = Astro.props;
+const typedLabels = new Set(storyTags.map(tag => tag.label));
+const labels = [...new Set(tags.map(tag => tag.trim()).filter(tag => tag && !typedLabels.has(tag.normalize("NFC"))))];
 ---
-{labels.length > 0 && (
+{(labels.length > 0 || storyTags.length > 0) && (
   <div class="ol-document-tags" aria-label="문서 태그" data-document-tags>
     {labels.map((tag) => blogLinks ? (
       <a class="ol-text-tag" href={`${url("/blog/")}?tag=${encodeURIComponent(tag)}`}>{tag}</a>
     ) : <span class="ol-text-tag">{tag}</span>)}
+    {storyTags.map(tag => (
+      <a class="ol-text-tag" href={url(storyTagPath(tag))}
+        aria-label={`${storyTagTypeLabels[tag.type]} 태그 ${tag.label}`}>{tag.label}</a>
+    ))}
   </div>
 )}

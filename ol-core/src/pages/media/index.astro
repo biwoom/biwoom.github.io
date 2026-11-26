@@ -5,14 +5,14 @@ import { url } from "../../lib/url";
 const images = await getMediaGallery();
 const categories = getMediaCategories(images);
 ---
-<BaseLayout title="미디어 — Biwoom" description="비움의 이미지와 시각 자료를 모아 봅니다." pagefindBody={false}>
+<BaseLayout title="미디어" description="비움의 이미지와 시각 자료를 모아 봅니다." pagefindBody={false}>
   <main class="ol-media-page" data-media-gallery>
     <section class="ol-media-hero">
       <div class="ol-container">
-        <span class="ol-section-label">Biwoom MEDIA</span>
+        <span class="ol-section-label">MEDIA</span>
         <h1 class="ol-kr">미디어</h1>
         <p class="ol-kr">이미지와 시각 자료를 모아 봅니다. 이미지를 선택하면 크게 볼 수 있습니다.</p>
-        <p class="ol-kr ol-media-license">이미지는 별도 표기가 없는 한 CC0로 제공합니다. 다른 라이선스가 적용되는 경우 이미지 정보에 별도로 안내합니다.</p>
+        <p class="ol-kr ol-media-license">비움이 제공하는 이미지는 별도 표기가 없는 한 CC0를 적용합니다. 이미지에 별도 이용 조건이 있으면 항목의 이미지 정보에서 확인할 수 있습니다.</p>
       </div>
     </section>
     <section class="ol-media-content">

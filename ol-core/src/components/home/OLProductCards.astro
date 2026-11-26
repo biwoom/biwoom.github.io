@@ -2,14 +2,15 @@
 import { getDocuments } from "../../lib/library";
 import { getCollection } from "astro:content";
 import { url } from "../../lib/url";
+import { LIBRARY_LABELS } from "../../lib/site-config";
 const counts = await Promise.all([
   getDocuments("text"),
   getDocuments("story"),
   getCollection("blog", (e) => e.data.published && e.data.kind === "document"),
 ]);
 const cards = [
-  { name: "불교경론", href: "/text/", description: "문헌별 번역·연구·시각자료" },
-  { name: "이야기불교", href: "/story/", description: "붓다와 고승의 생애, 가르침과 전승, 구법의 여정과 게송" },
+  { name: LIBRARY_LABELS.text, href: "/text/", description: "문헌별 번역·연구·시각자료" },
+  { name: LIBRARY_LABELS.story, href: "/story/", description: "붓다와 고승의 전기, 본생담과 설화, 순례기와 게송" },
   {
     name: "틈과 여백",
     href: "/blog/series/",
@@ -21,9 +22,9 @@ const cards = [
 <section class="ol-section">
   <div class="ol-container">
     <div class="ol-section-head">
-      <span class="ol-section-label">READ · Biwoom</span>
+      <span class="ol-section-label">READ · BIWOOM HUB</span>
       <h2 class="ol-kr">비움이 만드는 불교콘텐츠</h2>
-      <p>비움의 모든 자료는 CC0 라이선스를 따릅니다.</p>
+      <p>자료를 다시 이용할 때는 <a href={url('/pages/brand/#공개-자료와-이용-조건')}>공개 자료의 이용 조건</a>을 확인해 주세요.</p>
     </div>
     <div class="ol-grid-3">
       {cards.map((card, i) => (

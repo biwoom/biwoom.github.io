@@ -6,6 +6,7 @@ import * as yaml from "js-yaml";
 import { markdownTree } from "./markdown.mjs";
 export { markdownTree } from "./markdown.mjs";
 import { CONTENT_DEFAULTS } from "../../../site-config.mjs";
+import { readStoryTags, storyTagInputFields } from "./story-tags.mjs";
 
 export const collections = ["text", "story", "blog", "pages"];
 export const reserved = new Set(["assets", "_assets", "_drafts", "_templates"]);
@@ -63,15 +64,11 @@ export function walk(root, { assets = false } = {}) {
   });
 }
 export function parse(source) {
-  const parsed = parseFrontmatter(source);
-  validateInput(parsed.data);
-  return parsed;
-}
-export function parseFrontmatter(source) {
   const m = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   const data = m ? (yaml.load(m[1]) ?? {}) : {};
   if (typeof data !== "object" || Array.isArray(data))
     throw new Error("frontmatter must be an object");
+  validateInput(data);
   return { data, body: m ? source.slice(m[0].length) : source };
 }
 export function readRegistry(root = PROJECT_ROOT) {
@@ -108,10 +105,12 @@ export function hash(body) {
 export function shortId(value) {
   return hash(value.normalize("NFC")).slice(0, 14);
 }
-export const inputFields = new Set(["title", "description", "tags", "date", "published", "license", "licenseUrl", "rightsHolder", "copyrightNotice", "lang", "thumbnailAsset"]);
+export const inputFields = new Set(["title", "description", "tags", "date", "published", "license", "licenseUrl", "rightsHolder", "copyrightNotice", "lang", "thumbnailAsset", ...storyTagInputFields]);
 export function validateInput(data) {
+  if (storyTagInputFields.some(field => Object.hasOwn(data, field))) readStoryTags(data);
   for (const [key, value] of Object.entries(data)) {
     if (!inputFields.has(key)) throw new Error(`obsolete or unknown frontmatter field: ${key}`);
+    if (storyTagInputFields.includes(key)) continue;
     if (key === "tags") {
       if (!Array.isArray(value) || value.some(t => typeof t !== "string" || !t.trim())) throw new Error("tags must be a nonempty string array (or [])");
       if (value.some(t => t.includes("/"))) throw new Error("tags must use plain names without classification prefixes");
@@ -301,13 +300,24 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
   const parts = folderParts(relative);
   const series = registry.folders[parts.seriesPath];
   const intro = isIntroduction(relative);
-  const fallbackTitle = nameInfo(path.basename(parts.collection === "blog" && intro ? path.dirname(relative) : relative)).label;
+  const filename = path.basename(relative);
+  const fileInfo = nameInfo(filename);
+  const fallbackTitle = parts.collection === "blog" && intro ? nameInfo(path.basename(path.dirname(relative))).label : fileInfo.label;
+  const metadata = titleAndDescription(data, body, fallbackTitle);
+  // Treat a compound number repeated from the filename as a chapter label.
+  const chapterPrefix = parts.collection === "story" && !intro && !data.title?.trim()
+    ? metadata.title.match(/^(\d+(?:-\d+)+)(?:\s+|-)\s*(?=\S)/)
+    : null;
+  if (chapterPrefix && filename.startsWith(`${chapterPrefix[1]}-`)) {
+    metadata.title = metadata.title.slice(chapterPrefix[0].length);
+  }
   const categoryKey = collectionKey(parts);
   const categoryMeta = categoryKey ? folderMetadata(categoryKey, root) : null;
   const seriesMeta = parts.collection === "blog" && parts.seriesPath !== "blog/standalone" ? folderMetadata(parts.seriesPath, root) : null;
   return {
-    ...titleAndDescription(data, body, fallbackTitle),
+    ...metadata,
     tags: data.tags ?? [],
+    storyTags: parts.collection === "story" && !intro ? readStoryTags(data) : [],
     published:
       data.published !== false && !ignored(relative) && !series?.hidden && isPublicSource(relative, registry, root),
     date: new Date(data.date ?? record.date ?? "1970-01-01"),
@@ -323,7 +333,7 @@ export function normalize(relative, source, registry = readRegistry(), root = PR
     seriesUrl: series?.url ?? `/${parts.collection}/`,
     part: parts.part ? nameInfo(parts.part).label : "자료",
     partKey: parts.part || "자료",
-    order: nameInfo(path.basename(relative)).order,
+    order: fileInfo.order,
     license: data.license ?? CONTENT_DEFAULTS.license,
     rightsHolder: data.rightsHolder ?? CONTENT_DEFAULTS.author,
     licenseUrl: data.licenseUrl,

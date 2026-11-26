@@ -66,6 +66,22 @@ test("YAML-free headings and independent material sections normalize", () =>
     );
     assert.deepEqual(validate(root), []);
   }));
+test("STORY display titles drop chapter numbers repeated from the filename", () =>
+  fixture((root) => {
+    const cases = [
+      ["01-00-서문.md", "# 01-00 서문", "서문"],
+      ["01-01-2-전승.md", "# 01-01-2 전승", "전승"],
+      ["01-02-전기.md", "# 전기", "전기"],
+      ["01-03-자료.md", "# 02-03 자료", "02-03 자료"],
+      ["01-04-제목.md", "---\ntitle: 01-04 지정 제목\n---\n# 01-04 제목", "01-04 지정 제목"],
+      ["01-05-다섯 가지.md", "제목 없는 본문", "다섯 가지"],
+    ].map(([name, body, title]) => [`story/전기/판본/첫 파트/${name}`, body, title]);
+    for (const [source, body] of cases) write(root, source, body);
+    const registry = prepare(root);
+    for (const [source, body, title] of cases) {
+      assert.equal(normalize(source, body, registry, root).title, title, source);
+    }
+  }));
 test("moves and numeric renames preserve URL and first-publication date", () =>
   fixture((root) => {
     const a = write(root, rel, "# 제목\n\n내용");

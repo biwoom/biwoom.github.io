@@ -1,12 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import { url } from '../../lib/url';
-import { BRAND } from "../../lib/site-config";
+import { BRAND, LIBRARY_LABELS } from "../../lib/site-config";
 import { site } from '../../lib/site';
 const currentYear = new Date().getFullYear();
-const pages = await getCollection('pages', (entry) => entry.data.published);
-const brandPage = pages.find((entry) => entry.data.source === 'pages/brand.md');
-const supportPage = pages.find((entry) => entry.data.source === 'pages/support.md');
+const supportPage = (await getCollection('pages', (entry) => entry.data.published))
+  .find((entry) => entry.data.source === 'pages/support.md');
 ---
 
 <footer class="ol-footer" data-pagefind-ignore>
@@ -14,11 +13,11 @@ const supportPage = pages.find((entry) => entry.data.source === 'pages/support.m
     <div class="ol-footer-grid">
       <!-- Brand column -->
       <div>
-        <a href={url('/')} class="ol-brand ol-footer-brand" aria-label="비움 홈">
+        <div class="ol-brand ol-footer-brand">
           <img class="ol-brand-symbol ol-brand-symbol--monochrome" src={url(BRAND.logoMonochrome)} width="38" height="38" alt="" />
           <span class="ol-brand-name">{site.name}</span>
           <!-- <span class="ol-footer-tagline">{site.tagline}</span> -->
-        </a>
+        </div>
         <p class="ol-footer-copy ol-kr">
           {BRAND.nameKo} • {BRAND.tagline}
         </p>
@@ -39,7 +38,8 @@ const supportPage = pages.find((entry) => entry.data.source === 'pages/support.m
       <!-- Projects -->
       <div>
         <h4>PROJECTS</h4>
-        <a href="https://biwoom.github.io/hub/">HUB</a>
+        <a href={url('/text')}>{LIBRARY_LABELS.text}</a>
+        <a href={url('/story')}>{LIBRARY_LABELS.story}</a>
         <a href={url('/media/')}>MEDIA</a>
         <a href={url('/ebook/')}>EBOOK</a>
       </div>
@@ -47,19 +47,17 @@ const supportPage = pages.find((entry) => entry.data.source === 'pages/support.m
       <!-- Read -->
       <div>
         <h4>READ</h4>
-        <a href={url('/text')}>TEXT</a>
-        <a href={url('/story')}>STORY</a>
-        <a href={url('/blog/series/')}>BLOG</a>
-        {brandPage && <a href={url(brandPage.data.url)}>{BRAND.nameKo} 소개</a>}
-        {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원</a>}
+        <a href={url('/blog/series/')}>BLOG · 시리즈</a>
+        <a href={url('/pages/brand')}>비움허브 소개</a>
+        <a href={url('/partners')}>기여 및 협력단체</a>
+        <!-- {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원</a>} -->
       </div>
 
       <!-- Open -->
       <div>
         <h4>OPEN</h4>
         <a href={site.github} target="_blank" rel="noopener">GitHub 저장소</a>
-        <a href={site.license} target="_blank" rel="noopener">CC0 · 라이선스</a>
-        <a href={url('/partners')}>기여 및 협력단체</a>
+        <a href={site.license} target="_blank" rel="noopener">CC0 적용 자료의 이용 조건</a>
         <a href={`mailto:${site.email}`}>문의 및 기여</a>
       </div>
     </div>

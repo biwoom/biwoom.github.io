@@ -1,0 +1,145 @@
+import assert from 'node:assert/strict';
+import { categoryUrl } from './lib/content.mjs';
+import { PROJECT_ROOT } from './lib/paths.mjs';
+import { hubPath } from '../../site-config.mjs';
+import sharp from 'sharp';
+import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import {spawn} from 'node:child_process';
+const source=PROJECT_ROOT,root=fs.mkdtempSync(path.join(os.tmpdir(),'biwoom-hub-dev-'));
+for(const f of ['ol-core','astro.config.mjs','site-config.mjs','package.json','tsconfig.json']) fs.cpSync(path.join(source,f),path.join(root,f),{recursive:true,filter:p=>!p.includes('ol-core/public/generated')});
+fs.symlinkSync(path.join(source,'node_modules'),path.join(root,'node_modules'),'dir');fs.writeFileSync(path.join(root,'content-registry.json'),JSON.stringify({version:1,files:{},folders:{},redirects:{},aliases:{}}));
+// Instrument only the disposable server copy to verify unchanged documents are reused.
+const loaderPath=path.join(root,'ol-core/src/lib/content-loaders.ts');
+const parseLog=path.join(root,'loader-parses.jsonl');
+fs.writeFileSync(loaderPath, fs.readFileSync(loaderPath,'utf8').replace(
+  'const relative = relativeContentPath(options.filePath!);',
+  `const relative = relativeContentPath(options.filePath!); fs.appendFileSync(${JSON.stringify(parseLog)}, JSON.stringify(relative) + "\\n");`,
+));
+const write=(rel,body)=>{const f=path.join(root,'content',rel);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,body);};
+write('text/C/W/P/A.md','# Live document');write('text/C/W/P/file.pdf','%PDF-test');
+// Include unchanged private siblings to catch accidental whole-collection reparsing.
+for(let i=0;i<60;i++) write(`text/C/W/P/Private-${i}.md`,'---\npublished: false\n---\n# Cached sibling '+i+'\n\n'+('Unchanged Markdown paragraph.\n\n'.repeat(40)));
+write('text/C/W/index.md','# Work');
+write('story/001.Literature/010.First/010.Part/001.First.md','---\ndate: 2026-01-01\n---\n# First story document\n\n번역문입니다.\n\n```original\n原文 <literal> & **文字**\n```\n\n```original\n두 번째 원문\n```\n\n```text\nordinary code\n```\n\n`inline original`');
+write('story/001.Literature/020.Second/010.Part/001.Second.md','---\ndate: 2026-01-02\n---\n# Second story document');
+write('story/001.Literature/010.First/010.Part/002.New.md','---\ndate: 2026-01-02\n---\n# New story document');
+write('story/001.Literature/010.First/010.Part/003.New.md','---\ndate: 2026-01-02\n---\n# Another new story document');
+write('story/001.Literature/010.First/010.Part/004.Latest.md','---\ndate: 2026-01-03\n---\n# Latest story document');
+write('story/001.Literature/010.First/010.Part/005.Private.md','---\ndate: 2026-01-04\npublished: false\n---\n# Private story document');
+write('story/002.Poems/.gitkeep','');
+write('story/002.Poems/index.md','# Poems\n\nCategory introduction only.');
+write('blog/rights.md','---\nlicense: CC-BY\nrightsHolder: Rights Owner\ncopyrightNotice: Special notice\n---\n# Rights test');
+write('media/001.Images/index.md','# Images\n\n## [First media title](first.png)\n\nFirst media description.');
+await sharp({create:{width:20,height:30,channels:3,background:'red'}}).png().toFile(path.join(root,'content/media/001.Images/first.png'));
+write('ebook/001.Sample/001.Book/book.pdf','%PDF-test');
+write('ebook/001.Sample/001.Book/index.md','# Live ebook');
+const child=spawn('npm',['run','dev','--','--host','127.0.0.1','--port','4399'],{cwd:root,stdio:['ignore','pipe','pipe'],detached:true});let log='';child.stdout.on('data',d=>log+=d);child.stderr.on('data',d=>log+=d);
+const liveUrl = (pathname) => 'http://127.0.0.1:4399' + hubPath(pathname);
+const get=async p=>{try{return await (await fetch(liveUrl(p))).text();}catch{return '';}};
+const until=async(fn,label,timeout=18000)=>{const deadline=Date.now()+timeout;while(Date.now()<deadline){if(await fn())return;await new Promise(r=>setTimeout(r,300));}throw new Error(label+'\n'+log.slice(-3500));};
+const cardTitles = html => [...html.matchAll(/<a\b[^>]*\bdata-library-item[^>]*>([\s\S]*?)<\/a>/g)]
+  .map(([, card]) => card.match(/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/)?.[1]?.replace(/<[^>]+>/g, '').trim());
+const textCategory = categoryUrl('text/C');
+const storyCategory = categoryUrl('story/001.Literature');
+try{
+await until(async()=> JSON.stringify(cardTitles(await get('/text/'))) === JSON.stringify(['W']), 'initial TEXT work rows', 60000);
+await until(async()=> JSON.stringify(cardTitles(await get('/text/categories/'))) === JSON.stringify(['C']), 'initial TEXT category cards');
+await until(async()=> JSON.stringify(cardTitles(await get(textCategory))) === JSON.stringify(['W']), 'initial TEXT series inside category');
+await until(async()=> JSON.stringify(cardTitles(await get('/story/'))) === JSON.stringify(['First', 'Second']), 'STORY work cards');
+await until(async()=> JSON.stringify(cardTitles(await get('/story/categories/'))) === JSON.stringify(['Literature']), 'STORY category cards exclude introduction-only categories');
+await until(async()=> JSON.stringify(cardTitles(await get(storyCategory))) === JSON.stringify(['First', 'Second']), 'STORY category must contain two distinct series, not another category card');
+const empty = await get(categoryUrl('story/002.Poems'));
+assert.deepEqual(cardTitles(empty), []);
+assert.ok(empty.includes('준비 중입니다.'));
+const reg=()=>JSON.parse(fs.readFileSync(path.join(root,'content-registry.json'),'utf8'));
+const series=reg().folders['text/C/W'].url;
+const rights=reg().files['blog/rights.md'].url;
+const originalUrl=reg().files['story/001.Literature/010.First/010.Part/001.First.md'].url;
+const recentLinks = (html) => [...(html.match(/<section\b[^>]*aria-labelledby="ol-library-recent-title"[^>]*>([\s\S]*?)<\/section>/)?.[1] ?? "").matchAll(/<a\b[^>]*\shref="([^"]+)"/g)].map(([, href]) => href);
+assert.deepEqual(recentLinks(await get('/text/')), [hubPath(reg().files['text/C/W/P/A.md'].url)], 'recent TEXT links exclude attachments and introductions');
+const recentStorySources = [
+  'story/001.Literature/010.First/010.Part/004.Latest.md',
+  'story/001.Literature/010.First/010.Part/002.New.md',
+  'story/001.Literature/020.Second/010.Part/001.Second.md',
+];
+assert.deepEqual(recentLinks(await get('/story/')), recentStorySources.map((source) => hubPath(reg().files[source].url)), 'recent STORY links prioritize date, then distinct works within the day');
+await until(async()=>{const html=await get(originalUrl);return html.includes('data-original-toggle')&&(html.match(/data-reader-original(?=[\s=>])/g)??[]).length===2&&html.includes('원문 숨기기')&&html.includes('ordinary code')&&html.includes('inline original');},'STORY explicit original blocks and shared toggle');
+const plainStory=await get(reg().files['story/001.Literature/020.Second/010.Part/001.Second.md'].url);
+assert.ok(!plainStory.includes('data-original-toggle'),'Plain STORY pages must not show an original toggle');
+
+await until(async()=>{const html=await get(rights);return html.includes('Rights Owner') && html.includes('CC-BY') && html.includes('Special notice');},'BLOG rights rendering');
+await until(async()=> (await get(series)).includes('Live document'),'initial document');
+// Ordinary edits must update the reader and list without reparsing siblings/other collections.
+await new Promise(r=>setTimeout(r,800));
+fs.writeFileSync(parseLog,'');
+const editStarted=performance.now();
+write('text/C/W/P/A.md','# Updated live document\n\nUpdated body marker.');
+const documentUrl=reg().files['text/C/W/P/A.md'].url;
+await until(async()=> (await get(documentUrl)).includes('Updated body marker.'),'ordinary document body refresh');
+const editLatency=Math.round(performance.now()-editStarted);
+await until(async()=> (await get(series)).includes('Updated live document'),'ordinary edit updates list title');
+await new Promise(r=>setTimeout(r,800));
+const parsed=fs.readFileSync(parseLog,'utf8').trim().split('\n').filter(Boolean).map(line=>JSON.parse(line));
+assert.deepEqual(parsed,['text/C/W/P/A.md'],'ordinary edit reparses exactly one document, not siblings or unrelated collections');
+console.log(`LIVE EDIT: ${editLatency}ms to HTTP body update; ${parsed.length} document parsed.`);
+write('text/C/W/P/A.md','# Live document');
+await until(async()=> (await get(series)).includes('Live document') && !(await get(series)).includes('Updated live document'),'restore ordinary edit');
+
+const unicodeSource='story/003.유니코드/001.마하붓다왐사/01.자료/001.글.md';
+const unicodeNext='story/003.유니코드/001.마하붓다왐사/01.자료/002.다음.md';
+const unicodeIntro='story/003.유니코드/001.마하붓다왐사/index.md';
+const unicodeAsset='story/003.유니코드/001.마하붓다왐사/01.자료/_assets/첨부.pdf';
+write(unicodeSource.normalize('NFD'),'# Unicode live document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
+write(unicodeNext.normalize('NFD'),'# Unicode next document');write(unicodeAsset.normalize('NFD'),'%PDF-unicode');
+await until(async()=>{const r=reg();if(!r.files[unicodeSource]||!r.files[unicodeNext])return false;const html=await get(r.files[unicodeSource].url);return html.includes('Unicode live document')&&html.includes('href="'+hubPath(r.files[unicodeNext].url)+'"')&&html.includes(encodeURIComponent('첨부.pdf'));},'NFD source discovery, canonical loader IDs and relative links');
+const unicodeUrl=reg().files[unicodeSource].url;
+write(unicodeSource.normalize('NFD'),'# Unicode updated document\n\n[Next](002.다음.md) · [PDF](./_assets/첨부.pdf)');
+await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD edit without identity churn');
+assert.equal(reg().files[unicodeSource].url,unicodeUrl);assert.ok(Object.keys(reg().files).every(key=>key===key.normalize('NFC')));
+write(unicodeIntro.normalize('NFD'),'---\npublished: false\n---\n# Unicode private series');
+const unicodeCategory=categoryUrl('story/003.유니코드');
+await until(async()=>!(await get(unicodeCategory)).includes('href="'+hubPath(reg().folders['story/003.유니코드/001.마하붓다왐사'].url)+'"'),'NFD introduction privacy');
+const unicodeAssetUrl='/generated/content/'+unicodeAsset.split('/').map(encodeURIComponent).join('/');
+await until(async()=> (await fetch(liveUrl(unicodeAssetUrl))).status===404,'NFD private asset cleanup');
+write(unicodeIntro.normalize('NFD'),'# Unicode restored series');
+await until(async()=> (await get(unicodeUrl)).includes('Unicode updated document'),'NFD series restore');
+await until(async()=> (await fetch(liveUrl(unicodeAssetUrl))).status===200,'NFD public asset restore');
+
+write('text/C/W/index.md','---\npublished: false\n---\n# Work');
+await until(async()=> !(await get(textCategory)).includes('href="'+hubPath(series)+'"'),'hide series without restart');
+write('text/C/W/index.md','# Work');
+await until(async()=> (await get(series)).includes('Live document') && (await get(series)).includes('PDF'),'restore docs and media without restart');
+write('text/C/New/P/New.md','# Added live');
+await until(async()=>{const r=reg();const f=r.folders['text/C/New'];return f && (await get(f.url)).includes('Added live');},'new folder without restart');
+await until(async()=> JSON.stringify(cardTitles(await get(textCategory))) === JSON.stringify(['New', 'W']), 'category series membership after live addition');
+const addedSource='text/C/New/P/New.md', movedSource='text/C/New/P/Renamed.md';
+const addedUrl=reg().files[addedSource].url;
+const addedId=reg().files[addedSource].id;
+fs.renameSync(path.join(root,'content',addedSource),path.join(root,'content',movedSource));
+await until(async()=>{const r=reg();return r.aliases[addedSource]===movedSource && r.files[movedSource]?.id===addedId && (await get(addedUrl)).includes('Added live');},'Markdown rename preserves identity and route');
+fs.unlinkSync(path.join(root,'content',movedSource));
+await until(async()=> !(await get(reg().folders['text/C/New'].url)).includes('Added live'),'Markdown deletion removes reader list entry');
+await until(async()=> (await fetch(liveUrl(addedUrl))).status===404,'deleted Markdown reader disappears');
+await until(async()=> (await get('/media/')).includes('First media title'), 'MEDIA information from the separate vault');
+write('media/001.Images/index.md','# Images\n\n## [Changed media title](first.png)\n\nChanged media description.');
+await until(async()=> {const html=await get('/media/');return html.includes('Changed media title') && html.includes('Changed media description.') && !html.includes('First media title');}, 'MEDIA index edit without restart');
+fs.copyFileSync(path.join(root,'content/media/001.Images/first.png'),path.join(root,'content/media/001.Images/second.png'));
+await until(async()=> ((await get('/media/')).match(/data-media-item(?=[\s>])/g)??[]).length===2, 'MEDIA image addition without restart');
+fs.renameSync(path.join(root,'content/media/001.Images/first.png'),path.join(root,'content/media/001.Images/renamed.png'));
+write('media/001.Images/index.md','# Images\n\n## [Renamed media title](renamed.png)\n\nRenamed media description.');
+await until(async()=> {const html=await get('/media/');return html.includes('Renamed media title') && !html.includes('first.png');}, 'MEDIA image rename and metadata without restart');
+fs.unlinkSync(path.join(root,'content/media/001.Images/second.png'));
+await until(async()=> ((await get('/media/')).match(/data-media-item(?=[\s>])/g)??[]).length===1, 'MEDIA image deletion without restart');
+await until(async()=> (await get('/ebook/')).includes('Live ebook'), 'EBOOK discovery from the separate vault');
+write('ebook/001.Sample/001.Book/index.md','---\npublished: false\n---\n# Live ebook');
+await until(async()=> !(await get('/ebook/')).includes('Live ebook'), 'EBOOK privacy change without restart');
+await until(async()=> (await fetch(liveUrl('/generated/content/ebook/001.Sample/001.Book/book.pdf'))).status===404, 'private EBOOK asset removal');
+write('ebook/001.Sample/001.Book/index.md','# Restored ebook');
+await until(async()=> (await get('/ebook/')).includes('Restored ebook'), 'EBOOK restore without restart');
+write('story/002.Poems/First/index.md','# First poem work');
+await until(async()=> cardTitles(await get('/story/categories/')).includes('Poems'), 'category appears with a public work introduction, even before body documents');
+write('story/002.Poems/First/index.md','---\npublished: false\n---\n# First poem work');
+await until(async()=> !cardTitles(await get('/story/categories/')).includes('Poems'), 'category disappears when its only work becomes private');
+write('story/002.Poems/First/index.md','# First poem work');
+await until(async()=> cardTitles(await get('/story/categories/')).includes('Poems'), 'category returns after its work is restored');
+console.log('Local BIWOOM HUB development checks passed: separate content/core paths; TEXT/STORY hierarchy, privacy and incremental one-document refresh, Markdown rename/delete and document/PDF refresh; STORY original blocks/toolbar; BLOG rights; NFC/NFD loader, links, edit/privacy/asset restore; MEDIA metadata/add/rename/delete; EBOOK privacy/restore and private asset removal.');
+}finally{try{process.kill(-child.pid,'SIGTERM');}catch{}await new Promise(r=>setTimeout(r,500));fs.rmSync(root,{recursive:true,force:true});}

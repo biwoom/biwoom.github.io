@@ -9,6 +9,7 @@ import ts from 'typescript';
 import { syncMediaGallery, getMediaCategories, uncategorizedKey } from './lib/media-gallery.mjs';
 import { hash } from './lib/content.mjs';
 import { readMediaInformation } from './lib/media-information.mjs';
+import { hubPath } from '../../site-config.mjs';
 
 async function fixture(fn) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'biwoom-gallery-'));
@@ -155,7 +156,7 @@ test('category index maps multiple image headings, rich Markdown and document-re
   assert.equal(first.title, '첫 문양');
   assert.match(first.informationHtml, /<strong>설명<\/strong>/);
   assert.match(first.informationHtml, /<em>강조<\/em>/);
-  assert.match(first.informationHtml, /href="\/generated\/content\/media\/001\.%EB%AC%B8%EC%96%91\/deeper\/B.png"/);
+  assert.ok(first.informationHtml.includes(`href="${hubPath('/generated/content/media/001.%EB%AC%B8%EC%96%91/deeper/B.png')}"`));
   assert.ok(!first.informationHtml.includes('두 번째 설명'));
   assert.ok(!first.informationHtml.includes('집필 안내'));
   assert.match(items.find(item => item.fileName === 'B.png').informationHtml, /두 번째 설명/);

@@ -1,6 +1,7 @@
 import { PROJECT_ROOT, projectPaths, isMainModule, relativeContentPath, contentFile } from './lib/paths.mjs';
 import fs from "node:fs";
 import path from "node:path";
+import { storyTagInputFields } from "./lib/story-tags.mjs";
 import {
   walk,
   parse,
@@ -44,6 +45,9 @@ export function prepare(root = PROJECT_ROOT) {
     let data = {};
     try { if (markdownPattern.test(p)) data = parse(source).data; }
     catch (error) { throw new Error(`${relative}: ${error.message}`); }
+    if (storyTagInputFields.some(field => Object.hasOwn(data, field))
+      && (info.collection !== "story" || relative.split("/").length !== 5 || isIntroduction(relative)))
+      throw new Error(`${relative}: structured tags are only supported on STORY documents`);
     let record = registry.files[relative];
     if (!record) {
       const moved = Object.entries(registry.files).filter(

@@ -1,38 +1,20 @@
 ---
-import OLHomeShell from '../components/home/OLHomeShell.astro';
-import OLStoryCatalog from '../components/home/OLStoryCatalog.astro';
-import OLStoryPostcard from '../components/home/OLStoryPostcard.astro';
-import OLHomeTodayCard from '../components/home/OLHomeTodayCard.astro';
-import { getHomeArticles } from '../lib/home-articles';
-import { compareHomePublication, readHomeArticleIndex, selectRecommendedStories } from '../../scripts/lib/home-articles.mjs';
-import { url } from '../lib/url';
-const articles = await getHomeArticles();
-const today = [...articles].sort(compareHomePublication)[0];
-const recommended = selectRecommendedStories(readHomeArticleIndex(), articles);
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OLHero from '../components/home/OLHero.astro';
+import OLProductCards from '../components/home/OLProductCards.astro';
+import OLManifest from '../components/home/OLManifest.astro';
+import OLStats from '../components/home/OLStats.astro';
+import OLLatestUpdates from '../components/home/OLLatestUpdates.astro';
 ---
-<OLHomeShell title="비움 홈 · 이야기로 만나는 붓다의 가르침" detailStories={articles}>
-  <header slot="intro" class="ol-home-intro ol-home-hero">
-    <div class="ol-home-hero-intro">
-      <h1>이야기로 만나는 붓다의 가르침</h1>
-      <p>붓다의 지혜를 오늘의 삶으로 가져오세요</p>
-      <form action={url('/#ol-story-collection-title')} role="search" class="ol-home-hero-search" data-home-hero-search>
-        <label for="ol-home-hero-query" class="sr-only">이야기 검색</label>
-        <input id="ol-home-hero-query" type="search" name="q" placeholder="이야기 검색" autocomplete="off" />
-        <button class="ol-btn ol-btn-ghost ol-btn-icon" type="submit" aria-label="검색">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.3 15.3 4.5 4.5"/></svg>
-        </button>
-      </form>
-    </div>
-    {today && <section class="ol-home-today" aria-labelledby="ol-home-today-title">
-      <h2 id="ol-home-today-title">오늘의 이야기</h2>
-      <OLHomeTodayCard story={today} />
-    </section>}
-  </header>
-  {recommended.length > 0 && <section class="ol-home-recommended" aria-labelledby="ol-home-recommended-title">
-    <h2 id="ol-home-recommended-title">추천 이야기</h2>
-    <div class="ol-home-recommended-grid">
-      {recommended.map(story => <OLStoryPostcard story={story} featured />)}
-    </div>
-  </section>}
-  <OLStoryCatalog stories={articles} />
-</OLHomeShell>
+
+<BaseLayout
+  pagefindBody={false}
+>
+  <main>
+    <OLHero />
+    <OLProductCards />
+    <OLManifest />
+    <OLStats />
+    <OLLatestUpdates />
+  </main>
+</BaseLayout>

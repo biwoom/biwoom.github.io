@@ -1,4 +1,4 @@
 interface:
-  display_name: "BIWOOM HOME GitHub Upload"
-  short_description: "Push BIWOOM HOME changes to the approved target"
-  default_prompt: "Use $ol-github-upload-log to push BIWOOM HOME changes to the remote and branch I specify."
+  display_name: "BIWOOM HUB GitHub Upload"
+  short_description: "Push changes to the HUB repository"
+  default_prompt: "Use $ol-github-upload-log to upload the requested changes to biwoom/hub."

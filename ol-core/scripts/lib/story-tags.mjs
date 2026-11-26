@@ -9,7 +9,7 @@ export const storyTagFields = /** @type {const} */ ({
 
 export const storyTagTypes = /** @type {StoryTagType[]} */ (Object.keys(storyTagFields));
 export const storyTagInputFields = [...Object.values(storyTagFields), "aliasTags"];
-export const storyTagsPath = "/tags/";
+export const storyTagsPath = "/story/tags/";
 export const storyTagInitials = [..."가나다라마바사아자차카타파하"];
 
 // Fold the five doubled initials into the corresponding basic group.
@@ -60,7 +60,7 @@ export function readStoryTags(data) {
   }
   return storyTagTypes.flatMap(type => {
     const field = storyTagFields[type];
-    const labels = data[field] === undefined ? [] : names(data[field], field);
+    const labels = Object.hasOwn(data, field) ? names(data[field], field) : [];
     const aliasesByLabel = new Map();
     for (const [rawLabel, values] of Object.entries(readMap(aliasGroups[type], `aliasTags.${type}`))) {
       const label = name(rawLabel, `aliasTags.${type}`);

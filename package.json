@@ -1,5 +1,5 @@
 {
-  "name": "home",
+  "name": "biwoom-hub",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -11,7 +11,7 @@
     "check": "npm run check:content && npm run check:content:fixtures",
     "sync:assets": "node ol-core/scripts/sync-content-assets.mjs && node ol-core/scripts/sync-media-gallery.mjs",
     "dev": "npm run prepare:content && npm run sync:assets && astro dev",
-    "build:site": "npm run prepare:content && npm run sync:assets && astro build && node ol-core/scripts/build-search.mjs",
+    "build:site": "npm run prepare:content && npm run sync:assets && astro build && npx pagefind --site dist",
     "build": "npm run check:content && npm run build:site",
     "preview": "astro preview",
     "astro": "astro",
@@ -20,7 +20,8 @@
     "typecheck": "astro check",
     "check:built": "node ol-core/scripts/check-built-links.mjs && node ol-core/scripts/check-ui-contracts.mjs && node ol-core/scripts/check-built-domain.mjs",
     "check:registry": "node ol-core/scripts/check-registry.mjs",
-    "check:live": "node ol-core/scripts/check-content-live.mjs",
+    "check:dev": "node ol-core/scripts/check-content-dev.mjs",
+    "check:live": "npm run check:dev",
     "brand:assets": "node ol-core/scripts/build-brand-assets.mjs"
   },
   "dependencies": {
