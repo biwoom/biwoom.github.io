@@ -39,7 +39,8 @@ Last updated: 2026-11-27
 
 - TEXT/STORY modal TOC/footnote shells use overflow: clip so native autofocus cannot horizontally scroll the wrapper around the animated right-hand panel. Clear shell scroll offsets immediately after showModal; retain the resting transform, 360ms entrance/280ms exit, reduced motion, internal content scrolling and the shared desktop dock.
 
-- TEXT work libraries open only the first material folder by default; later folders start closed. Searching temporarily opens matching folders, and clearing/resetting search restores the pre-search open states.
+- 불교경론의 작은 문헌은 첫 자료 구분을 펼치고, 제목·설명 검색을 지우면 이전 펼침 상태를 복원한다. 문헌 전체가 60편을 넘거나 한 자료 구분이 30편을 넘으면 문헌 첫 화면에서 정적 목차로 연결하며, 각 목차는 최대 30편을 표시한다. 대형 문헌 제목·설명 검색은 첫 입력에서 공개 자료 JSON을 불러온다.
+- 30편을 넘는 자료 구분의 리더는 좌측에 현재 글과 인접 자료를 표시하고, 해당 자료의 목차 위치로 연결한다. 빌드 검사는 문헌 목록·자료 페이지·좌측 목차·본문 목차의 항목 수와 HTML gzip 크기, 한문 원문 검색 파일 크기를 기록한다.
 
 - TEXT/STORY body TOCs share reader-toc.ts to collect H2–H5 in source order, including documents containing only H4/H5. Both docked and modal TOCs indent H3/H4/H5 by depth; active heading tracking and current-section link copying cover the same range. H1 remains the title and H6 stays outside the TOC.
 

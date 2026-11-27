@@ -26,7 +26,7 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
 - TEXT/STORY menu roots show work rows and story cards, respectively. Use real page links for 문헌/카테고리 and 불전문학/카테고리/태그. The `/text/categories/` and `/story/categories/` pages show `ol-grid-3` category cards, and each category page lists its series. Category lists and work filters show only categories with a public work/series; a category index.md alone does not qualify. Preserve empty category sources and their direct category pages (track `.gitkeep` when needed). Menu roots end with up to three public Markdown documents linking to their existing readers, newest Seoul publication day first and one per work per round within each day.
 - TEXT/STORY category `index.md` files are category metadata, with authored title/description and canonical category URLs; exclude them from readers, series lists and document counts. Private category intros hide descendants/assets. The 불전문학 categories are 붓다전기, 전생이야기, 고승전기, 가르침과 일화, 설화와 전승, 구법과 순례, 시와 게송. 마하붓다왐사 is under 붓다전기 and 담마빠다이야기 is under 가르침과 일화. Future works are added by the user.
-- TEXT uses academic work/reader templates with ordinary section links and expandable material lists. Material buttons navigate to the first item; do not add actual tab-panel switching.
+- 불교경론은 일반 문헌에 펼침 목록과 자료 첫 편으로 가는 링크를 제공한다. 문헌 전체가 60편을 넘거나 한 자료 구분이 30편을 넘으면 자료 구분별 30편 정적 목차를 생성한다. 긴 자료 구분의 리더는 현재 자료, 이전·다음 및 현재 자료가 있는 목차로 연결한다. 문헌의 제목·설명 검색은 첫 검색 때 공개 목록을 불러온다.
 - TEXT uses `TextLibrary.astro` / `TextReader.astro` for its academic work/document views; STORY retains `LibrarySeries.astro` / `StoryReader.astro`. Share `ReaderToolbar`, `ReaderBody`, document-reader, reader-tools and reader-drawer behavior; do not duplicate Markdown/footnote interpretation or restore retired graph/Entity layouts. TEXT work/document accents are slate blue; gold stays on TEXT menu/category pages and document footnote emphasis. TEXT document list and document TOC default open at >=1360px and closed below that width; opening both gives desktop list/body/aid columns; one set of aid nodes becomes modal below 1360px. On TEXT document scroll, site header/work/part navigation scroll away; the reader toolbar and opened side panels stick at viewport top. Preserve focus-mode restoration and the single font slider. BLOG retains its dedicated list/detail layout.
 - TEXT/STORY document readers recognize explicitly fenced `original` blocks via one shared Markdown transform, toolbar and visibility controller. Start visible; show the toggle only with marked blocks, use an icon with accessible labels at <=980px, and leave ordinary code/inline code unchanged. Share original typography and font scaling; TEXT uses its soft panel background and STORY its themed secondary surface.
 - TEXT/STORY body/footnote emphasis (em/i) uses self-hosted SIL Gentium 7.000 real italic faces for Latin/combining marks, including romanized Pali. Keep Korean/upright/original/code typography and the shared font slider unchanged; never rewrite authored Pali to fix rendering. Preserve the unmodified WOFF2 assets and OFL license under ol-core/public/fonts/gentium; no browser test without the user's explicit request.
@@ -81,6 +81,10 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-27 — 불교경론 대형 문헌
+
+- 자료 규모에 따라 정적 목차를 생성한다. 생성본 검사에서 자료 목록, 좌측 목차, 본문 목차와 한문 검색 파일 크기를 기록한다.
 
 ### 2026-11-27 — 이야기카드 HTML 제작과 운영
 

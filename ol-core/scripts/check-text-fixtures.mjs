@@ -47,6 +47,69 @@ test('TEXT library searches title/description, expands matches, hides empty grou
   search.value='없음';search.fire('input');assert.equal(empty.hidden,false);
   reset.fire('click');assert.equal(ga.open,false);assert.equal(gb.open,true);assert.equal(status.textContent,'2개 자료');assert.ok(search.focused);
 });
+test('large TEXT library requests its catalog on demand, bounds result pages, and restores directory on reset', async () => {
+  const makeNode = () => Object.assign(new El(), {
+    append(...children) { this.children.push(...children); },
+    replaceChildren(...children) { this.children = children; },
+  });
+  const form = makeNode(), search = makeNode(), status = makeNode(), reset = makeNode(), directory = makeNode();
+  const results = makeNode(), list = makeNode(), pagination = makeNode(), prev = makeNode(), next = makeNode();
+  const page = makeNode(), empty = makeNode();
+  form.dataset = { textMaterialCatalog: '/text/library/work/materials.json', pageSize: '30' };
+  form.select = { '[data-text-search-status]': status, '[data-text-search-reset]': reset };
+  search.form = form;
+  status.textContent = '100개 자료';
+  results.select = { '[data-text-material-matches]': list, '[data-text-result-pages]': pagination };
+  pagination.select = { '[data-text-result-page]': page, '[data-text-result-prev]': prev, '[data-text-result-next]': next };
+  const document = {
+    createElement: makeNode,
+    querySelector: key => ({
+      '#text-material-search': search, '[data-text-material-directory]': directory,
+      '[data-text-material-results]': results, '[data-text-search-empty]': empty,
+    })[key],
+  };
+  let requests = 0, respond;
+  const fetch = href => {
+    assert.equal(href, form.dataset.textMaterialCatalog);
+    requests++;
+    return new Promise(resolve => { respond = resolve; });
+  };
+  const settle = () => new Promise(setImmediate);
+  evaluate('ol-core/src/lib/client/text-library.ts', { document, fetch }).initTextLibrary();
+  assert.equal(requests, 0);
+  search.value = '설명';
+  search.fire('input', { isComposing: true });
+  assert.equal(requests, 0);
+  search.fire('input');
+  respond({ ok: false });
+  await settle();
+  assert.equal(directory.hidden, false);
+  assert.match(status.textContent, /다시 시도/);
+  form.fire('submit');
+  reset.fire('click');
+  respond({ ok: true, json: async () => Array.from({ length: 100 }, (_, index) => ({
+    title: '문헌 ' + index, description: '자료 설명', url: '/text/read/' + index + '/', part: '교감 원문',
+  })) });
+  await settle();
+  assert.equal(status.textContent, '100개 자료');
+  assert.equal(results.hidden, true, 'an old response cannot overwrite a reset');
+  search.value = '설명'.normalize('NFD');
+  search.fire('input');
+  await settle();
+  assert.equal(requests, 2);
+  assert.equal(list.children.length, 30);
+  assert.equal(page.textContent, '1 / 4');
+  next.fire('click');
+  assert.equal(page.textContent, '2 / 4');
+  assert.equal(list.children[0].children[0].href, '/text/read/30/');
+  search.value = '찾을 수 없음';
+  search.fire('input');
+  await settle();
+  assert.equal(empty.hidden, false);
+  reset.fire('click');
+  assert.equal(directory.hidden, false);
+  assert.equal(empty.hidden, true);
+});
 test('docked document panels are nonmodal, do not lock body scroll, and close without animation',()=>{
   const dialog=new El(),trigger=new El(),panel=new El(),root=new El(),active=new El();dialog.dataset.docked='true';dialog.select={'.ol-reader-toc-panel':panel};dialog.parentElement=new El();dialog.closest=()=>root;
   const document={body:new El(),activeElement:active};document.body.style.overflow='scroll';

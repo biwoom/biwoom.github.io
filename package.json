@@ -18,7 +18,7 @@
     "prepare:content": "node ol-core/scripts/prepare-content.mjs",
     "content:move": "node ol-core/scripts/content-move.mjs",
     "typecheck": "astro check",
-    "check:built": "node ol-core/scripts/check-built-links.mjs && node ol-core/scripts/check-ui-contracts.mjs && node ol-core/scripts/check-built-domain.mjs && node ol-core/scripts/check-search-built.mjs",
+    "check:built": "node ol-core/scripts/check-built-links.mjs && node ol-core/scripts/check-ui-contracts.mjs && node ol-core/scripts/check-built-domain.mjs && node ol-core/scripts/check-text-size.mjs && node ol-core/scripts/check-search-built.mjs",
     "check:registry": "node ol-core/scripts/check-registry.mjs",
     "check:dev": "node ol-core/scripts/check-content-dev.mjs",
     "check:live": "npm run check:dev",

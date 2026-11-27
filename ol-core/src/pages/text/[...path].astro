@@ -1,36 +1,40 @@
 ---
 import { render } from "astro:content";
-import { getLibrary } from "../../lib/library";
+import { getLibrary, type Library } from "../../lib/library";
 import TextLibrary from "../../components/common/TextLibrary.astro";
 import TextReader from "../../components/common/TextReader.astro";
+import { textMaterialPageSize, textMaterialPageUrl, textRouteParam, usesSeparateMaterialLists, type TextPart } from "../../lib/text-materials";
+
 export async function getStaticPaths() {
   const library = await getLibrary("text");
   return library.flatMap((series) => [
-    {
-      params: {
-        path: decodeURI(series.url.replace(/^\/text\//, "").replace(/\/$/, "")),
-      },
-      props: { series },
-    },
-    ...series.entries.map((entry) => ({
-      params: {
-        path: decodeURI(
-          entry.data.url.replace(/^\/text\//, "").replace(/\/$/, ""),
-        ),
-      },
-      props: { series, entry },
-    })),
+    { params: { path: textRouteParam(series.url) }, props: { series } },
+    ...series.parts.flatMap(part => part.entries.map((entry, index) => ({
+      params: { path: textRouteParam(entry.data.url) },
+      props: { series, reader: { entry, part, index } },
+    }))),
+    ...(usesSeparateMaterialLists(series) ? series.parts.flatMap(part => {
+      const total = Math.ceil(part.entries.length / textMaterialPageSize);
+      return Array.from({ length: total }, (_, index) => ({
+        params: { path: textRouteParam(textMaterialPageUrl(series, part, index + 1)) },
+        props: { series, materials: { part, page: index + 1, total } },
+      }));
+    }) : []),
   ]);
 }
-const { series, entry } = Astro.props;
-const Intro =
-  !entry && series.meta ? (await render(series.meta)).Content : undefined;
+interface Props {
+  series: Library;
+  reader?: { entry: TextPart["entries"][number]; part: TextPart; index: number };
+  materials?: { part: TextPart; page: number; total: number };
+}
+const { series, reader, materials } = Astro.props;
+const Intro = !reader && !materials && series.meta ? (await render(series.meta)).Content : undefined;
 ---
 
-{entry ? (
-  <TextReader entry={entry} series={series} />
+{reader ? (
+  <TextReader {...reader} series={series} />
 ) : (
-  <TextLibrary series={series}>
+  <TextLibrary series={series} materials={materials}>
     {Intro && (
       <div class="ol-prose">
         <Intro />

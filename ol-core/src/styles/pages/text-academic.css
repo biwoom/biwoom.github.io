@@ -75,6 +75,10 @@ html.dark .ol-text-primary { color: #17232c; }
 .ol-text-material-group li > a > div { flex: 1; min-width: 0; }
 .ol-text-material-group li strong { font-size: 15px; font-weight: 600; }
 .ol-text-material-group li p { color: var(--ol-muted); font-size: 13px; line-height: 1.8; margin: 7px 0 0; }
+.ol-text-material-rows > li { scroll-margin-top: 90px; }
+.ol-text-material-rows > li:target > a { background: var(--ol-text-selected); }
+.ol-text-material-pages { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 16px; border-top: 1px solid var(--ol-border); }
+.ol-text-material-pages[hidden] { display: none; }
 .ol-text-row-num { flex: 0 0 22px; color: var(--ol-muted); font-size: 12px; padding-top: 3px; }
 .ol-text-bibliography { border-left: 1px solid var(--ol-border); padding: 30px 0 30px 24px; font-size: 13px; overflow-wrap: anywhere; }
 .ol-text-bibliography dt { color: var(--ol-muted); margin: 18px 0 6px; }

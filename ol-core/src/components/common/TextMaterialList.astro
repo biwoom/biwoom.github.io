@@ -1,0 +1,22 @@
+---
+import { url } from "../../lib/url";
+import type { Entry } from "../../lib/library";
+
+interface Props { entries: Entry[]; start?: number; filterable?: boolean; }
+const { entries, start = 0, filterable = false } = Astro.props;
+---
+<ol class="ol-text-material-rows" start={start + 1}>
+  {entries.map((entry, index) => (
+    <li id={`text-material-${entry.id}`} data-text-material-item data-search-text={filterable ? `${entry.data.title} ${entry.data.description}` : undefined}>
+      <a href={url(entry.data.url)}>
+        <span class="ol-text-row-num">{String(start + index + 1).padStart(2, "0")}</span>
+        <div>
+          <strong>{entry.data.title}</strong>
+          {entry.data.description && <p>{entry.data.description}</p>}
+          {entry.data.format && <small>{entry.data.format}</small>}
+        </div>
+        <span aria-hidden="true">→</span>
+      </a>
+    </li>
+  ))}
+</ol>

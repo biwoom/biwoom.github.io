@@ -9,16 +9,20 @@ import MaterialBody from './MaterialBody.astro';
 import ContentRights from './ContentRights.astro';
 import DocumentTags from './DocumentTags.astro';
 import { categoryUrl, type Entry, type Library } from '../../lib/library';
+import { textMaterialPageSize, textMaterialPageUrl, usesSeparateMaterialLists, type TextPart } from '../../lib/text-materials';
 import { hasOriginalBlocks } from '../../../scripts/lib/markdown.mjs';
 import { readerTocHeadings } from '../../lib/reader-toc';
-interface Props { entry: Entry; series: Library; }
-const { entry, series } = Astro.props;
+interface Props { entry: Entry; series: Library; part: TextPart; index: number; }
+const { entry, series, part: currentPart, index } = Astro.props;
 const rendered = entry.data.format ? undefined : await render(entry as CollectionEntry<'text'>);
 const Content = rendered?.Content;
 const headings = readerTocHeadings(rendered?.headings);
-const currentPart = series.parts.find(part => part.key === entry.data.partKey);
-const index = currentPart?.entries.findIndex(item => item.id === entry.id) ?? 0;
-const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index + 1];
+const prev = currentPart.entries[index - 1], next = currentPart.entries[index + 1];
+const separate = usesSeparateMaterialLists(series);
+const compact = currentPart.entries.length > textMaterialPageSize;
+const listStart = compact ? Math.max(0, index - 1) : 0;
+const nearby = compact ? currentPart.entries.slice(listStart, index + 2) : currentPart.entries;
+const materialUrl = separate ? url(textMaterialPageUrl(series, currentPart, Math.floor(index / textMaterialPageSize) + 1)) : url(series.url);
 ---
 <BaseLayout title={`${entry.data.title} — ${series.label} · TEXT`} description={entry.data.description} lang={entry.data.lang} academic
   pagefindMeta={{ id: entry.id, title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
@@ -29,7 +33,8 @@ const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index 
     </header>
     <nav class="ol-story-part-nav ol-text-parts" aria-label={`${series.label} 자료 구분 바로가기`}>
       <a href={url(series.url)} class="ol-story-part-home" aria-label={`${series.label} 문헌 목차로`}><span aria-hidden="true">⌂</span><strong>문헌정보</strong></a>
-      {series.parts.map((part, i) => <a href={url(part.entries[0].data.url)} class:list={{ active: part.key === currentPart?.key }} aria-current={part.key === currentPart?.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
+      {separate ? <a href={materialUrl} class="active"><strong>{currentPart.label} 목차</strong><small>{currentPart.entries.length}</small></a>
+        : series.parts.map((part, i) => <a href={url(part.entries[0].data.url)} class:list={{ active: part.key === currentPart.key }} aria-current={part.key === currentPart.key ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{part.label}</strong><small>{part.entries.length}</small></a>)}
     </nav>
     <div class="ol-text-workspace-grid" data-reader-resizable-grid>
       <aside class="ol-story-part-sidebar ol-text-document-list" id="text-document-list" aria-label="문헌 자료 목록" data-pagefind-ignore>
@@ -39,9 +44,9 @@ const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index 
             <button class="ol-text-list-close" type="button" aria-label="문헌 목차 닫기" data-text-list-close>닫기</button>
           </div> -->
           <a class="ol-text-work-name" href={url(series.url)}>{series.label}</a>
-          <p class="ol-text-list-part">{currentPart?.label} · {currentPart?.entries.length ?? 0}개 자료</p>
-          <nav aria-label={`${currentPart?.label ?? entry.data.part} 자료 목록`}>{currentPart?.entries.map((item, i) => <a href={url(item.data.url)} class:list={{ active: item.id === entry.id }} aria-current={item.id === entry.id ? 'page' : undefined}><span>{String(i + 1).padStart(2, '0')}</span><strong>{item.data.title}</strong></a>)}</nav>
-          <a class="ol-text-all-materials" href={url(series.url)}>← 전체 자료 목록</a>
+          <p class="ol-text-list-part">{currentPart.label} · {currentPart.entries.length}개 자료</p>
+          <nav aria-label={`${currentPart.label} 자료 목록`} data-text-reader-links>{nearby.map((item, i) => <a href={url(item.data.url)} class:list={{ active: item.id === entry.id }} aria-current={item.id === entry.id ? 'page' : undefined}><span>{String(listStart + i + 1).padStart(2, '0')}</span><strong>{item.data.title}</strong></a>)}</nav>
+          <a class="ol-text-all-materials" href={separate ? `${materialUrl}#text-material-${entry.id}` : materialUrl}>{separate ? "← 이 자료가 있는 목차" : "← 전체 자료 목록"}</a>
         </div>
       </aside>
       <article class="ol-story-part-content ol-text-document" data-pagefind-body>
