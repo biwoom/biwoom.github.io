@@ -86,6 +86,7 @@ if (root) {
   for (const button of viewButtons) button.addEventListener('click', () => {
     grid.dataset.view = button.dataset.homeView;
     for (const item of viewButtons) item.setAttribute('aria-pressed', String(item === button));
+    root.dispatchEvent(new Event('home-catalog-updated', { bubbles: true }));
   });
   for (const button of sortButtons) button.addEventListener('click', () => {
     sort = button.dataset.homeSort;

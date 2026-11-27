@@ -518,7 +518,7 @@ assert.match(supportHtml, /Noto\+Serif\+KR/);
 assert.doesNotMatch(brandHtml, /class="ol-reading-column ol-support-reading\b|Noto\+Serif\+KR/);
 const siteFooter = /<footer class="ol-footer"[\s\S]*?<\/footer>/;
 const footer = homeHtml.match(siteFooter)?.[0] ?? "";
-assert.ok(footer.includes(`href="${rulesPagePath}">CC0 적용 자료의 이용 조건</a>`), "Footer license link opens the site's guide");
+assert.ok(footer.includes(`href="${rulesPagePath}">CC0 안내</a>`), "Footer license link opens the site's guide");
 assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
   .map(([, href, label]) => [href, label])
   .filter(([, label]) => ["BLOG · 시리즈", ARTICLE_LABEL, "비움 소개"].includes(label)),
@@ -637,8 +637,10 @@ assert.match(articleIndexHtml.slice(articleIndexHtml.indexOf(articleNav) + artic
   "The preview follows the list in the results below the navigation");
 rule(".ol-home-detail[data-home-detail-inline]", /position:static/);
 rule(".ol-home-article-results:has", /grid-template-columns:minmax\(0,1fr\) var\(--home-detail-width\)/);
-rule(".ol-home-detail", /--home-detail-room:\s*75dvh[^{}]*position:fixed[^{}]*inset:auto 0 0[^{}]*height:var\(--home-detail-room\)/);
-rule(".ol-home-detail [data-home-detail-body]", /overflow-y:auto/);
+rule(".ol-home-detail[data-home-detail-inline]", /grid-column:1\s*\/\s*-1[^{}]*position:static/);
+rule(".ol-home-workspace", /padding-block:[^;{}]*var\(--home-detail-scroll-space,\s*0px\)/);
+rule(".ol-home-detail:not([data-home-detail-inline])", /--home-detail-room:\s*75dvh[^{}]*position:fixed[^{}]*inset:auto 0 0[^{}]*height:var\(--home-detail-room\)/);
+rule("body:has(.ol-home-detail[open]:not([data-home-detail-inline]))", /overflow:hidden/);
 rule(".ol-home-reader :is(.ol-home-reader-heading h1,.ol-home-reader-heading p,.ol-home-reader-copy,.ol-home-reader-source)", /font-family:var\(--ol-font-serif\)/);
 const recommendation = articleIndexHtml.match(/<section class="ol-home-recommended"[\s\S]*?<\/section>/)?.[0] ?? "";
 const recommendedIds = readHomeArticleIndex().recommendedStories ?? [];

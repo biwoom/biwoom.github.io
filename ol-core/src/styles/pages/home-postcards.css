@@ -3,7 +3,7 @@
   --home-detail-width: clamp(300px, 29vw, 410px);
   --home-workspace-top: clamp(16px, 2.5vw, 36px);
   min-height: 65vh;
-  padding-block: var(--home-workspace-top) clamp(54px, 7vw, 92px);
+  padding-block: var(--home-workspace-top) calc(clamp(54px, 7vw, 92px) + var(--home-detail-scroll-space, 0px));
 }
 .ol-home-main { min-width: 0; }
 .ol-home-intro {
@@ -347,7 +347,15 @@
   .ol-home-detail[data-home-detail-inline] .ol-home-detail-inner { max-height: none; }
 }
 @media (width < 1024px) {
-  .ol-home-detail {
+  .ol-home-detail[data-home-detail-inline] {
+    grid-column: 1 / -1;
+    position: static;
+    max-height: none;
+    margin: 0;
+  }
+  .ol-home-detail .ol-home-detail-inner { max-height: none; }
+  .ol-home-detail :is(.ol-home-detail-content, .ol-home-detail-excerpt) { flex: none; overflow: visible; }
+  .ol-home-detail:not([data-home-detail-inline]) {
     --home-detail-room: 75dvh;
     position: fixed;
     inset: auto 0 0;
@@ -355,17 +363,15 @@
     margin: 0;
     border-radius: var(--ol-r-lg) var(--ol-r-lg) 0 0;
   }
-  .ol-home-detail .ol-home-detail-inner {
+  .ol-home-detail:not([data-home-detail-inline]) .ol-home-detail-inner {
     width: min(100%, 580px);
     height: 100%;
-    max-height: none;
     margin-inline: auto;
     padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
-  .ol-home-detail [data-home-detail-body] { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
-  .ol-home-detail :is(.ol-home-detail-content, .ol-home-detail-excerpt) { flex: none; overflow: visible; }
-  .ol-home-detail::backdrop { background: rgb(0 0 0 / .42); }
-  body:has(.ol-home-detail[open]) { overflow: hidden; }
+  .ol-home-detail:not([data-home-detail-inline]) [data-home-detail-body] { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+  .ol-home-detail:not([data-home-detail-inline])::backdrop { background: rgb(0 0 0 / .42); }
+  body:has(.ol-home-detail[open]:not([data-home-detail-inline])) { overflow: hidden; }
 }
 @media (max-height: 580px) {
   .ol-home-detail-inner { padding: 10px; }

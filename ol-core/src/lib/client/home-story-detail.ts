@@ -4,6 +4,7 @@ const workspace = document.querySelector<HTMLElement>('[data-home-workspace]');
 const panel = workspace?.querySelector<HTMLDialogElement>('[data-home-story-detail]');
 const body = panel?.querySelector<HTMLElement>('[data-home-detail-body]');
 if (workspace && panel && body) {
+  const dock = workspace.querySelector<HTMLElement>('[data-home-detail-dock]');
   const wide = matchMedia('(min-width: 1024px)');
   const hover = matchMedia('(any-hover: hover)');
   const templates = new Map([...workspace.querySelectorAll<HTMLElement>('[data-home-detail-template]')]
@@ -16,6 +17,38 @@ if (workspace && panel && body) {
     return (event.target as Element).closest<HTMLAnchorElement>('[data-home-detail-open]') ?? undefined;
   };
 
+  const placeInline = (link: HTMLAnchorElement) => {
+    const card = link.closest<HTMLElement>('[data-story-card]');
+    if (!card) return;
+
+    // Measure the card row without a previously inserted panel splitting it.
+    panel.hidden = true;
+    const rowTop = card.offsetTop;
+    let rowEnd = card;
+    for (let next = card.nextElementSibling; next instanceof HTMLElement; next = next.nextElementSibling) {
+      if (next.hidden) continue;
+      if (!next.matches('[data-story-card]') || next.offsetTop !== rowTop) break;
+      rowEnd = next;
+    }
+    if (rowEnd.nextElementSibling !== panel) rowEnd.after(panel);
+    panel.hidden = false;
+  };
+
+  const scrollToInline = () => {
+    workspace.style.removeProperty('--home-detail-scroll-space');
+    const viewport = window.visualViewport;
+    const offset = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight) * 0.2;
+    const top = panel.getBoundingClientRect().top + window.scrollY - offset;
+    const root = document.scrollingElement;
+    if (root) {
+      // Reserve just enough trailing space to align even the last card.
+      const needed = Math.ceil(top + root.clientHeight - root.scrollHeight);
+      if (needed > 0) workspace.style.setProperty('--home-detail-scroll-space', `${needed}px`);
+    }
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top, behavior: reduceMotion ? 'instant' : 'smooth' });
+  };
+
   const open = (link: HTMLAnchorElement, template: HTMLElement) => {
     if (!link.isConnected || link.closest('[hidden]')) return;
     active?.setAttribute('aria-expanded', 'false');
@@ -25,12 +58,16 @@ if (workspace && panel && body) {
     const heading = body.querySelector<HTMLElement>('h2')!;
     heading.id = 'ol-home-detail-title';
     updateStoryBookmarks();
+    const inline = dock && !wide.matches;
+    if (inline) placeInline(link);
+    else if (dock && panel.parentElement !== dock) dock.prepend(panel);
     if (!panel.open) {
-      if (wide.matches) panel.show();
+      if (dock || wide.matches) panel.show();
       else panel.showModal();
     }
     body.scrollTop = 0;
     heading.focus({ preventScroll: true });
+    if (inline) scrollToInline();
   };
 
   workspace.addEventListener('click', event => {
@@ -65,18 +102,21 @@ if (workspace && panel && body) {
     }
     active = undefined;
     body.replaceChildren();
+    if (dock && panel.parentElement !== dock) dock.prepend(panel);
+    workspace.style.removeProperty('--home-detail-scroll-space');
   });
   workspace.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
     window.clearTimeout(pending);
-    if (wide.matches && panel.open) panel.close();
+    if ((dock || wide.matches) && panel.open) panel.close();
   });
   panel.addEventListener('click', event => {
-    if (!wide.matches && event.target === panel && event.clientY < panel.getBoundingClientRect().top) panel.close();
+    if (!dock && !wide.matches && event.target === panel && event.clientY < panel.getBoundingClientRect().top) panel.close();
   });
   wide.addEventListener('change', () => { if (panel.open) panel.close(); });
   workspace.addEventListener('home-catalog-updated', () => {
     if (!panel.open || !active) return;
     if (active.closest('[hidden]')) panel.close();
+    else if (dock && !wide.matches) placeInline(active);
   });
 }
