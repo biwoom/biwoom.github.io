@@ -30,7 +30,7 @@
 }
 .ol-home-hero:not(:has(.ol-home-today)) { grid-template-columns: 1fr; }
 .ol-home-hero h1 { word-break: keep-all; }
-.ol-home-today h2, .ol-home-recommended h2, .ol-home-category-section h2, .ol-home-reader-related h2 {
+.ol-home-today > h2, .ol-home-recommended > h2, .ol-home-category-section h2, .ol-home-reader-related h2 {
   margin: 0 0 12px;
   font-size: clamp(1.18rem, 2.1vw, 1.6rem);
   font-weight: 740;
@@ -45,6 +45,8 @@
 .ol-home-today-info:hover, .ol-home-today-info[aria-expanded='true'] { border-color: var(--ol-accent-story); }
 .ol-home-today-info p { margin: 8px 0 0; color: var(--ol-ink-2); font-size: .93rem; line-height: 1.55; }
 .ol-home-today-info small { color: var(--ol-ink); font-size: .85rem; font-weight: 650; }
+.ol-home-html-card { min-width: 0; }
+.ol-home-html-card-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .ol-home-hero-search {
   display: flex;
   align-items: center;

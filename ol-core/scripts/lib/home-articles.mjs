@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { z } from 'astro/zod';
 import { parseFrontmatter, shortId, walk } from './content.mjs';
-import { contentFile, normalizeContentPath, PROJECT_ROOT, projectPaths, readContentDirectory, relativeContentPath } from './paths.mjs';
+import { ARTICLE_HTML_DIRECTORY, contentFile, normalizeContentPath, PROJECT_ROOT, projectPaths, readContentDirectory, relativeContentPath } from './paths.mjs';
 import { indexStoryTags, readStoryTags } from './story-tags.mjs';
 
 export const storyCategories = /** @type {const} */ ({
@@ -25,7 +25,7 @@ export function homeArticlePlacement(articlePath) {
 }
 
 const homeCategoryKeys = /** @type {(keyof typeof storyCategories)[]} */ (Object.keys(storyCategories));
-const articlePattern = ['**/*.md', '!**/index.md', '!**/_*/**', '!**/_*.md', '!**/assets/**'];
+const articlePattern = ['**/*.md', `!${path.posix.relative('article', ARTICLE_HTML_DIRECTORY)}/**`, '!**/index.md', '!**/_*/**', '!**/_*.md', '!**/assets/**'];
 export { articlePattern };
 const text = z.string().trim().min(1);
 const slug = text.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use a stable lowercase ID.');
@@ -40,7 +40,7 @@ const articleIndexSchema = z.object({
 const seriesIndexSchema = z.object({ order, description: text.optional() });
 const tags = z.array(text).optional();
 const aliases = z.record(z.string(), z.array(text)).optional();
-const illustrationPath = text.transform(normalizeContentPath).refine(value => {
+export const illustrationPath = text.transform(normalizeContentPath).refine(value => {
   const [directory, ...parts] = value.split('/');
   return directory === 'illustration' && parts.length > 0 &&
     parts.every(part => part && !/^[._]/.test(part) && !/[\\%?#\p{Cc}]/u.test(part)) &&
@@ -148,7 +148,7 @@ export function readHomeSeries(root = PROJECT_ROOT) {
 }
 
 /** @param {string} source @param {string} root */
-function resolveArticleIllustration(source, root) {
+export function resolveArticleIllustration(source, root) {
   const file = contentFile(source, root);
   if (!fs.existsSync(file)) throw new Error(`missing illustration ${source}`);
   const vault = fs.realpathSync(projectPaths(root).content);
@@ -164,7 +164,8 @@ export function readHomeArticles(root = PROJECT_ROOT) {
   const ids = new Map();
   const index = readHomeArticleIndex(root);
   const files = walk(path.join(projectPaths(root).content, 'article'))
-    .filter(file => file.endsWith('.md') && path.basename(file) !== 'index.md');
+    .filter(file => file.endsWith('.md') && path.basename(file) !== 'index.md' &&
+      !relativeContentPath(file, root).startsWith(`${ARTICLE_HTML_DIRECTORY}/`));
   const articles = files.map(file => {
     const relative = relativeContentPath(file, root);
     try {

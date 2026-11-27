@@ -1,0 +1,148 @@
+# 비움 이야기카드 설계 문서
+
+- 문서 버전 v1.2
+- 최신 수정일 2026-11-27
+- 대상 프로젝트 BIWOOM (비움) · OL 코어
+- 적용 화면 `/articles/` · 배포 기준 주소 https://biwoom.github.io/
+- 디자인 원본은 별도 `biwoom-docs/이야기카드-기획/`에 보관한다. 디자인 시스템 v0.1은 `biwoom-story-card-design-system.html`, 두 편의 통합 시안은 `biwoom-story-cards.html`이다.
+
+## 1. 이야기카드의 역할
+
+이야기카드는 삽화집과 문학적 엽서의 형식으로 한 장면을 전하는 짧은 읽을거리다. 그림은 인물과 사건에 다가가는 계기가 되고, 이야기 본문은 카드 한 장에서 읽기를 마칠 수 있도록 구성한다. 여운을 남기는 문장은 그 장면의 의미를 생각할 여지를 주고, 출전은 문헌을 더 읽을 수 있는 길을 연다.
+
+| 구성 | 제작 원칙 |
+| --- | --- |
+| 삽화 | 한 장면을 대표하는 인물이나 사건을 담는다. 원본 투명 삽화를 보존하고 보이는 내용을 설명하는 대체 텍스트를 적는다. |
+| 이야기 | 주제와 제목 아래에 하나의 사건을 짧게 풀어 쓴다. 검수한 아티클을 바탕으로 핵심 행동이나 대화를 고른다. |
+| 여운 문장 | 장면과 주제를 잇는 짧은 문장을 둔다. 편집 문장이 문헌의 직접 인용처럼 읽히지 않게 한다. |
+| 문헌 출전 | 문헌명과 장·절·게송을 가능한 한 구체적으로 적고, 확인한 판본이나 비움의 해당 번역 절로 연결한다. 각색은 출전 표기에 밝힌다. |
+
+아티클 원고와 카드는 함께 기획한다. 아티클의 내용과 출전을 확인한 뒤 카드 문안을 확정한다. 붓다스토리 외에도 자따까, 담마빠다 이야기, 고승전, 선어록에 같은 구조를 적용할 수 있다.
+
+## 2. 디자인 시스템
+
+### 색상과 타이포그래피
+
+| 이름 | 값 | 적용 |
+| --- | --- | --- |
+| Paper | `#FDFBF7` | 기본 종이 배경 |
+| Ink | `#252520` | 제목과 주요 글자 |
+| Muted | `#66645B` | 출전, 시리즈, 삽화 표기 |
+| Gold | `#8D6A37` | 주제, 얇은 구분선, 여운 문장 |
+| Border | `#DED9CD` | 종이 테두리 |
+
+복수 인물형에는 밝은 종이색 `#FFFDF9`와 인물 뒤의 옅은 베이지를 사용한다. 이 색상은 카드 표면에 적용한다. 사이트의 메뉴와 독서 화면은 각자의 색상 설정을 사용한다.
+
+제목은 Pretendard와 시스템 고딕체로 정보 위계를 드러낸다. 짧은 이야기 본문은 Noto Serif KR 계열과 시스템 명조체를 사용하고 행간을 넉넉하게 둔다. 독립 HTML은 시스템 대체 글꼴로 읽을 수 있다. 비움에서 삽입된 카드는 같은 글꼴 순서를 사용하며, 사용 가능한 글꼴에 따라 표시가 달라질 수 있다.
+
+### 레이아웃
+
+| 유형 | 넓은 화면 | 시안 |
+| --- | --- | --- |
+| Type A · 단독 인물형 | 왼쪽 이야기, 오른쪽 삽화 | [수메다의 서원](../../content/article/html/sumedha-vow.html) |
+| Type B · 복수 인물형 | 왼쪽 삽화, 오른쪽 이야기 | [수메다와 수밋따의 만남](../../content/article/html/sumedha-sumitta.html) |
+
+넓은 화면의 기준 크기는 **1120 × 630px, 16:9**다. 사이트에서는 넓은 카드에 16:9에 해당하는 최소 높이를 두고, 글이 길거나 확대되면 높이가 늘어난다. 카드 자체의 너비가 **620px 이하**이면 삽화가 위, 이야기가 아래로 온다. 카드 상단에 시리즈 정보를, 하단에 출전을 둔다. PNG에는 초기의 `OL STORY` 표기가 남아 있고, 적용한 HTML에는 `비움 이야기카드`를 사용한다. 시안의 `01`과 `02`는 표시 순서이며 발행일이나 사건의 연속 순서를 뜻하지 않는다.
+
+## 3. 비움 카드 페이지에 적용하는 방식
+
+| 파일 | 관리하는 내용 |
+| --- | --- |
+| `biwoom/content/article/카테고리/시리즈/원고.md` | 전문, 제목, 아티클 `id`, 공개 여부, 탐색용 메타데이터 |
+| `biwoom/content/article/html/카드이름.html` | 한 편의 삽화·짧은 이야기·여운 문장·출전, 연결할 아티클 ID와 카드 날짜 |
+| `biwoom/content/article/index.md` | 메인 주제와 `recommendedStories`에 표시할 두 아티클 ID |
+
+빌드할 때 ol-core는 `content/article/html/` 바로 아래의 소문자 확장자 `.html` 파일을 읽는다. 파일당 한 개의 `<article class="story-card">`에 표시한 `data-article-id`를 Markdown의 `id`와 맞춘다. 파일명은 연결에 사용하지 않으므로, 읽기 편하게 아티클 ID와 같은 이름을 붙인다. 점이나 밑줄로 시작하는 파일과 하위 폴더는 이 가져오기 범위에서 제외한다.
+
+1. **오늘의 이야기**는 공개 Markdown에 연결된 카드 중 `data-card-date`가 가장 최근인 한 장을 히어로에 표시한다. 화면 너비 760px 초과에서는 ‘이야기로 만나는 붓다의 가르침’ 오른쪽에, 760px 이하에서는 소개와 검색 아래에 배치한다. 카드 날짜가 같으면 기존 아티클의 공개일과 순서 기준을 적용한다. 연결된 카드가 없으면 현재의 제목·소개문 형식으로 가장 최근 공개 아티클을 보여 준다. 카드 날짜는 정렬에 사용하며, 공개 여부는 Markdown의 `published`로 관리한다.
+2. **추천 이야기**는 `recommendedStories`에 적은 아티클 ID와 순서를 따른다. 연결된 HTML이 있으면 그 카드를, 없으면 기존 형식의 추천 카드를 표시한다.
+3. **전문 읽기**는 같은 ID의 `/stories/<id>/`로 연결한다. 사이트가 전문 링크와 보관 버튼을 카드 아래에 붙인다. 시리즈·태그·목록·검색·보관함도 같은 Markdown 원고와 ID를 사용한다.
+
+사이트에는 표시 영역만 삽입한다. 문서 바깥 소개, 제작 메모, `<head>`와 독립 HTML의 CSS는 추출하지 않는다. 사이트의 모양은 [공용 카드 CSS](../../ol-core/src/styles/pages/story-card.css)에서 정한다. 원본 HTML은 보관함에 있고 웹의 독립 페이지 주소를 만들지 않는다. `published: false`인 원고와 연결된 카드 및 전용 이미지는 사이트에 나타나지 않는다. 등록되지 않은 아티클 ID, 동일 ID의 HTML 중복, 잘못된 카드 날짜는 빌드 전에 검사한다.
+
+## 4. HTML 코드 제작 방식
+
+1. 검수한 Markdown 원고에서 `id`를 확인한다. 새 원고라면 기존 이야기카드 컬렉션 규칙에 따라 먼저 원고를 만든다.
+2. [단독 인물형 예시](../../content/article/html/sumedha-vow.html) 또는 [복수 인물형 예시](../../content/article/html/sumedha-sumitta.html)를 복제한다. 표시할 `<article>`을 한 개 두고 `data-article-id`와 카드 날짜 `data-card-date="YYYY-MM-DD"`를 수정한다.
+3. 주제, `<h2>` 제목 한 개, 짧은 이야기, 여운 문장, 삽화와 출전을 넣는다. 목록 레이아웃에서 카드 제목의 위계를 맞추기 위해 사이트는 `<h2>`를 `<h3>`로 출력한다.
+4. 절대 `https://` 주소나 `/story/read/…/#절-앵커` 같은 사이트 루트 경로를 출전 링크에 사용한다. 별도의 전문 버튼과 보관 버튼은 사이트에서 붙인다.
+5. 이미지마다 `src`와 `alt`를 넣는다. 원본 삽화를 단독 파일 안에 보존하려면 PNG·JPEG·WebP의 `data:image/…;base64,…`를 넣는다. 보관함에서 이미지를 관리할 때는 `../../illustration/파일.png`처럼 카드 파일 기준 상대 경로로 가리킨다. 사이트는 공개 카드의 내장 이미지를 별도 파일로 생성하고, 동일한 이미지 데이터는 같은 파일 주소를 사용한다. 제3자 이미지의 이용 조건은 공개 전에 확인하며, 출처와 크레디트를 보존한다.
+6. `content/article/html/`에 저장한다. 독립 HTML에 공용 CSS를 복사해 넣고 이미지를 내장하면 오프라인에서도 카드를 열 수 있다. 외부 문헌 링크를 열 때는 인터넷 연결이 필요하다.
+
+### 단독 인물형 예시
+
+이 예시는 HTML이 `content/article/html/`에 있을 때 저장소 안의 CSS를 참조한다. 파일 하나로 전달하려면 `<link>` 대신 해당 CSS를 `<style>`에 넣고 삽화를 내장한다.
+
+```html
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>이야기 제목 · 비움 이야기카드</title>
+  <link rel="stylesheet" href="../../../ol-core/src/styles/pages/story-card.css">
+</head>
+<body>
+  <main class="biwoom-card-frame">
+    <article class="story-card" data-article-id="example-story" data-card-date="2026-11-27">
+      <header class="story-card-meta">
+        <strong class="story-card-brand">비움 이야기카드</strong>
+        <span>붓다스토리</span>
+      </header>
+      <div class="story-card-copy">
+        <p class="story-card-kicker">주제</p>
+        <h2 class="story-card-title">이야기 제목</h2>
+        <p class="story-card-body">한 장면의 사건을 짧게 풀어 쓴다.</p>
+        <p class="story-card-reflection">여운을 남기는 문장.</p>
+      </div>
+      <figure class="story-card-art">
+        <img src="../../illustration/example.png" alt="삽화에 보이는 장면">
+      </figure>
+      <footer class="story-card-credit">
+        <a href="https://example.org/edition/chapter">문헌명 · 장과 절 · 이야기 각색</a>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>
+```
+
+복수 인물형으로 만들 때는 `<article>`에 `story-card-art-left`, `<figure>`에 `story-card-art-pair`를 각각 추가한다. 두 삽화에 `story-card-art-primary`와 `story-card-art-secondary`를 지정한다. 다른 서식 클래스와 인라인 스타일은 사이트 렌더링에 사용하지 않는다. 카드 안에서는 텍스트, 제목, 이미지, 링크와 각 영역의 의미를 나타내는 기본 HTML 요소를 쓴다.
+
+## 5. 추가·교체·공개 관리
+
+| 작업 | 방법 |
+| --- | --- |
+| 새 카드 추가 | 전문 Markdown과 HTML을 작성하고 동일한 ID로 연결한다. 기존 공개 원고에 카드만 추가할 때는 전문의 ID와 공개일을 그대로 사용하고 새 카드 날짜를 적는다. |
+| 카드 문안이나 삽화 교체 | 같은 ID의 HTML 파일을 수정한다. 단순 교정은 카드 날짜를 유지한다. 새 카드 발행으로 다룰 때 카드 날짜를 갱신한다. |
+| 추천 변경 | `content/article/index.md`의 `recommendedStories`에 서로 다른 공개 원고 ID 두 개를 표시 순서대로 적는다. 추천 목록을 비우려면 해당 항목을 삭제한다. |
+| 카드만 내리기 | 해당 HTML을 가져오기 대상에서 제거한다. 전문은 같은 주소에서 계속 읽을 수 있다. |
+| 전문과 카드 함께 내리기 | 해당 ID가 추천에 있으면 추천 설정에서 교체하거나 추천 항목을 삭제한 뒤, Markdown을 `published: false`로 변경한다. 빌드에서 전문·카드·전용 자산을 제외한다. |
+
+`published: false`는 사이트 출력에만 적용한다. 공개 GitHub 저장소에 넣은 초안 원본은 저장소에서 읽을 수 있으므로, 접근을 제한해야 하는 원고와 자료는 저장소 밖에 보관한다.
+
+`npm run check:content`로 카드와 원고의 연결을 점검한다. [카드 로더](../../ol-core/scripts/lib/home-html-cards.mjs)는 오류에 HTML 경로와 잘못된 항목을 표시한다. [자산 동기화](../../ol-core/scripts/sync-content-assets.mjs)는 공개 원고에 연결한 삽화만 내보낸다. `npm run build` 후 `npm run check:built`로 생성된 히어로, 추천, 전문 링크와 첨부를 확인한다.
+
+## 6. 첫 적용 및 확인
+
+| HTML 파일 | 연결 원고 | 상태 |
+| --- | --- | --- |
+| `sumedha-vow.html` | `sumedha-vow` · 수메다의 서원 | 공개 시범 원고. 로컬 빌드의 ‘오늘의 이야기’에서 표시. |
+| `sumedha-sumitta.html` | `sumedha-sumitta` · 수메다와 수밋따의 만남 | 연결 원고는 초안. HTML과 원고를 보관함에 저장. |
+
+저장소 루트에서 `npm run check`, `npm run typecheck`, `npm run build`, `npm run check:built`를 실행한다. 첫 적용에서는 원본과 동일한 삽화 바이트, 카드 날짜 우선순위, 아티클 ID 중복과 누락 검사, 생성된 카드·전문·출전 절 링크를 확인했다. 초안 카드와 초안 전용 이미지가 생성되지 않는 것도 확인했다.
+
+## 수정 변경사항
+
+### 2026-11-27 · v1.2
+
+- 설계 문서를 저장소의 `.agents/context/`로 옮겼다. 히어로의 반응형 기준과 카드 추가·교체·추천·비공개 운영 절차를 기록했다.
+
+### 2026-11-27 · v1.1
+
+- ‘오늘의 이야기’를 카드 메뉴의 히어로에 배치했다.
+
+### 2026-11-27 · v1.0
+
+- 디자인 시스템 v0.1의 색상·활자·두 레이아웃을 Markdown으로 정리했다.
+- 한 편당 한 HTML 파일을 보관하고 기존 Markdown에 연결하는 제작 규격을 기록했다. 첫 번째 카드를 ‘오늘의 이야기’에, 두 번째 카드를 초안 원고에 연결했다.

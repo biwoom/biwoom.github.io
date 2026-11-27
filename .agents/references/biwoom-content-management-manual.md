@@ -1,7 +1,7 @@
 # BIWOOM 콘텐츠 관리 매뉴얼
 
-- 문서 버전 v4.16
-- 최신 수정일 2026-11-26
+- 문서 버전 v4.17
+- 최신 수정일 2026-11-27
 - 대상 프로젝트 BIWOOM (OL 코어)
 - 배포 URL https://biwoom.github.io/
 
@@ -42,9 +42,12 @@ media/001.인포그래픽/lamrim-preview1.jpg
 
 ## 이야기카드
 
-- 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둔다. `content/article/index.md`에서 메인 주제와 추천 원고를 설정한다. 시리즈의 `index.md`는 소개와 읽는 순서를 관리한다.
+- 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둔다. `content/article/index.md`에서 메인 주제와 추천 원고를 설정한다. 시리즈의 `index.md`는 시리즈 소개와 시리즈 간 순서를 설정하며, 시리즈 안의 읽는 순서는 원고의 `order`를 사용한다.
 - 원고의 `id`, `title`, `topic`, `blurb`, `order` 등을 기존 원고와 `content.config.ts`에 맞춰 작성한다. `id`는 `/stories/<id>/`와 브라우저 보관함에 사용한다. 공개할 원고에는 `published: true`를 지정하고, 출전은 `source`에 기록한다.
 - 삽화는 `content/illustration/`에 두고 `illustration.file`에 보관함 기준 경로, `illustration.alt`에 대체 텍스트를 적는다. 빌드는 공개 원고가 참조하는 삽화만 게시한다.
+- HTML 카드가 필요하면 `content/article/html/` 바로 아래에 한 편씩 저장한다. 표시할 `<article class="story-card">`에 원고와 같은 `data-article-id`, 카드 날짜 `data-card-date="YYYY-MM-DD"`를 적는다. 한 아티클에는 HTML 카드 한 파일을 연결한다.
+- 오늘의 이야기는 공개 원고에 연결한 최신 HTML 카드 한 장을 카드 메뉴 히어로에 표시한다. 연결된 HTML이 없으면 최신 공개 원고를 보여 준다. 추천은 `recommendedStories`에 적은 공개 원고 두 편을 순서대로 보여 주며, 연결된 HTML이 있으면 해당 카드로 표시한다.
+- 비공개로 돌릴 원고가 추천에 있으면 먼저 추천 설정을 바꾼다. `published: false`는 사이트 출력에 적용한다. 저장소에서 공개할 수 없는 자료는 별도 보관한다. 추가·교체 절차와 HTML 예시를 [비움 이야기카드 설계 문서](../context/biwoom-story-card-specification.md)에서 확인하고 `npm run check:content`로 연결을 검사한다.
 - 상단 카드 메뉴, 첫 화면의 이야기카드, 푸터의 BLOG 시리즈 아래 링크는 `/articles/`로 연결된다. 그곳에서 전문과 시리즈·주제·태그·보관함으로 이동한다. 불전문학은 기존 `story/` 컬렉션에서 집필한다.
 
 ## BLOG 시리즈·카테고리·포스트
@@ -283,6 +286,10 @@ YAML 없는 글, 제목, 경로 계층, 중복 주소, 링크와 자산, 초안 
 GitHub Pages는 `biwoom/biwoom.github.io`에서 루트 주소로 배포한다. 기존 레지스트리 경로를 유지하며 예전 `/hub/` 주소는 빌드 시 대응하는 루트 주소로 연결한다. 라우트 변경 시 robots·RSS·사이트맵을 함께 검사한다. 업로드 요청은 요청된 push까지 수행하고, 배포 확인은 요청에 따라 진행한다.
 
 ## 수정 변경사항
+
+### 2026-11-27 — v4.17
+
+- HTML 이야기카드의 원고 연결, 추천 및 비공개 운영 절차를 기록했다.
 
 ### 2026-11-26 — v4.16
 

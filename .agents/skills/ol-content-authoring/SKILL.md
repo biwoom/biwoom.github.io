@@ -5,7 +5,7 @@ description: Create or revise BIWOOM Markdown and assets in the Obsidian vault u
 
 # BIWOOM Content Authoring
 
-Latest update: 2026-11-26.
+Latest update: 2026-11-27.
 
 BIWOOM is published from `biwoom/biwoom.github.io` at `https://biwoom.github.io/`. Use vault-relative Markdown links in authoring. The registry keeps root routes.
 
@@ -25,7 +25,18 @@ BIWOOM is published from `biwoom/biwoom.github.io` at `https://biwoom.github.io/
 
 For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for canonical names alongside ordinary `tags`. Declare variants under `aliasTags.person`, `aliasTags.place`, or `aliasTags.topic` for a canonical name listed in the same document. See the authoring manual for the example and public index rules.
 
+## 이야기카드
+
+- Follow the [story-card specification](../../context/biwoom-story-card-specification.md) for layout and the HTML template. Keep the full Markdown article under its category or series. Reuse its stable `id` for an optional HTML card.
+- Save one `.html` per article directly in `content/article/html/`. Set `data-article-id` and `data-card-date` on the single marked card article. Preserve alt text and edition or chapter links. The site uses shared CSS and extracts only the card.
+- Keep unfinished articles at `published: false`. If an article is recommended, change or remove its recommendation before unpublishing it. Update `content/article/index.md` for curated recommendations. The hero selects the latest eligible HTML card by its card date and falls back to the latest public article.
+- Run `npm run check:content` to validate the article link and card metadata. After building, use `npm run check:built` to verify card placement, reader links and published assets.
+
 ## 수정 변경사항
+
+### 2026-11-27 — HTML story cards
+
+- Document the path, stable ID, card date and validation workflow.
 
 ### 2026-11-26 — HUB editorial scope
 

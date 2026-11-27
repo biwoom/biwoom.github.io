@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 // Repository root is fixed by this module, independently of the shell's working directory.
 export const PROJECT_ROOT = path.resolve(fileURLToPath(new URL('../../../', import.meta.url)));
+export const ARTICLE_HTML_DIRECTORY = 'article/html';
 export function projectPaths(root = PROJECT_ROOT) {
   const repository = path.resolve(root);
   const core = path.join(repository, 'ol-core');

@@ -58,6 +58,7 @@ curl -I -L https://biwoom.github.io/sitemap-index.xml
 - Canonical, sitemap and RSS URLs start with `https://biwoom.github.io/`.
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
+- For story-card changes, use `npm run check:built` to verify the hero card, its article link, and assets for public articles. Source HTML and drafts should have no standalone output.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.
 
 ## Common Failure Modes
@@ -80,6 +81,10 @@ Report:
 - Concrete next action for GitHub settings or push, if needed.
 
 ## 수정 변경사항
+
+### 2026-11-27 — Story-card output
+
+- Record the generated-page checks for the hero, article links and eligible card assets.
 
 ### 2026-11-26 — HUB address and verification scope
 

@@ -3,16 +3,21 @@ import OLHomeShell from '../../components/home/OLHomeShell.astro';
 import OLStoryCatalog from '../../components/home/OLStoryCatalog.astro';
 import OLStoryPostcard from '../../components/home/OLStoryPostcard.astro';
 import OLHomeTodayCard from '../../components/home/OLHomeTodayCard.astro';
+import OLHomeHtmlCard from '../../components/home/OLHomeHtmlCard.astro';
+import { getCollection } from 'astro:content';
 import { getHomeArticles } from '../../lib/home-articles';
-import { compareHomePublication, readHomeArticleIndex, selectRecommendedStories } from '../../../scripts/lib/home-articles.mjs';
+import { readHomeArticleIndex, selectRecommendedStories } from '../../../scripts/lib/home-articles.mjs';
+import { readHomeHtmlCards, selectTodayArticle } from '../../../scripts/lib/home-html-cards.mjs';
 import { url } from '../../lib/url';
 import { ARTICLE_LABEL } from '../../lib/site-config';
 const articles = await getHomeArticles();
-const today = [...articles].sort(compareHomePublication)[0];
+const cards = readHomeHtmlCards((await getCollection('article')).map(entry => entry.data));
+const today = selectTodayArticle(articles, cards);
+const todayCard = today && cards.get(today.id);
 const recommended = selectRecommendedStories(readHomeArticleIndex(), articles);
 ---
 <OLHomeShell title={ARTICLE_LABEL} detailStories={articles}>
-  <header slot="intro" class="ol-home-intro ol-home-hero">
+  <div slot="intro" class="ol-home-intro ol-home-hero">
     <div class="ol-home-hero-intro">
       <h1>이야기로 만나는 붓다의 가르침</h1>
       <p>붓다의 지혜를 오늘의 삶으로 가져오세요</p>
@@ -26,13 +31,18 @@ const recommended = selectRecommendedStories(readHomeArticleIndex(), articles);
     </div>
     {today && <section class="ol-home-today" aria-labelledby="ol-home-today-title">
       <h2 id="ol-home-today-title">오늘의 이야기</h2>
-      <OLHomeTodayCard story={today} />
+      {todayCard ? <OLHomeHtmlCard story={today} html={todayCard.html} placement="today" />
+        : <OLHomeTodayCard story={today} />}
     </section>}
-  </header>
+  </div>
   {recommended.length > 0 && <section class="ol-home-recommended" aria-labelledby="ol-home-recommended-title">
     <h2 id="ol-home-recommended-title">추천 이야기</h2>
     <div class="ol-home-recommended-grid">
-      {recommended.map(story => <OLStoryPostcard story={story} featured />)}
+      {recommended.map(story => {
+        const card = cards.get(story.id);
+        return card ? <OLHomeHtmlCard story={story} html={card.html} placement="recommended" />
+          : <OLStoryPostcard story={story} featured />;
+      })}
     </div>
   </section>}
   <OLStoryCatalog stories={articles} />

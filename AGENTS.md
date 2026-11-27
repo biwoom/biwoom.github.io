@@ -20,6 +20,7 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - `content/` is both the content source and the user's Obsidian vault.
 - Desktop and mobile primary navigation uses 경론, 문학, 카드, in that order. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
 - The 카드 menu, 이야기카드 home card and footer link below BLOG series open `/articles/`. Label the `/series/` navigation and index 이야기카드 시리즈. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Preserve article metadata and publish only illustrations referenced by public articles.
+- Optional story-card HTML lives directly in `content/article/html/`. Match one `<article class="story-card">` per file to an existing Markdown `id` with `data-article-id` and set `data-card-date` as YYYY-MM-DD. Use the shared card CSS and publish only the extracted card and assets linked to public articles. The latest eligible HTML card appears in 오늘의 이야기 in the hero, to the right of the introduction above 760px and below it at narrower widths. Without eligible HTML, show the latest public article. Recommended stories use the configured public IDs in `content/article/index.md`. See [비움 이야기카드 설계 문서](.agents/context/biwoom-story-card-specification.md).
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
 - TEXT categories are 중관부, 반야부, 정토부, 선어록, 아비달마부, 유가부, 화엄부, 인명부, 대승부, 니까야, ordered 001–010. Each has a lowercase index.md introduction; preserve the existing 중관부/대승현론 content and identities. The other nine categories currently have introductions only, with future works added by the user.
@@ -80,6 +81,10 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-27 — 이야기카드 HTML 제작과 운영
+
+- 기록한 설계 문서를 `.agents/context/`에 두고, 공개 Markdown 연결과 카드 날짜·추천 설정, 히어로 배치 기준을 문서화했다.
 
 ### 2026-11-26 — Unified BIWOOM site
 

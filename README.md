@@ -1,6 +1,6 @@
 # BIWOOM
 
-문서 버전 v1.13 · 2026-11-26 · 비움 (OL 코어)
+문서 버전 v1.14 · 2026-11-27 · 비움 (OL 코어)
 
 비움(BIWOOM)은 불교경론, 불전문학, 이야기카드, 포스트 시리즈, 미디어와 전자책을 읽고 탐구하는 Astro 사이트입니다.
 
@@ -118,6 +118,8 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 상단 **카드** 메뉴와 첫 화면·푸터의 **이야기카드** 링크는 `/articles/`로 연결됩니다. 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둡니다. 공개할 원고에는 `published: true`를 지정합니다. 원고의 `id`는 상세 주소와 보관함에 쓰입니다. 삽화는 `content/illustration/`에 두고, 원고의 `illustration.file`과 `illustration.alt`에 경로와 대체 텍스트를 적습니다.
 
+삽화와 짧은 이야기를 담은 HTML 카드는 `content/article/html/`에 한 편씩 저장합니다. `data-article-id`를 Markdown 원고의 `id`와 맞추고 `data-card-date`에 카드 날짜를 적습니다. 오늘의 이야기는 공개 원고에 연결된 카드 중 날짜가 가장 최근인 한 장을 히어로에 표시합니다. 추천 이야기는 `content/article/index.md`에서 관리합니다. [비움 이야기카드 설계 문서](.agents/context/biwoom-story-card-specification.md)
+
 ## 브랜드 자산
 
 비움은 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 영문 표기는 `BIWOOM`이며 OL은 내부 코어 이름입니다.
@@ -127,6 +129,10 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 `content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 비움에서 CC0로 공개할 수 있는 책을 등록하고, 번역·표지·삽화·글꼴의 재배포 조건을 확인합니다. 별도 권리가 적용되는 요소는 배포 파일과 `index.md`의 서지·소개에 명시합니다. 푸터 MEDIA 아래의 EBOOK에서 접근하며, 책을 선택하면 다운로드 모달이 열립니다.
 
 ## 수정 변경사항
+
+### 2026-11-27 — v1.14
+
+- HTML 이야기카드 추가와 추천 설정을 안내하고 설계 문서를 연결했습니다.
 
 ### 2026-11-26 — v1.13
 

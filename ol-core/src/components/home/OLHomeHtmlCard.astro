@@ -1,0 +1,20 @@
+---
+import type { HomeArticle } from '../../lib/home-articles';
+import { url } from '../../lib/url';
+import OLStoryBookmark from './OLStoryBookmark.astro';
+import '../../styles/pages/story-card.css';
+
+interface Props { story: HomeArticle; html: string; placement: 'today' | 'recommended' }
+const { story, html, placement } = Astro.props;
+---
+<div class="ol-home-html-card" data-home-html-card={story.id}
+  data-home-today-story={placement === 'today' ? story.id : undefined}
+  data-story-card={placement === 'recommended' ? story.id : undefined}>
+  <div class="biwoom-card-frame">
+    <Fragment set:html={html} />
+  </div>
+  <div class="ol-home-html-card-actions">
+    <a class="ol-btn ol-btn-outline" href={url(`/stories/${story.id}/`)} aria-label={`${story.title} 전문 읽기`}>전문 읽기 <span aria-hidden="true">→</span></a>
+    <OLStoryBookmark id={story.id} title={story.title} />
+  </div>
+</div>

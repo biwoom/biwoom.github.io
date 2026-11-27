@@ -5,7 +5,8 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
-import { compareHomePublication, readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
+import { readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
+import { readHomeHtmlCards, selectTodayArticle } from "./lib/home-html-cards.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
 import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath } from "./lib/story-tags.mjs";
 import { ARTICLE_LABEL, BLOG, BRAND, REPOSITORY_URL, SERIES_LABELS, SITE_URL, sitePath } from "../../site-config.mjs";
@@ -495,7 +496,8 @@ const blogHomeCard = [...homeHtml.matchAll(/<a href="([^"]*)" class="ol-product-
 assert.ok(blogHomeCard, "Home BLOG product card must link to /blog/series/");
 assert.ok(blogHomeCard.includes(`${publishedBlogCategories.length}개 자료`), "Home product counts exclude BLOG metadata");
 
-const publishedArticles = readHomeArticles().filter(({ article }) => article.published);
+const allArticles = readHomeArticles();
+const publishedArticles = allArticles.filter(({ article }) => article.published);
 const articleIds = publishedArticles.map(({ article }) => article.id).sort();
 const articleCard = homeHtml.match(/<a href="\/articles\/" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1] ?? "";
 assert.ok(articleCard.includes(ARTICLE_LABEL), "Home card displays the public article name");
@@ -522,11 +524,31 @@ assert.ok(articleSeriesIndex.includes('id="ol-home-categories-title">이야기 �
 const articleCatalog = articleIndexHtml.match(/<section class="ol-story-collection"[\s\S]*?<\/section>/)?.[0] ?? "";
 const articleCards = [...articleCatalog.matchAll(/<article\b[^>]*data-story-card="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
 assert.deepEqual(articleCards.map(([, id]) => id).sort(), articleIds, "One card per public article");
-const latestArticle = publishedArticles.map(({ article }) => article).sort(compareHomePublication)[0];
+const htmlCards = readHomeHtmlCards(allArticles.map(({ article }) => article));
+assert.ok(!fs.existsSync(path.join(dist, "article", "html")), "Standalone HTML sources stay in the vault");
+const latestArticle = selectTodayArticle(publishedArticles.map(({ article }) => article), htmlCards);
 assert.equal(articleIndexHtml.match(/data-home-today-story="([^"]+)"/)?.[1], latestArticle?.id);
+const todayHtml = articleIndexHtml.match(/<section[^>]*aria-labelledby="ol-home-today-title"[\s\S]*?<\/section>/)?.[0] ?? "";
+if (latestArticle) {
+  const hero = articleIndexHtml.match(/<div class="ol-home-intro ol-home-hero">([\s\S]*?)<\/div>\s*(?=<nav class="ol-home-menu")/)?.[1] ?? "";
+  assert.match(hero, /class="ol-home-hero-intro"[\s\S]*?<\/div>\s*<section[^>]*aria-labelledby="ol-home-today-title"/,
+    "Today is the second column of the hero, after the introduction");
+  assert.ok(hero.trimEnd().endsWith(todayHtml), "Today remains within the hero above the card navigation");
+}
+const todayCard = latestArticle && htmlCards.get(latestArticle.id);
+if (todayCard) {
+  assert.ok(todayHtml.includes(`data-home-html-card="${todayCard.id}"`), "Today uses the matched HTML card");
+  assert.ok(todayHtml.includes(todayCard.html), "Today embeds only the article fragment");
+  assert.ok(todayHtml.includes(`href="/stories/${todayCard.id}/"`), "Today links to the article reader");
+  assert.ok(todayHtml.includes(`data-story-bookmark="${todayCard.id}"`), "Today shares the article bookmark");
+  rule(".biwoom-card-frame .story-card", /grid-template-areas:/);
+}
 const recommendation = articleIndexHtml.match(/<section class="ol-home-recommended"[\s\S]*?<\/section>/)?.[0] ?? "";
+const recommendedIds = readHomeArticleIndex().recommendedStories ?? [];
 assert.deepEqual([...recommendation.matchAll(/data-story-card="([^"]+)"/g)].map(([, id]) => id),
-  readHomeArticleIndex().recommendedStories ?? []);
+  recommendedIds);
+assert.deepEqual([...recommendation.matchAll(/data-home-html-card="([^"]+)"/g)].map(([, id]) => id),
+  recommendedIds.filter(id => htmlCards.has(id)));
 const readerDir = path.join(dist, "stories");
 const articleReaders = walk(readerDir, { assets: true }).filter(file => path.basename(file) === "index.html");
 assert.deepEqual(articleReaders.map(file => path.basename(path.dirname(file))).sort(), articleIds);
@@ -548,14 +570,18 @@ for (const series of readHomeSeries()) {
   assert.ok(html.includes(` · ${SERIES_LABELS.article} — BIWOOM</title>`), `${series.path}: series title includes the collection`);
   assert.ok(html.includes(`← ${SERIES_LABELS.article} 목록</a>`), `${series.path}: named series index link`);
 }
-const illustrationRoot = path.join(dist, "generated/content/illustration");
+const generatedContent = path.join(dist, "generated/content");
 const expectedArt = new Map(publishedArticles.filter(({ illustrationFile }) => illustrationFile)
-  .map(({ article, illustrationFile }) => [article.illustration.file.slice("illustration/".length), illustrationFile]));
-const builtArt = walk(illustrationRoot, { assets: true });
-assert.deepEqual(builtArt.map(file => path.relative(illustrationRoot, file).split(path.sep).join("/").normalize("NFC")).sort(),
+  .map(({ article, illustrationFile }) => [article.illustration.file, illustrationFile]));
+for (const card of htmlCards.values()) {
+  for (const { source, file } of card.images) expectedArt.set(source, file);
+}
+const builtArt = ["illustration", "article-html"].flatMap(folder => walk(path.join(generatedContent, folder), { assets: true }));
+assert.deepEqual(builtArt.map(file => path.relative(generatedContent, file).split(path.sep).join("/").normalize("NFC")).sort(),
   [...expectedArt.keys()].sort(), "Publish only illustrations referenced by public articles");
-for (const [relative, source] of expectedArt)
-  assert.deepEqual(fs.readFileSync(path.join(illustrationRoot, relative)), fs.readFileSync(source), relative);
+for (const [relative, source] of expectedArt) {
+  assert.deepEqual(fs.readFileSync(path.join(generatedContent, relative)), Buffer.isBuffer(source) ? source : fs.readFileSync(source), relative);
+}
 
 for (const series of blogCatalog) {
   const html = fs.readFileSync(path.join(dist, series.url, "index.html"), "utf8");

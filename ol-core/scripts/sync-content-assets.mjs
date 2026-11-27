@@ -4,6 +4,7 @@ import path from "node:path";
 import { walk, markdownPattern, readRegistry, isPublicSource } from "./lib/content.mjs";
 import { getEbooks } from "./lib/ebooks.mjs";
 import { readHomeArticles } from "./lib/home-articles.mjs";
+import { readHomeHtmlCards } from "./lib/home-html-cards.mjs";
 function allFiles(dir) {
   return fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? allFiles(path.join(dir,e.name)) : [path.join(dir,e.name)]);
 }
@@ -19,7 +20,8 @@ export function syncAssets(root = PROJECT_ROOT) {
     if (expected.has(key)) return;
     expected.add(key);
     fs.mkdirSync(path.dirname(output), { recursive: true });
-    if (!fs.existsSync(output) || !fs.readFileSync(file).equals(fs.readFileSync(output))) fs.copyFileSync(file, output);
+    const data = Buffer.isBuffer(file) ? file : fs.readFileSync(file);
+    if (!fs.existsSync(output) || !data.equals(fs.readFileSync(output))) fs.writeFileSync(output, data);
   }
   for (const collection of ["text", "story", "blog", "pages", "media"]) {
     for (const file of walk(`${base}/${collection}`, { assets: true })) {
@@ -35,8 +37,12 @@ export function syncAssets(root = PROJECT_ROOT) {
       syncFile(source, contentFile(source, root));
     }
   }
-  for (const { article, illustrationFile } of readHomeArticles(root)) {
+  const articles = readHomeArticles(root);
+  for (const { article, illustrationFile } of articles) {
     if (article.illustration && illustrationFile) syncFile(article.illustration.file, illustrationFile);
+  }
+  for (const { images } of readHomeHtmlCards(articles.map(({ article }) => article), root).values()) {
+    for (const { source, file } of images) syncFile(source, file);
   }
   for (const file of allFiles(target))
     if (!expected.has(normalizeContentPath(path.resolve(file)))) fs.unlinkSync(file);

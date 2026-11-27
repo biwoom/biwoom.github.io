@@ -16,6 +16,7 @@ import {
 } from "./lib/content.mjs";
 import { prepare } from "./prepare-content.mjs";
 import { validate } from "./check-content.mjs";
+import { readHomeHtmlCards, selectTodayArticle } from "./lib/home-html-cards.mjs";
 function fixture(fn) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "ol-content-"));
   try {
@@ -36,6 +37,45 @@ function write(root, relative, body) {
   fs.writeFileSync(p, body);
   return p;
 }
+test("HTML cards follow their own date, require a public article and extract only the marked content", () =>
+  fixture(root => {
+    const articles = [
+      { id: "older", title: "이전 원고", published: true, publishedAt: "2026-11-04", order: 1 },
+      { id: "newer", title: "새 원고", published: true, publishedAt: "2026-11-20", order: 2 },
+      { id: "draft", title: "초안", published: false, order: 3 },
+    ];
+    const pixel = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a/e0AAAAASUVORK5CYII=";
+    const html = (id, date, body) => `<!doctype html><head><style>body { margin: 0 }</style></head>
+      <body><main><article class="story-card" data-article-id="${id}" data-card-date="${date}">
+      <h2 id="fixture-title" style="color: red" class="story-card-title">이야기</h2>${body}
+      </article><p>제작 메모</p></main></body>`;
+    assert.equal(selectTodayArticle(articles.filter(article => article.published), readHomeHtmlCards(articles, root)).id, "newer");
+    write(root, "illustration/fixture.png", Buffer.from(pixel, "base64"));
+    write(root, "article/html/older.html", html("older", "2026-11-24",
+      '<img src="../../illustration/fixture.png" alt="그림"><a href="/story/">출전</a>'));
+    write(root, "article/html/newer.html", html("newer", "2026-11-21",
+      `<img src="data:image/png;base64,${pixel}" alt="그림">`));
+    write(root, "article/html/draft.html", html("draft", "2026-11-26", '<img src="./pending.png">'));
+    const cards = readHomeHtmlCards(articles, root);
+    assert.deepEqual([...cards.keys()].sort(), ["newer", "older"]);
+    assert.equal(selectTodayArticle(articles.filter(article => article.published), cards).id, "older");
+    const card = cards.get("older");
+    assert.match(card.html, /<h3 class="story-card-title">이야기<\/h3>/);
+    assert.match(card.html, /src="\/generated\/content\/illustration\/fixture.png"/);
+    assert.match(card.html, /href="\/story\/"/);
+    assert.doesNotMatch(card.html, /제작 메모|style=|data-article-id|fixture-title/);
+    assert.match(cards.get("newer").images[0].source, /^article-html\/[a-f0-9]{64}\.png$/);
+
+    const invalid = "article/html/unknown.html";
+    write(root, invalid, html("unknown", "2026-11-27", ""));
+    assert.throws(() => readHomeHtmlCards(articles, root), /Unknown Markdown article ID/);
+    write(root, invalid, html("older", "2026-11-27", ""));
+    assert.throws(() => readHomeHtmlCards(articles, root), /Duplicate HTML card/);
+    write(root, "article/html/older.html", html("older", "2026-02-30", ""));
+    assert.throws(() => readHomeHtmlCards(articles, root), /article\/html\/older\.html: Set data-card-date/);
+    write(root, "article/html/older.html", html("older", "2026-11-27", "<style>body { color: red }</style>"));
+    assert.throws(() => readHomeHtmlCards(articles, root), /Unsupported <style>/);
+  }));
 test("numeric names preserve title digits and accept different padding", () => {
   assert.deepEqual(nameInfo("001.1권.md"), { label: "1권", order: 1 });
   assert.equal(nameInfo("001.md").order, 1);
