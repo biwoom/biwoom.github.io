@@ -1,8 +1,78 @@
-# BIWOOM
+<div align="center">
+  <img src="ol-core/public/brand/biwoom-mark-gold.png" width="88" height="88" alt="비움의 금색 심볼">
+  <h1>비움 · BIWOOM</h1>
+  <p><strong>붓다의 지혜를 오늘의 삶으로</strong></p>
+  <p>한 출가 수행자의 공부와 번역에서 시작한 열린 불교 서재입니다.<br>문헌과 이야기에서 만난 가르침을 읽고, 사유하고, 일상에서 실천합니다.</p>
+  <p>
+    <a href="https://biwoom.github.io/"><img src="https://img.shields.io/badge/OPEN_BIWOOM-805715?style=for-the-badge&amp;logo=githubpages&amp;logoColor=white" alt="비움 사이트 열기"></a>
+    <a href="https://biwoom.github.io/pages/brand/"><img src="https://img.shields.io/badge/ABOUT_BIWOOM-384A43?style=for-the-badge" alt="비움 소개 읽기"></a>
+  </p>
+  <p>
+    <a href="https://github.com/biwoom/biwoom.github.io/actions/workflows/deploy.yml"><img src="https://github.com/biwoom/biwoom.github.io/actions/workflows/deploy.yml/badge.svg?branch=main" alt="GitHub Pages 배포 상태"></a>
+    <a href="astro.config.mjs"><img src="https://img.shields.io/badge/Astro-354B63?logo=astro&amp;logoColor=white" alt="Astro 설정"></a>
+    <a href="package.json"><img src="https://img.shields.io/badge/Node.js-22.12%2B-38623E?logo=nodedotjs&amp;logoColor=white" alt="Node.js 22.12 이상"></a>
+    <a href="content/pages/cc0.md"><img src="https://img.shields.io/badge/CC0_1.0-Reuse_Guide-635470" alt="CC0 1.0 공개 자료 이용 안내"></a>
+  </p>
+</div>
 
-문서 버전 v1.18 · 2026-11-27 · 비움 (OL 코어)
+## 비움을 둘러보기
 
-비움(BIWOOM)은 불교경론, 불전문학, 이야기카드, 포스트 시리즈, 미디어와 전자책을 읽고 탐구하는 Astro 사이트입니다.
+<table width="100%">
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://biwoom.github.io/articles/"><img src="ol-core/src/assets/home-preview/card.webp" width="360" alt="추천 이야기와 이야기카드 목록 화면"></a><br>
+      <strong><a href="https://biwoom.github.io/articles/">이야기카드 →</a></strong><br>
+      삽화가 있는 짧은 이야기에서 인물의 선택을 따라갑니다. 전문에서는 이야기 전체와 출전을 살펴볼 수 있습니다.
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://biwoom.github.io/text/"><img src="ol-core/src/assets/home-preview/text.webp" width="360" alt="삼론현의 본문과 문헌 목차를 함께 보여 주는 불교경론 리더"></a><br>
+      <strong><a href="https://biwoom.github.io/text/">불교경론 →</a></strong><br>
+      경전과 논서의 원문·번역을 대조하며 읽습니다. 문헌별 연구에서 개념과 사상적 맥락을 더 살펴봅니다.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://biwoom.github.io/story/"><img src="ol-core/src/assets/home-preview/story.webp" width="360" alt="마하붓다왐사의 장별 목차와 본문을 보여 주는 불전문학 리더"></a><br>
+      <strong><a href="https://biwoom.github.io/story/">불전문학 →</a></strong><br>
+      붓다와 고승의 전기, 본생담과 설화, 순례기와 게송을 원전과 번역으로 읽습니다.
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://biwoom.github.io/blog/series/"><img src="ol-core/src/assets/home-preview/blog.webp" width="360" alt="수행과 불교의 세계, 비움제작일지가 있는 블로그 시리즈 목록"></a><br>
+      <strong><a href="https://biwoom.github.io/blog/series/">블로그 · 틈과 여백 →</a></strong><br>
+      불교 교학과 일상의 수행, 디자인 작업과 비움을 만들어 가는 과정을 주제별로 읽습니다.
+    </td>
+  </tr>
+</table>
+
+삽화·인포그래픽·문양은 [미디어](https://biwoom.github.io/media/)에서 살펴볼 수 있습니다. 내려받아 읽을 수 있는 EPUB과 PDF는 [전자책](https://biwoom.github.io/ebook/)에 모았습니다.
+
+## 비움의 운영과 참여
+
+비움은 한 출가 수행자가 불교문헌을 공부하고 연구·번역한 성과를 나누기 위해 시작한 독립 프로젝트입니다. 운영자 개인이 책임을 맡아 개발하고 유지하며, 그 바탕에는 승가 공동체의 가르침과 돌봄, 불자들의 보시가 있습니다. 운영자는 수행과 생활을 뒷받침하는 보시 가운데 그 사용 목적에 맞는 여유 재원의 일부를 연구와 번역, 콘텐츠 제작, 웹 서비스 운영에 씁니다. 받은 도움을 다시 누구에게나 열려 있는 배움으로 돌려주는 것이 비움의 운영 취지입니다. [운영 및 기여](content/pages/support.md)
+
+> **받은 보시를 지혜의 나눔으로, 지혜의 나눔을 다시 세상의 이익으로.**
+
+| 운영 원칙 | 비움에서 이어 가는 일 |
+| --- | --- |
+| **개방성** | 공개 자료는 가입이나 후원 없이 누구나 읽을 수 있습니다. 별도 조건이 없는 비움 자체 제작 자료에는 CC0 1.0을 적용합니다. 제3자의 권리와 자료에 명시된 조건을 존중합니다. [CC0 안내](content/pages/cc0.md) |
+| **자발성** | 읽고 사유하고 나누는 일도 기여입니다. 오류 제보, 자료 소개, 번역·검수, 창작·교육과 웹 접근성 개선에 관한 제안을 환영합니다. [문의 및 제안](content/pages/contact.md) |
+| **책임성** | 출처와 맥락을 확인할 수 있는 자료를 이해하기 쉬운 말로 전합니다. 기존 자료의 오류를 바로잡고 보존하며, 누구나 편안하게 찾고 읽을 수 있도록 검색과 모바일 열람을 개선합니다. [비움 소개](content/pages/brand.md) |
+
+## 개발과 집필
+
+Node.js 22.12 이상에서 저장소 루트를 열고 실행합니다. 원고는 Obsidian의 `content/` 보관함에서 작성하고, 사이트 구현은 `ol-core/`에서 관리합니다.
+
+```sh
+npm ci
+npm run dev
+```
+
+[콘텐츠 관리 매뉴얼](.agents/references/biwoom-content-management-manual.md) · [이야기카드 설계](.agents/context/biwoom-story-card-specification.md) · [에이전트 작업 지침](AGENTS.md)
+
+<details>
+<summary><strong>저장소 구조와 배포 방식</strong></summary>
+
+### 사이트와 저장소
 
 - 사이트: https://biwoom.github.io/
 - 저장소: `biwoom/biwoom.github.io`
@@ -11,7 +81,7 @@
 
 공개 주소는 `site-config.mjs`의 `SITE_URL`에서 관리합니다. 공개·개발·미리보기는 루트에서 시작합니다. 레지스트리의 문서 경로는 유지하며 예전 `/hub/` 주소에는 이관 안내를 생성합니다. 배포는 `biwoom/biwoom.github.io`의 Settings → Pages에서 GitHub Actions를 소스로 사용합니다.
 
-## 폴더 구조
+### 폴더 구조
 
 ```text
 content/                 # Obsidian 보관함·문서·원본 첨부
@@ -27,7 +97,12 @@ content-registry.json    # 문서 식별자·주소·날짜·이력
 
 저장소 루트에서 기존 `npm run dev`, `npm run build` 명령을 그대로 사용합니다. 빌드 결과는 `dist/`에 생성됩니다. 경로 기준은 `ol-core/scripts/lib/paths.mjs`에서 관리합니다. 보관함 상대 경로와 레지스트리 키는 NFC로 통일하여 macOS의 자모 분해형 파일명과 Linux의 Git 체크아웃이 같은 메타정보를 사용합니다. 실제 파일명·본문·기존 문서 주소는 바꾸지 않습니다. 기존 Obsidian 보관함은 위치만 `content/`로 옮겼으므로 해당 폴더를 보관함으로 다시 열어 사용합니다. `.obsidian` 내용은 유지하며 Git에서는 제외합니다.
 
-## 집필
+</details>
+
+<details>
+<summary><strong>Obsidian 집필, 공개 범위와 문서 주소</strong></summary>
+
+### 집필
 
 모든 페이지의 상단과 모바일 메뉴는 **카드 · 경론 · 문학** 순서입니다. 비움 이름을 누르면 홈으로 돌아갑니다. 불교경론은 `/text/`, 불전문학은 `/story/`에서 엽니다. Obsidian의 집필 폴더 이름도 각각 `text`, `story`입니다.
 
@@ -62,7 +137,7 @@ content/
 
 BLOG는 `blog/시리즈/카테고리/포스트` 구조이며 카테고리는 하나의 시리즈에 속합니다. 시리즈·카테고리의 `index.md`에는 제목·소개와 선택적 표지를 작성합니다. `/blog/`는 포스트 목록, `/blog/series/`는 무작위 비대칭 시리즈 표지와 고정 비움제작일지 영역입니다. 시리즈 상세 목차와 포스트의 이전/다음은 같은 읽는 순서를 사용합니다. 에세이는 사용자의 향후 집필을 위해 소개만 준비했습니다. 구체적인 소속·메타정보·순서 작성법은 콘텐츠 관리 매뉴얼을 따릅니다.
 
-## 초안·첨부파일
+### 초안·첨부파일
 
 - `_drafts/`와 `_templates/`, `.obsidian/`은 사이트에서 제외합니다.
 - 공개용 메뉴 폴더의 문서는 기본 공개 대상입니다. 로컬 편집 내용은 업로드·배포 후 실제 사이트에 반영됩니다.
@@ -73,7 +148,7 @@ BLOG는 `blog/시리즈/카테고리/포스트` 구조이며 카테고리는 하
 - 문서 전용 보조 파일은 문서 옆 `assets/`에 두고 일반 Markdown 상대 링크로 연결합니다.
 - YAML은 선택 사항입니다. 날짜·권리·설명 등의 예외에만 사용합니다. 위키링크·Obsidian 블록 임베드는 현재 지원하지 않으므로 일반 Markdown 링크를 사용하세요.
 
-## 주소와 날짜
+### 주소와 날짜
 
 `content-registry.json`은 자동 관리되는 원본 색인입니다. 문서 URL·최초 공개 준비일·해시·문헌 주소·과거 경로 매핑을 보존하므로 콘텐츠와 함께 Git에 보관합니다. 빌드 산출물이 아닙니다. 기본 작성자·언어·권리는 `site-config.mjs`에서 관리하며 개별 권리 예외를 우선합니다.
 
@@ -89,11 +164,14 @@ npm run content:move -- "text/이전경로.md" "text/새경로.md"
 
 소개 문서의 주소는 문헌 주소와 같습니다. 최초 공개 준비일은 한국 날짜를 사용합니다. registry가 사라졌다면 Git에서 복원하세요. 신규 보관함만 `npm run prepare:content -- --init`으로 생성합니다. 콘텐츠 변경과 registry를 함께 커밋하고 `npm run check:registry`로 확인합니다.
 
-## 개발·검증
+</details>
+
+<details>
+<summary><strong>검사 명령과 OL 코어</strong></summary>
+
+### 개발·검증
 
 ```sh
-npm ci
-npm run dev
 npm run check
 npm run typecheck
 npm run build
@@ -114,7 +192,12 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 자세한 집필 규칙은 [비움 콘텐츠 관리 매뉴얼](.agents/references/biwoom-content-management-manual.md), 개편 기록은 [Obsidian 구조 개편 가이드](.agents/references/obsidian-content-refactor-guide.md)를 확인하세요.
 
-## 이야기카드
+</details>
+
+<details>
+<summary><strong>이야기카드, 브랜드 자산과 전자책 관리</strong></summary>
+
+### 이야기카드
 
 상단 **카드** 메뉴와 첫 화면·푸터의 **이야기카드** 링크는 `/articles/`로 연결됩니다. 원고는 `content/article/카테고리/원고.md` 또는 `content/article/카테고리/시리즈/원고.md`에 둡니다. 공개할 원고에는 `published: true`를 지정합니다. 원고의 `id`는 상세 주소와 보관함에 쓰입니다. 삽화는 `content/illustration/`에 두고, 원고의 `illustration.file`과 `illustration.alt`에 경로와 대체 텍스트를 적습니다.
 
@@ -122,15 +205,30 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 웹용 카드는 HTML로 제작하고, 새로 추가하거나 교체하는 삽화는 원본을 보존한 뒤 WebP로 내보냅니다. 완성 카드 PNG는 공유·배포에 사용합니다.
 
-## 브랜드 자산
+### 브랜드 자산
 
 비움은 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 영문 표기는 `BIWOOM`이며 OL은 내부 코어 이름입니다.
 
-## 전자책
+### 전자책
 
 `content/ebook/카테고리/책이름/`에 표지 이미지와 EPUB 또는 PDF를 넣으면 `/ebook/` 라이브러리에 등록됩니다. 비움에서 CC0로 공개할 수 있는 책을 등록하고, 번역·표지·삽화·글꼴의 재배포 조건을 확인합니다. 별도 권리가 적용되는 요소는 배포 파일과 `index.md`의 서지·소개에 명시합니다. 비움프리뷰탭의 미디어&ebook과 푸터 MEDIA 아래의 EBOOK에서 접근하며, 책을 선택하면 다운로드 모달이 열립니다.
 
+</details>
+
 ## 수정 변경사항
+
+문서 버전 v1.20 · 2026-11-28 · 비움 (OL 코어)
+
+<details>
+<summary>README 개정 이력</summary>
+
+### 2026-11-28 — v1.20
+
+- 금색 심볼, 사이트 버튼, 배포·기술·이용 안내 배지와 네 메뉴의 화면 미리보기를 추가했습니다. 운영 원칙과 기여 방법을 앞에 두고, 상세 집필·개발 안내를 펼침 영역에 담았습니다.
+
+### 2026-11-28 — v1.19
+
+- 비움의 출발점과 운영 기반, 개방성·자발성·책임성을 소개하고 운영 및 기여·문의·CC0 안내를 연결했습니다.
 
 ### 2026-11-27 — v1.18
 
@@ -203,3 +301,5 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 ### 2026-11-09
 
 - 브랜드명·기본 도메인·심볼 경로와 GitHub Pages 사용자 도메인 해제 절차를 갱신했습니다.
+
+</details>

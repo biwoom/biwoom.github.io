@@ -2,7 +2,13 @@
 
 ## Project
 
-BIWOOM (비움) is the public Astro site for Buddhist texts, translations, research, story articles, posts, media and ebooks. Publish to `https://biwoom.github.io/` through GitHub Actions in `biwoom/biwoom.github.io`. OL names the internal core.
+비움(BIWOOM)은 불교의 가르침을 읽고 사유하며, 그 지혜를 오늘의 삶에서 실천하도록 돕는다. 한 출가 수행자의 불교문헌 공부·연구·번역에서 시작한 독립 프로젝트로, 운영자 개인이 개발과 유지의 책임을 맡는다. 승가 공동체의 가르침과 돌봄, 불자들의 보시를 바탕으로 쌓은 공부와 수행의 성과를 누구나 읽고 활용할 수 있는 자료로 다시 나눈다. 운영자는 보시의 사용 목적에 맞는 범위에서 여유 재원의 일부를 연구·번역·콘텐츠 제작과 웹 운영에 사용한다. [운영 및 기여](content/pages/support.md)
+
+- **개방성.** 공개 자료는 가입이나 기여 여부와 관계없이 누구나 읽을 수 있게 한다. 별도 조건이 없는 비움 자체 제작 자료에 CC0 1.0을 적용하고, 제3자의 권리와 자료별 표시를 존중한다. [CC0 안내](content/pages/cc0.md)
+- **자발성.** 읽고 실천하고 나누는 일도 참여다. 오류 제보, 자료 제공, 번역·검수, 창작·교육, 기술 협력을 각자의 여건에 따라 환영한다. 제안은 정확성, 프로젝트 방향, 이용 조건과 운영 여건을 살펴 검토한다. [문의 및 제안](content/pages/contact.md)
+- **책임성.** 원전과 실제 판본·출전을 확인하고 번역, 해석, 각색과 불확실한 내용을 구분한다. 읽기 쉬운 한국어를 쓰고 학술적 맥락을 보존한다. 새 자료와 함께 기존 자료의 교정과 보존, 검색·모바일 열람·접근성의 개선을 돌본다. 콘텐츠 수와 체류 시간보다 독자가 필요한 자료를 찾아 자기 삶과 연결할 수 있는지를 우선한다. [비움 소개](content/pages/brand.md)
+
+The Astro site serves Buddhist texts, translations, research, story articles, posts, media and ebooks. Publish to `https://biwoom.github.io/` through GitHub Actions in `biwoom/biwoom.github.io`. OL names the internal core.
 
 - Use 불전문학 for source texts, traditions and translations, and 이야기카드 for stories written for a general audience. Link an article to the actual edition, chapter, verse or translation when available. The wordmark opens `/`.
 - For editorial direction, see the sibling `biwoom-docs/BIWOOM_기획문서/` collection. Follow the 2026-11-26 integration decision and the code for the deployed architecture and implemented behavior.
@@ -19,7 +25,8 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 
 - `content/` is both the content source and the user's Obsidian vault.
 - Desktop and mobile primary navigation uses 카드, 경론, 문학 on every page. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
-- The 카드 menu, 이야기카드 home preview tab and footer link below BLOG series open `/articles/`. Label the `/series/` navigation and index 이야기카드 시리즈. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Use Noto Serif KR for article titles and prose and for the support document reading area. Preserve article metadata and publish only illustrations referenced by public articles.
+- The 카드 menu, 이야기카드 home preview tab and footer link below BLOG series open `/articles/`. Label the `/series/` navigation and index 이야기카드 시리즈. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Use Noto Serif KR for article titles and prose. Preserve article metadata and publish only illustrations referenced by public articles.
+- Visitor documents under `content/pages/` use the site's default Pretendard Variable sans-serif type. The footer links 문의 및 제안 and 운영 및 기여 open `/pages/contact/` and `/pages/support/` respectively.
 - The home preview tabs are 이야기카드, 불교경론, 불전문학, 블로그, 미디어&ebook and 비움 소개. Desktop sidebar tabs have icons and fill the sidebar in equal rows. The first four panels place titles, descriptions, counts and links on the left with responsive WebP screenshots on the right from 1024px. At narrower widths the screenshots follow the description. The last panel holds the site introduction, usage terms link and brand document CTA. While in view, select the next tab and panel every eight seconds and wrap to the first. Pause during mouse hover and restart the eight-second timer on pointer exit. Previous and next arrows select adjacent tabs and panels immediately. Respect keyboard focus, page visibility and reduced motion.
 - Optional story-card HTML lives directly in `content/article/html/`. Match one `<article class="story-card">` per file to an existing Markdown `id` with `data-article-id` and set `data-card-date` as YYYY-MM-DD. Use the shared card CSS and publish only the extracted card and assets linked to public articles. On /articles/, 오늘의 이야기 shows up to five eligible cards by card date, to the right of the hero introduction above 760px and below it at narrower widths. Rotate every five seconds only when multiple cards are available. Keep direct reader links, pause controls for multiple cards, and visible arrows that are disabled for a single card. Without eligible HTML, show the latest public article in the card menu. The home page shows 오늘의 이야기카드 below the preview tabs using the same five-card selection and shared controls. Show two cards from 1024px up and one below it. Rotate by one card every five seconds when more cards exist than fit on screen. Keep previous and next arrows usable when two cards are visible and disable them for one card. Omit the home section without eligible HTML. Recommended stories use the configured public IDs in `content/article/index.md`. On `/articles/`, desktop list previews open below the navigation on the right. Below 1024px on `/articles/`, insert the preview across the grid after the selected card’s row and scroll the page so the panel starts 20% down the visible viewport. Other card catalogs use the bottom dialog. See [비움 이야기카드 설계 문서](.agents/context/biwoom-story-card-specification.md).
 - Keep the website story-card layout and text in HTML. Use WebP for new or replacement card illustrations, preserving the original assets and any transparency. Use complete card PNGs for sharing and distribution.
@@ -35,6 +42,7 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - STORY document aids use the shared TEXT-style dock at >=1360px: one persistent right panel with 본문 목차/각주 switching and the same background as the article. Below that width, move the original nodes back to native modals; do not duplicate IDs or auto-open a modal on resize. STORY focus hides both the left chapter list and right aid rail, then restores the selected aid.
 - TEXT/STORY right aid docks share ReaderPanelResize and reader-panel-resize: drag the article/panel boundary or use the keyboard separator at >=1360px. Default 300px, range 240–520px with at least 480px for the article; retain the 780px prose cap. Share the saved preferred width across readers, restore it before paint, and retain it through temporary viewport constraints, panel switching, focus and modal transitions. Cancel interrupted drags and hide the handle in modals/print.
 - BLOG uses `content/blog/series/category/post`: each category belongs to exactly one series. 불교의 세계 → 교학; 수행-몸과 마음 돌보기 → 수행; 상상공장 → 디자인·인포그래픽; 비움제작일지 → 비움·일지. 에세이-삶의 쉼표 intentionally has only its introduction until the user adds categories/posts. Keep per-post folders/attachments together; preserve IDs/URLs/dates/rights and rebase relative links when moving.
+- 블로그 포스트의 기본 문체는 **자세하고, 친절하고, 친숙한 용어와 일상어 사용**이다. 처음 읽는 사람도 이해할 수 있도록 배경과 예를 들고, 필요한 전문 용어는 처음 나올 때 쉬운 말로 풀어 쓴다. [블로그 포스트 집필 기준](.agents/references/biwoom-content-management-manual.md#블로그-포스트-문체)
 - BLOG `/blog/` uses compact post rows; `/blog/series/` randomizes the four non-journal covers and asymmetric sizes once before paint, with a fixed journal section below. Mobile uses one column. Series detail uses an ordered TOC; category detail uses its authored introduction and posts. Use real page links with aria-current for 포스트/블로그 시리즈.
 - BLOG series/category `index.md` supplies title/H1, description/first paragraph, optional thumbnailAsset and published state; classify these as metadata, never posts/RSS/recent-post/statistics. Private intros hide descendants/assets. Optional series `## 읽는 순서` ordered Markdown links override oldest-first reading order; unlisted public posts follow by date. Use the same order for TOC and previous/next. Reject duplicate category labels across series, duplicate reading-order links and cross-series membership. No tag inheritance.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
@@ -83,6 +91,14 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-28 — 블로그 포스트 문체
+
+- 처음 읽는 독자에게 자세하고 친절하게 설명하고, 친숙한 용어와 일상어를 사용하는 문체를 기본으로 정했다.
+
+### 2026-11-28 — 비움의 운영 배경과 원칙
+
+- 운영 및 기여 안내와 상설 문서를 바탕으로 운영의 책임 주체, 보시의 취지, 개방성·자발성·책임성 및 작업 판단 기준을 반영했다.
 
 ### 2026-11-27 — 비움프리뷰탭 배치와 홈 좌우 화살표
 

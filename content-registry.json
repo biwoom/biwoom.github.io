@@ -26,7 +26,7 @@
       "id": "pages-53dfbb7cee6fb5",
       "url": "/pages/brand/",
       "date": "2026-10-30",
-      "hash": "7ec3c4a6f563519868af22302892df7c0ec8ee883211c39a4b13685b0799b9b3",
+      "hash": "7d55fec88e55479674a1cc2cf9ab422bc275296fc8afaf150dd6c62a2b4d80d7",
       "seriesKey": "pages/standalone"
     },
     "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md": {
@@ -393,7 +393,7 @@
       "id": "blog-9b9c8c6df4dfd1",
       "url": "/blog/ol-brand-design/",
       "date": "2026-05-25",
-      "hash": "c1617fe947c98c79062c05b16f32b45c40f1e074f1349aae350f71caa2151063",
+      "hash": "47d54d3f85f1afc823ee0a93a5490a15c13abc25a07899f85dcf825898c14c6c",
       "seriesKey": "blog/005.비움제작일지",
       "categoryKey": "blog/005.비움제작일지/005.비움"
     },
@@ -401,7 +401,7 @@
       "id": "blog-56a140a591ce16",
       "url": "/blog/ol-why/",
       "date": "2026-05-23",
-      "hash": "12c370b61f22fbad33414f0e6be3806828989cd8dd791e934fcf74d642d0ad94",
+      "hash": "60b58a7521ae0373f756f94f3bcc4b1d7f36d92179f57f83465264a10663dc02",
       "seriesKey": "blog/005.비움제작일지",
       "categoryKey": "blog/005.비움제작일지/005.비움"
     },
@@ -7106,7 +7106,7 @@
       "date": "2026-11-27",
       "seriesKey": "blog/005.비움제작일지",
       "categoryKey": "blog/005.비움제작일지/006.일지",
-      "hash": "8911963d8198abdc1760ef261df29932f3a28f642f5229100030c4610eae86e0"
+      "hash": "9398fcaa452e38967dd085e23e06047ad5f34e5ffb35d17c1433b17a16f127ed"
     },
     "pages/support-origin.md": {
       "id": "pages-3c52254f5af1ba",
@@ -7117,17 +7117,32 @@
     },
     "pages/support.md": {
       "id": "pages-f214c0451bad22",
-      "url": "/pages/f214c0451bad22/",
+      "url": "/pages/support/",
       "date": "2026-11-08",
       "seriesKey": "pages/standalone",
-      "hash": "5648b335b51e408044fd188b96ca816c4244ee9d7dd5311e8b35ff8cb7e1d27a"
+      "hash": "338fc1a09ee2a1ef5360a1c182cfa3fca5043a3dce147ba5f70dc7535988429b"
     },
     "pages/cc0.md": {
       "id": "pages-a439d4fc8acf85",
       "url": "/pages/cc0/",
       "date": "2026-11-28",
       "seriesKey": "pages/standalone",
-      "hash": "8c34e4051ff86d20376df108545e393b0a5a3ba51db8ada1ffda957215212450"
+      "hash": "c7c18c94fbae63c278e2de919fdeaf1f705692f8c8e49f2948fe7547aae2c6e7"
+    },
+    "pages/contact.md": {
+      "id": "pages-1b5c06233b44b9",
+      "url": "/pages/contact/",
+      "date": "2026-11-28",
+      "seriesKey": "pages/standalone",
+      "hash": "2648b17cb9eff3cce1fe8adc51ad0cb14b58f87ed98363797d8208dd6f3b315f"
+    },
+    "blog/005.비움제작일지/006.일지/비움의 안내 페이지를 새롭게 정리했습니다.md": {
+      "id": "blog-68b92d3826ef76",
+      "url": "/blog/read/68b92d3826ef76/",
+      "date": "2026-11-28",
+      "seriesKey": "blog/005.비움제작일지",
+      "categoryKey": "blog/005.비움제작일지/006.일지",
+      "hash": "bc9fe21d49fcd6deef4011d45bb77266d9b1b45006d319412b8a727d0fbb75c5"
     }
   },
   "folders": {
@@ -7489,7 +7504,9 @@
     "/text/read/836b17fd553d84/": "/text/category/1b13c14ef6a15a/",
     "/text/read/afa9e4a4b03b7f/": "/text/category/d0029ef3f936c3/",
     "/text/read/2232d4ff6b88a8/": "/text/library/d82f6271da4518/",
-    "/story/read/0c9c534969dce6/": "/story/library/2e523ea50c1cac/"
+    "/story/read/0c9c534969dce6/": "/story/library/2e523ea50c1cac/",
+    "/pages/1b5c06233b44b9/": "/pages/contact/",
+    "/pages/f214c0451bad22/": "/pages/support/"
   },
   "aliases": {
     "text/body-mind-transformation/index.md": "text/900.기존문헌/040.수행연구/index.md",

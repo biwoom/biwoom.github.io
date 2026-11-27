@@ -7,11 +7,13 @@ description: 비움의 공개 자료에 적용되는 CC0 1.0과 이용 범위, �
 - **문서 버전** v1.0
 - **최종 업데이트** 2026-11-28
 - **기준 프로젝트** 비움 (`biwoom/biwoom.github.io`)
-- **공개 주소** https://biwoom.github.io/pages/cc0/
+- **공개 주소** [https://biwoom.github.io/pages/cc0/](https://biwoom.github.io/pages/cc0/)
 
-## 공개 자료와 이용 조건
+## 누구에게나 열린 지혜, 자유로운 나눔
 
 비움의 공개 자료는 회원 가입이나 후원 여부와 관계없이 누구나 자유롭게 읽고 이용할 수 있습니다. 별도의 저작권이나 이용 조건이 명시되지 않은 비움 자체 제작 자료에는 [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.ko)을 적용합니다.
+
+## 공개 자료와 이용 조건
 
 **CC0란 무엇인가요?**
 
@@ -122,5 +124,6 @@ CC0(Creative Commons Zero)는 저작권자가 법적으로 허용되는 범위�
 ### 2026-11-28 — v1.0
 
 - 비움 소개의 공개 자료와 이용 조건을 독립 문서로 옮겼습니다.
+- 문서 상단의 공개 주소를 누를 수 있는 링크로 표시했습니다.
 
 </details>

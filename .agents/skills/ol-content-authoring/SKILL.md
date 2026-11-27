@@ -5,9 +5,17 @@ description: Create or revise BIWOOM Markdown and assets in the Obsidian vault u
 
 # BIWOOM Content Authoring
 
-Latest update: 2026-11-27.
+Latest update: 2026-11-28.
 
 BIWOOM is published from `biwoom/biwoom.github.io` at `https://biwoom.github.io/`. Use vault-relative Markdown links in authoring. The registry keeps root routes.
+
+## Editorial purpose
+
+- 비움은 한 출가 수행자의 공부와 번역을 승가 공동체의 돌봄과 불자들의 보시에 힘입어 이어 가며, 그 성과를 누구나 읽고 사유하고 실천할 수 있는 자료로 나누는 독립 프로젝트다. 프로젝트의 배경과 책임 주체를 설명할 때 [운영 및 기여](../../../content/pages/support.md)를 기준으로 삼는다.
+- 독자가 원문과 맥락을 찾아볼 수 있게 확인한 판본과 위치를 남긴다. 전승이나 해석이 여럿이면 그 차이를 밝히고, 번역·해설·각색의 성격을 구분한다. 처음 읽는 사람도 이해할 수 있는 문장을 쓰며 기존 자료의 오류와 깨진 출전 링크도 돌본다. [비움 소개](../../../content/pages/brand.md)
+- 별도 이용 조건이 없는 비움 자체 제작 자료에 CC0 1.0을 적용한다. 외부에서 받은 문헌과 번역·삽화는 공개 전에 출처와 재배포 조건을 확인하고 자료별 권리 표시를 보존한다. [CC0 안내](../../../content/pages/cc0.md)
+
+## Workflow
 
 1. Read `.agents/references/biwoom-content-management-manual.md` and `ol-core/src/content.config.ts` before changing authoring rules.
 2. Use `content/` as the existing Obsidian vault. Do not install a CMS or edit personal `.obsidian` state.
@@ -23,6 +31,8 @@ BIWOOM is published from `biwoom/biwoom.github.io` at `https://biwoom.github.io/
 12. BLOG series/category index.md holds title/description, optional thumbnailAsset and publication state; metadata is excluded from post counts/RSS. Each category belongs to one series. Optional series `## 읽는 순서` ordered relative post links override oldest-first order; keep TOC/previous-next identical. Preserve the empty essay series until the user adds content.
 13. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
 
+블로그 포스트는 자세하고 친절하게 설명하며, 친숙한 용어와 일상어를 사용한다. 독자가 처음 읽는다는 전제에서 필요한 배경을 짚고, 불교·기술 용어는 처음 나올 때 쉽게 설명한다. 제작일지에는 무엇을 바꿨는지와 독자가 어디에서 어떻게 이용할 수 있는지를 함께 적는다. [블로그 포스트 집필 기준](../../references/biwoom-content-management-manual.md#블로그-포스트-문체)
+
 For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for canonical names alongside ordinary `tags`. Declare variants under `aliasTags.person`, `aliasTags.place`, or `aliasTags.topic` for a canonical name listed in the same document. See the authoring manual for the example and public index rules.
 
 ## 이야기카드
@@ -34,6 +44,14 @@ For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for ca
 - Run `npm run check:content` to validate the article link and card metadata. After building, use `npm run check:built` to verify card placement, reader links and published assets.
 
 ## 수정 변경사항
+
+### 2026-11-28 — 블로그 포스트 문체
+
+- 블로그 글은 자세하고 친절하게 설명하고, 친숙한 용어와 일상어를 사용하도록 정했다.
+
+### 2026-11-28 — 집필과 공개의 취지
+
+- 비움의 운영 배경을 원문에서 확인하고, 근거를 쉽게 따라갈 수 있는 집필과 자료별 권리 확인에 반영한다.
 
 ### 2026-11-27 — Home story cards
 

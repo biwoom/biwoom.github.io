@@ -14,6 +14,7 @@ import { ARTICLE_LABEL, BLOG, BRAND, REPOSITORY_URL, SERIES_LABELS, SITE_URL, si
 import {
   readRegistry,
   categoryFolders,
+  isPublicSource,
   normalize,
   walk,
   markdownPattern,
@@ -512,12 +513,21 @@ for (const html of [blog, brandHtml, ...["text", "story"].map(section => fs.read
   assert.deepEqual(primaryLinks(html), [...expectedPrimaryLinks, ...expectedPrimaryLinks],
     "Desktop and mobile navigation use the same cards-first order throughout the site");
 }
-const supportHtml = fs.readFileSync(path.join(dist, registry.files["pages/support.md"].url, "index.html"), "utf8");
-assert.match(supportHtml, /class="ol-reading-column ol-support-reading\b/);
-assert.match(supportHtml, /Noto\+Serif\+KR/);
-assert.doesNotMatch(brandHtml, /class="ol-reading-column ol-support-reading\b|Noto\+Serif\+KR/);
+for (const [source, entry] of Object.entries(registry.files)) {
+  if (!source.startsWith("pages/") || !markdownPattern.test(source) || !isPublicSource(source, registry)) continue;
+  const html = fs.readFileSync(path.join(dist, entry.url, "index.html"), "utf8");
+  assert.match(html, /pretendardvariable-dynamic-subset\.min\.css/, source);
+  assert.doesNotMatch(html, /\bol-support-reading\b|Noto\+Serif\+KR/, source);
+}
+assert.equal(registry.files["pages/contact.md"].url, "/pages/contact/");
+assert.equal(registry.files["pages/support.md"].url, "/pages/support/");
+const contactHtml = fs.readFileSync(path.join(dist, "pages/contact/index.html"), "utf8");
+assert.match(contactHtml, /<h1[^>]*>문의 및 제안<\/h1>/);
+assert.match(contactHtml, /href="\/pages\/support\/">운영 및 기여<\/a>/);
 const siteFooter = /<footer class="ol-footer"[\s\S]*?<\/footer>/;
 const footer = homeHtml.match(siteFooter)?.[0] ?? "";
+assert.match(footer, /href="\/pages\/contact\/?">문의 및 제안<\/a>/);
+assert.match(footer, /href="\/pages\/support\/?">운영 및 기여<\/a>/);
 assert.ok(footer.includes(`href="${rulesPagePath}">CC0 안내</a>`), "Footer license link opens the site's guide");
 assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
   .map(([, href, label]) => [href, label])

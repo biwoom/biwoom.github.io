@@ -15,7 +15,7 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
    - Codex local workflow: `.agents/skills/{name}/SKILL.md`.
    - Codex execution setting: `.codex/config.toml` or `.codex/rules/*.rules`.
 2. Read the current version before editing.
-3. Use the BIWOOM brand definition and integration decision for service scope. Verify what is implemented in the current codebase and `.agents/context/current-state.md`. Use BIWOOM (비움) as the site name.
+3. For project descriptions, read the relevant public source in Document Placement. Use the operations guide for the ordained practitioner's independent stewardship, the role of the monastic community and lay donors, and open, voluntary and responsible participation. Use the brand definition for editorial purpose. Verify implemented service scope against the integration decision, `.agents/context/current-state.md`, and the code. Use BIWOOM (비움) as the site name.
 4. Keep internal operating manuals under `.agents/references/` when they are for Codex or maintainers rather than public visitors.
 5. Public manuals may omit YAML and use an H1 title. Keep any optional frontmatter within the current allowed input fields; preserve existing descriptions and rights exceptions.
 
@@ -39,8 +39,10 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 
 ## Document Placement
 
-- Brand definition: `content/pages/brand.md`.
-- Public CC0 and reuse guide: `content/pages/cc0.md` at `/pages/cc0/`. The footer, home preview and brand introduction link to this guide.
+- 편집 방향과 독서 경험은 [비움 소개](../../../content/pages/brand.md)를 기준으로 정리한다.
+- 운영 배경과 참여 방식은 [운영 및 기여](../../../content/pages/support.md)에서 확인한다. 지원의 취지를 설명할 때 운영 주체와 보시의 사용 목적을 정확히 전달한다.
+- 오류 제보·자료 제공·개선 및 협력의 공개 창구는 [문의 및 제안](../../../content/pages/contact.md)이다. 제안은 정확성·이용 조건·방향·운영 여건에 따라 검토하는 것으로 안내한다.
+- 공개 자료의 CC0 적용 범위와 자료별 예외는 [CC0 안내](../../../content/pages/cc0.md)에 둔다. 푸터와 홈 미리보기, 비움 소개는 `/pages/cc0/`으로 연결한다.
 - Content management manual: `.agents/references/biwoom-content-management-manual.md`.
 - Story-card design and operating specification: `.agents/context/biwoom-story-card-specification.md`. Keep its HTML examples, placement rules and WebP illustration guidance aligned with the shared card loader, the home page, `/articles/`, and the content-authoring skill.
 - Repo-wide Codex guidance: `AGENTS.md`.
@@ -68,6 +70,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-28 — 비움의 운영 취지와 공개 문서
+
+- 프로젝트 설명, 운영과 참여, 문의, 이용 조건을 각각 최신 상설 문서에 맞춰 관리하는 기준을 반영했다.
 
 ### 2026-11-27 — Home preview tabs
 
