@@ -1,5 +1,5 @@
 /* TEXT and STORY share reading typography; navigation keeps its own theme. */
-.ol-story-doc-page { --ol-reader-serif: 'Noto Serif KR', 'Batang', 'Songti SC', serif; --ol-reader-pali-serif: 'Gentium'; --ol-reader-emphasis-fallback: var(--ol-reader-serif); --ol-reader-font-scale: var(--ol-reader-initial-scale, 1); }
+.ol-story-doc-page { --ol-reader-serif: var(--ol-font-serif); --ol-reader-pali-serif: 'Gentium'; --ol-reader-emphasis-fallback: var(--ol-reader-serif); --ol-reader-font-scale: var(--ol-reader-initial-scale, 1); }
 .ol-story-doc-page .ol-story-part-content .ol-prose { max-width: 780px; margin-inline: auto; font-family: var(--ol-reader-serif); font-size: 17px; line-height: 1.95; word-break: keep-all; overflow-wrap: anywhere; }
 .ol-story-doc-page .ol-reader-footnotes-content { --ol-reader-emphasis-fallback: var(--ol-font-ui); }
 .ol-story-doc-page :is(.ol-prose, .ol-reader-footnotes-content) :is(em, i) {

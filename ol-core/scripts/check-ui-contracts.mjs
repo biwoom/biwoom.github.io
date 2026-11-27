@@ -490,16 +490,24 @@ assert.ok(landingHeader.includes(`href="${sitePath("/")}" class="ol-brand"`), "B
 assert.ok(landingHeader.includes('class="ol-brand-name">비움</span>'), "Header displays the Korean wordmark");
 assert.ok(landingHeader.includes(`class="ol-brand-meta">${BRAND.tagline}</span>`), "Header displays the brand tagline");
 const expectedPrimaryLinks = [
+  [sitePath("/articles/"), "카드"],
   [sitePath("/text"), "경론"],
   [sitePath("/story"), "문학"],
-  [sitePath("/articles/"), "카드"],
 ];
 const primaryLinks = html => Array.from(html.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)(?: active)?">([^<]+)<\/a>/g),
   ([, href, label]) => [href, label.trim()]);
 for (const menu of [landingHeader, landingMobileMenu]) {
-  assert.deepEqual(primaryLinks(menu), [expectedPrimaryLinks[2], ...expectedPrimaryLinks.slice(0, 2)],
+  assert.deepEqual(primaryLinks(menu), expectedPrimaryLinks,
     "Home desktop and mobile navigation put cards first");
 }
+for (const html of [blog, brandHtml, ...["text", "story"].map(section => fs.readFileSync(path.join(dist, section, "index.html"), "utf8"))]) {
+  assert.deepEqual(primaryLinks(html), [...expectedPrimaryLinks, ...expectedPrimaryLinks],
+    "Desktop and mobile navigation use the same cards-first order throughout the site");
+}
+const supportHtml = fs.readFileSync(path.join(dist, registry.files["pages/support.md"].url, "index.html"), "utf8");
+assert.match(supportHtml, /class="ol-reading-column ol-support-reading\b/);
+assert.match(supportHtml, /Noto\+Serif\+KR/);
+assert.doesNotMatch(brandHtml, /class="ol-reading-column ol-support-reading\b|Noto\+Serif\+KR/);
 const siteFooter = /<footer class="ol-footer"[\s\S]*?<\/footer>/;
 const footer = homeHtml.match(siteFooter)?.[0] ?? "";
 assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
@@ -545,7 +553,7 @@ const publishedArticles = allArticles.filter(({ article }) => article.published)
 const articleIds = publishedArticles.map(({ article }) => article.id).sort();
 assert.match(panels.get("cards"), new RegExp(`data-article-stat-count[^>]*>${articleIds.length}<`), "Home counts public articles");
 const articleIndexHtml = fs.readFileSync(path.join(dist, "articles/index.html"), "utf8");
-assert.deepEqual(primaryLinks(articleIndexHtml), [...expectedPrimaryLinks, ...expectedPrimaryLinks], "Catalog navigation retains the library-first order");
+assert.deepEqual(primaryLinks(articleIndexHtml), [...expectedPrimaryLinks, ...expectedPrimaryLinks], "Catalog navigation puts cards first");
 assert.deepEqual(
   [...articleIndexHtml.matchAll(/<a href="\/articles\/" class="(ol-nav-link|ol-mobile-sheet-link) active">\s*카드\s*<\/a>/g)]
     .map(([, name]) => name),
@@ -560,6 +568,14 @@ assert.ok(articleNav.includes(`<span>${SERIES_LABELS.article}</span>`));
 const articleSeriesIndex = fs.readFileSync(path.join(dist, "series/index.html"), "utf8");
 assert.equal(articleSeriesIndex.match(/<h1>([^<]*)<\/h1>/)?.[1].trim(), SERIES_LABELS.article);
 assert.ok(articleSeriesIndex.includes('id="ol-home-categories-title">이야기 묶음</h2>'));
+assert.match(articleSeriesIndex, /class="ol-blog-series-grid ol-home-series-grid"[^>]*>[\s\S]*?<\/div>\s*<script>[^<]*previousElementSibling[^<]*data-home-series-card/,
+  "Article series shuffle runs outside the grid and preserves its positional layout");
+const topicsIndex = fs.readFileSync(path.join(dist, "topics/index.html"), "utf8");
+assert.match(topicsIndex, /data-home-catalog-title="모든 주제"/);
+for (const indexHtml of [articleIndexHtml, topicsIndex]) {
+  assert.match(indexHtml, /<script>[^<]*data-home-random-widths[^<]*home-catalog-updated/,
+    "Article and topic lists share visit-level row widths that update with the visible results");
+}
 const articleCatalog = articleIndexHtml.match(/<section class="ol-story-collection"[\s\S]*?<\/section>/)?.[0] ?? "";
 const articleCards = [...articleCatalog.matchAll(/<article\b[^>]*data-story-card="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
 assert.deepEqual(articleCards.map(([, id]) => id).sort(), articleIds, "One card per public article");
@@ -612,6 +628,9 @@ assert.match(articleIndexHtml.slice(articleIndexHtml.indexOf(articleNav) + artic
   "The preview follows the list in the results below the navigation");
 rule(".ol-home-detail[data-home-detail-inline]", /position:static/);
 rule(".ol-home-article-results:has", /grid-template-columns:minmax\(0,1fr\) var\(--home-detail-width\)/);
+rule(".ol-home-detail", /--home-detail-room:\s*75dvh[^{}]*position:fixed[^{}]*inset:auto 0 0[^{}]*height:var\(--home-detail-room\)/);
+rule(".ol-home-detail [data-home-detail-body]", /overflow-y:auto/);
+rule(".ol-home-reader :is(.ol-home-reader-heading h1,.ol-home-reader-heading p,.ol-home-reader-copy,.ol-home-reader-source)", /font-family:var\(--ol-font-serif\)/);
 const recommendation = articleIndexHtml.match(/<section class="ol-home-recommended"[\s\S]*?<\/section>/)?.[0] ?? "";
 const recommendedIds = readHomeArticleIndex().recommendedStories ?? [];
 assert.deepEqual([...recommendation.matchAll(/data-story-card="([^"]+)"/g)].map(([, id]) => id),
@@ -625,6 +644,7 @@ for (const [, id, card] of articleCards) {
   assert.ok(card.includes(`href="/stories/${id}/"`), `${id}: direct article link`);
   assert.ok(card.includes(`data-story-bookmark="${id}"`), `${id}: existing bookmark ID`);
   const reader = fs.readFileSync(path.join(readerDir, id, "index.html"), "utf8");
+  assert.match(reader, /Noto\+Serif\+KR/, `${id}: story reader loads the reading font`);
   assert.ok(!hasClass(reader, "ol-home-menu"), `${id}: story reader navigation uses the return link`);
   const backLink = reader.match(/<a\b[^>]*class="[^"]*\bol-home-reader-back\b[^"]*"[^>]*>[\s\S]*?<\/a>/)?.[0];
   assert.ok(backLink?.includes('href="/articles/"') && backLink.includes("이야기 목록"), `${id}: labeled return link`);

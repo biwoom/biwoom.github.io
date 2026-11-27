@@ -11,7 +11,7 @@ body:has(.ol-text-academic) {
   --ol-muted: #63707b;
   --ol-text-soft: #f6f8fa;
   --ol-text-selected: #eaf1f5;
-  --ol-text-serif: 'Noto Serif KR', 'Batang', 'Songti SC', serif;
+  --ol-text-serif: var(--ol-font-serif);
 }
 html.dark body:has(.ol-text-academic) {
   --ol-accent: #9cbed2;

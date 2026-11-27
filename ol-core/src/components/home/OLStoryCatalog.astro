@@ -81,7 +81,7 @@ const label = topics ? '모든 주제' : mode === 'category' ? '수록 이야기
   {!saved && cards.length > pageSize && <noscript>
     <style is:inline>.ol-story-collection [data-home-catalog-grid] .ol-postcard[hidden] { display: block; }</style>
   </noscript>}
-  {mode === 'home' && <script is:inline>
+  {(mode === 'home' || topics) && <script is:inline>
     (() => {
       const catalog = document.currentScript.closest('[data-home-catalog]');
       const grid = catalog.querySelector('[data-home-catalog-grid]');

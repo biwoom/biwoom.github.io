@@ -50,8 +50,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
         <a href={url('/blog/series/')}>BLOG · 시리즈</a>
         <a href={url('/articles/')}>{ARTICLE_LABEL}</a>
         <a href={url('/pages/brand')}>비움 소개</a>
-        <a href={url('/partners')}>기여 및 협력단체</a>
-        <!-- {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원</a>} -->
+        {supportPage && <a href={url(supportPage.data.url)}>{BRAND.nameKo} 후원안내</a>}
       </div>
 
       <!-- Open -->
@@ -60,6 +59,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
         <a href={site.github} target="_blank" rel="noopener">GitHub 저장소</a>
         <a href={site.license} target="_blank" rel="noopener">CC0 적용 자료의 이용 조건</a>
         <a href={`mailto:${site.email}`}>문의 및 기여</a>
+        <a href={url('/partners')}>기여 및 협력단체</a>
       </div>
     </div>
 

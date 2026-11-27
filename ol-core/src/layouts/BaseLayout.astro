@@ -16,6 +16,7 @@ interface Props {
   pagefindMeta?: Record<string, string | number | boolean | null | undefined>;
   pagefindBody?: boolean;
   academic?: boolean;
+  readingSerif?: boolean;
   articlePage?: boolean;
   articleReader?: boolean;
 }
@@ -28,6 +29,7 @@ const {
   pagefindMeta = {},
   pagefindBody = true,
   academic = false,
+  readingSerif = false,
   articlePage = false,
   articleReader = false,
 } = Astro.props;
@@ -104,6 +106,8 @@ const pagefindSection = isSearchSection(pagefindMeta.section) ? pagefindMeta.sec
         document.documentElement.style.setProperty('--ol-reader-initial-scale', String(percent / 100));
       })();
     </script>
+  </>}
+  {(academic || articleReader || readingSerif) && <>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet" />

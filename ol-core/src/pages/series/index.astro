@@ -28,6 +28,18 @@ const categories = Object.entries(storyCategories).map(([id, label]) => ({
       </a>
     ))}
   </div>
+  <script is:inline>
+    // Keep the script outside the grid so its positional CSS counts only cards.
+    (() => {
+      const grid = document.currentScript.previousElementSibling;
+      const cards = [...grid.querySelectorAll('[data-home-series-card]')];
+      for (let index = cards.length - 1; index > 0; index--) {
+        const other = Math.floor(Math.random() * (index + 1));
+        [cards[index], cards[other]] = [cards[other], cards[index]];
+      }
+      grid.append(...cards);
+    })();
+  </script>
   {series.length === 0 && <p>등록된 시리즈가 없습니다.</p>}
   <section class="ol-home-category-section" id="categories" aria-labelledby="ol-home-categories-title">
     <h2 id="ol-home-categories-title">이야기 묶음</h2>

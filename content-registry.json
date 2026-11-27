@@ -26,7 +26,7 @@
       "id": "pages-53dfbb7cee6fb5",
       "url": "/pages/brand/",
       "date": "2026-10-30",
-      "hash": "e50e602886522be42350e9f4c78a26a65e7030ac776ec5e0f3ab8b1fc5d51dcf",
+      "hash": "8052a8d8392b58f007a4f5c493e422bd38bcd096dfe68b2de77d3c1755f8a0ca",
       "seriesKey": "pages/standalone"
     },
     "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md": {
@@ -252,13 +252,6 @@
       "date": "2026-06-11",
       "hash": "9888979d8cdd3c011159ab73741a0b2b714f9d0b2c36622b81a83a4f9aa525f3",
       "seriesKey": "text/media/010.불교의 세계관 — 두 가지 관점"
-    },
-    "pages/support.md": {
-      "id": "pages-f214c0451bad22",
-      "url": "/pages/f214c0451bad22/",
-      "date": "2026-11-08",
-      "seriesKey": "pages/standalone",
-      "hash": "2029f2d5462306bd78fb9b6fa66aca212b65a1368078b3cd8b038a82ab5ff789"
     },
     "blog/001.불교의 세계/001.교학/과학주의를 넘어 불교적 사실을 이해하는 중도적 태도.md": {
       "id": "text-211536d4712e36",
@@ -7114,6 +7107,20 @@
       "seriesKey": "blog/005.비움제작일지",
       "categoryKey": "blog/005.비움제작일지/006.일지",
       "hash": "8911963d8198abdc1760ef261df29932f3a28f642f5229100030c4610eae86e0"
+    },
+    "pages/support-origin.md": {
+      "id": "pages-3c52254f5af1ba",
+      "url": "/pages/3c52254f5af1ba/",
+      "date": "2026-11-08",
+      "seriesKey": "pages/standalone",
+      "hash": "f0987820221e34f8973a1f9da62a24433957864b3a5dd6b103873c7b2279388d"
+    },
+    "pages/support.md": {
+      "id": "pages-f214c0451bad22",
+      "url": "/pages/f214c0451bad22/",
+      "date": "2026-11-08",
+      "seriesKey": "pages/standalone",
+      "hash": "5648b335b51e408044fd188b96ca816c4244ee9d7dd5311e8b35ff8cb7e1d27a"
     }
   },
   "folders": {

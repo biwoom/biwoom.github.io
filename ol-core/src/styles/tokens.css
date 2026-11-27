@@ -25,6 +25,7 @@
   --ol-font-sans:    "Pretendard Variable", "Noto Sans KR", "Inter",
                      -apple-system, BlinkMacSystemFont, sans-serif;
   --ol-font-ui:      var(--ol-font-sans);
+  --ol-font-serif:   "Noto Serif KR", Batang, "Songti SC", serif;
   --ol-font-mono:    "JetBrains Mono", "SFMono-Regular", "SF Mono",
                      ui-monospace, Menlo, Consolas, monospace;
 

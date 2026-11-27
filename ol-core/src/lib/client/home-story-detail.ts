@@ -4,7 +4,6 @@ const workspace = document.querySelector<HTMLElement>('[data-home-workspace]');
 const panel = workspace?.querySelector<HTMLDialogElement>('[data-home-story-detail]');
 const body = panel?.querySelector<HTMLElement>('[data-home-detail-body]');
 if (workspace && panel && body) {
-  const dock = workspace.querySelector<HTMLElement>('[data-home-detail-dock]');
   const wide = matchMedia('(min-width: 1024px)');
   const hover = matchMedia('(any-hover: hover)');
   const templates = new Map([...workspace.querySelectorAll<HTMLElement>('[data-home-detail-template]')]
@@ -17,12 +16,6 @@ if (workspace && panel && body) {
     return (event.target as Element).closest<HTMLAnchorElement>('[data-home-detail-open]') ?? undefined;
   };
 
-  const placeInline = (link: HTMLAnchorElement) => {
-    if (!dock || wide.matches) return;
-    const card = link.closest<HTMLElement>('[data-story-card]');
-    if (card && card.nextElementSibling !== panel) card.after(panel);
-  };
-
   const open = (link: HTMLAnchorElement, template: HTMLElement) => {
     if (!link.isConnected || link.closest('[hidden]')) return;
     active?.setAttribute('aria-expanded', 'false');
@@ -32,13 +25,12 @@ if (workspace && panel && body) {
     const heading = body.querySelector<HTMLElement>('h2')!;
     heading.id = 'ol-home-detail-title';
     updateStoryBookmarks();
-    placeInline(link);
     if (!panel.open) {
-      if (dock || wide.matches) panel.show();
+      if (wide.matches) panel.show();
       else panel.showModal();
     }
+    body.scrollTop = 0;
     heading.focus({ preventScroll: true });
-    if (dock && !wide.matches) panel.scrollIntoView({ block: 'nearest' });
   };
 
   workspace.addEventListener('click', event => {
@@ -73,20 +65,18 @@ if (workspace && panel && body) {
     }
     active = undefined;
     body.replaceChildren();
-    if (dock && panel.parentElement !== dock) dock.prepend(panel);
   });
   workspace.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
     window.clearTimeout(pending);
-    if ((dock || wide.matches) && panel.open) panel.close();
+    if (wide.matches && panel.open) panel.close();
   });
   panel.addEventListener('click', event => {
-    if (!dock && !wide.matches && event.target === panel && event.clientY < panel.getBoundingClientRect().top) panel.close();
+    if (!wide.matches && event.target === panel && event.clientY < panel.getBoundingClientRect().top) panel.close();
   });
   wide.addEventListener('change', () => { if (panel.open) panel.close(); });
   workspace.addEventListener('home-catalog-updated', () => {
     if (!panel.open || !active) return;
     if (active.closest('[hidden]')) panel.close();
-    else placeInline(active);
   });
 }

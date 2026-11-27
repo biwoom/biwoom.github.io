@@ -5,10 +5,8 @@ export interface NavItem {
   label: string;
 }
 
-const cardItem = { href: url("/articles/"), label: "카드" };
-const libraryItems: NavItem[] = [
+export const navItems: NavItem[] = [
+  { href: url("/articles/"), label: "카드" },
   { href: url("/text"), label: "경론" },
   { href: url("/story"), label: "문학" },
 ];
-export const navItems = [...libraryItems, cardItem];
-export const homeNavItems = [cardItem, ...libraryItems];

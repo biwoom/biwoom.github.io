@@ -26,7 +26,7 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 ## Current BIWOOM Facts
 
 - The production target is `https://biwoom.github.io/` from `biwoom/biwoom.github.io`. The build preserves older `/hub/` links through redirects.
-- `content/` is the Obsidian vault. The home primary menu is 카드, 경론, 문학. Other routes use 경론, 문학, 카드. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The wordmark opens the root landing. The 카드 menu and 이야기카드 links on the landing page and below BLOG series in the footer lead to `/articles/`.
+- `content/` is the Obsidian vault. Desktop and mobile primary menus use 카드, 경론, 문학 throughout the site. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The wordmark opens the root landing. The 카드 menu and 이야기카드 links on the landing page and below BLOG series in the footer lead to `/articles/`.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
