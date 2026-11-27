@@ -16,7 +16,7 @@ body[data-accent-theme] {
     var(--ol-border)
   );
 }
-body[data-site-section="home"] :is(.ol-hero, .ol-manifest),
+body[data-site-section="home"] .ol-hero,
 body[data-accent-theme] .ol-library-menu-hero {
   background-image:
     radial-gradient(
@@ -74,7 +74,7 @@ body[data-accent-theme] .ol-story-part-sidebar a.active {
   color: var(--ol-ink);
   box-shadow: inset 3px 0 var(--ol-accent);
 }
-body[data-accent-theme] :is(.ol-card, .ol-product-card):hover {
+body[data-accent-theme] .ol-card:hover {
   border-color: var(--ol-accent-border);
 }
 body[data-accent-theme] .ol-prose a {

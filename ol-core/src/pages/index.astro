@@ -1,10 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { readHomeHtmlCards, selectTodayArticles } from '../../scripts/lib/home-html-cards.mjs';
+import { getHomeArticles } from '../lib/home-articles';
 import OLHero from '../components/home/OLHero.astro';
-import OLProductCards from '../components/home/OLProductCards.astro';
-import OLManifest from '../components/home/OLManifest.astro';
-import OLStats from '../components/home/OLStats.astro';
+import OLPreviewTabs from '../components/home/OLPreviewTabs.astro';
+import OLHomeTodayCarousel from '../components/home/OLHomeTodayCarousel.astro';
 import OLLatestUpdates from '../components/home/OLLatestUpdates.astro';
+
+const [articles, entries] = await Promise.all([getHomeArticles(), getCollection('article')]);
+const cards = readHomeHtmlCards(entries.map(entry => entry.data));
+const today = selectTodayArticles(articles, cards, { fallback: false }).map(story => ({ story, card: cards.get(story.id) }));
 ---
 
 <BaseLayout
@@ -12,9 +18,12 @@ import OLLatestUpdates from '../components/home/OLLatestUpdates.astro';
 >
   <main>
     <OLHero />
-    <OLProductCards />
-    <OLManifest />
-    <OLStats />
+    <OLPreviewTabs articleCount={articles.length} />
+    {today.length > 0 &&
+      <div class="ol-section ol-container">
+        <OLHomeTodayCarousel slides={today} title="오늘의 이야기카드" label="LATEST · 최근 이야기카드" wide />
+      </div>
+    }
     <OLLatestUpdates />
   </main>
 </BaseLayout>

@@ -4,15 +4,25 @@ import type { HomeHtmlCard } from '../../../scripts/lib/home-html-cards.mjs';
 import { url } from '../../lib/url';
 import OLHomeTodayCard from './OLHomeTodayCard.astro';
 import '../../styles/pages/story-card.css';
+import '../../styles/components/today-carousel.css';
 
-interface Props { slides: { story: HomeArticle; card?: HomeHtmlCard }[] }
-const { slides } = Astro.props;
+interface Props {
+  slides: { story: HomeArticle; card?: HomeHtmlCard }[];
+  title?: string;
+  label?: string;
+  wide?: boolean;
+}
+const { slides, title = '오늘의 이야기', label, wide = false } = Astro.props;
 const rotates = slides.length > 1;
+const widePair = wide && rotates;
+const titleId = wide ? 'ol-home-today-cards-title' : 'ol-home-today-title';
 ---
-<section class="ol-home-today" aria-labelledby="ol-home-today-title"
+<section class:list={['ol-home-today', { 'ol-home-today--wide': wide }]} aria-labelledby={titleId}
+  data-home-today-wide={widePair || undefined} data-home-today-pair-only={(widePair && slides.length === 2) || undefined}
   aria-roledescription={rotates ? '캐러셀' : undefined} data-home-today-carousel={rotates || undefined}>
+  {label && <p class="ol-section-label ol-home-today-label">{label}</p>}
   <div class="ol-home-today-heading">
-    <h2 id="ol-home-today-title">오늘의 이야기</h2>
+    <h2 id={titleId}>{title}</h2>
     <div class="ol-home-today-controls" data-home-today-controls role="group" aria-label="이야기 이동"
       title={rotates ? undefined : '표시할 이야기가 한 장입니다'}>
       {rotates && <button class="ol-btn ol-btn-outline ol-btn-icon" type="button" data-home-today-toggle disabled aria-label="자동 전환 일시정지" title="자동 전환 일시정지">
@@ -30,17 +40,23 @@ const rotates = slides.length > 1;
     </div>
   </div>
   <div class="ol-home-today-slides">
-    {slides.map(({ story, card }, index) => card
-      ? <div class="ol-home-today-slide" data-home-today-slide={story.id} data-active={index === 0 || undefined}
-          inert={index !== 0} aria-hidden={index !== 0 ? 'true' : undefined}
+    {slides.map(({ story, card }, index) => {
+      if (!card) return <OLHomeTodayCard story={story} />;
+      const initiallyVisible = index === 0 || (widePair && index === 1);
+      const html = initiallyVisible
+        ? (wide ? card.slideHtml.replaceAll('<img ', '<img loading="lazy" ') : card.slideHtml)
+        : card.deferredSlideHtml;
+      return <div class="ol-home-today-slide" data-home-today-slide={story.id} data-active={initiallyVisible || undefined}
+          data-slot={widePair && index === 1 ? 'second' : undefined}
+          inert={!initiallyVisible} aria-hidden={initiallyVisible ? undefined : 'true'}
           role={rotates ? 'group' : undefined} aria-roledescription={rotates ? '슬라이드' : undefined}
           aria-label={rotates ? `${index + 1} / ${slides.length}` : undefined}>
           <a class="ol-home-today-link biwoom-card-frame" href={url(`/stories/${story.id}/`)}
             data-home-html-card={story.id} data-home-today-story={story.id} aria-label={`${story.title} 전문 읽기`}>
-            <Fragment set:html={index === 0 ? card.slideHtml : card.deferredSlideHtml} />
+            <Fragment set:html={html} />
           </a>
-        </div>
-      : <OLHomeTodayCard story={story} />)}
+        </div>;
+    })}
   </div>
   {rotates && <span class="sr-only" data-home-today-status role="status"></span>}
 </section>

@@ -1,11 +1,12 @@
 ---
 import { BRAND, REPOSITORY_URL } from "../../lib/site-config";
-import { navItems } from "../../data/nav";
+import { homeNavItems, navItems } from "../../data/nav";
 import { url } from "../../lib/url";
 
 const { articlePage = false, articleReader = false } = Astro.props;
 const articleLanding = articlePage && Astro.url.pathname === "/articles/";
 const currentPath = Astro.url.pathname;
+const primaryLinks = currentPath === "/" ? homeNavItems : navItems;
 const wordmark = BRAND.nameKo;
 
 function isActive(href: string): boolean {
@@ -26,7 +27,7 @@ function isActive(href: string): boolean {
 
     <!-- Nav -->
     <nav class="ol-nav" aria-label="주요 메뉴">
-      {navItems.map((item) => (
+      {primaryLinks.map((item) => (
         <a
           href={item.href}
           class:list={["ol-nav-link", { active: isActive(item.href) }]}
@@ -158,7 +159,7 @@ function isActive(href: string): boolean {
     <div class="ol-mobile-sheet-handle"></div>
 
     <div class="ol-mobile-sheet-links">
-      {navItems.map((item) => (
+      {primaryLinks.map((item) => (
         <a
           href={item.href}
           class:list={["ol-mobile-sheet-link", { active: isActive(item.href) }]}

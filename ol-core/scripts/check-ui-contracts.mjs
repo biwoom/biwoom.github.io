@@ -494,12 +494,14 @@ const expectedPrimaryLinks = [
   [sitePath("/story"), "문학"],
   [sitePath("/articles/"), "카드"],
 ];
+const primaryLinks = html => Array.from(html.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)(?: active)?">([^<]+)<\/a>/g),
+  ([, href, label]) => [href, label.trim()]);
 for (const menu of [landingHeader, landingMobileMenu]) {
-  const links = Array.from(menu.matchAll(/<a href="([^"]+)" class="ol-(?:nav-link|mobile-sheet-link)(?: active)?">([^<]+)<\/a>/g),
-    ([, href, label]) => [href, label.trim()]);
-  assert.deepEqual(links, expectedPrimaryLinks, "Primary navigation uses Korean labels and preserves its destinations");
+  assert.deepEqual(primaryLinks(menu), [expectedPrimaryLinks[2], ...expectedPrimaryLinks.slice(0, 2)],
+    "Home desktop and mobile navigation put cards first");
 }
-const footer = homeHtml.match(/<footer\b[\s\S]*?<\/footer>/)?.[0] ?? "";
+const siteFooter = /<footer class="ol-footer"[\s\S]*?<\/footer>/;
+const footer = homeHtml.match(siteFooter)?.[0] ?? "";
 assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
   .map(([, href, label]) => [href, label])
   .filter(([, label]) => ["BLOG · 시리즈", ARTICLE_LABEL, "비움 소개"].includes(label)),
@@ -508,22 +510,42 @@ assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
 assert.ok(landingHeader.includes(`href="${REPOSITORY_URL}"`), "Header GitHub link opens the site repository");
 assert.ok(homeHtml.includes(`data-pagefind-path="${sitePath("/pagefind/pagefind.js")}"`), "Search loads the site index");
 assert.ok(fs.existsSync(path.join(dist, "pagefind/pagefind.js")), "Pagefind script is published");
-const blogHomeCard = [...homeHtml.matchAll(/<a href="([^"]*)" class="ol-product-card">([\s\S]*?)<\/a>/g)]
-  .find(([, href]) => href === sitePath("/blog/series/"))?.[2];
-assert.ok(blogHomeCard, "Home BLOG product card must link to /blog/series/");
-assert.ok(blogHomeCard.includes(`${publishedBlogCategories.length}개 자료`), "Home product counts exclude BLOG metadata");
+const preview = homeHtml.match(/<section[^>]*data-home-preview[^>]*>[\s\S]*?<\/section>/)?.[0] ?? "";
+assert.match(preview, />READ · BIWOOM<\/span>\s*<h2 id="ol-preview-title"[^>]*>비움이 만드는 불교콘텐츠<\/h2>/);
+assert.match(preview, /<div[^>]*data-home-preview-controls[^>]*\bhidden\b/);
+assert.match(preview, /<button[^>]*data-home-preview-prev[^>]*aria-controls="ol-preview-panels"[^>]*aria-label="이전 탭"/);
+assert.match(preview, /<button[^>]*data-home-preview-next[^>]*aria-controls="ol-preview-panels"[^>]*aria-label="다음 탭"/);
+assert.doesNotMatch(preview, /자동 전환 일시정지/);
+assert.match(preview, /\bid="ol-preview-panels"/);
+assert.deepEqual([...preview.matchAll(/href="#ol-preview-(\w+)"[^>]*>\s*<svg\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/svg>\s*<span[^>]*>([^<]+)<\/span>\s*<\/a>/g)].map(([, id, label]) => [id, decode(label)]), [
+  ["cards", ARTICLE_LABEL], ["text", "불교경론"], ["story", "불전문학"], ["blog", "블로그"],
+  ["media", "미디어&ebook"], ["about", "비움 소개"],
+], "Home preview has six tabs with decorative icons in display order");
+const panels = new Map([...preview.matchAll(/<div id="ol-preview-(\w+)"[^>]*data-home-preview-panel[^>]*>([\s\S]*?)(?=<div id="ol-preview-|<\/section>)/g)]
+  .map(([, id, panel]) => [id, panel]));
+for (const [id, href] of [["cards", "/articles/"], ["text", "/text/"], ["story", "/story/"], ["blog", "/blog/series/"]]) {
+  const panel = panels.get(id);
+  assert.ok(panel?.includes(`href="${sitePath(href)}"`), `${id}: preview CTA opens the collection`);
+  assert.match(panel, /<div class="ol-preview-feature\b[\s\S]*?<h3\b[\s\S]*?<ul class="ol-preview-details\b[\s\S]*?<\/div>\s*<img\b/,
+    `${id}: title and feature details precede the thumbnail`);
+  const source = panel.match(/<img[^>]*\bsrc="([^"]+\.webp)"[^>]*>/)?.[1];
+  assert.ok(source && fs.existsSync(path.join(dist, source)), `${id}: generated WebP preview`);
+}
+assert.match(panels.get("blog"), new RegExp(`<strong[^>]*>${publishedBlogCategories.length}</strong>편`), "Home counts exclude BLOG metadata");
+const extraLibraries = panels.get("media");
+assert.deepEqual([...extraLibraries.matchAll(/\bhref="([^"]+)"/g)].map(([, href]) => href), [sitePath("/media/"), sitePath("/ebook/")]);
+const about = panels.get("about");
+assert.ok(about?.includes(BRAND.tagline) && about.includes('href="/pages/brand/"'), "About displays the tagline and brand CTA");
+assert.ok(about.includes('href="/pages/brand/#공개-자료와-이용-조건"') && brandHtml.includes('id="공개-자료와-이용-조건"'),
+  "About links to the usage terms on the brand page");
+assert.doesNotMatch(extraLibraries + about, /<img\b/);
 
 const allArticles = readHomeArticles();
 const publishedArticles = allArticles.filter(({ article }) => article.published);
 const articleIds = publishedArticles.map(({ article }) => article.id).sort();
-const articleCard = homeHtml.match(/<a href="\/articles\/" class="ol-product-card">([\s\S]*?)<\/a>/)?.[1] ?? "";
-assert.ok(articleCard.includes(ARTICLE_LABEL), "Home card displays the public article name");
-assert.ok(articleCard.includes(`${articleIds.length}개 자료`), "Home card counts public articles");
-const articleStat = [...homeHtml.matchAll(/<a\b[^>]*\bclass="ol-stat"[^>]*>[\s\S]*?<\/a>/g)]
-  .find(([link]) => link.includes(`href="${sitePath("/articles/")}"`))?.[0];
-assert.ok(articleStat?.includes(ARTICLE_LABEL) && articleStat.includes(`data-article-stat-count>${articleIds.length}<`),
-  "Home story-card stat links to the article catalog and counts public articles");
+assert.match(panels.get("cards"), new RegExp(`data-article-stat-count[^>]*>${articleIds.length}<`), "Home counts public articles");
 const articleIndexHtml = fs.readFileSync(path.join(dist, "articles/index.html"), "utf8");
+assert.deepEqual(primaryLinks(articleIndexHtml), [...expectedPrimaryLinks, ...expectedPrimaryLinks], "Catalog navigation retains the library-first order");
 assert.deepEqual(
   [...articleIndexHtml.matchAll(/<a href="\/articles\/" class="(ol-nav-link|ol-mobile-sheet-link) active">\s*카드\s*<\/a>/g)]
     .map(([, name]) => name),
@@ -544,7 +566,27 @@ assert.deepEqual(articleCards.map(([, id]) => id).sort(), articleIds, "One card 
 const htmlCards = readHomeHtmlCards(allArticles.map(({ article }) => article));
 assert.ok(!fs.existsSync(path.join(dist, "article", "html")), "Standalone HTML sources stay in the vault");
 const todayArticles = selectTodayArticles(publishedArticles.map(({ article }) => article), htmlCards);
+const landingToday = homeHtml.match(/<section[^>]*aria-labelledby="ol-home-today-cards-title"[\s\S]*?<\/section>/)?.[0] ?? "";
+const landingStories = selectTodayArticles(publishedArticles.map(({ article }) => article), htmlCards, { fallback: false });
+assert.equal(Boolean(landingToday), landingStories.length > 0, "Home has a carousel only when eligible HTML stories exist");
+assert.deepEqual([...landingToday.matchAll(/data-home-today-story="([^"]+)"/g)].map(([, id]) => id), landingStories.map(article => article.id));
+if (landingStories.length > 0) {
+  assert.match(landingToday, />LATEST · 최근 이야기카드<\/p>\s*<div class="ol-home-today-heading">\s*<h2[^>]*>오늘의 이야기카드<\/h2>/);
+  assert.ok(homeHtml.indexOf(landingToday) > homeHtml.indexOf(preview) && homeHtml.indexOf(landingToday) < homeHtml.indexOf('class="ol-row ol-latest-head"'),
+    "Home story cards sit between preview tabs and latest updates");
+  assert.doesNotMatch(landingToday, /data-story-bookmark|data-home-detail-open|ol-home-html-card-actions/);
+  for (const story of landingStories) assert.ok(landingToday.includes(`href="/stories/${story.id}/"`));
+  assert.equal(landingToday.includes('data-slot="second"'), landingStories.length >= 2);
+  for (const direction of ['prev', 'next']) {
+    assert.match(landingToday, new RegExp(`<button[^>]*data-home-today-${direction}\\b`), "Home renders both arrow buttons");
+  }
+  rule("[data-home-today-pair-only] [data-home-today-toggle]", /display:none/);
+  assert.ok(!rules.some(([, selector, body]) => selector.includes("[data-home-today-pair-only] .ol-home-today-controls") && /display:none/.test(body)),
+    "Showing both stories on desktop must leave the arrows visible");
+  rule("[data-home-today-wide] .ol-home-today-slides", /grid-template-columns:/);
+}
 const todayHtml = articleIndexHtml.match(/<section[^>]*aria-labelledby="ol-home-today-title"[\s\S]*?<\/section>/)?.[0] ?? "";
+assert.doesNotMatch(todayHtml, /LATEST · 최근 이야기카드/);
 assert.deepEqual([...todayHtml.matchAll(/data-home-today-story="([^"]+)"/g)].map(([, id]) => id), todayArticles.map(article => article.id));
 if (todayArticles.length) {
   const hero = articleIndexHtml.match(/<div class="ol-home-intro ol-home-hero">([\s\S]*?)<\/div>\s*(?=<nav class="ol-home-menu")/)?.[1] ?? "";
@@ -691,12 +733,9 @@ for (const item of mediaImages) {
 const galleryCategories = [...mediaHtml.matchAll(/<button[^>]*data-media-filter="([^"]*)"[^>]*>/g)].map(([, value]) => decode(value));
 assert.deepEqual(galleryCategories.slice().sort(), ["", ...getMediaCategories(mediaImages).map((category) => category.key)].sort(), "MEDIA category filters must match the first folder keys");
 assert.deepEqual(fs.readdirSync(path.join(dist, "media")), ["index.html"], "MEDIA must not create detail pages");
-const home = fs.readFileSync(path.join(dist, "index.html"), "utf8");
-const mediaStat = home.match(/<a[^>]*class="[^"]*ol-stat--media[^>]*>([\s\S]*?)<\/a>/)?.[0];
-assert.ok(mediaStat && mediaStat.includes(`href="${sitePath("/media/")}"`), "Home MEDIA stat must link to gallery");
-assert.match(mediaStat, new RegExp(`data-media-stat-count>${mediaImages.length}<`));
-for (const html of [home, mediaHtml]) {
-  const footer = html.match(/<footer\b[\s\S]*?<\/footer>/)?.[0] ?? "";
+assert.match(extraLibraries, new RegExp(`data-media-stat-count[^>]*>${mediaImages.length}<`));
+for (const html of [homeHtml, mediaHtml]) {
+  const footer = html.match(siteFooter)?.[0] ?? "";
   assert.ok(footer.includes(`href="${sitePath("/media/")}"`), "Footer MEDIA link missing");
   const header = html.match(/<header\b[\s\S]*?<\/header>/)?.[0] ?? "";
   assert.ok(!header.includes(`href="${sitePath("/media/")}"`), "MEDIA must stay out of main menu");
@@ -713,6 +752,7 @@ console.log(
 // Auxiliary ebook navigation and generated package controls must agree with source packages.
 const { getEbookLibrary } = await import("./lib/ebooks.mjs");
 const { books: ebooks, categories: ebookCategories } = getEbookLibrary();
+assert.match(extraLibraries, new RegExp(`<strong[^>]*>${ebooks.length}</strong>권`));
 const ebookHtml = fs.readFileSync(path.join(dist, "ebook/index.html"), "utf8");
 const ebookCategoryControls = ebookHtml.match(/<div[^>]*aria-label="전자책 카테고리"[\s\S]*?<\/div>/)?.[0];
 assert.ok(ebookCategoryControls);

@@ -146,11 +146,11 @@ export function readHomeHtmlCards(articles, root = PROJECT_ROOT) {
 }
 
 /** @template {Parameters<typeof compareHomePublication>[0]} T
- * @param {T[]} articles @param {Map<string, HomeHtmlCard>} cards */
-export function selectTodayArticles(articles, cards) {
+ * @param {T[]} articles @param {Map<string, HomeHtmlCard>} cards @param {{ fallback?: boolean }} options */
+export function selectTodayArticles(articles, cards, { fallback = true } = {}) {
   const ordered = [...articles].sort((a, b) =>
     (cards.get(b.id)?.date ?? '').localeCompare(cards.get(a.id)?.date ?? '') || compareHomePublication(a, b)
   );
   const featured = ordered.filter(article => cards.has(article.id)).slice(0, 5);
-  return featured.length ? featured : ordered.slice(0, 1);
+  return featured.length || !fallback ? featured : ordered.slice(0, 1);
 }

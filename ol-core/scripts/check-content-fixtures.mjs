@@ -90,6 +90,8 @@ test("Today's carousel takes at most five HTML cards and breaks date ties in art
     "story-6", "story-1", "story-2", "story-3", "story-4",
   ]);
   assert.deepEqual(selectTodayArticles([], cards), []);
+  assert.deepEqual(selectTodayArticles(articles, new Map(), { fallback: false }), []);
+  assert.equal(selectTodayArticles(articles, new Map()).length, 1);
 });
 test("numeric names preserve title digits and accept different padding", () => {
   assert.deepEqual(nameInfo("001.1권.md"), { label: "1권", order: 1 });

@@ -1,0 +1,329 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import cardSample from '../../assets/home-preview/card.webp';
+import textSample from '../../assets/home-preview/text.webp';
+import storySample from '../../assets/home-preview/story.webp';
+import blogSample from '../../assets/home-preview/blog.webp';
+import { getDocuments } from '../../lib/library';
+import { getMediaGallery } from '../../lib/media';
+import { ARTICLE_LABEL, BRAND, LIBRARY_LABELS } from '../../lib/site-config';
+import { url } from '../../lib/url';
+import { getEbookLibrary } from '../../../scripts/lib/ebooks.mjs';
+
+interface Props { articleCount: number }
+const { articleCount } = Astro.props;
+const [text, story, blog, media] = await Promise.all([
+  getDocuments('text'),
+  getDocuments('story'),
+  getCollection('blog', ({ data }) => data.published && data.kind === 'document'),
+  getMediaGallery(),
+]);
+const { books } = getEbookLibrary();
+const features = [
+  {
+    id: 'cards', label: ARTICLE_LABEL, title: ARTICLE_LABEL, href: '/articles/', image: cardSample,
+    icon: 'M6 4h13a2 2 0 0 1 2 2v10M5 8h11a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Zm2 5h7m-7 3h4',
+    alt: '이야기카드 목록 화면', description: '삽화와 함께 읽는 짧은 불교 이야기',
+    details: [
+      '붓다의 생애, 경전의 비유, 본생담과 수행자의 일화에서 한 장면을 골라 인물의 말과 선택을 따라갑니다.',
+      '오늘의 이야기와 추천 이야기에서 한 편을 고르거나, 시리즈·주제·태그와 검색으로 관심 있는 이야기를 찾을 수 있습니다.',
+      '목록에서 줄거리와 본문 일부를 미리 보고, 전문에서 이야기 전체와 출전을 확인합니다. 다시 읽고 싶은 글은 보관함에 담을 수 있습니다.',
+    ],
+    count: articleCount, unit: '편', countAttribute: 'data-article-stat-count',
+  },
+  {
+    id: 'text', label: LIBRARY_LABELS.text, title: LIBRARY_LABELS.text, href: '/text/', image: textSample,
+    icon: 'M6 18a2 2 0 0 1 2-2h12M6 18a2 2 0 0 0 2 2h12V4H8a2 2 0 0 0-2 2v12m4-10h6m-6 4h5',
+    alt: '삼론현의 문헌 읽기 화면', description: '문헌별 번역·연구·시각자료',
+    details: [
+      '불교 경전과 논서를 오늘의 한국어로 읽으며, 원문과 번역을 대조하고 연구 자료에서 용어와 사상적 맥락을 살핍니다.',
+      '문헌별 목록과 카테고리에서 작품을 찾고, 문헌 개요의 파트 목차로 원하는 자료를 엽니다.',
+      '본문 목차와 각주를 펼쳐 읽고, 한문 등 원문이 표시된 글에서는 원문 보기 여부를 선택할 수 있습니다.',
+    ],
+    count: text.filter(entry => entry.data.kind !== 'series').length, unit: '편',
+  },
+  {
+    id: 'story', label: LIBRARY_LABELS.story, title: LIBRARY_LABELS.story, href: '/story/', image: storySample,
+    icon: 'M12 6a5 5 0 0 0-4-2H3v15h5a5 5 0 0 1 4 2 5 5 0 0 1 4-2h5V4h-5a5 5 0 0 0-4 2Zm0 0v15',
+    alt: '불전문학 읽기 화면', description: '붓다와 고승의 전기, 본생담과 설화, 순례기와 게송',
+    details: [
+      '원전과 번역을 읽으며 인물과 사건을 따라가고, 가르침이 전기와 일화, 시와 게송에 어떻게 전해지는지 살펴봅니다.',
+      '작품별 차례로 읽거나 카테고리와 태그에서 찾아볼 수 있습니다. 인물·장소·주제 태그로 여러 작품의 관련 대목을 모아 읽습니다.',
+      '《마하붓다왐사》와 《담마빠다이야기》 같은 작품은 편과 장으로 나뉘며, 장별 목차와 각주로 본문을 살펴볼 수 있습니다.',
+    ],
+    count: story.filter(entry => entry.data.kind !== 'series').length, unit: '편',
+  },
+  {
+    id: 'blog', label: '블로그', title: '틈과 여백', href: '/blog/series/', image: blogSample,
+    icon: 'M13 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-6m-1-8 2 2-7 7-3 1 1-3 7-7Z',
+    alt: '블로그 포스트 목록 화면', description: '사유의 길에 작은 틈을 내고, 일상의 여백을 모읍니다.',
+    details: [
+      '불교의 가르침과 일상의 수행을 다루고, 디자인·인포그래픽 작업과 비움을 만들어 가는 과정도 기록합니다.',
+      '포스트 목록에서 연도나 태그로 글을 찾고, 블로그 시리즈에서는 한 주제의 글을 차례대로 이어 읽을 수 있습니다.',
+    ],
+    count: blog.length, unit: '편',
+  },
+];
+const tabs = [
+  ...features,
+  { id: 'media', label: '미디어&ebook', icon: 'M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm-2 12 5-5 4 4 3-3 6 6M16 8h.01' },
+  { id: 'about', label: '비움 소개', icon: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-1v5m0-8h.01' },
+];
+const libraries = [
+  {
+    title: '미디어', href: '/media/', description: '삽화, 인포그래픽, 문양을 모은 이미지 갤러리입니다.',
+    details: [
+      '카테고리별로 이미지를 살펴보고, 이미지를 선택해 확대하거나 원본 크기로 볼 수 있습니다.',
+      '이미지 정보에서 작품 설명과 별도 이용 조건을 확인할 수 있습니다.',
+    ],
+    count: media.length, unit: '점', countAttribute: 'data-media-stat-count',
+  },
+  {
+    title: '전자책', href: '/ebook/', description: '공개 문헌과 이야기를 EPUB과 PDF로 내려받을 수 있습니다.',
+    details: [
+      '카테고리와 파일 형식으로 책을 골라 보거나, 제목·저자·번역자로 검색할 수 있습니다.',
+      '책을 선택하면 서지정보와 다운로드 버튼이 열립니다. 별도 이용 조건이 있는 구성 요소는 책 소개와 파일에 안내합니다.',
+    ],
+    count: books.length, unit: '권',
+  },
+];
+---
+
+<section class="ol-section ol-preview" aria-labelledby="ol-preview-title" data-home-preview>
+  <div class="ol-container">
+    <div class="ol-section-head ol-preview-heading">
+      <div>
+        <span class="ol-section-label">READ · BIWOOM</span>
+        <h2 id="ol-preview-title" class="ol-preview-title ol-kr">비움이 만드는 불교콘텐츠</h2>
+      </div>
+      <div class="ol-preview-controls" data-home-preview-controls role="group" aria-label="프리뷰탭 이동" hidden>
+        <button class="ol-btn ol-btn-outline ol-btn-icon" type="button" data-home-preview-prev
+          aria-controls="ol-preview-panels" aria-label="이전 탭" title="이전 탭">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5-5 5 5 5" /></svg>
+        </button>
+        <button class="ol-btn ol-btn-outline ol-btn-icon" type="button" data-home-preview-next
+          aria-controls="ol-preview-panels" aria-label="다음 탭" title="다음 탭">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 5 5-5 5" /></svg>
+        </button>
+        <span class="sr-only" role="status" data-home-preview-status></span>
+      </div>
+    </div>
+    <div class="ol-preview-layout">
+      <div class="ol-preview-tabs" data-home-preview-tabs>
+        {tabs.map(({ id, label, icon }) => (
+          <a class="ol-preview-tab" id={`ol-preview-tab-${id}`} href={`#ol-preview-${id}`}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={icon} /></svg>
+            <span>{label}</span>
+          </a>
+        ))}
+      </div>
+      <div class="ol-preview-panels" id="ol-preview-panels">
+        {features.map(({ id, title, label, description, details, count, unit, href, image, alt, countAttribute }) => (
+          <div id={`ol-preview-${id}`} class="ol-preview-panel ol-preview-panel--illustrated" data-home-preview-panel>
+            <div class="ol-preview-feature">
+              <div class="ol-preview-feature-heading">
+                <h3>{title}</h3>
+                <span class="ol-preview-count">공개 자료 <strong {...(countAttribute ? { [countAttribute]: true } : {})}>{count}</strong>{unit}</span>
+              </div>
+              <p class="ol-preview-summary">{description}</p>
+              <ul class="ol-preview-details">{details.map(detail => <li>{detail}</li>)}</ul>
+              <a class="ol-btn ol-btn-outline" href={url(href)}>{label} 보기 <span aria-hidden="true">→</span></a>
+            </div>
+            <Image src={image} alt={alt} class="ol-preview-image" format="webp" quality={88}
+              widths={[480, 800, 1200]} sizes="(min-width: 1600px) 640px, (min-width: 1024px) 39vw, (min-width: 760px) 70vw, calc(100vw - 64px)"
+              loading="lazy" decoding="async" />
+          </div>
+        ))}
+        <div id="ol-preview-media" class="ol-preview-panel ol-preview-libraries" data-home-preview-panel>
+          {libraries.map(({ title, description, details, count, unit, href, countAttribute }) => (
+            <div class="ol-preview-feature">
+              <div class="ol-preview-feature-heading">
+                <h3>{title}</h3>
+                <span class="ol-preview-count">공개 자료 <strong {...(countAttribute ? { [countAttribute]: true } : {})}>{count}</strong>{unit}</span>
+              </div>
+              <p class="ol-preview-summary">{description}</p>
+              <ul class="ol-preview-details">{details.map(detail => <li>{detail}</li>)}</ul>
+              <a class="ol-btn ol-btn-outline" href={url(href)}>{title} 보기 <span aria-hidden="true">→</span></a>
+            </div>
+          ))}
+        </div>
+        <div id="ol-preview-about" class="ol-preview-panel ol-preview-about" data-home-preview-panel>
+          <div class="ol-preview-feature">
+            <h3>{BRAND.tagline}</h3>
+            <p>읽고, 사유하고, 실천하며, 다시 삶으로 돌아가는 힘을 충전하세요</p>
+            <p>비움은 불교 문헌의 번역과 연구를 모아 누구나 읽을 수 있게 공개합니다. 경전의 한 구절을 살피고 전기나 설화에서 인물의 선택을 돌아보며, 그 가르침을 오늘의 삶으로 가져오는 길을 함께 찾습니다.</p>
+            <p>비움이란,</p>
+            <ul class="ol-preview-details">
+              <li>마음을 가득 채운 집착과 익숙한 판단을 잠시 내려놓고, 삶을 새롭게 바라보는 여백과 여유</li>
+              <li>공부와 경험을 지우는 일이 아니라, 배운 것에 갇히지 않고 다시 자유로워지는 삶의 태도</li>
+              <li>평안하고 지혜로운 가르침을 통해 자유로워지는 삶</li>
+              <li>다시 삶으로 돌아가는 힘을 얻는 콘텐츠</li>
+              <li>진리에 맞게 사유하고, 실천하며, 살아가는 길</li>
+            </ul>
+            <p>자료를 다시 이용할 때는 <a href={url('/pages/brand/#공개-자료와-이용-조건')}>공개 자료의 이용 조건</a>을 확인해 주세요.</p>
+            <a class="ol-btn ol-btn-outline" href={url('/pages/brand/')}>브랜드 문서 보기 <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../../lib/client/home-preview-tabs';
+</script>
+
+<style>
+  .ol-preview-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .ol-preview-controls { display: flex; gap: 4px; }
+  .ol-preview-controls[hidden] { display: none; }
+  .ol-preview-controls .ol-btn { width: 40px; height: 40px; }
+  .ol-preview-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+    font-weight: 740;
+    letter-spacing: -.045em;
+  }
+  .ol-preview-layout {
+    display: grid;
+    grid-template-columns: clamp(165px, 18vw, 230px) minmax(0, 1fr);
+    gap: clamp(12px, 1.8vw, 26px);
+  }
+  .ol-preview-tabs {
+    display: grid;
+    grid-auto-rows: minmax(46px, 1fr);
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid #3e4c4e;
+    border-radius: var(--ol-r-lg);
+    background: #232d2f;
+    color: #e0e8e8;
+  }
+  .ol-preview-tab {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 46px;
+    padding: 8px clamp(12px, 1.6vw, 22px);
+    /* border: 1px solid #688185; */
+    border-radius: var(--ol-r);
+    color: inherit;
+    font-weight: 580;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .ol-preview-tab svg { flex: none; width: 18px; height: 18px; }
+  .ol-preview-tab:hover { border-color: #a2c5c7; background: #364447; color: #fff; }
+  .ol-preview-tab[aria-selected="true"],
+  .ol-preview:not([data-tabs-ready]):not(:has(.ol-preview-panel:target)) .ol-preview-tab:first-child {
+    border-color: #a2c5c7;
+    background: #3a5155;
+    color: #fff;
+    font-weight: 720;
+  }
+  .ol-preview-panels {
+    --preview-inset: clamp(16px, 3vw, 38px);
+    display: grid;
+    min-width: 0;
+    min-height: 500px;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r-lg);
+    background: var(--ol-surface);
+  }
+  .ol-preview-panel {
+    padding: var(--preview-inset);
+    scroll-margin-top: 84px;
+  }
+  .ol-preview-panel--illustrated {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(18px, 2.5vw, 38px);
+  }
+  .ol-preview-panel[hidden],
+  .ol-preview:not([data-tabs-ready]) .ol-preview-panel:not(:first-child):not(:target),
+  .ol-preview:not([data-tabs-ready]) .ol-preview-panels:has(> :target) .ol-preview-panel:not(:target) {
+    display: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ol-preview[data-tabs-ready] .ol-preview-panel:not([hidden]) {
+      animation: ol-preview-reveal .22s ease-out;
+    }
+  }
+  @keyframes ol-preview-reveal {
+    from { opacity: .65; }
+    to { opacity: 1; }
+  }
+  .ol-preview-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--ol-border);
+    border-radius: var(--ol-r);
+    background: var(--ol-surface-2);
+  }
+  .ol-preview-feature {
+    display: grid;
+    justify-items: start;
+    align-content: start;
+    gap: 10px;
+  }
+  .ol-preview-feature-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 6px 16px;
+  }
+  .ol-preview-feature h3 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-weight: 720;
+    letter-spacing: -.035em;
+  }
+  .ol-preview-feature :is(p, ul) { max-width: 68ch; margin: 0; color: var(--ol-ink-2); line-height: 1.65; }
+  .ol-preview-feature .ol-preview-summary { font-weight: 620; }
+  .ol-preview-count {
+    padding: 4px 10px;
+    border: 1px solid var(--ol-border);
+    border-radius: 999px;
+    background: var(--ol-surface-2);
+    color: var(--ol-ink-2);
+    font-size: .88rem;
+  }
+  .ol-preview-feature .ol-btn { margin-top: 6px; }
+  .ol-preview-libraries {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 44px);
+  }
+  .ol-preview-details { list-style: disc; padding-inline-start: 1.25em; }
+  .ol-preview-details li + li { margin-top: 4px; }
+  .ol-preview-about p a { text-decoration: underline; text-underline-offset: .18em; }
+  @media (min-width: 1024px) {
+    .ol-preview-panel--illustrated { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+  }
+  @media (width < 760px) {
+    .ol-preview-layout, .ol-preview-libraries { grid-template-columns: minmax(0, 1fr); }
+    .ol-preview-tabs {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(9.25rem, 1fr);
+      overflow-x: auto;
+      padding: 8px;
+    }
+    .ol-preview-tab { justify-content: center; padding-inline: 10px; }
+    .ol-preview-tab:focus-visible { outline-offset: -4px; }
+    .ol-preview-panels { min-height: 0; }
+  }
+</style>

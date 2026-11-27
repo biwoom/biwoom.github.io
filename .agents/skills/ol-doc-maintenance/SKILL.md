@@ -26,12 +26,12 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 ## Current BIWOOM Facts
 
 - The production target is `https://biwoom.github.io/` from `biwoom/biwoom.github.io`. The build preserves older `/hub/` links through redirects.
-- `content/` is the Obsidian vault. The primary menu is 경론, 문학, 카드. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The wordmark opens the root landing. The 카드 menu and 이야기카드 links on the landing page and below BLOG series in the footer lead to `/articles/`.
+- `content/` is the Obsidian vault. The home primary menu is 카드, 경론, 문학. Other routes use 경론, 문학, 카드. The library names are 불교경론 and 불전문학, with the existing `text` and `story` route keys. The wordmark opens the root landing. The 카드 menu and 이야기카드 links on the landing page and below BLOG series in the footer lead to `/articles/`.
 - TEXT uses category/work/material-section/item folders and STORY uses category/series/part/item. Their menu roots show work rows and story cards respectively. Separate `/text/categories/` and `/story/categories/` pages list category cards. Order comes from numeric prefixes and title/body writing is supported without YAML.
 - DESIGN/NET and Entity/Ontology systems have been removed after general asset/prose migration. Do not restore their authoring rules or environment settings.
 - `ol-core/src/content.config.ts` defines normalized data; `ol-core/scripts/lib/content.mjs` shares source interpretation with validation.
 - `content-registry.json` is committed source metadata for stable URLs/dates/paths. `ol-core/public/generated/content/` is derived output and is not committed.
-- Shared images live in `content/media/`; first subfolders supply categories for the auxiliary /media/ masonry gallery. Home statistics/footer link to it, without main-menu entries or per-image document records. Originals and generated previews are separate; respect user-deleted historical archives.
+- Shared images live in `content/media/`; first subfolders supply categories for the auxiliary /media/ masonry gallery. The home 미디어&ebook preview tab and footer link to it, without main-menu entries or per-image document records. Originals and generated previews are separate; respect user-deleted historical archives.
 - BLOG uses series/category/post folders; index metadata is excluded from post counts/RSS and categories have one series parent.
 - Shared settings: `site-config.mjs`, app entry `ol-core/src/lib/site-config.ts`. No DESIGN asset environment variables are needed.
 - Deploy workflow: `.github/workflows/deploy.yml`. Upload requests stop after requested push.
@@ -41,7 +41,7 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 
 - Brand definition: `content/pages/brand.md`.
 - Content management manual: `.agents/references/biwoom-content-management-manual.md`.
-- Story-card design and operating specification: `.agents/context/biwoom-story-card-specification.md`. Keep its HTML examples, placement rules and WebP illustration guidance aligned with the card loader, `/articles/`, and the content-authoring skill.
+- Story-card design and operating specification: `.agents/context/biwoom-story-card-specification.md`. Keep its HTML examples, placement rules and WebP illustration guidance aligned with the shared card loader, the home page, `/articles/`, and the content-authoring skill.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
 - `content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
@@ -67,6 +67,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-27 — Home preview tabs
+
+- Record the home navigation order, preview links and story-card placement.
 
 ### 2026-11-27 — Story-card specification
 

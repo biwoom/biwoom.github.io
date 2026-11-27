@@ -11,10 +11,6 @@
   .ol-footer-grid { grid-template-columns: 1fr 1fr; }
   .ol-nav { display: none; }
   .ol-post { grid-template-columns: 1fr; }
-  .ol-stats { grid-template-columns: 1fr 1fr; }
-  .ol-stat { border-left: none; border-top: 1px solid var(--ol-border); }
-  .ol-stat:first-child, .ol-stat:nth-child(2) { border-top: none; }
-  .ol-stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .ol-container { padding-inline: 20px; }
   .ol-reading-column { max-width: 680px; }
   .ol-section-grid-2 { grid-template-columns: 1fr; }
@@ -33,7 +29,6 @@
   .ol-grid-3, .ol-grid-4 { grid-template-columns: 1fr; }
   .ol-hero { padding: 64px 0 40px; }
   .ol-hero h1 { font-size: 40px; line-height: 50px;}
-  .ol-stats { grid-template-columns: 1fr 1fr; }
 
   /* ── Search: 전체 화면 모달 ── */
   .ol-search-overlay { padding-top: 0; align-items: stretch; }
