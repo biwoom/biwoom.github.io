@@ -5,5 +5,5 @@ export const site = {
   tagline: BRAND.tagline,
   email: 'biwoom.ol@gmail.com',
   github: REPOSITORY_URL,
-  license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  licenseGuide: '/pages/cc0/',
 } as const;

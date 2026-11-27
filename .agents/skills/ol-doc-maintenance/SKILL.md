@@ -40,6 +40,7 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 ## Document Placement
 
 - Brand definition: `content/pages/brand.md`.
+- Public CC0 and reuse guide: `content/pages/cc0.md` at `/pages/cc0/`. The footer, home preview and brand introduction link to this guide.
 - Content management manual: `.agents/references/biwoom-content-management-manual.md`.
 - Story-card design and operating specification: `.agents/context/biwoom-story-card-specification.md`. Keep its HTML examples, placement rules and WebP illustration guidance aligned with the shared card loader, the home page, `/articles/`, and the content-authoring skill.
 - Repo-wide Codex guidance: `AGENTS.md`.

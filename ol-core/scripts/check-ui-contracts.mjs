@@ -484,6 +484,14 @@ assert.equal((feed.match(/<item>/g) ?? []).length, publishedBlogCategories.lengt
 const homeHtml = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 const brandHtml = fs.readFileSync(path.join(dist, registry.files["pages/brand.md"].url, "index.html"), "utf8");
 assert.ok(readingFrame.test(brandHtml), "Brand page keeps a reading column inside the page container");
+const rulesPagePath = registry.files["pages/cc0.md"].url;
+const rulesPage = fs.readFileSync(path.join(dist, rulesPagePath, "index.html"), "utf8");
+assert.match(rulesPage, /<h1[^>]*>CC0 안내<\/h1>/);
+assert.match(rulesPage, /CC0가 허용하는 이용 범위/);
+assert.ok(rulesPage.includes('href="https://creativecommons.org/publicdomain/zero/1.0/deed.ko"'));
+assert.doesNotMatch(brandHtml, /CC0가 허용하는 이용 범위/);
+assert.ok(brandHtml.includes('id="공개-자료와-이용-조건"') && brandHtml.includes(`href="${rulesPagePath}">CC0 안내</a>`),
+  "The former brand anchor links to the standalone usage guide");
 const landingHeader = homeHtml.match(/<header class="ol-header"[\s\S]*?<\/header>/)?.[0] ?? "";
 const landingMobileMenu = homeHtml.match(/<nav class="ol-mobile-sheet"[\s\S]*?<\/nav>/)?.[0] ?? "";
 assert.ok(landingHeader.includes(`href="${sitePath("/")}" class="ol-brand"`), "Biwoom brand opens the site landing");
@@ -510,6 +518,7 @@ assert.match(supportHtml, /Noto\+Serif\+KR/);
 assert.doesNotMatch(brandHtml, /class="ol-reading-column ol-support-reading\b|Noto\+Serif\+KR/);
 const siteFooter = /<footer class="ol-footer"[\s\S]*?<\/footer>/;
 const footer = homeHtml.match(siteFooter)?.[0] ?? "";
+assert.ok(footer.includes(`href="${rulesPagePath}">CC0 적용 자료의 이용 조건</a>`), "Footer license link opens the site's guide");
 assert.deepEqual([...footer.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)]
   .map(([, href, label]) => [href, label])
   .filter(([, label]) => ["BLOG · 시리즈", ARTICLE_LABEL, "비움 소개"].includes(label)),
@@ -544,8 +553,8 @@ const extraLibraries = panels.get("media");
 assert.deepEqual([...extraLibraries.matchAll(/\bhref="([^"]+)"/g)].map(([, href]) => href), [sitePath("/media/"), sitePath("/ebook/")]);
 const about = panels.get("about");
 assert.ok(about?.includes(BRAND.tagline) && about.includes('href="/pages/brand/"'), "About displays the tagline and brand CTA");
-assert.ok(about.includes('href="/pages/brand/#공개-자료와-이용-조건"') && brandHtml.includes('id="공개-자료와-이용-조건"'),
-  "About links to the usage terms on the brand page");
+assert.equal(about.match(/<a href="([^"]+)"[^>]*>공개 자료의 이용 조건<\/a>/)?.[1], rulesPagePath,
+  "About links to the standalone usage guide");
 assert.doesNotMatch(extraLibraries + about, /<img\b/);
 
 const allArticles = readHomeArticles();

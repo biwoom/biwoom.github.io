@@ -8,6 +8,7 @@ import blogSample from '../../assets/home-preview/blog.webp';
 import { getDocuments } from '../../lib/library';
 import { getMediaGallery } from '../../lib/media';
 import { ARTICLE_LABEL, BRAND, LIBRARY_LABELS } from '../../lib/site-config';
+import { site } from '../../lib/site';
 import { url } from '../../lib/url';
 import { getEbookLibrary } from '../../../scripts/lib/ebooks.mjs';
 
@@ -164,7 +165,7 @@ const libraries = [
               <li>다시 삶으로 돌아가는 힘을 얻는 콘텐츠</li>
               <li>진리에 맞게 사유하고, 실천하며, 살아가는 길</li>
             </ul>
-            <p>자료를 다시 이용할 때는 <a href={url('/pages/brand/#공개-자료와-이용-조건')}>공개 자료의 이용 조건</a>을 확인해 주세요.</p>
+            <p>자료를 다시 이용할 때는 <a href={url(site.licenseGuide)}>공개 자료의 이용 조건</a>을 확인해 주세요.</p>
             <a class="ol-btn ol-btn-outline" href={url('/pages/brand/')}>브랜드 문서 보기 <span aria-hidden="true">→</span></a>
           </div>
         </div>

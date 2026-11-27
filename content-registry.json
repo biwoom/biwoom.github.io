@@ -26,7 +26,7 @@
       "id": "pages-53dfbb7cee6fb5",
       "url": "/pages/brand/",
       "date": "2026-10-30",
-      "hash": "8052a8d8392b58f007a4f5c493e422bd38bcd096dfe68b2de77d3c1755f8a0ca",
+      "hash": "7ec3c4a6f563519868af22302892df7c0ec8ee883211c39a4b13685b0799b9b3",
       "seriesKey": "pages/standalone"
     },
     "text/980.참고자료/001.불교 참고 노트/001.자료/연기.md": {
@@ -7121,6 +7121,13 @@
       "date": "2026-11-08",
       "seriesKey": "pages/standalone",
       "hash": "5648b335b51e408044fd188b96ca816c4244ee9d7dd5311e8b35ff8cb7e1d27a"
+    },
+    "pages/cc0.md": {
+      "id": "pages-a439d4fc8acf85",
+      "url": "/pages/cc0/",
+      "date": "2026-11-28",
+      "seriesKey": "pages/standalone",
+      "hash": "8c34e4051ff86d20376df108545e393b0a5a3ba51db8ada1ffda957215212450"
     }
   },
   "folders": {

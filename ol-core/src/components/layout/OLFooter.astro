@@ -57,7 +57,7 @@ const supportPage = (await getCollection('pages', (entry) => entry.data.publishe
       <div>
         <h4>OPEN</h4>
         <a href={site.github} target="_blank" rel="noopener">GitHub 저장소</a>
-        <a href={site.license} target="_blank" rel="noopener">CC0 적용 자료의 이용 조건</a>
+        <a href={url(site.licenseGuide)}>CC0 안내</a>
         <a href={`mailto:${site.email}`}>문의 및 기여</a>
         <a href={url('/partners')}>기여 및 협력단체</a>
       </div>

@@ -1,12 +1,13 @@
 # Current State
 
-Last updated: 2026-11-27
+Last updated: 2026-11-28
 
 ## Brand and Deployment
 
 - BIWOOM (비움) is the single site for Buddhist texts, translations, research, story articles, posts, media and ebooks. OL is the internal core. The header displays 비움 and 붓다의 지혜를 오늘의 삶으로. The wordmark opens the root.
 - The publication target is `https://biwoom.github.io/`, built by GitHub Actions in `biwoom/biwoom.github.io`. Astro uses `SITE_URL` with root routes. Static compatibility redirects handle previous `/hub/` addresses. Registry URLs and identities are stable. The consolidation was prepared on the `biwoom-unification` branch.
 - Existing brand symbols remain under `ol-core/public/brand/`. Use `npm run brand:assets` to regenerate icons and the social sharing image.
+- 공개 자료의 이용 조건은 `content/pages/cc0.md`의 ‘CC0 안내’에서 관리한다. 푸터와 홈의 비움 소개 탭은 `/pages/cc0/`으로 바로 연결하며, 비움 소개의 기존 절 주소에서도 안내를 찾을 수 있다.
 - Public library names are 불교경론 and 불전문학 at `/text/` and `/story/`. Primary navigation is 카드·경론·문학 on every page, on desktop and mobile. 카드, the 이야기카드 home preview and the footer link below BLOG series open `/articles/`. Article readers, catalog pages and bookmarks retain their existing routes and IDs.
 - 홈의 비움프리뷰탭은 이야기카드, 불교경론, 불전문학, 블로그, 미디어&ebook, 비움 소개 순서다. 홈에는 ‘READ · BIWOOM’과 ‘비움이 만드는 불교콘텐츠’를 표시한다. 넓은 화면의 사이드바는 아이콘이 있는 탭 여섯 개를 균등 배치하며, 760px 미만에서는 가로로 스크롤한다. 첫 네 패널은 1024px 이상에서 제목·공개 자료 수·메뉴 설명·이동 버튼을 왼쪽, 반응형 WebP 화면 캡처를 오른쪽에 표시한다. 그보다 좁은 화면은 설명 다음에 썸네일을 표시한다. 마지막 탭은 기존 소개와 이용 조건·브랜드 문서를 연결한다. 프리뷰가 보일 때 선택 탭과 설명을 8초마다 함께 넘긴다. 마우스를 올리면 멈추고 벗어나면 새로 8초를 센다. 키보드로 탭을 탐색하거나 패널에 포커스가 있는 동안, 화면 밖에 있을 때, 페이지가 숨겨졌을 때도 멈춘다. 상단 좌우 화살표로 이전·다음 탭과 패널을 즉시 열 수 있다. 동작 줄이기 환경에서는 수동으로 전환한다.
 - Article sources live in `content/article/`. Publish referenced illustrations from `content/illustration/`. The article and document library readers share font and copy controls. Article titles, descriptions, prose and sources use Noto Serif KR, as do the support page title and prose. The support document keeps its canonical route.
