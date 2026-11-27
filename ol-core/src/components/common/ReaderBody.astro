@@ -1,11 +1,12 @@
 ---
+const { searchOriginals = false } = Astro.props;
 // Astro's Markdown renderer emits its footnote section last. Extract it during
 // server rendering so IDs, rich markup and backreferences have one destination.
 const html = await Astro.slots.render("default");
 const notes = html.match(/<section\b[^>]*\bdata-footnotes(?:="[^"]*")?[^>]*>[\s\S]*<\/section>\s*$/);
 const body = notes ? html.slice(0, notes.index) : html;
 ---
-<div class="ol-prose ol-kr" set:html={body} />
+<div class="ol-prose ol-kr" data-search-originals-body={searchOriginals || undefined} set:html={body} />
 {notes && (
   <dialog id="ol-reader-footnotes" class="ol-reader-toc ol-reader-footnotes" aria-labelledby="ol-reader-footnotes-title" data-pagefind-ignore>
     <section class="ol-reader-toc-panel">

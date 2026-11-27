@@ -25,7 +25,7 @@ const topic = story.topicLabel;
 const currentUrl = url(`/stories/${story.id}/`);
 ---
 <OLHomeShell title={`${story.title}`} description={story.blurb} ogImage={story.photo?.url} reader
-  pagefindMeta={{ title: story.title, section: 'ARTICLE', sectionLabel: ARTICLE_LABEL, category: topic }}>
+  pagefindMeta={{ id: `article-${story.id}`, title: story.title, section: 'ARTICLE', sectionLabel: ARTICLE_LABEL, category: topic }}>
   <div class="ol-home-reader">
     <article>
       <div class="ol-home-reader-nav" data-pagefind-ignore>

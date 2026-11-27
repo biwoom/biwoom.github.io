@@ -21,7 +21,7 @@ const index = currentPart?.entries.findIndex(item => item.id === entry.id) ?? 0;
 const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index + 1];
 ---
 <BaseLayout title={`${entry.data.title} — ${series.label} · TEXT`} description={entry.data.description} lang={entry.data.lang} academic
-  pagefindMeta={{ title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
+  pagefindMeta={{ id: entry.id, title: entry.data.title, section: 'TEXT', sectionLabel: 'TEXT', category: entry.data.category, series: series.label, part: entry.data.part, breadcrumb: ['TEXT', entry.data.category, series.label, entry.data.part].filter(Boolean).join(' · ') }}>
   <main class="ol-story-reader-page ol-story-doc-page ol-text-academic ol-text-reader" data-reader-section="text" data-text-workspace>
     <header class="ol-story-doc-hero ol-text-document-head">
       <nav class="ol-text-crumb" aria-label="현재 위치"><a href={url("/text/")}>TEXT</a>{series.category && <><span>/</span><a href={url(categoryUrl(series.categoryKey))}>{series.category}</a></>}<span>/</span><a href={url(series.url)}>{series.label}</a><span>/</span><span>{entry.data.part}</span></nav>
@@ -52,7 +52,7 @@ const prev = currentPart?.entries[index - 1], next = currentPart?.entries[index 
             {fields.length > 0 && <dl>{fields.map(field => <><dt>{field.label}</dt><dd>{field.value}</dd></>)}</dl>}
             <p>공개일 <time datetime={entry.data.date.toISOString()}>{entry.data.date.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'})}</time></p>
           </div> -->
-          <div class="ol-story-chapter active"><ReaderBody><MaterialBody entry={entry}>{Content && <Content />}</MaterialBody></ReaderBody></div>
+          <div class="ol-story-chapter active"><ReaderBody searchOriginals><MaterialBody entry={entry}>{Content && <Content />}</MaterialBody></ReaderBody></div>
           <div data-text-print-notes></div>
           <ContentRights data={entry.data} />
           <nav class="ol-text-document-next" aria-label="자료 탐색"><a href={url(series.url)}>← 문헌 목차</a>{prev && <a href={url(prev.data.url)}>이전 {entry.data.part} 자료</a>}{next && <a href={url(next.data.url)}>다음 {entry.data.part} 자료 →</a>}</nav>

@@ -4,6 +4,7 @@ import ReaderFonts from '../components/common/ReaderFonts.astro';
 import OLHeader from '../components/layout/OLHeader.astro';
 import OLFooter from '../components/layout/OLFooter.astro';
 import OLSearchModal from '../components/layout/OLSearchModal.astro';
+import { isSearchSection } from '../lib/search.mjs';
 import { SITE_URL, BRAND } from '../lib/site-config';
 import { url } from '../lib/url';
 
@@ -41,6 +42,7 @@ const ogImageUrl = new URL(url(ogImage ?? '/og-image.png'), SITE_URL).href;
 const pagefindMetaEntries = Object.entries(pagefindMeta)
   .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
   .map(([key, value]) => [key, String(value)] as const);
+const pagefindSection = isSearchSection(pagefindMeta.section) ? pagefindMeta.section : undefined;
 ---
 
 <!DOCTYPE html>
@@ -64,6 +66,7 @@ const pagefindMetaEntries = Object.entries(pagefindMeta)
   {pagefindMetaEntries.map(([key, value]) => (
     <meta data-pagefind-meta={`${key}[content]`} content={value} />
   ))}
+  {pagefindSection && <meta data-pagefind-filter="section[content]" content={pagefindSection} />}
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />

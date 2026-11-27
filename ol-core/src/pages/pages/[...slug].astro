@@ -21,6 +21,7 @@ const { Content } = await render(entry);
 <BaseLayout
   title={entry.data.title}
   description={entry.data.description}
+  pagefindMeta={{ id: entry.id, title: entry.data.title, section: 'PAGES' }}
 >
   <main>
     <section class="ol-section">

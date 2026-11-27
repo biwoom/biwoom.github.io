@@ -1,6 +1,6 @@
 # Current State
 
-Last updated: 2026-11-26
+Last updated: 2026-11-27
 
 ## Brand and Deployment
 
@@ -18,6 +18,8 @@ Last updated: 2026-11-26
 - BaseLayout derives the menu from the route; tokens and components/menu-accents.css scope selection/button accents in both color modes. HOME and TEXT/STORY menu roots retain accent hero gradients. TEXT/STORY category-detail heroes use a 4% accent tint and compact 40px/28px padding (28px/20px at <=900px). Series/document heroes remain transparent; document padding is 20px/16px (16px/12px mobile) with 20px bottom margin. All retain 40px titles (30px at <=900px). Menu-root category cards and category-detail series rows share the 4% tint, increasing to 8% on hover/keyboard focus, with theme-aware background mixing. Category/list headings and descriptions stay left-aligned. The top header and page containers share a 1600px maximum width and responsive inline gutters. TEXT/STORY individual readers retain their existing header and workspace. BLOG posts and permanent pages keep their existing readable inner column, and story articles keep their 704px reader.
 
 ## Current Architecture
+
+- 통합 검색은 공개 작품·제목·이칭의 Astro JSON, Pagefind 1.5.2 본문, 공개 TEXT 리더의 정적 한문 원문을 조회한다. 본문 유형 필터를 먼저 적용하고 초기 발췌 8건을 요청한다. 원문은 일치 문단의 발췌와 기존 절 링크를 제공한다. 제목 JSON은 개발 서버에서도 조회할 수 있으며, 본문·원문 색인은 빌드 후 미리보기에서 확인한다.
 
 - STORY body frontmatter accepts optional person, place, topic and alias tags. The public tag directory supports alias lookup, and detail pages group tagged chapters in their existing series order. Both translation releases supply structured tags.
 - STORY's display title omits the compound chapter prefix when it matches the filename and the title comes from the H1 or filename. The Dhammapada Stories release keeps its numbered source filenames and headings.

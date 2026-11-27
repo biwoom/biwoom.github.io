@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-11-27 — 비움 통합 검색
+
+- 검색 작업지시서 v1.1을 따른다. 제목·이칭에는 기존 공개 조회로 만든 정적 JSON을, 본문에는 Pagefind 1.5.2를 쓴다. 한문은 공개 TEXT의 렌더링된 원문에서 연속 문자열을 비교하고 기존 절 주소로 연결한다.
+- Pagefind 1.6.0 전환은 현행 및 이전 조사 기준선의 첫 질의 회귀 검사로 판단한다. Garu + MiniSearch와 OpenSearch + Nori는 장기 형태소 검색 후보로 둔다.
+
 ## 2026-11-26 — Series names by section
 
 - Use 이야기카드 시리즈 at `/series/` and 블로그 시리즈 at `/blog/series/` in navigation, list titles and detail-page context. 이야기 묶음 continues to name the story-card categories.
