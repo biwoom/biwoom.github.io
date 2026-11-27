@@ -16,7 +16,7 @@ import {
 } from "./lib/content.mjs";
 import { prepare } from "./prepare-content.mjs";
 import { validate } from "./check-content.mjs";
-import { readHomeHtmlCards, selectTodayArticle } from "./lib/home-html-cards.mjs";
+import { readHomeHtmlCards, selectTodayArticles } from "./lib/home-html-cards.mjs";
 function fixture(fn) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "ol-content-"));
   try {
@@ -49,7 +49,8 @@ test("HTML cards follow their own date, require a public article and extract onl
       <body><main><article class="story-card" data-article-id="${id}" data-card-date="${date}">
       <h2 id="fixture-title" style="color: red" class="story-card-title">이야기</h2>${body}
       </article><p>제작 메모</p></main></body>`;
-    assert.equal(selectTodayArticle(articles.filter(article => article.published), readHomeHtmlCards(articles, root)).id, "newer");
+    const published = articles.filter(article => article.published);
+    assert.deepEqual(selectTodayArticles(published, readHomeHtmlCards(articles, root)).map(article => article.id), ["newer"]);
     write(root, "illustration/fixture.png", Buffer.from(pixel, "base64"));
     write(root, "article/html/older.html", html("older", "2026-11-24",
       '<img src="../../illustration/fixture.png" alt="그림"><a href="/story/">출전</a>'));
@@ -58,11 +59,15 @@ test("HTML cards follow their own date, require a public article and extract onl
     write(root, "article/html/draft.html", html("draft", "2026-11-26", '<img src="./pending.png">'));
     const cards = readHomeHtmlCards(articles, root);
     assert.deepEqual([...cards.keys()].sort(), ["newer", "older"]);
-    assert.equal(selectTodayArticle(articles.filter(article => article.published), cards).id, "older");
+    assert.deepEqual(selectTodayArticles(published, cards).map(article => article.id), ["older", "newer"]);
     const card = cards.get("older");
     assert.match(card.html, /<h3 class="story-card-title">이야기<\/h3>/);
     assert.match(card.html, /src="\/generated\/content\/illustration\/fixture.png"/);
     assert.match(card.html, /href="\/story\/"/);
+    assert.match(card.slideHtml, /<span>출전<\/span>/);
+    assert.doesNotMatch(card.slideHtml, /<a\b/);
+    assert.match(card.deferredSlideHtml, /data-home-today-src="\/generated\/content\/illustration\/fixture.png"/);
+    assert.doesNotMatch(card.deferredSlideHtml, /\ssrc=/);
     assert.doesNotMatch(card.html, /제작 메모|style=|data-article-id|fixture-title/);
     assert.match(cards.get("newer").images[0].source, /^article-html\/[a-f0-9]{64}\.png$/);
 
@@ -76,6 +81,16 @@ test("HTML cards follow their own date, require a public article and extract onl
     write(root, "article/html/older.html", html("older", "2026-11-27", "<style>body { color: red }</style>"));
     assert.throws(() => readHomeHtmlCards(articles, root), /Unsupported <style>/);
   }));
+test("Today's carousel takes at most five HTML cards and breaks date ties in article order", () => {
+  const articles = Array.from({ length: 7 }, (_, order) => ({ id: `story-${order}`, title: `이야기 ${order}`, order }));
+  const cards = new Map(articles.slice(1).map(article => [article.id, {
+    date: article.order === 6 ? "2026-11-27" : "2026-11-26",
+  }]));
+  assert.deepEqual(selectTodayArticles(articles, cards).map(article => article.id), [
+    "story-6", "story-1", "story-2", "story-3", "story-4",
+  ]);
+  assert.deepEqual(selectTodayArticles([], cards), []);
+});
 test("numeric names preserve title digits and accept different padding", () => {
   assert.deepEqual(nameInfo("001.1권.md"), { label: "1권", order: 1 });
   assert.equal(nameInfo("001.md").order, 1);

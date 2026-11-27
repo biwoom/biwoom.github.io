@@ -6,9 +6,8 @@ interface Props { story: HomeArticle }
 const { story } = Astro.props;
 ---
 <a class="ol-library-hero-design ol-home-today-info" href={url(`/stories/${story.id}/`)}
-  data-home-today-story={story.id} data-home-detail-open={story.id} aria-controls="ol-home-detail" aria-expanded="false">
+  data-home-today-story={story.id} aria-label={`${story.title} 전문 읽기`}>
   <span>{story.topicLabel} · {story.minutes}분 읽기</span>
   <strong>{story.title}</strong>
   <p>{story.blurb}</p>
-  <small>이야기 읽기 <span aria-hidden="true">→</span></small>
 </a>

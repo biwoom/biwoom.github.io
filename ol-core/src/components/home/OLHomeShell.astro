@@ -6,16 +6,21 @@ import type { HomeArticle } from '../../lib/home-articles';
 import '../../styles/layout/home-menu.css';
 import '../../styles/pages/home-postcards.css';
 
-interface Props { title: string; description?: string; ogImage?: string; pagefindMeta?: Record<string, string>; detailStories?: HomeArticle[]; reader?: boolean }
-const { title, description, ogImage, pagefindMeta, detailStories, reader = false } = Astro.props;
+interface Props { title: string; description?: string; ogImage?: string; pagefindMeta?: Record<string, string>; detailStories?: HomeArticle[]; reader?: boolean; inlineDetail?: boolean }
+const { title, description, ogImage, pagefindMeta, detailStories, reader = false, inlineDetail = false } = Astro.props;
 ---
 <BaseLayout {title} {description} {ogImage} {pagefindMeta} pagefindBody={Boolean(pagefindMeta)} articlePage articleReader={reader}>
   <div class="ol-container ol-home-workspace" data-home-workspace>
     <main class="ol-home-main">
       <slot name="intro" />
       {!reader && <OLHomeMenu />}
-      <slot />
+      {inlineDetail && detailStories ? <div class="ol-home-article-results">
+        <div class="ol-home-article-list"><slot /></div>
+        <div class="ol-home-detail-dock" data-home-detail-dock>
+          <OLStoryDetail stories={detailStories} inline />
+        </div>
+      </div> : <slot />}
     </main>
-    {detailStories && <OLStoryDetail stories={detailStories} />}
+    {detailStories && !inlineDetail && <OLStoryDetail stories={detailStories} />}
   </div>
 </BaseLayout>

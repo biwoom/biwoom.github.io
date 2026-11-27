@@ -30,7 +30,7 @@ For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for ca
 - Follow the [story-card specification](../../context/biwoom-story-card-specification.md) for layout and the HTML template. Keep the full Markdown article under its category or series. Reuse its stable `id` for an optional HTML card.
 - Save one `.html` per article directly in `content/article/html/`. Set `data-article-id` and `data-card-date` on the single marked card article. Preserve alt text and edition or chapter links. The site uses shared CSS and extracts only the card.
 - Use WebP for new or replacement illustrations in web cards. Keep the original artwork and preserve transparency in the WebP. Link to the WebP in `content/illustration/` from the card HTML. Use complete card PNGs for sharing and distribution.
-- Keep unfinished articles at `published: false`. If an article is recommended, change or remove its recommendation before unpublishing it. Update `content/article/index.md` for curated recommendations. The hero selects the latest eligible HTML card by its card date and falls back to the latest public article.
+- Keep unfinished articles at `published: false`. If an article is recommended, change or remove its recommendation before unpublishing it. Update `content/article/index.md` for curated recommendations. Today's hero selects up to five HTML cards by card date, cycles when multiple cards are available, and falls back to the latest public article. Keep the actual source links in the article reader because the hero card links directly to the reader.
 - Run `npm run check:content` to validate the article link and card metadata. After building, use `npm run check:built` to verify card placement, reader links and published assets.
 
 ## 수정 변경사항

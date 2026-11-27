@@ -4,12 +4,10 @@ import { url } from '../../lib/url';
 import OLStoryBookmark from './OLStoryBookmark.astro';
 import '../../styles/pages/story-card.css';
 
-interface Props { story: HomeArticle; html: string; placement: 'today' | 'recommended' }
-const { story, html, placement } = Astro.props;
+interface Props { story: HomeArticle; html: string }
+const { story, html } = Astro.props;
 ---
-<div class="ol-home-html-card" data-home-html-card={story.id}
-  data-home-today-story={placement === 'today' ? story.id : undefined}
-  data-story-card={placement === 'recommended' ? story.id : undefined}>
+<div class="ol-home-html-card" data-home-html-card={story.id} data-story-card={story.id}>
   <div class="biwoom-card-frame">
     <Fragment set:html={html} />
   </div>

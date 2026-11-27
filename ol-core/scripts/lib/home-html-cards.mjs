@@ -11,7 +11,7 @@ import { ARTICLE_HTML_DIRECTORY, contentFile, normalizeContentPath, PROJECT_ROOT
 /** @typedef {import('parse5').DefaultTreeAdapterTypes.Element} Element */
 /** @typedef {import('parse5').DefaultTreeAdapterTypes.ParentNode} ParentNode */
 /** @typedef {{source: string, file: string | Buffer}} CardImage */
-/** @typedef {{id: string, date: string, html: string, images: CardImage[]}} HomeHtmlCard */
+/** @typedef {{id: string, date: string, html: string, slideHtml: string, deferredSlideHtml: string, images: CardImage[]}} HomeHtmlCard */
 
 const elements = new Set([
   'article', 'header', 'footer', 'div', 'span', 'figure', 'figcaption', 'img',
@@ -99,7 +99,17 @@ function extractCard(card, root) {
     node.attrs = attrs;
     if (tagName === 'h2') node.tagName = node.nodeName = 'h3';
   }
-  return { html: serializeOuter(card), images: [...images.values()] };
+  const html = serializeOuter(card);
+  // The hero wraps the whole card in a reader link, so retain source labels as text.
+  for (const node of children.filter(node => node.tagName === 'a')) {
+    node.tagName = node.nodeName = 'span';
+    node.attrs = node.attrs.filter(attr => attr.name !== 'href');
+  }
+  const slideHtml = serializeOuter(card);
+  for (const node of children.filter(node => node.tagName === 'img')) {
+    node.attrs = node.attrs.map(attr => attr.name === 'src' ? { ...attr, name: 'data-home-today-src' } : attr);
+  }
+  return { html, slideHtml, deferredSlideHtml: serializeOuter(card), images: [...images.values()] };
 }
 
 /** @param {{id: string, published: boolean}[]} articles @param {string} root @returns {Map<string, HomeHtmlCard>} */
@@ -137,8 +147,10 @@ export function readHomeHtmlCards(articles, root = PROJECT_ROOT) {
 
 /** @template {Parameters<typeof compareHomePublication>[0]} T
  * @param {T[]} articles @param {Map<string, HomeHtmlCard>} cards */
-export function selectTodayArticle(articles, cards) {
-  return [...articles].sort((a, b) =>
+export function selectTodayArticles(articles, cards) {
+  const ordered = [...articles].sort((a, b) =>
     (cards.get(b.id)?.date ?? '').localeCompare(cards.get(a.id)?.date ?? '') || compareHomePublication(a, b)
-  )[0];
+  );
+  const featured = ordered.filter(article => cards.has(article.id)).slice(0, 5);
+  return featured.length ? featured : ordered.slice(0, 1);
 }

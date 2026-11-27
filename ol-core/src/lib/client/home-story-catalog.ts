@@ -39,7 +39,8 @@ if (root) {
   loadMore?.addEventListener('click', () => {
     const next = paginator.getVisibleCount();
     paginator.showMore();
-    grid.children[next]?.querySelector<HTMLAnchorElement>('.ol-postcard-link')?.focus();
+    grid.querySelectorAll<HTMLElement>('[data-story-card]:not([hidden])')[next]
+      ?.querySelector<HTMLAnchorElement>('.ol-postcard-link')?.focus();
   });
   const filterForHash = () => filters.find(button => button.dataset.homeFilter && button.dataset.homeFilter === location.hash.slice(1));
   let filter = filterForHash();

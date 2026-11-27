@@ -7,7 +7,7 @@ import sharp from "sharp";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import { readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
-import { readHomeHtmlCards, selectTodayArticle } from "./lib/home-html-cards.mjs";
+import { readHomeHtmlCards, selectTodayArticles } from "./lib/home-html-cards.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
 import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath, storyTagsPageSize } from "./lib/story-tags.mjs";
 import { ARTICLE_LABEL, BLOG, BRAND, REPOSITORY_URL, SERIES_LABELS, SITE_URL, sitePath } from "../../site-config.mjs";
@@ -543,23 +543,33 @@ const articleCards = [...articleCatalog.matchAll(/<article\b[^>]*data-story-card
 assert.deepEqual(articleCards.map(([, id]) => id).sort(), articleIds, "One card per public article");
 const htmlCards = readHomeHtmlCards(allArticles.map(({ article }) => article));
 assert.ok(!fs.existsSync(path.join(dist, "article", "html")), "Standalone HTML sources stay in the vault");
-const latestArticle = selectTodayArticle(publishedArticles.map(({ article }) => article), htmlCards);
-assert.equal(articleIndexHtml.match(/data-home-today-story="([^"]+)"/)?.[1], latestArticle?.id);
+const todayArticles = selectTodayArticles(publishedArticles.map(({ article }) => article), htmlCards);
 const todayHtml = articleIndexHtml.match(/<section[^>]*aria-labelledby="ol-home-today-title"[\s\S]*?<\/section>/)?.[0] ?? "";
-if (latestArticle) {
+assert.deepEqual([...todayHtml.matchAll(/data-home-today-story="([^"]+)"/g)].map(([, id]) => id), todayArticles.map(article => article.id));
+if (todayArticles.length) {
   const hero = articleIndexHtml.match(/<div class="ol-home-intro ol-home-hero">([\s\S]*?)<\/div>\s*(?=<nav class="ol-home-menu")/)?.[1] ?? "";
   assert.match(hero, /class="ol-home-hero-intro"[\s\S]*?<\/div>\s*<section[^>]*aria-labelledby="ol-home-today-title"/,
     "Today is the second column of the hero, after the introduction");
-  assert.ok(hero.trimEnd().endsWith(todayHtml), "Today remains within the hero above the card navigation");
+  assert.ok(hero.includes(todayHtml), "Today remains within the hero above the card navigation");
 }
-const todayCard = latestArticle && htmlCards.get(latestArticle.id);
-if (todayCard) {
-  assert.ok(todayHtml.includes(`data-home-html-card="${todayCard.id}"`), "Today uses the matched HTML card");
-  assert.ok(todayHtml.includes(todayCard.html), "Today embeds only the article fragment");
-  assert.ok(todayHtml.includes(`href="/stories/${todayCard.id}/"`), "Today links to the article reader");
-  assert.ok(todayHtml.includes(`data-story-bookmark="${todayCard.id}"`), "Today shares the article bookmark");
+assert.equal(todayHtml.includes('data-home-today-toggle'), todayArticles.length > 1, "Pause control appears only for multiple cards");
+for (const direction of ['prev', 'next']) {
+  assert.equal(new RegExp(`<button[^>]*data-home-today-${direction}[^>]*\\bdisabled\\b`).test(todayHtml), todayArticles.length > 0,
+    "Navigation arrows are present and start disabled until there are multiple slides and the controller is ready");
+}
+assert.doesNotMatch(todayHtml, /data-story-bookmark|data-home-detail-open|ol-home-html-card-actions/);
+for (const [index, article] of todayArticles.entries()) {
+  assert.ok(todayHtml.includes(`href="/stories/${article.id}/"`), "Today links to the article reader");
+  const card = htmlCards.get(article.id);
+  if (!card) continue;
+  assert.ok(todayHtml.includes(index === 0 ? card.slideHtml : card.deferredSlideHtml), "Today embeds the link-free card fragment");
   rule(".biwoom-card-frame .story-card", /grid-template-areas:/);
 }
+assert.match(articleIndexHtml.slice(articleIndexHtml.indexOf(articleNav) + articleNav.length),
+  /^\s*<div class="ol-home-article-results">\s*<div class="ol-home-article-list">[\s\S]*?<div class="ol-home-detail-dock"[^>]*>\s*<dialog[^>]*data-home-detail-inline/,
+  "The preview follows the list in the results below the navigation");
+rule(".ol-home-detail[data-home-detail-inline]", /position:static/);
+rule(".ol-home-article-results:has", /grid-template-columns:minmax\(0,1fr\) var\(--home-detail-width\)/);
 const recommendation = articleIndexHtml.match(/<section class="ol-home-recommended"[\s\S]*?<\/section>/)?.[0] ?? "";
 const recommendedIds = readHomeArticleIndex().recommendedStories ?? [];
 assert.deepEqual([...recommendation.matchAll(/data-story-card="([^"]+)"/g)].map(([, id]) => id),

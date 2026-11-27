@@ -20,7 +20,7 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - `content/` is both the content source and the user's Obsidian vault.
 - Desktop and mobile primary navigation uses 경론, 문학, 카드, in that order. The public library names are 불교경론 and 불전문학, with `/text/` and `/story/` as their routes and `text` and `story` as their collection keys. The BLOG link remains a separate action. `pages` holds visitor-facing permanent documents.
 - The 카드 menu, 이야기카드 home card and footer link below BLOG series open `/articles/`. Label the `/series/` navigation and index 이야기카드 시리즈. Keep `/stories/<id>/`, `/series/`, `/topics/`, `/tags/`, `/categories/` and `/saved/` working for existing links and bookmarks. Article sources use `content/article/` and their illustrations use `content/illustration/`. Publish articles with explicit `published: true`. Keep stable article IDs and the browser bookmark storage key. Share reading controls with the libraries. Preserve article metadata and publish only illustrations referenced by public articles.
-- Optional story-card HTML lives directly in `content/article/html/`. Match one `<article class="story-card">` per file to an existing Markdown `id` with `data-article-id` and set `data-card-date` as YYYY-MM-DD. Use the shared card CSS and publish only the extracted card and assets linked to public articles. The latest eligible HTML card appears in 오늘의 이야기 in the hero, to the right of the introduction above 760px and below it at narrower widths. Without eligible HTML, show the latest public article. Recommended stories use the configured public IDs in `content/article/index.md`. See [비움 이야기카드 설계 문서](.agents/context/biwoom-story-card-specification.md).
+- Optional story-card HTML lives directly in `content/article/html/`. Match one `<article class="story-card">` per file to an existing Markdown `id` with `data-article-id` and set `data-card-date` as YYYY-MM-DD. Use the shared card CSS and publish only the extracted card and assets linked to public articles. 오늘의 이야기 shows up to five eligible cards by card date, to the right of the hero introduction above 760px and below it at narrower widths. Rotate every five seconds only when multiple cards are available. Keep direct reader links, pause controls for multiple cards, and visible arrows that are disabled for a single card. Without eligible HTML, show the latest public article. Recommended stories use the configured public IDs in `content/article/index.md`. On `/articles/`, list previews open below the navigation on the right on desktop and below the selected card on narrower screens. See [비움 이야기카드 설계 문서](.agents/context/biwoom-story-card-specification.md).
 - Keep the website story-card layout and text in HTML. Use WebP for new or replacement card illustrations, preserving the original assets and any transparency. Use complete card PNGs for sharing and distribution.
 - Vault CMS, Front Matter, and Decap CMS are not used.
 - TEXT uses category → work/series → material section/part → item. STORY uses category → series → part → chapter. Translation and research are independent.
@@ -82,6 +82,10 @@ BIWOOM (비움) is the public Astro site for Buddhist texts, translations, resea
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-27 — 오늘의 이야기 캐러셀
+
+- 히어로의 최신 HTML 카드 최대 다섯 장을 5초 간격으로 전환한다. 목록 미리보기는 카드 탐색 메뉴 아래에 배치한다.
 
 ### 2026-11-27 — 이야기카드 WebP 삽화
 
