@@ -59,6 +59,7 @@ curl -I -L https://biwoom.github.io/sitemap-index.xml
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
 - For story-card changes, use `npm run check:built` to verify the hero card, its article link, and assets for public articles. Source HTML and drafts should have no standalone output.
+- When adding or replacing card illustrations, confirm the built card points to the WebP derivative of the original artwork.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.
 
 ## Common Failure Modes
@@ -84,7 +85,7 @@ Report:
 
 ### 2026-11-27 — Story-card output
 
-- Record the generated-page checks for the hero, article links and eligible card assets.
+- Record the generated-page checks for the hero, article links and eligible card assets, including WebP references for new or replacement illustrations.
 
 ### 2026-11-26 — HUB address and verification scope
 

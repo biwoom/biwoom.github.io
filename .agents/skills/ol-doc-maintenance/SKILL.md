@@ -41,7 +41,7 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 
 - Brand definition: `content/pages/brand.md`.
 - Content management manual: `.agents/references/biwoom-content-management-manual.md`.
-- Story-card design and operating specification: `.agents/context/biwoom-story-card-specification.md`. Keep its HTML examples and placement rules aligned with the card loader, `/articles/`, and the content-authoring skill.
+- Story-card design and operating specification: `.agents/context/biwoom-story-card-specification.md`. Keep its HTML examples, placement rules and WebP illustration guidance aligned with the card loader, `/articles/`, and the content-authoring skill.
 - Repo-wide Codex guidance: `AGENTS.md`.
 - Reusable Codex workflows: `.agents/skills/`.
 - `content/pages/` should stay visitor-facing; internal operating manuals do not belong there.
@@ -70,7 +70,7 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 
 ### 2026-11-27 — Story-card specification
 
-- Record the repository location for the design and authoring specification.
+- Record the repository location for the design and authoring specification and its WebP illustration default.
 
 ### 2026-11-26 — HUB identity
 

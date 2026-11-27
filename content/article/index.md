@@ -16,3 +16,5 @@ recommendedStories: [mustard, lake]
 `recommendedStories`에는 ‘추천 이야기’로 보여 줄 공개 원고의 `id` 두 개를 표시 순서대로 적습니다. HTML 카드가 연결된 원고는 해당 카드로 표시합니다.
 
 HTML 카드는 이 폴더의 `html/` 바로 아래에 한 파일씩 둡니다. 표시할 카드에 원고와 같은 `data-article-id`와 카드 날짜 `data-card-date="YYYY-MM-DD"`를 적습니다. 추천 중인 원고를 비공개로 바꿀 때는 먼저 추천 설정을 수정합니다. 연결이 올바른지는 저장소 루트에서 `npm run check:content`로 확인합니다.
+
+새로 추가하거나 교체하는 웹용 카드 삽화는 원본을 보존한 뒤 WebP로 내보내고, HTML에서 `../../illustration/파일.webp`로 연결합니다. 완성 카드 PNG는 공유·배포에 사용합니다.

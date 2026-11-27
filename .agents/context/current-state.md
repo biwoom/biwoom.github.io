@@ -10,6 +10,7 @@ Last updated: 2026-11-27
 - Public library names are 불교경론 and 불전문학 at `/text/` and `/story/`. Primary navigation is 경론·문학·카드. 카드 and the 이야기카드 links on the landing page and below BLOG series in the footer open `/articles/`. The home statistics link to the story-card catalog and count public articles. Article readers, catalog pages and bookmarks retain their existing routes and IDs.
 - Article sources live in `content/article/`. Publish referenced illustrations from `content/illustration/`. The article and document library readers share font and copy controls.
 - 선택형 HTML 카드 원본은 `content/article/html/`에 보관한다. 공개 아티클의 ID에 연결한 카드만 `/articles/`에 삽입한다. ‘오늘의 이야기’의 최신 카드 한 장은 히어로의 오른쪽에, 좁은 화면에서는 소개 아래에 배치한다. ‘추천 이야기’는 기존 추천 ID를 따른다. 제작·교체·공개 절차는 [비움 이야기카드 설계 문서](biwoom-story-card-specification.md)에 둔다.
+- 웹용 이야기카드는 HTML을 유지하며, 새로 추가하거나 교체하는 삽화는 WebP를 기본으로 쓴다. 기존 파일 형식도 로더에서 지원한다.
 
 ## Menu Accents
 
