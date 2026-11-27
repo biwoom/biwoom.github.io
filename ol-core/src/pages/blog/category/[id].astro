@@ -18,6 +18,6 @@ const posts = series.entries.filter(p => p.data.categoryKey === category.key).so
 <BaseLayout title={`${category.title} · BLOG`} description={category.description} pagefindMeta={{ title: category.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `BLOG · ${series.title} · ${category.title}` }}>
   <main class="ol-blog-page"><BlogNav active="posts" compact /><section class="ol-section-tight"><div class="ol-container">
     <a class="ol-blog-breadcrumb" href={url(series.url)}>← {series.title}</a><header class="ol-blog-series-intro"><span class="ol-section-label">CATEGORY</span><h1>{category.title}</h1>{category.coverUrl && <img class="ol-blog-category-cover" src={url(category.coverUrl)} alt="" />}{Intro ? <div class="ol-prose"><Intro /></div> : <p>{category.description}</p>}<span>{posts.length}개의 글</span></header>
-    {posts.map(post => <BlogPostItem post={post} />)}{!posts.length && <p class="ol-blog-empty">새로운 글을 준비하고 있습니다.</p>}
+    {posts.map((post, index) => <BlogPostItem post={post} eager={index === 0} />)}{!posts.length && <p class="ol-blog-empty">새로운 글을 준비하고 있습니다.</p>}
   </div></section></main>
 </BaseLayout>

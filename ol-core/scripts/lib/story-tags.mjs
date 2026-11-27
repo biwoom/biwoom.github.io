@@ -10,6 +10,7 @@ export const storyTagFields = /** @type {const} */ ({
 export const storyTagTypes = /** @type {StoryTagType[]} */ (Object.keys(storyTagFields));
 export const storyTagInputFields = [...Object.values(storyTagFields), "aliasTags"];
 export const storyTagsPath = "/story/tags/";
+export const storyTagsPageSize = 30;
 export const storyTagInitials = [..."가나다라마바사아자차카타파하"];
 
 // Fold the five doubled initials into the corresponding basic group.
@@ -26,6 +27,11 @@ export function storyTagInitial(label) {
 /** @param {string} text */
 export function storyTagSearchKey(text) {
   return text.trim().normalize("NFC").toLowerCase();
+}
+
+/** @param {string} a @param {string} b */
+export function compareStoryTagNames(a, b) {
+  return a.localeCompare(b, "ko");
 }
 
 /** @param {Pick<StoryTag, "type" | "label">} tag */
@@ -97,5 +103,5 @@ export function indexStoryTags(documents) {
       item.documents.push(doc);
     }
   }
-  return [...catalog.values()].sort((a, b) => a.label.localeCompare(b.label, "ko"));
+  return [...catalog.values()].sort((a, b) => compareStoryTagNames(a.label, b.label) || a.type.localeCompare(b.type));
 }

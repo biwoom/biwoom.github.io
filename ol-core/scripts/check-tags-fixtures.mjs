@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import { validateInput } from './lib/content.mjs';
-import { indexStoryTags, readStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagSearchKey } from './lib/story-tags.mjs';
+import { compareStoryTagNames, indexStoryTags, readStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagSearchKey, storyTagsPageSize } from './lib/story-tags.mjs';
 
 function evaluate(source, imports = {}, globals = {}) {
   const module = { exports: {} };
@@ -93,104 +93,152 @@ class Element {
   replaceChildren() {}
 }
 
-test('STORY tag explorer filters and pages cards, loads previews on demand, and moves them between layouts', async () => {
+test('STORY tag explorer navigates static pages and loads filtered cards and previews on demand', async () => {
   const { initStoryTagExplorer } = evaluate(fs.readFileSync('ol-core/src/lib/client/story-tag-explorer.ts', 'utf8'), {
-    '../../../scripts/lib/story-tags.mjs': { storyTagSearchKey },
-    './paginated-list': pagination,
+    '../../../scripts/lib/story-tags.mjs': { compareStoryTagNames, storyTagInitial, storyTagSearchKey, storyTagsPageSize },
   }, { URL, URLSearchParams, AbortController, DOMParser: class {
     parseFromString(text) { return { querySelector: () => ({ content: { cloneNode: () => text } }) }; }
   } });
   const node = (dataset) => Object.assign(new Element(dataset), {
     focused: false,
+    getAttribute(name) { return this.attributes[name] ?? null; },
     removeAttribute(name) { delete this.attributes[name]; },
     append(child) { child.parent = this; },
     replaceChildren(...children) { this.children = children; },
     focus() { this.focused = true; },
   });
-  const card = (type, ...names) => {
-    const item = node({ type, initial: storyTagInitial(names[0]), storyTagEntry: JSON.stringify(names) });
-    const link = node();
-    link.href = `https://example.test/hub/story/tags/${type}/${encodeURIComponent(names[0])}/`;
-    link.closest = selector => selector === '[data-story-tag-card]' ? link : item;
-    item.link = link;
+  const card = () => {
+    const item = node();
+    const selectors = Object.fromEntries(['story-tag-card', 'tag-kind', 'tag-count', 'tag-name', 'tag-aliases'].map(name => [name, node()]));
+    item.link = selectors['story-tag-card'];
+    item.link.closest = () => item.link;
+    item.querySelector = selector => selectors[selector.slice(6, -1)];
+    item.cloneNode = card;
     return item;
   };
-  const person = card('person', '사리불', 'Sāriputta');
-  const place = card('place', '테스트 장소', 'Sāriputta');
-  const cards = [person, place, ...Array.from({ length: 29 }, (_, i) => card('topic', '주제 ' + i))];
-  const query = node();
-  const search = node();
+  const route = '/story/tags/';
+  const catalogUrl = '/search/catalog.json';
+  const record = (tagType, title, ...aliases) => ({
+    kind: 'tag', section: 'STORY', tagType, title, aliases, documentCount: 1,
+    url: storyTagPath({ type: tagType, label: title }),
+  });
+  const person = record('person', '사리불', 'Sāriputta');
+  const place = record('place', '테스트 장소', 'Sāriputta');
+  const records = [person, place, ...Array.from({ length: 31 }, (_, i) => record('topic', '주제 ' + String(i).padStart(2, '0')))];
+  const staticCards = Array.from({ length: 30 }, card);
+  const query = node(), search = node(), filters = node(), initials = node();
   query.value = '';
   search.querySelector = () => query;
-  const button = (type) => node({ storyTagType: type });
-  const [all, people, places] = ['', 'person', 'place'].map(button);
-  const filters = node();
-  filters.querySelectorAll = () => [all, people, places];
-  const initials = node();
+  const [, people, places, topics] = ['', 'person', 'place', 'topic'].map(storyTagType => node({ storyTagType }));
+  filters.querySelectorAll = () => [node({ storyTagType: '' }), people, places, topics];
   const [allInitials, sa, ja, ta] = ['', '사', '자', '타'].map(storyTagInitial => node({ storyTagInitial }));
   initials.querySelectorAll = () => [allInitials, sa, ja, ta];
   const status = node(), empty = node(), reset = node(), list = node();
+  status.textContent = '33개 태그';
+  list.children = staticCards;
+  list.querySelectorAll = () => staticCards;
   const desktop = node(), placeholder = node(), preview = node(), dialog = node(), mobile = node();
-  const previewBody = node(), fullLink = node();
-  const more = node(), remaining = node(), loadMore = node();
-  list.querySelectorAll = () => cards;
+  const previewBody = node(), fullLink = node(), pages = node(), page = node(), prev = node(), next = node();
+  for (const link of [prev, next]) Object.defineProperty(link, 'href', { get() { return link.getAttribute('href'); } });
+  next.setAttribute('href', route + '2/');
+  page.textContent = '1 / 2';
+  pages.querySelector = selector => ({ page, prev, next })[selector.slice('[data-story-tag-'.length, -1)];
   dialog.querySelector = () => mobile;
   dialog.showModal = () => { dialog.open = true; };
   dialog.close = () => { dialog.open = false; dialog.handlers.close(); };
   const selectors = {
     'story-tag-filters': filters, 'story-tag-status': status, 'story-tag-empty': empty,
-    'story-tag-initials': initials,
+    'story-tag-initials': initials, 'story-tag-pages': pages,
     'story-tag-reset': reset, 'story-tag-list': list, 'story-tag-desktop': desktop,
     'story-tag-placeholder': placeholder, 'story-tag-preview': preview, 'story-tag-dialog': dialog,
     'story-tag-preview-body': previewBody, 'story-tag-full': fullLink,
-    'loadmore-wrap': more, 'loadmore-button': loadMore, 'loadmore-remaining': remaining,
   };
-  const root = node({ pageSize: '30' });
+  const root = node({ catalogUrl });
   root.querySelector = selector => selectors[selector.slice(6, -1)];
   const document = { querySelector: selector => selector.includes('directory') ? root : search };
   const wide = node();
   wide.matches = true;
-  const requests = [];
+  const previewRequests = [];
+  let finishCatalog, catalogRequests = 0, previewOk = true;
   const browser = Object.assign(node(), {
-    location: new URL('https://example.test/hub/story/tags/?utm_source=test'),
-    history: { replaceState(_, __, url) { browser.location = new URL(url); } },
+    location: new URL(route + '?utm_source=test', 'https://example.test'),
+    history: {
+      replaceState(_, __, url) { browser.location = new URL(url); },
+      pushState(_, __, url) { browser.location = new URL(url); },
+    },
     matchMedia: () => wide,
-    async fetch(href, { signal }) {
-      requests.push({ href, signal });
-      return { ok: true, text: async () => '사리불' };
+    async fetch(href, options = {}) {
+      if (href === catalogUrl) {
+        catalogRequests++;
+        return new Promise(resolve => { finishCatalog = resolve; });
+      }
+      previewRequests.push({ href, signal: options.signal });
+      return { ok: previewOk, text: async () => '사리불' };
     },
   });
+  const settle = () => new Promise(setImmediate);
+  const click = (extra = {}) => ({ button: 0, preventDefault() { this.defaultPrevented = true; }, ...extra });
+  const rendered = () => list.children.map(item => item.link.href);
   initStoryTagExplorer(document, browser);
-  assert.equal(requests.length, 0);
-  assert.equal(cards.filter(card => !card.hidden).length, 30);
-  assert.equal(remaining.textContent, '(1)');
-  loadMore.click();
-  assert.ok(cards.every(card => !card.hidden));
+  assert.deepEqual(list.children, staticCards);
+  assert.equal(page.textContent, '1 / 2');
+  const staticNavigation = click();
+  next.handlers.click(staticNavigation);
+  assert.equal(staticNavigation.defaultPrevented, undefined);
+  assert.equal(next.href, route + '2/');
+  assert.equal(catalogRequests, 0);
+
+  topics.click();
+  finishCatalog({ ok: false });
+  await settle();
+  assert.match(status.textContent, /불러오지 못했습니다/);
+  search.handlers.submit(click());
   ja.click();
-  assert.equal(cards.filter(card => !card.hidden).length, 29);
-  assert.equal(browser.location.searchParams.get('initial'), '자');
-  allInitials.click();
-  assert.equal(cards.filter(card => !card.hidden).length, 30);
-  query.value = 'SA\u0304RIPUTTA';
-  query.handlers.input();
+  assert.equal(catalogRequests, 2, 'retry after failure and share the in-flight fetch');
+  finishCatalog({ ok: true, json: async () => records });
+  await settle();
+  assert.equal(status.textContent, '31개 태그');
+  assert.equal(list.children.length, 30);
+  assert.match(next.href, /type=topic&initial=%EC%9E%90&page=2/);
+  next.handlers.click(click());
+  await settle();
+  assert.equal(page.textContent, '2 / 2');
+  assert.deepEqual(rendered(), [records.at(-1).url]);
+  assert.equal(browser.location.searchParams.get('page'), '2');
+  prev.handlers.click(click());
+  await settle();
+  assert.equal(list.children.length, 30);
+
+  reset.click();
+  assert.deepEqual(list.children, staticCards);
+  assert.equal(next.href, route + '2/');
+  query.value = 'SĀRIPUTTA';
+  query.handlers.input({ isComposing: true });
+  assert.deepEqual(list.children, staticCards);
+  query.handlers.input({});
+  await settle();
   assert.equal(status.textContent, '2개 태그');
+  assert.deepEqual(rendered(), [person.url, place.url]);
   people.click();
   ta.click();
+  await settle();
   assert.equal(status.textContent, '0개 태그', 'alias search uses the initial of the canonical name');
   sa.click();
-  assert.deepEqual(cards.filter(card => !card.hidden), [person]);
+  await settle();
+  assert.deepEqual(rendered(), [person.url]);
   assert.equal(browser.location.searchParams.get('type'), 'person');
   assert.equal(browser.location.searchParams.get('utm_source'), 'test');
+
   const select = async (extra = {}) => {
-    const event = { button: 0, target: person.link, preventDefault() { this.defaultPrevented = true; }, ...extra };
+    const event = click({ target: list.children[0].link, ...extra });
     await list.handlers.click(event);
     return event.defaultPrevented;
   };
   assert.equal(await select({ metaKey: true }), undefined, 'modifier click follows the original href');
-  assert.equal(requests.length, 0);
+  assert.equal(previewRequests.length, 0);
   assert.equal(await select(), true);
   assert.deepEqual(previewBody.children, ['사리불']);
-  assert.equal(fullLink.href, person.link.href);
+  assert.equal(fullLink.href, person.url);
   assert.equal(preview.parent, desktop);
   assert.equal(preview.focused, true);
   wide.matches = false;
@@ -198,32 +246,36 @@ test('STORY tag explorer filters and pages cards, loads previews on demand, and 
   assert.equal(preview.parent, mobile);
   assert.ok(!dialog.open);
   await select();
-  assert.equal(requests[0].signal.aborted, true);
+  assert.equal(previewRequests[0].signal.aborted, true);
   assert.equal(dialog.open, true);
   dialog.close();
-  assert.equal(person.link.attributes['aria-current'], undefined);
+  assert.equal(list.children[0].link.attributes['aria-current'], undefined);
   await select();
   wide.matches = true;
   wide.handlers.change();
   assert.equal(dialog.open, false);
   assert.equal(preview.parent, desktop);
   preview.handlers.keydown({ key: 'Escape' });
-  assert.equal(person.link.focused, true);
-  browser.fetch = async () => ({ ok: false, text: async () => "" });
+  assert.equal(list.children[0].link.focused, true);
+  previewOk = false;
   await select();
   assert.equal(previewBody.textContent, '미리보기를 불러오지 못했습니다.');
-  assert.equal(fullLink.href, person.link.href);
+  assert.equal(fullLink.href, person.url);
+
   places.click();
   ta.click();
-  assert.deepEqual(cards.filter(card => !card.hidden), [place]);
+  await settle();
+  assert.deepEqual(rendered(), [place.url]);
   reset.click();
-  assert.equal(cards.filter(card => !card.hidden).length, 30);
+  assert.deepEqual(list.children, staticCards);
   assert.equal(browser.location.searchParams.has('q'), false);
   assert.equal(browser.location.searchParams.has('initial'), false);
-  browser.location = new URL('https://example.test/hub/story/tags/?type=person&initial=사&q=Sāriputta');
+  browser.location = new URL(route + '2/?type=person&initial=사&q=Sāriputta', 'https://example.test');
   browser.handlers.popstate();
+  await settle();
   assert.equal(sa.attributes['aria-pressed'], 'true');
-  assert.deepEqual(cards.filter(card => !card.hidden), [person]);
+  assert.deepEqual(rendered(), [person.url]);
+  assert.equal(catalogRequests, 2);
 });
 
 test('blog UI combines tag/year filters, resets pagination, keeps untagged posts in All, and supports tag links', () => {

@@ -24,7 +24,7 @@ Last updated: 2026-11-27
 
 - STORY body frontmatter accepts optional person, place, topic and alias tags. The public tag directory supports alias lookup, and detail pages group tagged chapters in their existing series order. Both translation releases supply structured tags.
 - STORY's display title omits the compound chapter prefix when it matches the filename and the title comes from the H1 or filename. The Dhammapada Stories release keeps its numbered source filenames and headings.
-- The STORY tag directory uses the historical NET explorer layout with type and initial filters, a 30-card batch and a selected-tag preview. The preview loads from the full tag page on demand and appears in a right-hand panel at 1180px and wider or in a dialog below that width. Card links lead to the full tag page when opened directly.
+- 불전문학 태그 목록은 한 페이지에 최대 30개를 정적으로 생성한다. 유형·초성 필터나 이름·이칭 검색을 사용하면 공개 검색 카탈로그를 요청한다. 카드 링크는 태그 상세로 이어지며, 미리보기는 상세에서 필요할 때 불러온다.
 
 - TEXT/STORY category cards, menu filters and displayed category counts include only categories with a public work/series. Category-only introductions remain authored metadata and direct category pages remain available; a public work introduction qualifies even before its first body document.
 
@@ -35,6 +35,7 @@ Last updated: 2026-11-27
 - 2026-11-13 internal audit: normalized schema remains in `src/content.config.ts`; `src/lib/content-loaders.ts` owns loading and refresh-scoped registry snapshots. Markdown parser configuration is reused with fresh ASTs, title/description share one parse, and development assets use the shared serialized watcher. Retired TOC CSS and redundant dark rules were removed without changing active declarations. Built-link validation now matches literal percent-encoded footnote IDs before decoding. Evidence: `.agents/references/ol-core-maintenance-audit-2026-11-13.md`.
 
 - Desktop/mobile header BLOG menus enter /blog/series/ first. Keep /blog/ as the posts list with real-page 포스트/블로그 시리즈 tabs and explicit post-list links. The `/series/` index and tab use 이야기카드 시리즈.
+- BLOG 포스트·카테고리 목록은 배포용 콘텐츠에서 생성한 160px·320px WebP를 사용한다. 이미지는 화면과 픽셀 밀도에 맞춰 선택하며, 첫 행 이후는 지연 로딩한다.
 
 - TEXT/STORY modal TOC/footnote shells use overflow: clip so native autofocus cannot horizontally scroll the wrapper around the animated right-hand panel. Clear shell scroll offsets immediately after showModal; retain the resting transform, 360ms entrance/280ms exit, reduced motion, internal content scrolling and the shared desktop dock.
 

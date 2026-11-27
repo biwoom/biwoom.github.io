@@ -1,10 +1,16 @@
-import { storyTagSearchKey } from "../../../scripts/lib/story-tags.mjs";
-import { createPaginator } from "./paginated-list";
+import { compareStoryTagNames, storyTagInitial, storyTagSearchKey, storyTagsPageSize } from "../../../scripts/lib/story-tags.mjs";
+import type { CatalogRecord } from "../search.mjs";
+
+function followsLink(event: MouseEvent) {
+  return !event.defaultPrevented && event.button === 0
+    && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+}
 
 export function initStoryTagExplorer(document: Document = window.document, browser: Window = window) {
   const root = document.querySelector<HTMLElement>("[data-story-tag-directory]");
   const search = document.querySelector<HTMLFormElement>("[data-story-tag-search]");
-  if (!root || !search) return;
+  const catalogUrl = root?.dataset.catalogUrl;
+  if (!root || !search || !catalogUrl) return;
 
   const input = search.querySelector("input")!;
   const filters = root.querySelector<HTMLElement>("[data-story-tag-filters]")!;
@@ -22,17 +28,22 @@ export function initStoryTagExplorer(document: Document = window.document, brows
   const fullLink = root.querySelector<HTMLAnchorElement>("[data-story-tag-full]")!;
   const dialog = root.querySelector<HTMLDialogElement>("[data-story-tag-dialog]")!;
   const mobile = dialog.querySelector<HTMLElement>("[data-story-tag-mobile]")!;
-  const loadMoreWrap = root.querySelector<HTMLElement>("[data-loadmore-wrap]");
+  const pages = root.querySelector<HTMLElement>("[data-story-tag-pages]")!;
+  const pageLabel = pages.querySelector<HTMLElement>("[data-story-tag-page]")!;
+  const prev = pages.querySelector<HTMLAnchorElement>("[data-story-tag-prev]")!;
+  const next = pages.querySelector<HTMLAnchorElement>("[data-story-tag-next]")!;
   const wide = browser.matchMedia("(min-width: 1180px)");
-  const cards = [...list.querySelectorAll<HTMLElement>("[data-story-tag-entry]")].map(item => ({
-    item,
-    type: item.dataset.type,
-    initial: item.dataset.initial,
-    names: (JSON.parse(item.dataset.storyTagEntry ?? "[]") as string[]).map(storyTagSearchKey),
-  }));
-  let selected: { item: HTMLElement; link: HTMLAnchorElement; request: AbortController } | undefined;
+  const staticCards = [...list.querySelectorAll<HTMLElement>("[data-story-tag-entry]")];
+  const staticStatus = status.textContent;
+  const staticPage = pageLabel.textContent;
+  const staticPrev = prev.getAttribute("href");
+  const staticNext = next.getAttribute("href");
+  let selected: { link: HTMLAnchorElement; request: AbortController } | undefined;
   let type = "";
   let initial = "";
+  let renderId = 0;
+  let filtered = false;
+  let catalog: Promise<CatalogRecord[]> | undefined;
 
   function clearPreview() {
     selected?.link.removeAttribute("aria-current");
@@ -49,20 +60,54 @@ export function initStoryTagExplorer(document: Document = window.document, brows
     (wide.matches ? desktop : mobile).append(preview);
   }
 
-  const paginator = createPaginator({
-    allItems: cards.map(card => card.item),
-    pageSize: Number(root.dataset.pageSize),
-    loadMoreWrap,
-    loadMoreButton: root.querySelector("[data-loadmore-button]"),
-    loadMoreRemaining: root.querySelector("[data-loadmore-remaining]"),
-    onRender({ matchedItems, visibleItems }) {
-      status.textContent = `${matchedItems.length}개 태그`;
-      empty.hidden = matchedItems.length > 0;
-      if (selected && !visibleItems.includes(selected.item)) clearPreview();
-    },
-  });
+  const loadCatalog = () => {
+    return catalog ??= browser.fetch(catalogUrl)
+      .then(response => {
+        if (!response.ok) throw new Error("Tag catalog unavailable");
+        return response.json() as Promise<CatalogRecord[]>;
+      })
+      .then(records => records.filter(record => record.kind === "tag" && record.section === "STORY")
+        .sort((a, b) => compareStoryTagNames(a.title, b.title) || (a.tagType ?? "").localeCompare(b.tagType ?? "")))
+      .catch(error => {
+        catalog = undefined;
+        throw error;
+      });
+  };
 
-  function applyFilters(updateAddress = true) {
+  function renderCard(tag: CatalogRecord) {
+    const card = staticCards[0].cloneNode(true) as HTMLElement;
+    const link = card.querySelector<HTMLAnchorElement>("[data-story-tag-card]")!;
+    link.href = tag.url;
+    link.removeAttribute("aria-current");
+    card.querySelector("[data-tag-kind]")!.textContent = tag.context ?? "";
+    card.querySelector("[data-tag-count]")!.textContent = `${tag.documentCount ?? 0}편`;
+    card.querySelector("[data-tag-name]")!.textContent = tag.title;
+    const aliases = card.querySelector<HTMLElement>("[data-tag-aliases]")!;
+    aliases.textContent = (tag.aliases ?? []).slice(0, 2).join(" · ");
+    aliases.hidden = !aliases.textContent;
+    return card;
+  }
+
+  function setNavigation(label: string | null, previous: string | null, following: string | null) {
+    pageLabel.textContent = label;
+    for (const [link, href] of [[prev, previous], [next, following]] as const) {
+      link.hidden = !href;
+      if (href) link.setAttribute("href", href);
+      else link.removeAttribute("href");
+    }
+    pages.hidden = !previous && !following;
+  }
+
+  function addressForPage(address: URL, page: number) {
+    const target = new URL(address);
+    if (page > 1) target.searchParams.set("page", String(page));
+    else target.searchParams.delete("page");
+    return target.href;
+  }
+
+  async function applyFilters(updateAddress = true) {
+    const render = ++renderId;
+    const address = new URL(browser.location.href);
     const query = storyTagSearchKey(input.value);
     for (const button of buttons) {
       button.setAttribute("aria-pressed", String(button.dataset.storyTagType === type));
@@ -70,22 +115,53 @@ export function initStoryTagExplorer(document: Document = window.document, brows
     for (const button of initialButtons) {
       button.setAttribute("aria-pressed", String(button.dataset.storyTagInitial === initial));
     }
-    reset.hidden = !type && !initial && !query;
-    paginator.reset(cards.filter(card =>
-      (!type || card.type === type) && (!initial || card.initial === initial)
-      && card.names.some(name => name.includes(query))
-    ).map(card => card.item));
-
+    filtered = Boolean(type || initial || query);
+    reset.hidden = !filtered;
     if (updateAddress) {
-      const address = new URL(browser.location.href);
       if (type) address.searchParams.set("type", type);
       else address.searchParams.delete("type");
       if (initial) address.searchParams.set("initial", initial);
       else address.searchParams.delete("initial");
       if (query) address.searchParams.set("q", input.value.trim());
       else address.searchParams.delete("q");
+      address.searchParams.delete("page");
       if (address.href !== browser.location.href)
         browser.history.replaceState(browser.history.state, "", address);
+    }
+
+    if (selected) clearPreview();
+    empty.hidden = true;
+    list.removeAttribute("aria-busy");
+    if (!filtered) {
+      status.textContent = staticStatus;
+      list.replaceChildren(...staticCards);
+      setNavigation(staticPage, staticPrev, staticNext);
+      return;
+    }
+
+    list.setAttribute("aria-busy", "true");
+    status.textContent = "태그를 불러오는 중입니다.";
+    list.replaceChildren();
+    setNavigation("", null, null);
+    try {
+      const records = await loadCatalog();
+      if (render !== renderId) return;
+      const matches = records.filter(tag => (!type || tag.tagType === type)
+        && (!initial || storyTagInitial(tag.title) === initial)
+        && [tag.title, ...(tag.aliases ?? [])].some(name => storyTagSearchKey(name).includes(query)));
+      const pageCount = Math.max(1, Math.ceil(matches.length / storyTagsPageSize));
+      const requested = Number(address.searchParams.get("page"));
+      const page = Number.isSafeInteger(requested) ? Math.min(pageCount, Math.max(1, requested)) : 1;
+      const start = (page - 1) * storyTagsPageSize;
+      list.replaceChildren(...matches.slice(start, start + storyTagsPageSize).map(renderCard));
+      status.textContent = `${matches.length}개 태그`;
+      empty.hidden = matches.length > 0;
+      setNavigation(`${page} / ${pageCount}`, page > 1 ? addressForPage(address, page - 1) : null,
+        page < pageCount ? addressForPage(address, page + 1) : null);
+    } catch {
+      if (render === renderId) status.textContent = "태그를 불러오지 못했습니다. 검색어를 다시 입력하거나 Enter를 눌러 주세요.";
+    } finally {
+      if (render === renderId) list.removeAttribute("aria-busy");
     }
   }
 
@@ -96,46 +172,56 @@ export function initStoryTagExplorer(document: Document = window.document, brows
     const requestedInitial = params.get("initial") ?? "";
     initial = initialButtons.some(button => button.dataset.storyTagInitial === requestedInitial) ? requestedInitial : "";
     input.value = params.get("q") ?? "";
-    applyFilters(false);
+    void applyFilters(false);
   }
 
   for (const button of buttons) {
     button.addEventListener("click", () => {
       type = button.dataset.storyTagType ?? "";
-      applyFilters();
+      void applyFilters();
     });
   }
   for (const button of initialButtons) {
     button.addEventListener("click", () => {
       initial = button.dataset.storyTagInitial ?? "";
-      applyFilters();
+      void applyFilters();
     });
   }
-  input.addEventListener("input", () => applyFilters());
+  input.addEventListener("input", event => {
+    if (!(event as InputEvent).isComposing) void applyFilters();
+  });
   search.addEventListener("submit", event => {
     event.preventDefault();
-    applyFilters();
+    void applyFilters();
   });
   reset.addEventListener("click", () => {
     type = "";
     initial = "";
     input.value = "";
-    applyFilters();
+    void applyFilters();
     input.focus();
   });
   browser.addEventListener("popstate", restoreFilters);
+  for (const link of [prev, next]) {
+    link.addEventListener("click", event => {
+      if (!filtered || !followsLink(event)) return;
+      event.preventDefault();
+      browser.history.pushState(browser.history.state, "", link.href);
+      root.querySelector<HTMLElement>("#story-tag-list-title")?.focus();
+      void applyFilters(false);
+    });
+  }
 
   if (typeof dialog.showModal === "function") {
     list.addEventListener("click", async event => {
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (!followsLink(event)) return;
       const link = (event.target as Element).closest<HTMLAnchorElement>("[data-story-tag-card]");
-      const item = link?.closest<HTMLElement>("[data-story-tag-entry]");
-      if (!link || !item) return;
+      if (!link) return;
       event.preventDefault();
       selected?.link.removeAttribute("aria-current");
       selected?.request.abort();
       const request = new AbortController();
-      selected = { item, link, request };
+      selected = { link, request };
       link.setAttribute("aria-current", "true");
       fullLink.href = link.href;
       previewBody.textContent = "미리보기를 불러오는 중입니다.";
@@ -177,5 +263,4 @@ export function initStoryTagExplorer(document: Document = window.document, brows
   search.removeAttribute("inert");
   filters.removeAttribute("inert");
   initials.removeAttribute("inert");
-  loadMoreWrap?.removeAttribute("inert");
 }

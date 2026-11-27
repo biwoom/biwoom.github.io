@@ -15,7 +15,7 @@ const collator = new Intl.Collator('ko');
 /** @typedef {typeof searchSections[number]} SearchSection */
 /** @typedef {SearchSection | 'ALL'} SearchFilter */
 /** @typedef {{id: string, title: string, url: string, section?: SearchSection, context?: string, workId?: string, work?: string}} SearchTarget */
-/** @typedef {SearchTarget & {kind: 'work' | 'document' | 'tag', aliases?: string[]}} CatalogRecord */
+/** @typedef {SearchTarget & {kind: 'work' | 'document' | 'tag', aliases?: string[], tagType?: import('../../scripts/lib/story-tags.mjs').StoryTagType, documentCount?: number}} CatalogRecord */
 /** @typedef {SearchTarget & {passages: [anchor: string, text: string][]}} OriginalDocument */
 /** @typedef {SearchTarget & {kind: CatalogRecord['kind'] | 'original', excerpt?: string, match?: [before: string, text: string, after: string]}} SearchResult */
 

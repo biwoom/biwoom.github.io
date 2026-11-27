@@ -3,12 +3,13 @@ const { dist } = projectPaths();
 import fs from "node:fs";
 import path from "node:path";
 import assert from "node:assert/strict";
+import sharp from "sharp";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import { readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
 import { readHomeHtmlCards, selectTodayArticle } from "./lib/home-html-cards.mjs";
 import { readBlogCatalog } from "./lib/blog.mjs";
-import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath } from "./lib/story-tags.mjs";
+import { indexStoryTags, storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath, storyTagsPageSize } from "./lib/story-tags.mjs";
 import { ARTICLE_LABEL, BLOG, BRAND, REPOSITORY_URL, SERIES_LABELS, SITE_URL, sitePath } from "../../site-config.mjs";
 import {
   readRegistry,
@@ -328,28 +329,45 @@ for (const [source, record] of Object.entries(registry.files)) {
   );
   count++;
 }
+const tagDirectoryPage = number => number > 1 ? `${storyTagsPath}${number}/` : storyTagsPath;
 const storyTagDirectory = fs.readFileSync(path.join(dist, storyTagsPath, "index.html"), "utf8");
 const storyTags = indexStoryTags(taggedStoryDocuments);
 if (storyTags.length) {
-  assert.ok(storyTagDirectory.includes('data-page-size="30"'), "STORY tag explorer shows 30 cards per batch");
-  assert.equal((storyTagDirectory.match(/<a\b[^>]*data-story-tag-card/g) ?? []).length, storyTags.length);
-  const initialCards = [...storyTagDirectory.matchAll(/<li\b[^>]*data-story-tag-entry="[^"]*"[^>]*>/g)].map(match => match[0]);
-  assert.deepEqual(initialCards.map(card => /\shidden(?=[\s>])/.test(card)),
-    storyTags.map((_, index) => index >= 30), "STORY explorer renders only its first batch before scripts");
   const initialGroups = storyTags.map(tag => storyTagInitial(tag.label));
   const initialButtons = [...storyTagDirectory.matchAll(/<button[^>]*\sdata-story-tag-initial(?:="([^"]*)")?(?=[\s>])/g)]
     .map(match => match[1] ?? "");
   assert.deepEqual(initialButtons, ["", ...storyTagInitials, ...(initialGroups.includes("other") ? ["other"] : [])]);
-  assert.deepEqual(initialCards.map(card => card.match(/\sdata-initial="([^"]*)"/)?.[1]).sort(), initialGroups.sort(),
-    "STORY tag cards carry the initial of their canonical name");
-  for (const control of ["story-tag-search", "story-tag-filters", "story-tag-initials", "loadmore-wrap"]) {
+  for (const control of ["story-tag-search", "story-tag-filters", "story-tag-initials"]) {
     const element = storyTagDirectory.match(new RegExp(`<[^>]+data-${control}[^>]*>`))?.[0];
     assert.ok(element?.includes(" inert"), `STORY explorer ${control} is inert until initialized`);
-    assert.equal(/\shidden(?=[\s>])/.test(element), control === "loadmore-wrap" && storyTags.length <= 30);
   }
-  assert.ok(storyTagDirectory.includes(`data-loadmore-remaining`));
-  assert.match(storyTagDirectory, /<noscript>[\s\S]*?\[data-story-tag-entry\]\[hidden\][\s\S]*?<\/noscript>/,
-    "STORY explorer keeps all tag links available without scripts");
+  const pageCount = Math.ceil(storyTags.length / storyTagsPageSize);
+  for (let page = 1; page <= pageCount; page++) {
+    const route = tagDirectoryPage(page);
+    const html = fs.readFileSync(path.join(dist, route, "index.html"), "utf8");
+    const actual = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*data-story-tag-card/g)].map(match => match[1]);
+    const start = (page - 1) * storyTagsPageSize;
+    assert.deepEqual(actual, storyTags.slice(start, start + storyTagsPageSize).map(tag => storyTagPath(tag)), `${route}: its own static cards`);
+    assert.equal((html.match(/<li\b[^>]*data-story-tag-entry[^>]*>/g) ?? []).length, actual.length);
+    assert.doesNotMatch(html, /<li\b[^>]*data-story-tag-entry[^>]*\shidden/);
+    assert.ok(html.includes(`rel="canonical" href="${SITE_URL}${route}"`), `${route}: canonical`);
+    assert.match(html, new RegExp(`data-story-tag-page[^>]*>${page} / ${pageCount}</span>`));
+    for (const [direction, expected] of [["prev", page > 1 ? tagDirectoryPage(page - 1) : undefined],
+      ["next", page < pageCount ? tagDirectoryPage(page + 1) : undefined]]) {
+      const link = html.match(new RegExp(`<a[^>]*data-story-tag-${direction}[^>]*>`))?.[0];
+      assert.ok(link, `${route}: ${direction} control`);
+      assert.equal(link.match(/href="([^"]+)"/)?.[1], expected);
+      assert.equal(/\shidden(?=[\s>])/.test(link), !expected);
+    }
+  }
+  const catalog = JSON.parse(fs.readFileSync(path.join(dist, "search/catalog.json"), "utf8"));
+  const catalogTags = new Map(catalog.filter(record => record.kind === "tag").map(record => [record.url, record]));
+  assert.equal(catalogTags.size, storyTags.length, "STORY tag filter uses the complete public search catalog");
+  for (const tag of storyTags) {
+    const record = catalogTags.get(storyTagPath(tag));
+    assert.deepEqual([record?.tagType, record?.title, record?.aliases.toSorted(), record?.documentCount],
+      [tag.type, tag.label, tag.aliases.toSorted(), tag.documents.length]);
+  }
   assert.match(storyTagDirectory, /<dialog[^>]*data-story-tag-dialog/);
   assert.ok(storyTagDirectory.includes("data-story-tag-desktop"), "STORY tag explorer has a desktop preview");
   rule(".ol-tag-desktop", /display:block/);
@@ -358,7 +376,6 @@ if (storyTags.length) {
 }
 for (const tag of storyTags) {
   const route = storyTagPath(tag);
-  assert.ok(storyTagDirectory.includes(`href="${sitePath(route)}"`), `${route}: tag directory link`);
   const html = fs.readFileSync(path.join(dist, decodeURIComponent(route), "index.html"), "utf8");
   const fragment = html.match(/<template[^>]*data-story-tag-preview-fragment[^>]*>([\s\S]*?)<\/template>/)?.[1];
   assert.ok(fragment, `${route}: preview fragment`);
@@ -583,6 +600,33 @@ for (const [relative, source] of expectedArt) {
   assert.deepEqual(fs.readFileSync(path.join(generatedContent, relative)), Buffer.isBuffer(source) ? source : fs.readFileSync(source), relative);
 }
 
+const checkedThumbnails = new Set();
+async function checkBlogThumbnails(html, route) {
+  const rows = html.match(/<article\b[^>]*class="[^"]*\bol-blog-post-row\b[^"]*"[^>]*>[\s\S]*?<\/article>/g) ?? [];
+  for (const [index, row] of rows.entries()) {
+    const image = row.match(/<a\b[^>]*class="ol-blog-list-thumbnail"[^>]*>\s*(<img\b[^>]*>)/)?.[1];
+    if (!image) continue;
+    assert.match(image, new RegExp(`loading="${index === 0 ? "eager" : "lazy"}"`), route);
+    const src = image.match(/\bsrc="([^"]+)"/)?.[1];
+    if (!src?.startsWith("/generated/blog-thumbnails/")) continue;
+    const srcset = image.match(/\bsrcset="([^"]+)"/)?.[1];
+    if (srcset) assert.match(image, /sizes="\(max-width: 700px\) 92px, 152px"/, route);
+    const variants = srcset?.split(", ") ?? [`${src} 160w`];
+    assert.equal(variants[0], `${src} 160w`);
+    if (srcset) assert.deepEqual(variants.map(variant => variant.split(" ")[1]), ["160w", "320w"]);
+    for (const variant of variants) {
+      const [url, width] = variant.split(" ");
+      if (checkedThumbnails.has(url)) continue;
+      assert.match(url, /^\/generated\/blog-thumbnails\/[a-f0-9]+-v\d+-(160|320)\.webp$/);
+      const image = await sharp(path.join(dist, url)).metadata();
+      assert.equal(image.format, "webp");
+      assert.equal(image.width, Number.parseInt(width, 10));
+      assert.equal(image.height, image.width * 3 / 4);
+      checkedThumbnails.add(url);
+    }
+  }
+}
+await checkBlogThumbnails(blog, "/blog/");
 for (const series of blogCatalog) {
   const html = fs.readFileSync(path.join(dist, series.url, "index.html"), "utf8");
   assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1, `${series.url}: one page title`);
@@ -600,6 +644,7 @@ for (const series of blogCatalog) {
     assert.equal((categoryHtml.match(/<h1(?:\s|>)/g) ?? []).length, 1);
     assert.ok(categoryHtml.includes(category.description));
     assert.ok(!feed.includes(`<link>${new URL(sitePath(category.url), SITE_URL).href}</link>`), "Category metadata is excluded from RSS");
+    await checkBlogThumbnails(categoryHtml, category.url);
   }
   for (const [index, post] of series.entries.entries()) {
     const postHtml = fs.readFileSync(path.join(dist, post.data.url, "index.html"), "utf8");
@@ -612,6 +657,10 @@ for (const series of blogCatalog) {
     if (next) assert.ok(next.includes(`href="${sitePath(series.entries[index+1].data.url)}"`));
   }
 }
+const thumbnailRoot = path.join(dist, "generated/blog-thumbnails");
+assert.deepEqual(walk(thumbnailRoot, { assets: true }).map(file => path.basename(file)).sort(),
+  [...checkedThumbnails].map(url => path.basename(url)).sort(), "Only thumbnails used by public BLOG lists are published");
+console.log(`Verified ${checkedThumbnails.size} responsive BLOG thumbnail files.`);
 console.log(`BLOG covers, ${blogCatalog.length} series, metadata pages, RSS exclusions and sequential reading verified.`);
 const mediaImages = await syncMediaGallery();
 const mediaHtml = fs.readFileSync(path.join(dist, "media/index.html"), "utf8");

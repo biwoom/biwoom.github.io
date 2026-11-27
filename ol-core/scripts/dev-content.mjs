@@ -2,6 +2,7 @@ import { watchContent } from "./lib/watch-content.mjs";
 import { prepare } from "./prepare-content.mjs";
 import { syncAssets } from "./sync-content-assets.mjs";
 import { syncMediaGallery } from "./lib/media-gallery.mjs";
+import { syncBlogThumbnails } from "./lib/blog-thumbnails.mjs";
 export default function contentDevelopment() {
   return {
     name: "ol-content-development",
@@ -10,6 +11,7 @@ export default function contentDevelopment() {
         const dispose = watchContent(server.watcher, async (changes) => {
           prepare();
           syncAssets();
+          await syncBlogThumbnails();
           if (changes.some(change => !change.relative || change.relative === "media" || change.relative.startsWith("media/"))) {
             await syncMediaGallery();
           }

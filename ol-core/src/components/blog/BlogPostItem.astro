@@ -1,15 +1,21 @@
 ---
 import { url } from "../../lib/url";
 import type { CollectionEntry } from "astro:content";
-import { getBlogThumbnailUrl } from "../../lib/assets";
-interface Props { post: CollectionEntry<"blog">; index?: number; hidden?: boolean; }
-const { post, index = 0, hidden = false } = Astro.props;
-const thumbnail = getBlogThumbnailUrl(post);
+import { getBlogThumbnail } from "../../../scripts/lib/blog-thumbnails.mjs";
+interface Props { post: CollectionEntry<"blog">; index?: number; hidden?: boolean; eager?: boolean; }
+const { post, index = 0, hidden = false, eager = false } = Astro.props;
+const thumbnail = getBlogThumbnail(post);
+const variants = thumbnail?.variants ?? [];
+const src = variants[0]?.url ?? thumbnail?.original;
 ---
 <article class:list={["ol-post", "ol-blog-post-row", {"ol-post--text-only": !thumbnail}]} data-category={post.data.category || "미분류"} data-tags={JSON.stringify(post.data.tags)} data-year={post.data.date.getFullYear()} data-index={index} hidden={hidden}>
   <div class="ol-blog-post-copy"><div class="ol-blog-card-meta-row"><span class="when">{post.data.date.toLocaleDateString("ko-KR")}</span>{post.data.category && <span class="ol-badge">{post.data.category}</span>}</div>
     <a href={url(post.data.url)} class="ol-post-title-link"><h3>{post.data.title}</h3></a><p>{post.data.description}</p>
     <div class="meta">{post.data.seriesKey !== "blog/standalone" && <a href={url(post.data.seriesUrl)}>{post.data.series}</a>}<span>{post.data.readingTime}분 읽기</span></div>
   </div>
-  {thumbnail && <a href={url(post.data.url)} class="ol-blog-list-thumbnail" aria-label={`${post.data.title} 읽기`} tabindex="-1"><img src={url(thumbnail)} alt="" loading="lazy" width="160" height="120" /></a>}
+  {src && <a href={url(post.data.url)} class="ol-blog-list-thumbnail" aria-label={`${post.data.title} 읽기`} tabindex="-1">
+    <img src={url(src)} alt="" width="160" height="120" loading={eager ? "eager" : "lazy"} decoding="async"
+      srcset={variants.length > 1 ? variants.map(variant => `${url(variant.url)} ${variant.width}w`).join(", ") : undefined}
+      sizes={variants.length > 1 ? "(max-width: 700px) 92px, 152px" : undefined} />
+  </a>}
 </article>

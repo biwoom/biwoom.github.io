@@ -1,38 +1,43 @@
 ---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { url } from "../../../lib/url";
 import { LIBRARY_LABELS } from "../../../lib/site-config";
+import { searchPaths } from "../../../lib/search.mjs";
 import { getStoryTags, storyTagTypeLabels } from "../../../lib/story-tags";
-import { storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath, storyTagTypes } from "../../../../scripts/lib/story-tags.mjs";
+import { storyTagInitial, storyTagInitials, storyTagPath, storyTagsPath, storyTagsPageSize, storyTagTypes } from "../../../../scripts/lib/story-tags.mjs";
 
-const tags = await getStoryTags();
-const pageSize = 30;
-const remaining = Math.max(tags.length - pageSize, 0);
-const cards = tags.map(tag => ({ tag, initial: storyTagInitial(tag.label) }));
-const initialFilters = [
-  { value: "", label: "전체" },
-  ...storyTagInitials.map(label => ({ value: label, label })),
-  ...(cards.some(card => card.initial === "other") ? [{ value: "other", label: "기타" }] : []),
-];
-const filters = [
-  { type: "", label: "전체", count: tags.length },
-  ...storyTagTypes.map(type => ({
-    type, label: storyTagTypeLabels[type], count: tags.filter(tag => tag.type === type).length,
-  })),
-];
+export const getStaticPaths = (async ({ paginate }) => {
+  const tags = await getStoryTags();
+  const initialFilters = [
+    { value: "", label: "전체" },
+    ...storyTagInitials.map(label => ({ value: label, label })),
+    ...(tags.some(tag => storyTagInitial(tag.label) === "other") ? [{ value: "other", label: "기타" }] : []),
+  ];
+  const filters = [
+    { type: "", label: "전체", count: tags.length },
+    ...storyTagTypes.map(type => ({
+      type, label: storyTagTypeLabels[type], count: tags.filter(tag => tag.type === type).length,
+    })),
+  ];
+  return paginate(tags, { pageSize: storyTagsPageSize, props: { initialFilters, filters } });
+}) satisfies GetStaticPaths;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { page, initialFilters, filters } = Astro.props;
+const title = `${LIBRARY_LABELS.story} 태그${page.currentPage > 1 ? ` · ${page.currentPage}페이지` : ""}`;
+const prev = page.url.prev?.replace(/\/?$/, "/");
+const next = page.url.next?.replace(/\/?$/, "/");
 ---
 
-<BaseLayout title={`${LIBRARY_LABELS.story} 태그`} pagefindBody={false}>
+<BaseLayout title={title} pagefindBody={false}>
   <main class="ol-section ol-tag-explorer">
     <noscript>
       <style is:inline>
         .ol-tag-explorer .ol-tag-search,
         .ol-tag-explorer [data-story-tag-directory] > .ol-tag-filters,
         .ol-tag-explorer [data-story-tag-directory] > .ol-tag-desktop,
-        .ol-tag-explorer [data-story-tag-initials],
-        .ol-tag-explorer [data-loadmore-wrap] { display: none; }
+        .ol-tag-explorer [data-story-tag-initials] { display: none; }
         .ol-tag-explorer .ol-tag-columns { grid-template-columns: minmax(0, 1fr); }
-        .ol-tag-explorer [data-story-tag-entry][hidden] { display: list-item; }
       </style>
     </noscript>
     <div class="ol-container">
@@ -43,15 +48,15 @@ const filters = [
       </nav>
       <header class="ol-tag-heading">
         <h1>{LIBRARY_LABELS.story} 태그</h1>
-        {tags.length > 0 && (
+        {page.total > 0 && (
           <form class="ol-library-search ol-tag-search" role="search" data-story-tag-search inert>
             <label class="sr-only" for="story-tag-query">태그 이름 또는 이칭 검색</label>
             <input id="story-tag-query" name="q" type="search" placeholder="태그 이름이나 이칭 검색" />
           </form>
         )}
       </header>
-      {tags.length === 0 ? <p>등록된 태그가 없습니다.</p> : (
-        <div class="ol-tag-columns" data-story-tag-directory data-page-size={pageSize}>
+      {page.total === 0 ? <p>등록된 태그가 없습니다.</p> : (
+        <div class="ol-tag-columns" data-story-tag-directory data-catalog-url={url(searchPaths.catalog)}>
           <aside class="ol-tag-panel ol-tag-filters" data-story-tag-filters inert>
             <h2>유형</h2>
             <div class="ol-tag-type-list" role="group" aria-label="태그 유형">
@@ -64,8 +69,8 @@ const filters = [
           </aside>
           <section class="ol-tag-panel ol-tag-list" aria-labelledby="story-tag-list-title">
             <div class="ol-tag-toolbar">
-              <h2 id="story-tag-list-title">태그 목록</h2>
-              <p data-story-tag-status role="status">{tags.length}개 태그</p>
+              <h2 id="story-tag-list-title" tabindex="-1">태그 목록</h2>
+              <p data-story-tag-status role="status">{page.total}개 태그</p>
               <button class="ol-btn ol-btn-ghost ol-btn-sm" type="button" data-story-tag-reset hidden>초기화</button>
             </div>
             <div class="ol-tag-initials" role="group" aria-label="태그 초성" data-story-tag-initials inert>
@@ -77,27 +82,23 @@ const filters = [
             </div>
             <p data-story-tag-empty hidden>일치하는 태그가 없습니다.</p>
             <ul class="ol-tag-grid" data-story-tag-list>
-              {cards.map(({ tag, initial }, index) => {
-                const href = url(storyTagPath(tag));
-                return (
-                  <li data-story-tag-entry={JSON.stringify([tag.label, ...tag.aliases])} data-type={tag.type} data-initial={initial}
-                    hidden={index >= pageSize}>
-                    <a class="ol-tag-card" href={href} data-story-tag-card>
-                      <span class="ol-tag-card-meta">
-                        <span>{storyTagTypeLabels[tag.type]}</span><span>{tag.documents.length}편</span>
-                      </span>
-                      <strong>{tag.label}</strong>
-                      {tag.aliases.length > 0 && <span class="ol-tag-card-alias">{tag.aliases.slice(0, 2).join(" · ")}</span>}
-                    </a>
-                  </li>
-                );
-              })}
+              {page.data.map(tag => (
+                <li data-story-tag-entry>
+                  <a class="ol-tag-card" href={url(storyTagPath(tag))} data-story-tag-card>
+                    <span class="ol-tag-card-meta">
+                      <span data-tag-kind>{storyTagTypeLabels[tag.type]}</span><span data-tag-count>{tag.documents.length}편</span>
+                    </span>
+                    <strong data-tag-name>{tag.label}</strong>
+                    <span class="ol-tag-card-alias" data-tag-aliases hidden={tag.aliases.length === 0}>{tag.aliases.slice(0, 2).join(" · ")}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
-            <div class="ol-tag-more" data-loadmore-wrap hidden={remaining === 0} inert>
-              <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-loadmore-button>
-                더 보기 <span data-loadmore-remaining>({remaining})</span>
-              </button>
-            </div>
+            <nav class="ol-tag-pages" data-story-tag-pages aria-label="태그 목록 페이지" hidden={page.lastPage < 2}>
+              <a class="ol-btn ol-btn-outline ol-btn-sm" data-story-tag-prev href={prev} hidden={!prev} rel="prev">이전</a>
+              <span data-story-tag-page>{page.currentPage} / {page.lastPage}</span>
+              <a class="ol-btn ol-btn-outline ol-btn-sm" data-story-tag-next href={next} hidden={!next} rel="next">다음</a>
+            </nav>
           </section>
           <aside class="ol-tag-panel ol-tag-desktop" data-story-tag-desktop aria-label="선택한 태그">
             <p data-story-tag-placeholder>태그를 선택하면 이칭과 관련 자료를 볼 수 있습니다.</p>
@@ -213,7 +214,8 @@ const filters = [
   .ol-tag-card:hover { border-color: var(--ol-accent); }
   .ol-tag-card-meta, .ol-tag-card-alias { font-size: 0.78rem; color: var(--ol-muted); }
   .ol-tag-card-alias { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ol-tag-more { margin-top: 1rem; text-align: center; }
+  .ol-tag-pages { display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+  .ol-tag-pages span { color: var(--ol-muted); font-size: 0.84rem; }
 
   .ol-tag-desktop { display: none; }
   .ol-tag-desktop > p { margin: 0; color: var(--ol-muted); }

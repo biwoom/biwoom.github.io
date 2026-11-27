@@ -5,6 +5,7 @@ import { walk, markdownPattern, readRegistry, isPublicSource } from "./lib/conte
 import { getEbooks } from "./lib/ebooks.mjs";
 import { readHomeArticles } from "./lib/home-articles.mjs";
 import { readHomeHtmlCards } from "./lib/home-html-cards.mjs";
+import { syncBlogThumbnails } from "./lib/blog-thumbnails.mjs";
 function allFiles(dir) {
   return fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => e.isDirectory() ? allFiles(path.join(dir,e.name)) : [path.join(dir,e.name)]);
 }
@@ -60,4 +61,7 @@ export function syncAssets(root = PROJECT_ROOT) {
     fs.rmSync(path.join(projectPaths(root).generated, name), { recursive: true, force: true });
   console.log(`Synced ${expected.size} content assets.`);
 }
-if (isMainModule(import.meta.url)) syncAssets();
+if (isMainModule(import.meta.url)) {
+  syncAssets();
+  console.log(`Prepared ${await syncBlogThumbnails()} BLOG thumbnails.`);
+}

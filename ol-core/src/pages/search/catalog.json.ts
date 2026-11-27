@@ -38,7 +38,7 @@ export const GET: APIRoute = async () => {
     records.push({
       id: href, kind: 'tag', section: 'STORY',
       title: tag.label, url: href, aliases: tag.aliases,
-      context: storyTagTypeLabels[tag.type],
+      context: storyTagTypeLabels[tag.type], tagType: tag.type, documentCount: tag.documents.length,
     });
   }
   for (const article of articles) {
