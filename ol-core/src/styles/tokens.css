@@ -22,7 +22,7 @@
   --ol-subtle:          #a3a3a3;
 
   /* ── Typography ── */
-  --ol-font-sans:    "Pretendard", "Noto Sans KR", "Inter",
+  --ol-font-sans:    "Pretendard Variable", "Noto Sans KR", "Inter",
                      -apple-system, BlinkMacSystemFont, sans-serif;
   --ol-font-ui:      var(--ol-font-sans);
   --ol-font-mono:    "JetBrains Mono", "SFMono-Regular", "SF Mono",

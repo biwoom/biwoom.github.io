@@ -21,7 +21,8 @@ Last updated: 2026-11-27
 
 ## Current Architecture
 
-- 통합 검색은 공개 작품·제목·이칭의 Astro JSON, Pagefind 1.5.2 본문, 공개 TEXT 리더의 정적 한문 원문을 조회한다. 본문 유형 필터를 먼저 적용하고 초기 발췌 8건을 요청한다. 원문은 일치 문단의 발췌와 기존 절 링크를 제공한다. 제목 JSON은 개발 서버에서도 조회할 수 있으며, 본문·원문 색인은 빌드 후 미리보기에서 확인한다.
+- 통합 검색은 공개 작품·제목·이칭의 Astro JSON과 공개 TEXT 리더의 정적 한문 원문을 조회한다. 검색창에서 ‘본문 검색’을 켜면 Pagefind 1.5.2를 불러오고 본문 유형 필터와 초기 발췌 8건을 적용한다. 새 검색창을 열면 본문 선택을 초기화한다. 원문은 일치 문단의 발췌와 기존 절 링크를 제공한다. 제목 JSON은 개발 서버에서도 조회할 수 있으며, 본문·원문 색인은 빌드 후 확인한다.
+- 공통 UI와 이야기카드는 버전을 고정한 Pretendard Variable 가변 동적 서브셋을 사용한다.
 
 - STORY body frontmatter accepts optional person, place, topic and alias tags. The public tag directory supports alias lookup, and detail pages group tagged chapters in their existing series order. Both translation releases supply structured tags.
 - STORY's display title omits the compound chapter prefix when it matches the filename and the title comes from the H1 or filename. The Dhammapada Stories release keeps its numbered source filenames and headings.

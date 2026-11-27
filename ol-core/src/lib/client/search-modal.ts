@@ -21,15 +21,15 @@ type Pagefind = {
 
 type Source = 'catalog' | 'originals' | 'body';
 type Group = { rows: SearchResult[]; limit: number; busy: boolean; error?: string };
+type BodyGroup = Group & { handles: PagefindHandle[]; offset: number };
 type Search = {
   query: string;
-  groups: Partial<Record<Source, Group>>;
-  bodyHandles: PagefindHandle[];
-  bodyOffset: number;
+  groups: { catalog: Group; originals?: Group; body?: BodyGroup };
 };
 const sourceOrder = ['originals', 'catalog', 'body'] as const;
 const labels = { catalog: '작품·제목·태그', originals: '한문 원문', body: '본문' };
 const batch = 8;
+const newGroup = (): Group => ({ rows: [], limit: batch, busy: true });
 
 function lazy<T>(load: () => Promise<T>) {
   let pending: Promise<T> | undefined;
@@ -84,6 +84,7 @@ export function initSearchModal() {
   const overlay = document.querySelector<HTMLElement>('#ol-search-overlay')!;
   const input = overlay.querySelector<HTMLInputElement>('#ol-search-input')!;
   const filters = overlay.querySelector<HTMLElement>('[data-search-filters]')!;
+  const bodyToggle = filters.querySelector<HTMLButtonElement>('[data-search-body]')!;
   const results = overlay.querySelector<HTMLElement>('#ol-search-results')!;
   const trigger = document.getElementById('ol-search-trigger');
   const loadCatalog = lazy(() => fetchJson<CatalogRecord[]>(overlay.dataset.searchCatalog!));
@@ -96,6 +97,7 @@ export function initSearchModal() {
   });
 
   let filter: SearchFilter = 'ALL';
+  let bodyEnabled = false;
   let active: Search | undefined;
   let timer: ReturnType<typeof setTimeout>;
   let composing = false;
@@ -116,8 +118,9 @@ export function initSearchModal() {
     const lists = sourceOrder.map(source => {
       const group = run.groups[source];
       if (!group) return '';
-      const total = source === 'body' ? run.bodyHandles.length : group.rows.length;
-      const more = source === 'body' ? run.bodyOffset < total : group.limit < total;
+      const body = source === 'body' ? run.groups.body : undefined;
+      const total = body?.handles.length ?? group.rows.length;
+      const more = (body?.offset ?? group.limit) < total;
       const cards = group.rows.slice(0, group.limit).map(result => {
         const key = searchLocationKey(result.url);
         if (seen.has(key)) return '';
@@ -137,8 +140,8 @@ export function initSearchModal() {
             ${snippet ? `<span class="ol-search-result-excerpt">${snippet}</span>` : ''}
           </a>`;
       }).join('');
-      if (!cards && !more && !group.busy && !group.error) return '';
-      const status = group.error || (group.busy && !cards ? '불러오는 중…' : '');
+      if (!cards && !more && !group.busy && !group.error && !(body && !total)) return '';
+      const status = group.error || (group.busy && !cards ? '불러오는 중…' : body && !total ? '일치하는 본문이 없습니다' : '');
       return `
         <section class="ol-search-group">
           <h2>${labels[source]}${total ? ` <span>${total}건</span>` : ''}</h2>
@@ -158,29 +161,46 @@ export function initSearchModal() {
     }
   }
 
-  async function showBodyBatch(run: Search, group: Group) {
+  async function showBodyBatch(run: Search, group: BodyGroup) {
     group.busy = true;
     group.error = undefined;
     render(run);
-    const handles = run.bodyHandles.slice(run.bodyOffset, run.bodyOffset + batch);
+    const handles = group.handles.slice(group.offset, group.offset + batch);
     const settled = await Promise.allSettled(handles.map(async handle => bodyResult(await handle.data(), run.query)));
-    if (active !== run) return;
+    if (active !== run || run.groups.body !== group) return;
     for (const item of settled) {
       if (item.status === 'fulfilled') group.rows.push(item.value);
       else group.error = '본문 발췌 일부를 불러올 수 없습니다';
     }
-    run.bodyOffset += handles.length;
+    group.offset += handles.length;
     group.limit = group.rows.length;
     group.busy = false;
     render(run);
   }
 
+  async function startBodySearch(run: Search, scope: SearchFilter) {
+    const body: BodyGroup = { ...newGroup(), handles: [], offset: 0 };
+    run.groups.body = body;
+    render(run);
+    try {
+      const pagefind = await loadPagefind();
+      if (active !== run || run.groups.body !== body) return;
+      const match = await pagefind.search(searchKey(run.query), scope === 'ALL' ? undefined : { filters: { section: scope } });
+      if (active !== run || run.groups.body !== body) return;
+      body.handles = match.results;
+      await showBodyBatch(run, body);
+    } catch {
+      if (active !== run || run.groups.body !== body) return;
+      body.busy = false;
+      body.error = '본문 검색을 불러올 수 없습니다';
+      render(run);
+    }
+  }
+
   function startSearch(query: string, scope: SearchFilter) {
-    const group = (): Group => ({ rows: [], limit: batch, busy: true });
-    const catalog = group();
-    const body = group();
-    const originals = hasHan(query) && (scope === 'ALL' || scope === 'TEXT') ? group() : undefined;
-    const run: Search = { query, groups: { catalog, body, originals }, bodyHandles: [], bodyOffset: 0 };
+    const catalog = newGroup();
+    const originals = hasHan(query) && (scope === 'ALL' || scope === 'TEXT') ? newGroup() : undefined;
+    const run: Search = { query, groups: { catalog, originals } };
     active = run;
     render(run);
     async function populate(target: Group, items: () => Promise<SearchResult[]>, error: string) {
@@ -197,21 +217,7 @@ export function initSearchModal() {
     }
     void populate(catalog, async () => findCatalogRecords(await loadCatalog(), query, scope),
       '제목·태그 색인을 불러올 수 없습니다');
-    void (async () => {
-      try {
-        const pagefind = await loadPagefind();
-        if (active !== run) return;
-        const match = await pagefind.search(searchKey(query), scope === 'ALL' ? undefined : { filters: { section: scope } });
-        if (active !== run) return;
-        run.bodyHandles = match.results;
-        await showBodyBatch(run, body);
-      } catch {
-        if (active !== run) return;
-        body.busy = false;
-        body.error = '본문 검색을 불러올 수 없습니다';
-        render(run);
-      }
-    })();
+    if (bodyEnabled) void startBodySearch(run, scope);
   }
 
   function cancelPending() {
@@ -229,7 +235,7 @@ export function initSearchModal() {
 
   function setFilter(next: SearchFilter) {
     filter = next;
-    for (const button of filters.querySelectorAll<HTMLButtonElement>('button')) {
+    for (const button of filters.querySelectorAll<HTMLButtonElement>('[data-search-section]')) {
       const selected = button.dataset.searchSection === filter;
       button.classList.toggle('active', selected);
       button.setAttribute('aria-pressed', String(selected));
@@ -243,6 +249,8 @@ export function initSearchModal() {
     overlay.inert = false;
     overlay.setAttribute('aria-hidden', 'false');
     input.value = '';
+    bodyEnabled = false;
+    bodyToggle.setAttribute('aria-pressed', 'false');
     setFilter('ALL');
     queueSearch();
     input.focus();
@@ -285,13 +293,28 @@ export function initSearchModal() {
       if (!composing) queueSearch(0);
     }
   });
+  bodyToggle.addEventListener('click', () => {
+    const query = input.value.trim();
+    if (!query) return;
+    bodyEnabled = !bodyEnabled;
+    bodyToggle.setAttribute('aria-pressed', String(bodyEnabled));
+    if (composing) return;
+    if (active?.query !== query) {
+      queueSearch(0);
+    } else if (bodyEnabled) {
+      void startBodySearch(active, filter);
+    } else {
+      delete active.groups.body;
+      render(active);
+    }
+  });
   results.addEventListener('click', event => {
     const target = event.target as Element;
     if (target.closest('.ol-search-result')) close();
     const source = target.closest<HTMLElement>('[data-search-more]')?.dataset.searchMore as Source | undefined;
     const group = source && active?.groups[source];
     if (!active || !group || group.busy) return;
-    if (source === 'body') void showBodyBatch(active, group);
+    if (source === 'body' && active.groups.body) void showBodyBatch(active, active.groups.body);
     else {
       group.limit += batch;
       render(active);

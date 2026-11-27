@@ -9,7 +9,7 @@
   --card-muted: #66645b;
   --card-gold: #8d6a37;
   --card-border: #ded9cd;
-  --card-font: Pretendard, "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --card-font: "Pretendard Variable", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --card-serif: "Noto Serif KR", "Noto Serif CJK KR", Batang, serif;
   box-sizing: border-box;
   color-scheme: light;

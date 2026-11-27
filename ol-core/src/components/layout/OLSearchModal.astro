@@ -47,6 +47,9 @@ import { url } from '../../lib/url';
     </div>
 
     <div class="ol-search-filters" data-search-filters role="group" aria-label="검색 결과 유형" hidden>
+      <button type="button" class="ol-search-filter ol-search-body-toggle" data-search-body aria-pressed="false">
+        본문 검색
+      </button>
       <button type="button" class="ol-search-filter active" data-search-section="ALL" aria-pressed="true">전체</button>
       {searchSections.map(section => (
         <button type="button" class="ol-search-filter" data-search-section={section} aria-pressed="false">

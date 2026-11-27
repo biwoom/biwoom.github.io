@@ -88,10 +88,11 @@ test('original build reads only public TEXT documents named in the catalogue', t
   assert.doesNotMatch(fs.readFileSync(path.join(dist, searchData.searchPaths.originals), 'utf8'), /非公開標識|目錄標識/);
 });
 
-test('search modal waits for IME, discards stale results, and pages excerpts after filtering', async () => {
+test('search modal loads Pagefind on selection, waits for IME, and preserves filtering and excerpt paging', async () => {
   const requests = [];
   const downloaded = [];
   const fetched = [];
+  let importsOfPagefind = 0;
   const catalog = [
     { id: 'same', kind: 'document', title: '새 질의', section: 'BLOG', url: '/blog/result-0/' },
     { id: 'error', kind: 'document', title: '본문 오류', section: 'BLOG', url: '/blog/catalogue-only/' },
@@ -127,12 +128,15 @@ test('search modal waits for IME, discards stale results, and pages excerpts aft
     focus() { document.activeElement = this; }
   }
   const overlay = new Element(), input = new Element(), filters = new Element(), results = new Element();
+  const bodyToggle = new Element();
   const trigger = new Element(), document = new Element();
   overlay.hidden = true;
   overlay.dataset = { searchCatalog: '/catalog', searchOriginals: '/originals', pagefindPath: '/pagefind' };
   overlay.querySelector = key => ({
     '#ol-search-input': input, '[data-search-filters]': filters, '#ol-search-results': results,
   })[key];
+  filters.querySelector = key => key === '[data-search-body]' ? bodyToggle : null;
+  bodyToggle.setAttribute = (key, value) => { if (key === 'aria-pressed') bodyToggle.pressed = value; };
   document.querySelector = () => overlay;
   document.getElementById = () => trigger;
   trigger.focus();
@@ -144,7 +148,11 @@ test('search modal waits for IME, discards stale results, and pages excerpts aft
   const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
   vm.runInNewContext(code, {
     module, exports: module.exports, document, HTMLElement: Element, HTMLAnchorElement: class {},
-    require: name => { assert.ok(Object.hasOwn(imports, name), name); return imports[name]; },
+    require: name => {
+      assert.ok(Object.hasOwn(imports, name), name);
+      if (name === '/pagefind') importsOfPagefind++;
+      return imports[name];
+    },
     fetch: async url => {
       fetched.push(url);
       return { ok: true, json: async () => url === '/catalog' ? catalog : [] };
@@ -163,12 +171,19 @@ test('search modal waits for IME, discards stale results, and pages excerpts aft
   const type = async value => { input.value = value; input.fire('input'); await flush(); };
   trigger.fire('click');
   assert.equal(document.activeElement, input);
+  assert.equal(bodyToggle.pressed, 'false');
 
   input.fire('compositionstart');
   await type('이전 질의');
   assert.equal(requests.length, 0);
   input.fire('compositionend');
   await flush();
+  assert.equal(requests.length, 0);
+  assert.equal(importsOfPagefind, 0);
+  bodyToggle.fire('click');
+  await flush();
+  assert.equal(bodyToggle.pressed, 'true');
+  assert.equal(importsOfPagefind, 1);
   assert.deepEqual(requests, [['이전 질의', undefined]]);
   await type('새 질의'.normalize('NFD'));
   assert.equal(requests.at(-1)[0], '새 질의');
@@ -191,11 +206,22 @@ test('search modal waits for IME, discards stale results, and pages excerpts aft
   await type('본문 오류');
   assert.match(results.innerHTML, /catalogue-only/);
   assert.match(results.innerHTML, /본문 검색을 불러올 수 없습니다/);
+  bodyToggle.fire('click');
+  assert.equal(bodyToggle.pressed, 'false');
+  assert.match(results.innerHTML, /catalogue-only/);
+  assert.doesNotMatch(results.innerHTML, /본문 검색을 불러올 수 없습니다/);
+  const count = requests.length;
   click(filters, 'section', 'ALL');
   await type('無常');
   assert.deepEqual(fetched, ['/catalog', '/originals']);
+  assert.equal(requests.length, count);
 
   document.fire('keydown', { key: 'Escape', preventDefault() {} });
   assert.equal(overlay.hidden, true);
   assert.equal(document.activeElement, trigger);
+  trigger.fire('click');
+  await type('새 질의');
+  assert.equal(bodyToggle.pressed, 'false');
+  assert.equal(requests.length, count);
+  assert.equal(importsOfPagefind, 1);
 });
