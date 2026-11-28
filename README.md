@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="ol-core/public/brand/biwoom-mark-gold.png" width="88" height="88" alt="비움의 금색 심볼">
+  <img src="ol-core/public/brand/biwoom-mark-monochrome-box.png" width="88" height="89" alt="둥근 사각 안에 물방울이 있는 비움 로고">
   <h1>비움 · BIWOOM</h1>
   <p><strong>붓다의 지혜를 오늘의 삶으로</strong></p>
   <p>한 출가 수행자의 공부와 번역에서 시작한 열린 불교 서재입니다.<br>문헌과 이야기에서 만난 가르침을 읽고, 사유하고, 일상에서 실천합니다.</p>
@@ -20,24 +20,24 @@
 <table width="100%">
   <tr>
     <td width="50%" valign="top">
-      <a href="https://biwoom.github.io/articles/"><img src="ol-core/src/assets/home-preview/card.webp" width="360" alt="추천 이야기와 이야기카드 목록 화면"></a><br>
+      <a href="https://biwoom.github.io/articles/"><img src=".github/readme/card.webp" width="360" height="216" alt="추천 이야기와 이야기카드 목록 화면"></a><br>
       <strong><a href="https://biwoom.github.io/articles/">이야기카드 →</a></strong><br>
       삽화가 있는 짧은 이야기에서 인물의 선택을 따라갑니다. 전문에서는 이야기 전체와 출전을 살펴볼 수 있습니다.
     </td>
     <td width="50%" valign="top">
-      <a href="https://biwoom.github.io/text/"><img src="ol-core/src/assets/home-preview/text.webp" width="360" alt="삼론현의 본문과 문헌 목차를 함께 보여 주는 불교경론 리더"></a><br>
+      <a href="https://biwoom.github.io/text/"><img src=".github/readme/text.webp" width="360" height="216" alt="삼론현의 본문과 문헌 목차를 함께 보여 주는 불교경론 리더"></a><br>
       <strong><a href="https://biwoom.github.io/text/">불교경론 →</a></strong><br>
       경전과 논서의 원문·번역을 대조하며 읽습니다. 문헌별 연구에서 개념과 사상적 맥락을 더 살펴봅니다.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://biwoom.github.io/story/"><img src="ol-core/src/assets/home-preview/story.webp" width="360" alt="마하붓다왐사의 장별 목차와 본문을 보여 주는 불전문학 리더"></a><br>
+      <a href="https://biwoom.github.io/story/"><img src=".github/readme/story.webp" width="360" height="216" alt="마하붓다왐사의 장별 목차와 본문을 보여 주는 불전문학 리더"></a><br>
       <strong><a href="https://biwoom.github.io/story/">불전문학 →</a></strong><br>
       붓다와 고승의 전기, 본생담과 설화, 순례기와 게송을 원전과 번역으로 읽습니다.
     </td>
     <td width="50%" valign="top">
-      <a href="https://biwoom.github.io/blog/series/"><img src="ol-core/src/assets/home-preview/blog.webp" width="360" alt="수행과 불교의 세계, 비움제작일지가 있는 블로그 시리즈 목록"></a><br>
+      <a href="https://biwoom.github.io/blog/series/"><img src=".github/readme/blog.webp" width="360" height="216" alt="수행과 불교의 세계가 보이는 블로그 시리즈 화면"></a><br>
       <strong><a href="https://biwoom.github.io/blog/series/">블로그 · 틈과 여백 →</a></strong><br>
       불교 교학과 일상의 수행, 디자인 작업과 비움을 만들어 가는 과정을 주제별로 읽습니다.
     </td>
@@ -207,7 +207,7 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 ### 브랜드 자산
 
-비움은 기존 심볼 `ol-core/public/brand/biwoom-mark-monochrome.png`(제공 원본 004)와 `biwoom-mark-gold.png`(006)를 사용합니다. `npm run brand:assets`로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 영문 표기는 `BIWOOM`이며 OL은 내부 코어 이름입니다.
+README와 비움 소개에는 `ol-core/public/brand/biwoom-mark-monochrome-box.png`를 사용합니다. 로고에 담은 뜻은 [비움 소개](content/pages/brand.md#비움-로고에-담은-뜻)에서 읽을 수 있습니다. `npm run brand:assets`는 기존 `biwoom-mark-monochrome.png`를 바탕으로 파비콘·ICO·Apple 아이콘·공유 이미지를 재생성합니다. 공개 영문 표기는 `BIWOOM`이며 OL은 내부 코어 이름입니다.
 
 ### 전자책
 
@@ -217,10 +217,14 @@ DESIGN·NET·엔터티·온톨로지 전용 기능은 제거했습니다. 기존
 
 ## 수정 변경사항
 
-문서 버전 v1.20 · 2026-11-28 · 비움 (OL 코어)
+문서 버전 v1.21 · 2026-11-28 · 비움 (OL 코어)
 
 <details>
 <summary>README 개정 이력</summary>
+
+### 2026-11-28 — v1.21
+
+- 상단 로고를 둥근 상자형 흑백 비움 로고로 바꾸고, 메뉴 미리보기 네 장을 같은 5:3 비율로 잘랐습니다.
 
 ### 2026-11-28 — v1.20
 
