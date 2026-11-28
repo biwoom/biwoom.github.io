@@ -21,7 +21,7 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 
 6. Put document version, latest update date, target project, and deployment URL in the body.
 7. Add or update a bottom section named `수정 변경사항`.
-8. Run `npm run build` after public content changes.
+8. Choose verification according to [Local verification](../../../AGENTS.md#local-verification).
 
 ## Current BIWOOM Facts
 
@@ -61,8 +61,8 @@ description: Maintain BIWOOM manuals, brand documents, AGENTS.md, README.md, and
 
 ## Validation
 
-- Run `npm run build` for public document changes.
-- Confirm new pages appear in build output.
+- For repository-only documents and skills, review the diff and check links, paths, and skill format as applicable.
+- For public documents, prepare affected registry metadata and check changed links or publication settings. Build and inspect the output when a page is added, its route changes, or the generated rendering needs verification.
 - Search for stale deployment paths when updating deployment docs:
 
 ```sh
@@ -70,6 +70,10 @@ rg "ol-home|/biwoom|base:" astro.config.mjs ol-core/public ol-core/src README.md
 ```
 
 ## 수정 변경사항
+
+### 2026-11-28 — 문서 변경의 검증 범위
+
+- 저장소 문서와 공개 문서의 변경 내용에 맞춰 링크·스킬 형식·생성본 검사를 고르는 기준을 연결했다.
 
 ### 2026-11-28 — 비움의 운영 취지와 공개 문서
 

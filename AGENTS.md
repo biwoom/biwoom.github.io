@@ -76,11 +76,20 @@ The Astro site serves Buddhist texts, translations, research, story articles, po
 
 - Preserve existing unpublished states, dates, rights, body text and assets when migrating content. Review `.agents/references/content-migration-inventory.json` for the original migration mapping.
 - Keep Astro at the root using `SITE_URL` from `site-config.mjs`. Use root routes such as `/text/` in public links and metadata. `sitePath` maps older internal links to the root, and the build emits compatibility redirects under `/hub/`. Preserve registry IDs, URLs, dates and existing path keys.
-- Run `npm run check`, `npm run typecheck`, and `npm run build` for content/route/layout/config changes.
-- Verify actual `dist` pages and local targets, plus RSS/sitemap/robots when routing changes.
 - Keep `dist/`, `.astro/`, `node_modules/`, and `ol-core/public/generated/` out of commits. Do not edit generated assets as source.
 - Do not alter the user's `.obsidian` state. Personal workspace and plugin files are ignored.
 - Historical ATLAS/media archives may have been deleted by the user. Preserve those deletions; do not restore them.
+
+### Local verification
+
+변경분과 영향 범위를 보고 필요한 검사만 고른다. 같은 작업의 자잘한 수정은 모아서 확인한다. 완료할 때 실제로 확인한 범위를 기록한다.
+
+- **저장소 문서·스킬·README 전용 이미지**는 변경분, Markdown 링크, 파일 경로, 스킬 형식을 점검한다.
+- **작은 CSS 변경**은 대상 선택자, 우선순위, 반응형 조건을 확인한다. 결과 확인이 필요하면 해당 페이지에 반영된 CSS나 로컬 HTTP 응답을 검사한다. 공통 스타일이나 빌드 결과에 미치는 영향이 불분명하면 정적 빌드로 확인한다.
+- **콘텐츠**의 문구만 고치면 원고 변경분을 확인하고 레지스트리에 영향을 주는 경우 `npm run prepare:content`로 ID·주소·날짜 보존을 확인한다. 경로, 메타정보, 링크, 자산, 공개 범위를 바꾸면 `npm run check:content`를 사용한다. 변경한 로더·필터·리더 로직은 해당 회귀 검사로 확인하며, 영향이 넓으면 전체 회귀 검사를 실행한다. `npm run check`는 콘텐츠 검사와 전체 회귀 검사가 모두 필요할 때 사용한다.
+- **타입과 템플릿**에서 TypeScript, Astro 표현식·props, 스키마 등 타입 검사가 확인할 수 있는 부분을 바꾸면 `npm run typecheck`를 실행한다.
+- **라우트·리디렉션, 배포 설정, 공개·검색·자산 생성 규칙**은 `npm run build`로 확인한 뒤 변경이 반영된 `dist/`를 검사한다. HTML·CSS·스크립트의 합성 결과를 확인해야 하는 경우에도 빌드한다. 변경 범위에 따라 생성된 페이지·링크·RSS·사이트맵·robots를 확인하고, 사이트 전체 출력이나 공통 렌더링에 영향이 있으면 `npm run check:built`를 사용한다. 빌드에서 `check:content`를 실행하므로 같은 변경분의 콘텐츠 검사는 한 번이면 충분하다. 빌드와 전체 회귀 검사가 함께 필요하면 `npm run check:content:fixtures`를 추가한다.
+- 레지스트리를 변경했다면 콘텐츠와 함께 커밋하고, 커밋된 HEAD와의 일치가 필요한 검증에는 `npm run check:registry`를 사용한다. 배포 CI 검사는 `.github/workflows/deploy.yml`을 따른다. 브라우저 점검은 위 Browser Testing 규칙을 따른다.
 
 ## Continuity and Skills
 
@@ -92,6 +101,10 @@ The Astro site serves Buddhist texts, translations, research, story articles, po
 - Upload requests perform only the requested push. Do not automatically add work-log commits, wait for Pages, or inspect Actions unless explicitly requested.
 
 ## 수정 변경사항
+
+### 2026-11-28 — 변경 영향에 따른 로컬 검증
+
+- 변경으로 생길 수 있는 문제에 맞춰 콘텐츠·타입·빌드 검사 범위를 고르는 기준을 정했다.
 
 ### 2026-11-28 — 시리즈 목차 정렬
 

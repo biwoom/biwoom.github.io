@@ -162,7 +162,7 @@ npm run content:move -- "text/이전경로.md" "text/새경로.md"
 
 비공개 첨부는 비공개 `index.md`가 있는 전용 폴더 또는 `_drafts`에 둡니다. 공개 글도 참조하는 공유 첨부는 공개입니다. `_assets`를 제외한 `_` 경로는 배포하지 않습니다. 상세 공개 범위는 관리 매뉴얼을 따릅니다.
 
-소개 문서의 주소는 문헌 주소와 같습니다. 최초 공개 준비일은 한국 날짜를 사용합니다. registry가 사라졌다면 Git에서 복원하세요. 신규 보관함만 `npm run prepare:content -- --init`으로 생성합니다. 콘텐츠 변경과 registry를 함께 커밋하고 `npm run check:registry`로 확인합니다.
+소개 문서의 주소는 문헌 주소와 같습니다. 최초 공개 준비일은 한국 날짜를 사용합니다. 레지스트리가 사라졌다면 Git에서 복원하세요. 신규 보관함만 `npm run prepare:content -- --init`으로 생성합니다. 레지스트리가 갱신되면 콘텐츠와 함께 커밋합니다. 커밋된 레지스트리와 `HEAD`의 일치를 확인할 때는 `npm run check:registry`를 사용합니다.
 
 </details>
 
@@ -171,12 +171,7 @@ npm run content:move -- "text/이전경로.md" "text/새경로.md"
 
 ### 개발·검증
 
-```sh
-npm run check
-npm run typecheck
-npm run build
-npm run check:built
-```
+로컬 검사는 [변경 영향별 검증 기준](AGENTS.md#local-verification)에 따라 고릅니다. 저장소 문서나 작은 CSS 수정은 변경분과 관련 링크·선택자를 확인합니다. 콘텐츠 규칙을 검증할 때는 `npm run check:content`, 타입에 영향을 주는 코드를 바꿀 때는 `npm run typecheck`를 사용합니다. 공개 주소나 사이트 생성 결과를 확인해야 할 때는 `npm run build`로 새 산출물을 만들고 대상 페이지를 검사합니다. 전체 회귀 검사가 필요한 변경에는 `npm run check`를 사용합니다.
 
 `npm run check:dev`는 임시 프로젝트와 로컬 개발 서버로 콘텐츠 갱신을 확인합니다. `check:live`는 기존 명령의 호환 별칭입니다. `check:built`는 로컬 `dist/`를 대상으로 합니다.
 
@@ -217,10 +212,14 @@ README와 비움 소개에는 `ol-core/public/brand/biwoom-mark-monochrome-box.p
 
 ## 수정 변경사항
 
-문서 버전 v1.21 · 2026-11-28 · 비움 (OL 코어)
+문서 버전 v1.22 · 2026-11-28 · 비움 (OL 코어)
 
 <details>
 <summary>README 개정 이력</summary>
+
+### 2026-11-28 — v1.22
+
+- 변경 영향에 따라 로컬 검사 명령을 고르는 기준을 연결했습니다.
 
 ### 2026-11-28 — v1.21
 

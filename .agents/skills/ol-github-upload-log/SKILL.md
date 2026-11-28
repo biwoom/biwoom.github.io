@@ -25,7 +25,7 @@ git status --short --branch
 
 2. Confirm the current branch is `main` and that it is not behind `origin/main`. If it is behind or diverged, stop the upload process, analyze the cause, resolve the branch state, and restart the upload workflow.
 3. If unrelated changes exist, stage only the files that belong to the user's requested upload.
-4. Run relevant local validation if it has not already been run for the changed files.
+4. Follow [Local verification](../../../AGENTS.md#local-verification) and reuse results that still cover the requested changes. Run the remaining checks required by their scope.
 5. Commit the requested code/content/documentation changes with a concise message.
 6. Push the requested change to GitHub:
 

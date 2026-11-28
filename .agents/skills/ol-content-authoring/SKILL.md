@@ -29,7 +29,7 @@ BIWOOM is published from `biwoom/biwoom.github.io` at `https://biwoom.github.io/
 10. Vault-relative paths are canonical NFC via shared paths helpers; physical NFD names remain supported without renaming sources or normalizing prose. Preserve `content-registry.json`. Moves with unchanged content retain identity; moved-and-edited files may require `npm run content:move -- old new` before preparation. Do not silently assign a replacement URL to a known moved document.
 11. Use shared DocumentTags for document-only optional tags below the title, without series inheritance. Series tag menus/modals are retired; BLOG tags filter alongside years/pagination. Do not create real tab switching; section buttons link to the first item, with expandable full lists.
 12. BLOG series/category index.md holds title/description, optional thumbnailAsset and publication state; metadata is excluded from post counts/RSS. Each category belongs to one series. Optional series `## 읽는 순서` ordered relative post links override oldest-first order; keep TOC/previous-next identical. Preserve the empty essay series until the user adds content.
-13. Run `npm run check`, `npm run typecheck`, `npm run build`, and `npm run check:built`; inspect expected output and assets. Do not commit generated output or upload unless requested.
+13. Follow [Local verification](../../../AGENTS.md#local-verification). For prose edits, review the diff and prepare affected registry metadata. Use `npm run check:content` for paths, metadata, links, assets or publication changes. Build for new routes or generated output that needs verification. Use `npm run typecheck` when the change affects typed code or templates. Do not commit generated output or upload unless requested.
 
 블로그 포스트는 자세하고 친절하게 설명하며, 친숙한 용어와 일상어를 사용한다. 독자가 처음 읽는다는 전제에서 필요한 배경을 짚고, 불교·기술 용어는 처음 나올 때 쉽게 설명한다. 제작일지에는 무엇을 바꿨는지와 독자가 어디에서 어떻게 이용할 수 있는지를 함께 적는다. [블로그 포스트 집필 기준](../../references/biwoom-content-management-manual.md#블로그-포스트-문체)
 
@@ -41,9 +41,13 @@ For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for ca
 - Save one `.html` per article directly in `content/article/html/`. Set `data-article-id` and `data-card-date` on the single marked card article. Preserve alt text and edition or chapter links. The site uses shared CSS and extracts only the card.
 - Use WebP for new or replacement illustrations in web cards. Keep the original artwork and preserve transparency in the WebP. Link to the WebP in `content/illustration/` from the card HTML. Use complete card PNGs for sharing and distribution.
 - Keep unfinished articles at `published: false`. If an article is recommended, change or remove its recommendation before unpublishing it. Update `content/article/index.md` for curated recommendations. The home and card-menu carousels select up to five public HTML cards by card date. Only the card-menu hero falls back to the latest public article when no eligible HTML exists. Keep the source links in the reader because both carousels link the entire card to the reader.
-- Run `npm run check:content` to validate the article link and card metadata. After building, use `npm run check:built` to verify card placement, reader links and published assets.
+- When changing card links or metadata, use `npm run check:content`. When changing card selection, rendered placement, or which assets are published, verify the affected home and card-menu output and article links in a fresh build. Use `npm run check:built` for changes that affect shared generated output.
 
 ## 수정 변경사항
+
+### 2026-11-28 — 변경 영향별 검증
+
+- 문구 교정, 콘텐츠 구조 변경, 공개 출력 변경에 필요한 검사 범위를 구분했다.
 
 ### 2026-11-28 — 블로그 포스트 문체
 
@@ -110,4 +114,4 @@ For STORY bodies, use optional `personTags`, `placeTags`, and `topicTags` for ca
 
 - Run explicit content:move before preparation for moved-and-edited documents; confirm the old file no longer exists and check older Markdown links after repeated moves. Cross-collection moves require deliberate canonical URL/redirect migration.
 - Private per-document assets belong in a private index.md directory or _drafts; publicly shared attachments remain public.
-- Commit the prepared content-registry.json with source changes; after committing, run npm run check:registry.
+- Commit prepared registry changes with the source. Use `npm run check:registry` when verifying the committed registry against HEAD.

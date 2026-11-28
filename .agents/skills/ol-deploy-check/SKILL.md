@@ -25,15 +25,10 @@ git status --short --branch
 rg 'biwoom\.github\.io|/ol-home|base:' astro.config.mjs site-config.mjs ol-core/public/robots.txt ol-core/src README.md AGENTS.md .agents
 ```
 
-4. Build locally:
-
-```sh
-npm run check
-npm run typecheck
-npm run build
-npm run check:built
-npm run check:registry
-```
+4. Choose local checks by the change and the question being investigated. Follow [Local verification](../../../AGENTS.md#local-verification).
+   - For a live-route or deployment-status report, inspect the relevant commit, workflow result or HTTP response. Use a local build when it is needed to reproduce or compare the output.
+   - For changes to routes, redirects, deploy configuration, or public output generation, run `npm run build` and inspect the affected pages and assets. Use `npm run check:built` for changes affecting shared or site-wide output.
+   - Use `npm run check:content` when content rules need validation, and `npm run typecheck` for typed changes. The build includes content validation. Add `npm run check:content:fixtures` when a build also needs the full regression suite. Run `npm run check:registry` to check the committed registry against HEAD.
 
 5. Inspect generated artifacts when relevant:
 
@@ -53,12 +48,12 @@ curl -I -L https://biwoom.github.io/sitemap-index.xml
 
 ## Expected Results
 
-- Build succeeds.
+- When a build is needed, it succeeds and the affected output matches the change.
 - Generated site links use paths such as `/blog/`.
 - Canonical, sitemap and RSS URLs start with `https://biwoom.github.io/`.
 - GitHub Pages Source is GitHub Actions.
 - Confirm private assets and deleted content are absent from dist.
-- For story-card changes, use `npm run check:built` to verify the hero card, its article link, and assets for public articles. Source HTML and drafts should have no standalone output.
+- For story-card output changes, verify the hero card, its article link, and assets for public articles in the relevant built pages. Use `npm run check:built` for shared-output changes. Source HTML and drafts should have no standalone output.
 - When adding or replacing card illustrations, confirm the built card points to the WebP derivative of the original artwork.
 - Local checks, GitHub push and Actions/live deployment verification are separate. Inspect deployment only when requested.
 
@@ -76,12 +71,16 @@ curl -I -L https://biwoom.github.io/sitemap-index.xml
 Report:
 
 - The changed files relevant to deployment.
-- Whether `npm run build` passed.
+- The checks run and their results.
 - The generated route count if available.
 - Any remaining warnings.
 - Concrete next action for GitHub settings or push, if needed.
 
 ## 수정 변경사항
+
+### 2026-11-28 — 변경 영향별 검증
+
+- 공개 사이트 상태 확인과 로컬 생성본을 검증해야 하는 변경의 기준을 정리했다.
 
 ### 2026-11-27 — Story-card output
 

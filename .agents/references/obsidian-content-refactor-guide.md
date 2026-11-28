@@ -234,7 +234,7 @@ src/content/
 ### 실행 검사
 
 - 정규화·정렬·경로 충돌·공개 제외·자산 이관처럼 실패 영향이 큰 규칙은 의미 있는 fixture로 검증한다.
-- `npm run check`와 `npm run build`를 실행한다. 실제 카테고리·문헌·문서 경로와 PDF 파일을 `dist/`에서 확인한다.
+- 경로 해석과 공개 범위를 바꾸는 이관에서는 `npm run check:content:fixtures`와 `npm run build`를 실행하고 실제 카테고리·문헌·문서 경로와 PDF를 `dist/`에서 확인한다. 작은 후속 변경은 [변경 영향별 검증 기준](../../AGENTS.md#local-verification)을 따른다.
 - 비움을 Astro 루트에 배포한다. 라우트 변경 시 `astro.config.mjs`, `ol-core/public/robots.txt`, RSS, 사이트맵과 기존 URL 처리를 확인한다.
 - `dist/`, `.astro/`, `node_modules/`, `public/generated/`를 커밋하지 않는다.
 - GitHub 업로드와 배포 확인은 사용자가 요청할 때 별도로 수행한다.
