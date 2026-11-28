@@ -105,7 +105,12 @@ html[data-reader-panel-dragging], html[data-reader-panel-dragging] * { cursor: c
 body .ol-story-doc-page .ol-text-parts a.active { background: transparent; border-bottom-color: var(--ol-accent); color: var(--ol-accent); }
 @media (max-width: 980px) {
   .ol-story-reader-page.ol-story-doc-page .ol-story-doc-hero { padding: 18px var(--ol-reader-heading-gutter) 10px; }
-  .ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero { grid-template-columns: minmax(0, 1fr); }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero { grid-template-columns: minmax(0, 1fr); text-align: start; }
+  .ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero .ol-text-crumb {
+    grid-row: 1;
+    justify-content: flex-start;
+    text-align: inherit;
+  }
   .ol-story-doc-page .ol-text-parts { gap: 20px; }
 }
 body:has(.ol-story-doc-page) .ol-header { position: relative; top: auto; }
