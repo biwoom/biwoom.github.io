@@ -5,7 +5,7 @@ import ReaderFontControl from './ReaderFontControl.astro';
 interface Props { hasToc: boolean; hasOriginal?: boolean; currentUrl: string; title: string; currentPart?: Library["parts"][number]; academic?: boolean; }
 const { hasToc, hasOriginal = false, currentUrl, title, academic = false } = Astro.props;
 ---
-          <div class="ol-reader-toolbar">
+          <div class="ol-reader-toolbar" data-reader-font-toolbar>
             <div class="ol-reader-navigation-tools">
             <button class="ol-text-tool-btn ol-text-list-trigger" type="button" data-text-left-toggle={academic ? true : undefined} data-story-left-toggle={!academic ? true : undefined} aria-expanded="false" aria-controls={academic ? "text-document-list" : "story-document-list"}><span class="ol-text-tool-symbol" aria-hidden="true">☷</span><span class="ol-text-list-label-wide">문헌 목차</span><span class="ol-text-list-label-compact">문헌</span></button>
             {hasOriginal && <button class="ol-text-tool-btn ol-original-toggle" type="button" data-original-toggle aria-pressed="false" aria-label="원문 숨기기" title="원문 숨기기">
@@ -13,7 +13,7 @@ const { hasToc, hasOriginal = false, currentUrl, title, academic = false } = Ast
               <span data-original-label>원문 숨기기</span>
             </button>}
             </div>
-            <div class="ol-story-part-tools">
+            <div class="ol-story-part-tools" data-reader-font-tools>
                 <button class="ol-text-tool-btn ol-reader-toc-trigger" type="button"
                   aria-label="본문 목차 열기" title={hasToc ? "본문 목차" : "목차없음"} aria-haspopup="dialog"
                   aria-expanded="false" aria-controls="ol-reader-toc" data-reader-toc-trigger>

@@ -165,7 +165,6 @@ body:has(.ol-text-reader) .ol-header { position: relative; top: auto; }
   .ol-text-reading-column { width: calc(100% - 40px); padding-top: 28px; }
   .ol-text-reader .ol-reader-toolbar .ol-story-part-tools { flex: 0 1 auto; flex-wrap: nowrap; min-width: 0; }
   .ol-text-reader .ol-text-list-trigger { flex-shrink: 0; font-size: 12px; }
-  .ol-text-reader .ol-reader-font-panel { left: 50%; }
 }
 @media (prefers-reduced-motion: reduce) { .ol-text-material-group summary::before { transition: none; } }
 @media print {

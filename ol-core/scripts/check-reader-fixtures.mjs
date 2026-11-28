@@ -28,7 +28,8 @@ class Element {
   close() { this.open = false; }
 }
 function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMotion=true, noteId='note', referenceId='ref', noteHash=`#${noteId}`, initialHash='' } = {}) {
-  const reader=new Element(), font=new Element(), trigger=new Element(), panel=new Element(), slider=new Element(), output=new Element(), reset=new Element();
+  const reader=new Element(), toolbar=new Element(), font=new Element(), trigger=new Element(), panel=new Element(), slider=new Element(), output=new Element(), reset=new Element(), fontClose=new Element();
+  slider.min='80'; slider.max='150';
   const drawer=new Element(), noteTrigger=new Element(), close=new Element(), reference=new Element(), note=new Element();
   const secondReference=new Element(); secondReference.id='ref2'; secondReference.hash=noteHash;
   reference.id=referenceId; reference.hash=noteHash; note.id=noteId;
@@ -42,11 +43,11 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   drawer.select={'[data-reader-footnotes-close]':close,'.ol-reader-footnotes-content':scroller};
   const title=new Element(), body=new Element(), original=new Element(); title.base='34px'; body.base='16px';
   title.closest=()=>null;body.closest=()=>null;original.closest=()=>original;
-  reader.select={'#ol-reader-footnotes':drawer,'[data-reader-footnotes-trigger]':noteTrigger,'[data-reader-font]':font};
+  reader.select={'#ol-reader-footnotes':drawer,'[data-reader-footnotes-trigger]':noteTrigger,'[data-reader-font-toolbar]':toolbar};
   reader.querySelectorAll = s => s === 'a[data-footnote-ref]' ? [reference,secondReference] : s === '[data-active-footnote-ref]' ? [reference,secondReference].filter(el=>el.getAttribute('data-active-footnote-ref') !== undefined) : [title,body,original];
-  font.select={'[data-reader-font-trigger]':trigger,'.ol-reader-font-panel':panel,'[data-reader-font-size]':slider,'[data-reader-font-value]':output,'[data-reader-font-reset]':reset};
-  font.children=[trigger,panel,slider,reset];
-  trigger.getBoundingClientRect=()=>({bottom:120});
+  toolbar.select={'[data-reader-font]':font};
+  font.select={'[data-reader-font-trigger]':trigger,'.ol-reader-font-panel':panel,'[data-reader-font-size]':slider,'[data-reader-font-value]':output,'[data-reader-font-reset]':reset,'[data-reader-font-close]':fontClose};
+  font.children=[trigger,panel,slider,reset,fontClose];
   const doc=new Element(); doc.body=new Element(); doc.querySelector=()=>reader; doc.getElementById=id=>[reference,secondReference,note].find(el=>el.id===id) ?? null;
   const win=new Element(); win.matchMedia=query=>({matches:query.includes('prefers-reduced-motion')?reducedMotion:true}); win.setTimeout=fn=>fn();
   win.getSelection=()=>win.selection ?? null;
@@ -63,7 +64,7 @@ function setup({ saved='100', unavailable=false, withBackToTop=false, reducedMot
   vm.runInNewContext(drawerSource,{module:drawerModule,exports:drawerModule.exports,...globals});
   vm.runInNewContext(source,{module,exports:module.exports,require:name=>{assert.equal(name,'./reader-drawer');return drawerModule.exports;},...globals});
   module.exports.initReaderTools();
-  return {reader,font,trigger,panel,slider,output,reset,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,scroller,secondReference,backToTop,location};
+  return {reader,toolbar,font,trigger,panel,slider,output,reset,fontClose,title,body,original,doc,win,drawer,noteTrigger,close,reference,note,scroller,secondReference,backToTop,location};
 }
 test('single reading slider scales title/body together, restores saved size, resets and dismisses',()=>{
   const h=setup({saved:'125'});
@@ -71,14 +72,18 @@ test('single reading slider scales title/body together, restores saved size, res
   assert.equal(h.title.props['--ol-reader-base-font'],'34px');
   assert.equal(h.body.props['--ol-reader-base-font'],'16px');
   h.trigger.fire('click'); assert.equal(h.panel.hidden,false); assert.ok(h.slider.focused);
-  assert.equal(h.panel.props['--ol-reader-font-top'],'128px');
-  h.trigger.getBoundingClientRect=()=>({bottom:150});
-  h.win.fire('scroll'); assert.equal(h.panel.props['--ol-reader-font-top'],'158px');
+  assert.ok(h.toolbar.hasAttribute('data-reader-font-open'));
+  assert.equal(h.trigger.getAttribute('aria-expanded'),'true');
   h.slider.value='150'; h.slider.fire('input'); assert.equal(h.output.value,'150%'); assert.equal(h.reader.props['--ol-reader-font-scale'],'1.5');
+  assert.equal(h.slider.props['--slider-value'],'100%');
   h.win.fire('resize'); assert.equal(h.body.props['--ol-reader-base-font'],'16px');
+  h.fontClose.fire('click'); assert.equal(h.panel.hidden,true); assert.ok(h.trigger.focused);
+  assert.ok(!h.toolbar.hasAttribute('data-reader-font-open')); assert.equal(h.output.value,'150%');
+  h.trigger.fire('click'); h.reset.fire('click');
+  assert.equal(h.output.value,'100%'); assert.equal(h.panel.hidden,false);
   h.doc.fire('keydown',{key:'Escape'}); assert.equal(h.panel.hidden,true); assert.ok(h.trigger.focused);
+  assert.equal(h.trigger.getAttribute('aria-expanded'),'false');
   h.trigger.fire('click'); h.doc.fire('click',{target:new Element()}); assert.equal(h.panel.hidden,true);
-  h.reset.fire('click'); assert.equal(h.output.value,'100%');
 });
 test('reading control tolerates unavailable storage and invalid stored values',()=>{
   assert.equal(setup({unavailable:true}).output.value,'100%');

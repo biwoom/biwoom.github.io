@@ -28,11 +28,11 @@ const currentUrl = url(`/stories/${story.id}/`);
   pagefindMeta={{ id: `article-${story.id}`, title: story.title, section: 'ARTICLE', sectionLabel: ARTICLE_LABEL, category: topic }}>
   <div class="ol-home-reader">
     <article>
-      <div class="ol-home-reader-nav" data-pagefind-ignore>
+      <div class="ol-home-reader-nav" data-reader-font-toolbar data-pagefind-ignore>
         <a href={url('/articles/')} class="ol-btn ol-btn-outline ol-home-reader-back">
           <span aria-hidden="true">←</span> 이야기 목록
         </a>
-        <div class="ol-home-reader-tools">
+        <div class="ol-home-reader-tools" data-reader-font-tools>
           <OLStoryBookmark id={story.id} title={story.title} />
           <ReaderFontControl />
         </div>

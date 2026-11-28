@@ -116,17 +116,20 @@ export function initReaderTools() {
 }
 
 export function initReaderFont(reader: HTMLElement, targetSelector: string) {
-  const font = reader.querySelector<HTMLElement>("[data-reader-font]");
+  const toolbar = reader.querySelector<HTMLElement>("[data-reader-font-toolbar]");
+  const font = toolbar?.querySelector<HTMLElement>("[data-reader-font]");
   const fontTrigger = font?.querySelector<HTMLButtonElement>("[data-reader-font-trigger]");
   const panel = font?.querySelector<HTMLElement>(".ol-reader-font-panel");
   const slider = font?.querySelector<HTMLInputElement>("[data-reader-font-size]");
   const output = font?.querySelector<HTMLOutputElement>("[data-reader-font-value]");
-  if (!font || !fontTrigger || !panel || !slider || !output) return;
+  if (!toolbar || !font || !fontTrigger || !panel || !slider || !output) return;
   const key = "ol-reader-font-percent";
+  const min = Number(slider.min);
+  const max = Number(slider.max);
   let percent = 100;
   try {
     const saved = Number(localStorage.getItem(key));
-    if (Number.isFinite(saved) && saved >= 80 && saved <= 150) percent = saved;
+    if (Number.isFinite(saved) && saved >= min && saved <= max) percent = saved;
   } catch { /* Reading controls also work when storage is unavailable. */ }
   // Measure the existing cascade, including responsive heading/table/code sizes.
   const targets = Array.from(reader.querySelectorAll<HTMLElement>(targetSelector))
@@ -148,38 +151,35 @@ export function initReaderFont(reader: HTMLElement, targetSelector: string) {
   const apply = () => {
     slider.value = String(percent);
     output.value = `${percent}%`;
+    slider.style.setProperty("--slider-value", `${(Number(slider.value) - min) / (max - min) * 100}%`);
     reader.style.setProperty("--ol-reader-font-scale", String(percent / 100));
     try { localStorage.setItem(key, String(percent)); } catch { /* Optional persistence. */ }
   };
-  const positionFontPanel = () => {
+  const closeFont = (restoreFocus = false) => {
     if (panel.hidden) return;
-    const top = fontTrigger.getBoundingClientRect().bottom + 8;
-    panel.style.setProperty("--ol-reader-font-top", `${top}px`);
-  };
-  const closeFont = () => {
     panel.hidden = true;
+    toolbar.removeAttribute("data-reader-font-open");
     fontTrigger.setAttribute("aria-expanded", "false");
+    if (restoreFocus) fontTrigger.focus({ preventScroll: true });
   };
   fontTrigger.addEventListener("click", () => {
-    panel.hidden = !panel.hidden;
-    fontTrigger.setAttribute("aria-expanded", String(!panel.hidden));
-    if (!panel.hidden) {
-      positionFontPanel();
-      slider.focus({ preventScroll: true });
-    }
+    panel.hidden = false;
+    toolbar.setAttribute("data-reader-font-open", "");
+    fontTrigger.setAttribute("aria-expanded", "true");
+    slider.focus({ preventScroll: true });
   });
   slider.addEventListener("input", () => { percent = Number(slider.value); apply(); });
   font.querySelector("[data-reader-font-reset]")?.addEventListener("click", () => { percent = 100; apply(); });
+  font.querySelector("[data-reader-font-close]")?.addEventListener("click", () => closeFont(true));
   document.addEventListener("click", event => {
     if (event.target instanceof Node && !font.contains(event.target)) closeFont();
   });
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !panel.hidden) {
-      event.preventDefault(); closeFont(); fontTrigger.focus();
+      event.preventDefault(); closeFont(true);
     }
   });
   measure();
   apply();
-  window.addEventListener("resize", () => { measure(); positionFontPanel(); });
-  window.addEventListener("scroll", positionFontPanel, { passive: true });
+  window.addEventListener("resize", measure);
 }

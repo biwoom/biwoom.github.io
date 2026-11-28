@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import assert from "node:assert/strict";
 import sharp from "sharp";
+import { parse as parseHtml } from "parse5";
 import { hasOriginalBlocks } from "./lib/markdown.mjs";
 import { syncMediaGallery, getMediaCategories } from "./lib/media-gallery.mjs";
 import { readHomeArticleIndex, readHomeArticles, readHomeSeries } from "./lib/home-articles.mjs";
@@ -43,6 +44,27 @@ function hasClass(html, name) {
 function classes(html, names, label) {
   for (const name of names)
     assert.ok(hasClass(html, name), `${label}: missing ${name}`);
+}
+function checkFontToolbar(html, label) {
+  function* descendants(node) {
+    yield node;
+    for (const child of node.childNodes ?? []) yield* descendants(child);
+  }
+  const attr = (node, name) => node.attrs?.find((item) => item.name === name)?.value;
+  const toolbar = [...descendants(parseHtml(html))].find((node) => attr(node, "data-reader-font-toolbar") !== undefined);
+  assert.ok(toolbar, `${label}: font toolbar`);
+  const panel = [...descendants(toolbar)].find((node) => attr(node, "id") === "ol-reader-font-panel");
+  assert.ok(panel && attr(panel, "hidden") !== undefined, `${label}: font panel begins hidden inside the toolbar`);
+  const controls = [...descendants(panel)];
+  const sliders = controls.filter((node) => attr(node, "type") === "range");
+  assert.equal(sliders.length, 1, `${label}: one shared reading slider`);
+  assert.deepEqual(["class", "min", "max", "step", "value"].map((name) => attr(sliders[0], name)), ["input w-full", "80", "150", "5", "100"]);
+  for (const [action, title] of [["reset", "초기화"], ["close", "닫기"]]) {
+    const button = controls.find((node) => attr(node, `data-reader-font-${action}`) !== undefined);
+    assert.equal(button?.tagName, "button", label);
+    assert.equal(button.childNodes[0]?.value, title, label);
+    assert.equal(attr(button, "class"), undefined, `${label}: plain text action`);
+  }
 }
 function checkSeriesOrderControls(html, label) {
   const controls = html.match(/(<div class="ol-series-order-controls"[^>]*>)([\s\S]*?)<\/div>/);
@@ -120,10 +142,8 @@ rule(".ol-reader-toc::backdrop", /animation:[^;]*ol-reader-backdrop-in/);
 rule(".ol-story-doc-page .ol-reader-toolbar", /position:sticky/);
 rule(".ol-story-doc-page .ol-story-reader-shell", /overflow:clip/);
 rule(".ol-story-doc-page .ol-story-part-content-head h2", /max-width:1200px/);
-rule(".ol-reader-font-panel", /position:fixed/);
-rule(".ol-reader-font-panel", /transform:translate(?:X)?\(-50%(?:,0)?\)/);
-rule(".ol-reader-font-panel", /grid-template-columns:minmax\(0,1fr\)/);
-rule(".ol-reader-font-panel", /top:var\(--ol-reader-font-top/);
+rule(".ol-reader-font-panel", /grid-template-columns:minmax\(0,1fr\) auto/);
+rule("[data-reader-font-open] [data-reader-font-trigger]", /display:none/);
 rule(".ol-reader-footnotes-label", /display:inline/);
 rule("[data-active-footnote-ref]", /font-weight:800/);
 rule("body:has(.ol-text-academic)", /--ol-accent:#274e65/);
@@ -247,7 +267,7 @@ for (const [source, record] of Object.entries(registry.files)) {
     assert.match(html, /<nav class="ol-story-part-nav ol-text-parts"/, `${record.url}: shared reader part navigation`);
   }
   if (collection === "story") {
-    assert.match(html, /<div class="ol-reader-toolbar">\s*<div class="ol-reader-navigation-tools">\s*<button[^>]*data-story-left-toggle/);
+    assert.match(html, /<div class="ol-reader-toolbar" data-reader-font-toolbar>\s*<div class="ol-reader-navigation-tools">\s*<button[^>]*data-story-left-toggle/);
     assert.equal((html.match(/data-story-list-content/g) ?? []).length, 1);
     assert.match(html, /id="story-list-dialog"/);
     assert.ok(!html.includes('data-story-mobile-chapters'), `${record.url}: one responsive chapter list`);
@@ -281,9 +301,7 @@ for (const [source, record] of Object.entries(registry.files)) {
     assert.match(html, /<button[^>]*data-reader-back-to-top[^>]*hidden/);
     assert.match(html, /data-reader-footnotes-trigger/);
     assert.match(html, /class="ol-text-tool-label ol-reader-footnotes-label">각주<\/span>/);
-    assert.equal((html.match(/type="range"/g) ?? []).length, 1, `${record.url}: one shared reading slider`);
-    assert.match(html, /min="80" max="150" step="5" value="100"/);
-    assert.match(html, /id="ol-reader-font-panel"[^>]*hidden/);
+    checkFontToolbar(html, record.url);
     const notesDialog = html.match(/<dialog[^>]*id="ol-reader-footnotes"[^>]*>([\s\S]*?)<\/dialog>/)?.[0];
     const notesCount = (html.match(/<section[^>]*data-footnotes/g) ?? []).length;
     assert.equal(notesCount, notesDialog ? 1 : 0, `${record.url}: notes exist only in their built drawer`);
@@ -683,6 +701,7 @@ for (const [, id, card] of articleCards) {
   assert.ok(!hasClass(reader, "ol-home-menu"), `${id}: story reader navigation uses the return link`);
   const backLink = reader.match(/<a\b[^>]*class="[^"]*\bol-home-reader-back\b[^"]*"[^>]*>[\s\S]*?<\/a>/)?.[0];
   assert.ok(backLink?.includes('href="/articles/"') && backLink.includes("이야기 목록"), `${id}: labeled return link`);
+  checkFontToolbar(reader, id);
   for (const feature of ["data-reader-font-trigger", "data-reader-copy-source", "data-home-reader-share"]) {
     assert.ok(reader.includes(feature), `${id}: missing ${feature}`);
   }
