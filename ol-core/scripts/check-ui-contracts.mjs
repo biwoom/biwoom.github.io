@@ -44,6 +44,13 @@ function classes(html, names, label) {
   for (const name of names)
     assert.ok(hasClass(html, name), `${label}: missing ${name}`);
 }
+function checkSeriesOrderControls(html, label) {
+  const controls = html.match(/(<div class="ol-series-order-controls"[^>]*>)([\s\S]*?)<\/div>/);
+  assert.ok(controls, `${label}: the series sort controls must be present`);
+  assert.doesNotMatch(controls[1], /\shidden(?:\s|=|>)/, `${label}: the sort controls must be visible on initial render`);
+  assert.match(controls[2], /<button\b[^>]*data-series-order="forward"[^>]*>순서대로<\/button>/, label);
+  assert.match(controls[2], /<button\b[^>]*data-series-order="reverse"[^>]*>최신순으로<\/button>/, label);
+}
 function overlay(html, id, label) {
   const tag = html.match(new RegExp(`<div[^>]*id="${id}"[^>]*>`))?.[0];
   assert.ok(tag, `${label}: missing ${id}`);
@@ -679,6 +686,7 @@ for (const series of readHomeSeries()) {
   const html = fs.readFileSync(path.join(dist, decodeURIComponent(series.path), "index.html"), "utf8");
   assert.ok(html.includes(` · ${SERIES_LABELS.article} — BIWOOM</title>`), `${series.path}: series title includes the collection`);
   assert.ok(html.includes(`← ${SERIES_LABELS.article} 목록</a>`), `${series.path}: named series index link`);
+  checkSeriesOrderControls(html, series.path);
 }
 const generatedContent = path.join(dist, "generated/content");
 const expectedArt = new Map(publishedArticles.filter(({ illustrationFile }) => illustrationFile)
@@ -725,6 +733,7 @@ for (const series of blogCatalog) {
   assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1, `${series.url}: one page title`);
   assert.ok(html.includes(` · ${SERIES_LABELS.blog} — BIWOOM</title>`), `${series.url}: series title includes the collection`);
   assert.ok(html.includes(`← ${SERIES_LABELS.blog} 목록</a>`), `${series.url}: named series index link`);
+  checkSeriesOrderControls(html, series.url);
   const toc = html.match(/<ol class="ol-blog-series-toc">([\s\S]*?)<\/ol>/)?.[1] ?? "";
   assert.deepEqual([...toc.matchAll(/href="([^"]+)"/g)].map(m => m[1]), series.entries.map(e => sitePath(e.data.url)), `${series.url}: rendered reading order`);
   if (!series.count) {

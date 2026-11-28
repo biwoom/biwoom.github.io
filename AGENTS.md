@@ -45,7 +45,7 @@ The Astro site serves Buddhist texts, translations, research, story articles, po
 - 블로그 포스트의 기본 문체는 **자세하고, 친절하고, 친숙한 용어와 일상어 사용**이다. 처음 읽는 사람도 이해할 수 있도록 배경과 예를 들고, 필요한 전문 용어는 처음 나올 때 쉬운 말로 풀어 쓴다. [블로그 포스트 집필 기준](.agents/references/biwoom-content-management-manual.md#블로그-포스트-문체)
 - BLOG `/blog/` uses compact post rows; `/blog/series/` randomizes the four non-journal covers and asymmetric sizes once before paint, with a fixed journal section below. Mobile uses one column. Series detail uses an ordered TOC; category detail uses its authored introduction and posts. Use real page links with aria-current for 포스트/블로그 시리즈.
 - BLOG series/category `index.md` supplies title/H1, description/first paragraph, optional thumbnailAsset and published state; classify these as metadata, never posts/RSS/recent-post/statistics. Private intros hide descendants/assets. Optional series `## 읽는 순서` ordered Markdown links override oldest-first reading order; unlisted public posts follow by date. Use that order for the default TOC and previous/next. Reject duplicate category labels across series, duplicate reading-order links and cross-series membership. No tag inheritance.
-- 이야기카드와 블로그의 시리즈 상세는 공통 목차를 사용한다. 글이 두 편 이상이면 ‘순서대로’로 기존 읽는 순서를, ‘최신순으로’로 그 역순을 보여 준다. 목차 번호, 처음부터 읽기 링크와 개별 글의 이전·다음 링크는 기존 읽는 순서를 따른다.
+- 이야기카드와 블로그의 시리즈 상세는 공통 목차를 사용한다. 모든 상세 목차에 ‘순서대로’와 ‘최신순으로’를 바로 표시한다. 글이 두 편 이상이면 기본 읽는 순서와 그 역순을 전환할 수 있다. 목차 번호, 처음부터 읽기 링크와 개별 글의 이전·다음 링크는 기존 읽는 순서를 따른다.
 - DESIGN/NET and Entity/Ontology systems are retired. Their useful assets/prose have been migrated to ordinary TEXT material. Do not recreate their schemas or linking layers.
 
 ## Content Rules

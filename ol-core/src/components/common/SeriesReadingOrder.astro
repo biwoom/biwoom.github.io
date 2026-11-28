@@ -7,10 +7,10 @@ const { entries } = Astro.props;
 <div data-series-reading-order>
   <div class="ol-blog-toc-heading">
     <h2>시리즈 목차</h2>
-    {entries.length > 1 && <div class="ol-series-order-controls" role="group" aria-label="시리즈 목차 정렬" hidden>
-      <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-series-order="forward" aria-pressed="true">순서대로</button>
-      <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-series-order="reverse" aria-pressed="false">최신순으로</button>
-    </div>}
+    <div class="ol-series-order-controls" role="group" aria-label="시리즈 목차 정렬">
+      <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-series-order="forward" aria-pressed="true" disabled>순서대로</button>
+      <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-series-order="reverse" aria-pressed="false" disabled>최신순으로</button>
+    </div>
   </div>
   <ol class="ol-blog-series-toc">
     {entries.map(({ href, title, description, category, minutes }, index) => (
@@ -32,10 +32,10 @@ const { entries } = Astro.props;
   for (const series of document.querySelectorAll('[data-series-reading-order]')) {
     const controls = series.querySelector('.ol-series-order-controls');
     const list = series.querySelector('.ol-blog-series-toc');
-    if (!controls || !list) continue;
+    if (!controls || !list || list.children.length < 2) continue;
 
-    const items = [...list.children];
-    const buttons = controls.querySelectorAll('button[data-series-order]');
+    const items = Array.from(list.children);
+    const buttons = controls.querySelectorAll<HTMLButtonElement>('button[data-series-order]');
     for (const button of buttons) {
       button.addEventListener('click', () => {
         if (button.getAttribute('aria-pressed') === 'true') return;
@@ -45,7 +45,7 @@ const { entries } = Astro.props;
         list.toggleAttribute('reversed', reversed);
         for (const option of buttons) option.setAttribute('aria-pressed', String(option === button));
       });
+      button.disabled = false;
     }
-    controls.removeAttribute('hidden');
   }
 </script>
