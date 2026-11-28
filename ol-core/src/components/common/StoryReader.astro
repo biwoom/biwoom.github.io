@@ -79,7 +79,8 @@ const hasToc = headings.length > 0;
     data-story-workspace
   >
     <section class="ol-story-doc-hero">
-      <div class="ol-text-breadcrumb">
+      <h1 class="ol-kr">{heroTitle}</h1>
+      <nav class="ol-text-crumb" aria-label="현재 위치">
         <a href={url(`/${section}`)}>{sectionLabel}</a>
         {entry.data.category && (
           <>
@@ -95,14 +96,12 @@ const hasToc = headings.length > 0;
             <span>{entry.data.part}</span>
           </>
         )}
-      </div>
-
-      <h1 class="ol-kr">{heroTitle}</h1>
+      </nav>
     </section>
 
     {documentParts.length > 0 && (
       <nav
-        class="ol-story-part-nav"
+        class="ol-story-part-nav ol-text-parts"
         aria-label={`${series.label} ${section === "text" ? "자료 구분" : "파트"} 바로가기`}
       >
         <a
@@ -117,6 +116,7 @@ const hasToc = headings.length > 0;
             <path d="m3 10 9-7 9 7" />
             <path d="M5 9v12h14V9M9 21v-8h6v8" />
           </svg>
+          <strong>시리즈 정보</strong>
         </a>
         {documentParts.map((part, index) => {
           const firstEntry = part.entries[0];
@@ -124,11 +124,11 @@ const hasToc = headings.length > 0;
             <a
               href={url(entryUrl(firstEntry))}
               class:list={{ active: part.slug === currentPartSlug }}
+              aria-current={part.slug === currentPartSlug ? "location" : undefined}
             >
-              <span>
-                {section === "text" ? "자료 구분" : "PART"} {index + 1}
-              </span>
+              <span>{String(index + 1).padStart(2, "0")}</span>
               <strong class="ol-kr">{part.label}</strong>
+              <small>{part.entries.length}</small>
             </a>
           );
         })}

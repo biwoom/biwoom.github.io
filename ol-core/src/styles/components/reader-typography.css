@@ -45,7 +45,7 @@
 /* STORY hero gives work/part context; the chapter title belongs to the body. */
 .ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero h1 {
   font: 600 22px/1.6 var(--ol-reader-serif);
-  margin-top: 12px;
+  margin: 0;
 }
 /* The chapter title stays larger than the shared 25px body H2 on mobile. */
 .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-content-head h2 {

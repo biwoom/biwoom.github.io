@@ -128,7 +128,11 @@ rule(".ol-reader-footnotes-label", /display:inline/);
 rule("[data-active-footnote-ref]", /font-weight:800/);
 rule("body:has(.ol-text-academic)", /--ol-accent:#274e65/);
 rule("body:has(.ol-text-reader) .ol-header", /position:relative/);
-rule(".ol-text-reader .ol-text-parts", /position:static/);
+rule(".ol-story-doc-page .ol-text-parts", /position:static/);
+rule(".ol-story-reader-page.ol-story-doc-page .ol-story-doc-hero", /padding:20px var\(--ol-reader-heading-gutter\) 12px/);
+rule(".ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero", /grid-template-columns:minmax\(0,1fr\) fit-content\(50%\)/);
+rule(".ol-story-doc-page:not(.ol-text-reader) .ol-story-doc-hero .ol-text-crumb", /justify-content:flex-end/);
+rule(".ol-story-doc-page .ol-text-parts", /padding:0 var\(--ol-reader-heading-gutter\)/);
 rule(".ol-text-reader .ol-reader-toolbar", /top:0/);
 rule(".ol-text-reader [data-text-focus]", /display:none/);
 rule(".ol-text-reader .ol-text-list-label-compact", /display:inline/);
@@ -142,7 +146,6 @@ rule(".ol-story-doc-page .ol-story-chapter>.ol-prose:not([data-reader-scalable])
 rule(".ol-text-reader:not([data-text-ready]) .ol-text-workspace-grid", /grid-template-columns:minmax\(0,1fr\)/);
 rule(".ol-story-reader-rail", /background:var\(--ol-surface\)/);
 rule(".ol-story-reader-rail", /position:sticky/);
-rule(".ol-story-doc-page:not(.ol-text-reader) .ol-story-part-nav", /position:static/);
 rule(".ol-story-doc-page .ol-reader-toolbar", /top:0(?:;|$)/);
 rule(".ol-story-doc-page:not(.ol-text-reader) .ol-story-part-sidebar", /(?=.*(?:^|;)top:0(?:;|$))(?=.*(?:^|;)height:100dvh(?:;|$))/);
 rule(".ol-story-reader-rail", /(?=.*(?:^|;)top:0(?:;|$))(?=.*(?:^|;)height:100dvh(?:;|$))/);
@@ -239,6 +242,10 @@ for (const [source, record] of Object.entries(registry.files)) {
       ]
     : ["ol-blog-detail-header", "ol-blog-detail-title", "ol-blog-detail-meta"];
   classes(html, [...expected, "ol-prose"], record.url);
+  if (isLibrary) {
+    assert.match(html, /<nav class="ol-text-crumb" aria-label="현재 위치">/, `${record.url}: shared reader breadcrumb`);
+    assert.match(html, /<nav class="ol-story-part-nav ol-text-parts"/, `${record.url}: shared reader part navigation`);
+  }
   if (collection === "story") {
     assert.match(html, /<div class="ol-reader-toolbar">\s*<div class="ol-reader-navigation-tools">\s*<button[^>]*data-story-left-toggle/);
     assert.equal((html.match(/data-story-list-content/g) ?? []).length, 1);

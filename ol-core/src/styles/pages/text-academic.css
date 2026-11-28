@@ -46,7 +46,7 @@ html.dark .ol-text-primary { color: #17232c; }
 .ol-text-parts a { display: inline-flex; align-items: center; gap: 10px; padding: 16px 2px; border: 0; border-radius: 0; background: transparent; color: var(--ol-muted); text-decoration: none; white-space: nowrap; font-size: 14px; }
 .ol-text-parts a > span { font-size: 12px; }
 .ol-text-parts a.active, .ol-text-parts a:hover { color: var(--ol-accent); background: transparent; }
-.ol-text-parts small { padding: 1px 7px; border-radius: 12px; background: var(--ol-text-soft); color: var(--ol-muted); font-size: 12px; }
+.ol-text-parts small { padding: 1px 7px; border-radius: 12px; background: var(--ol-text-soft, var(--ol-surface-2)); color: var(--ol-muted); font-size: 12px; }
 .ol-text-library-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr) 270px; padding-block-end: 80px; }
 .ol-text-library-nav { padding: 30px 20px 30px 0; border-right: 1px solid var(--ol-border); }
 .ol-text-library-nav h2, .ol-text-bibliography h2 { font-size: 14px; margin: 0 0 18px; }
@@ -95,12 +95,7 @@ html.dark .ol-text-primary { color: #17232c; }
 body:has(.ol-text-reader) .ol-header { position: relative; top: auto; }
 :root:has(.ol-text-reader) { scroll-padding-top: 0; }
 .ol-text-reader.ol-story-doc-page { width: 100%; max-width: none; margin: 0; padding: 0 0 72px; overflow: visible; }
-body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px; }
 .ol-text-work-name { display: block; font: 600 22px/1.6 var(--ol-text-serif); color: var(--ol-ink); text-decoration: none; }
-.ol-text-reader .ol-text-parts { position: static; top: auto; z-index: 45; margin: 0; padding: 0 36px; background: var(--ol-bg); min-height: 58px; }
-.ol-text-reader .ol-text-parts a { flex-direction: row; min-width: auto; border-bottom: 2px solid transparent; box-shadow: none; }
-.ol-text-reader .ol-text-parts strong { font-size: 14px; }
-.ol-text-reader .ol-text-parts .ol-story-part-home { width: auto; }
 .ol-text-workspace-grid { display: grid; grid-template-columns: 240px minmax(0, 1fr) var(--ol-reader-aid-width); border-bottom: 1px solid var(--ol-border); }
 .ol-text-reader .ol-text-document-list { position: sticky; top: 0; align-self: start; width: auto; min-height: 0; height: 100dvh; max-height: 100dvh; overflow-y: auto; border-right: 1px solid var(--ol-border); background: var(--ol-text-soft); padding: 24px 16px; }
 .ol-text-document-list .ol-text-section-head h2 { font-size: 13px; margin-bottom: 18px; }
@@ -163,8 +158,6 @@ body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px
   .ol-text-library-nav { display: none; }
   .ol-text-library-main { padding: 26px 0; }
   .ol-text-library-grid > .ol-text-bibliography { padding: 24px 0; }
-  body .ol-text-reader .ol-text-document-head { padding: 18px 20px 10px; }
-  .ol-text-reader .ol-text-parts { padding: 0 20px; gap: 20px; }
   .ol-text-reader .ol-text-workspace-grid { display: block; }
   .ol-text-reader .ol-text-document-list { display: none; }
   .ol-text-reader .ol-reader-toolbar { flex-wrap: nowrap; gap: 4px; padding: 6px 12px; }
@@ -181,8 +174,6 @@ body .ol-text-reader .ol-text-document-head { margin: 0; padding: 20px 36px 12px
   .ol-text-reader .ol-text-reading-column { width: 100%; max-width: none; padding: 0; }
   .ol-text-reader .ol-prose { color: #000; }
 }
-
-body .ol-text-reader .ol-text-parts a.active { background: transparent; border-bottom-color: var(--ol-accent); color: var(--ol-accent); }
 
 .ol-reader-feedback:empty { display: none; }
 .ol-reader-feedback { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); max-width: calc(100vw - 32px); padding: 12px 18px; border-radius: 6px; background: var(--ol-ink); color: var(--ol-bg); font: 13px/1.6 var(--ol-font-ui); z-index: 100; box-shadow: var(--ol-shadow); }
