@@ -30,6 +30,18 @@ class El {
   append(el){el.parentElement=this;this.children.push(el);} before(marker){marker.parentElement=this.parentElement;} after(el){el.parentElement=this.parentElement;}
   classList={add(){},remove(){}};
 }
+
+function touch(panel, type, x, y, extra = {}) {
+  const points = [{ identifier: 1, clientX: x, clientY: y }];
+  let prevented = false;
+  panel.fire(type, {
+    touches: type === 'touchend' || type === 'touchcancel' ? [] : points,
+    changedTouches: points,
+    preventDefault() { prevented = true; },
+    ...extra,
+  });
+  return prevented;
+}
 test('TEXT bibliography reads explicit prose labels and never invents source facts from code or headings',()=>{
   const api=evaluate('ol-core/src/lib/text-bibliography.ts',{}, {'../../scripts/lib/content.mjs':content});
   const result=api.readTextBibliography('# 대승현론\n\n**저자**: 길장 찬  \n**출처**: CBETA T45n1853\n\n```\n저본: 가짜\n```\n\n이 글은 저자: 추정하지 않음');
@@ -119,6 +131,56 @@ test('docked document panels are nonmodal, do not lock body scroll, and close wi
   const controller=api.createReaderDrawer(dialog,trigger,null);controller.open();assert.ok(dialog.open);assert.equal(document.body.style.overflow,'scroll');assert.equal(active.focused,undefined);assert.equal(trigger.attrs['aria-expanded'],'true');
   let returned=false;controller.close(()=>returned=true);assert.equal(dialog.open,false);assert.ok(returned);assert.equal(document.body.style.overflow,'scroll');
 });
+test('mobile aid focuses its heading and dismisses only after an outward one-finger swipe', () => {
+  const dialog = new El(), panel = new El(), heading = new El(), trigger = new El(), body = new El();
+  dialog.select = { '.ol-reader-toc-panel': panel };
+  panel.select = { '.ol-reader-toc-head h2': heading };
+  body.style.overflow = 'auto';
+  const narrow = { matches: true };
+  let selection = null;
+  const window = { matchMedia: query => query.includes('max-width') ? narrow : { matches: true }, getSelection: () => selection };
+  const { createReaderDrawer } = evaluate('ol-core/src/lib/client/reader-drawer.ts', {
+    document: { body }, window, getComputedStyle: () => ({ transform: 'none' }),
+  });
+  const controller = createReaderDrawer(dialog, trigger, null);
+  controller.open();
+  assert.ok(heading.focused);
+  assert.equal(body.style.overflow, 'hidden');
+
+  const swipe = (x, y) => {
+    touch(panel, 'touchstart', 140, 100);
+    return touch(panel, 'touchend', x, y);
+  };
+  assert.equal(swipe(55, 104), false);
+  assert.equal(swipe(165, 104), false);
+  assert.equal(swipe(219, 168), false);
+  touch(panel, 'touchstart', 140, 100);
+  touch(panel, 'touchmove', 144, 130);
+  assert.equal(touch(panel, 'touchend', 240, 130), false);
+  touch(panel, 'touchstart', 140, 100);
+  touch(panel, 'touchcancel', 175, 104);
+  assert.equal(touch(panel, 'touchend', 240, 104), false);
+  touch(panel, 'touchstart', 140, 100);
+  touch(panel, 'touchmove', 170, 104, { touches: [{ identifier: 1 }, { identifier: 2 }] });
+  assert.equal(touch(panel, 'touchend', 240, 104), false);
+  selection = { isCollapsed: false, containsNode: node => node === panel };
+  assert.equal(swipe(220, 104), false);
+  assert.ok(dialog.open);
+
+  selection = null;
+  assert.equal(swipe(220, 104), true);
+  assert.equal(dialog.open, false);
+  assert.ok(trigger.focused);
+  assert.equal(trigger.attrs['aria-expanded'], 'false');
+  assert.equal(body.style.overflow, 'auto');
+
+  narrow.matches = false;
+  heading.focused = false;
+  controller.open();
+  assert.equal(heading.focused, false);
+  assert.equal(swipe(220, 104), false);
+  assert.ok(dialog.open);
+});
 function workspace({ opened = true, initialNote = false, wideScreen = true, emptyToc = false, withNotes = true } = {}) {
   const root=new El(),slot=new El(),printSlot=new El(),left=new El(),list=new El(),mobile=new El(),mobileSlot=new El(),leftBtn=new El(),focusBtn=new El(),focusLabel=new El();
   const toc=new El(),notes=new El();toc.id='ol-reader-toc';notes.id='ol-reader-footnotes';
@@ -127,18 +189,20 @@ function workspace({ opened = true, initialNote = false, wideScreen = true, empt
   if (emptyToc) toc.setAttribute('data-reader-toc-empty','');
   const dialogs=withNotes?[toc,notes]:[toc],tabs=['toc','footnotes'].map(type=>{const e=new El();e.dataset.textPanel=type;return e;});
   const wide=new El(),narrow=new El();wide.matches=wideScreen;narrow.matches=false;
-  root.select={'[data-text-panel-slot]':slot,'[data-text-print-notes]':printSlot,'#text-document-list':left,'[data-text-list-content]':list,'#text-list-dialog':mobile,'[data-text-left-toggle]':leftBtn,'[data-text-focus]':focusBtn,'[data-text-focus-label]':focusLabel,'[data-text-list-close]':new El()};
-  root.lists={'.ol-reader-toc':dialogs,'[data-text-panel]':tabs};mobile.select={'[data-text-mobile-list-slot]':mobileSlot};
+  const mobilePanel = new El(), closeBtn = new El();
+  root.select={'[data-text-panel-slot]':slot,'[data-text-print-notes]':printSlot,'#text-document-list':left,'[data-text-list-content]':list,'#text-list-dialog':mobile,'[data-text-left-toggle]':leftBtn,'[data-text-focus]':focusBtn,'[data-text-focus-label]':focusLabel};
+  root.lists={'.ol-reader-toc':dialogs,'[data-text-panel]':tabs};mobile.select={'[data-reader-mobile-list-slot]':mobileSlot,'.ol-reader-list-panel':mobilePanel,'[data-reader-list-close]':closeBtn};
   for(const dialog of dialogs){
     dialog.addEventListener('reader:open',()=>{dialogs.forEach(d=>{d.open=false;});dialog.open=true;root.removeAttribute('data-text-right-hidden');root.fire('reader:panel');});
     dialog.addEventListener('reader:reset',()=>{dialog.open=false;root.fire('reader:panel');});
   }
   const body=new El();body.style.overflow='auto';
   const document={body,querySelector:()=>root,createComment:()=>new El()};
-  const window=new El(); window.matchMedia=query=>query.includes('1360')?wide:narrow;
+  const window=new El(); window.matchMedia=query=>query.includes('1360')?wide:narrow; window.getSelection=()=>null;
   const Event=class{constructor(type){this.type=type;}};
-  evaluate('ol-core/src/lib/client/text-workspace.ts',{document,Event,window}).initTextWorkspace();
-  return {root,slot,printSlot,window,left,list,mobile,mobileSlot,leftBtn,focusBtn,focusLabel,toc,notes,tabs,wide,narrow,body};
+  const drawer=evaluate('ol-core/src/lib/client/reader-drawer.ts',{document,window});
+  evaluate('ol-core/src/lib/client/text-workspace.ts',{document,Event,window},{'./reader-drawer':drawer}).initTextWorkspace();
+  return {root,slot,printSlot,window,left,list,mobile,mobileSlot,mobilePanel,closeBtn,leftBtn,focusBtn,focusLabel,toc,notes,tabs,wide,narrow,body};
 }
 test('TEXT focus restores the actual previous panel/list state and selecting a panel leaves focus mode',()=>{
   const h=workspace();assert.ok(h.toc.open);assert.equal(h.tabs[0].attrs['aria-pressed'],'true');
@@ -154,6 +218,7 @@ test('TEXT responsive layout moves original nodes, closes modal with Esc, and re
   assert.equal(h.list.parentElement,h.mobileSlot);assert.equal(h.toc.dataset.docked,undefined);assert.equal(h.leftBtn.attrs['aria-controls'],'text-list-dialog');
   h.leftBtn.fire('click');assert.ok(h.mobile.open);assert.equal(h.body.style.overflow,'hidden');
   h.mobile.fire('cancel');assert.equal(h.mobile.open,false);assert.equal(h.body.style.overflow,'auto');assert.equal(h.leftBtn.attrs['aria-expanded'],'false');
+  h.leftBtn.fire('click');h.closeBtn.fire('click');assert.equal(h.mobile.open,false);
   h.wide.matches=true;h.narrow.matches=false;h.wide.fire('change');assert.equal(h.list.parentElement,h.left);assert.equal(h.toc.parentElement,h.slot);assert.ok(h.toc.open);
 });
 
@@ -243,17 +308,18 @@ function storyWorkspace(wideScreen = true, withList = false, { emptyToc = false,
   slot.querySelectorAll=()=>dialogs.filter(dialog=>dialog.parentElement===slot && dialog.open);
   const document={body,querySelector:()=>root,createComment:()=>new El()};
   const Event=class{constructor(type,options){this.type=type;Object.assign(this,options);}};
-  const narrow=new El(),left=new El(),list=new El(),mobile=new El(),mobileSlot=new El(),leftBtn=new El(),closeBtn=new El();
+  const narrow=new El(),left=new El(),list=new El(),mobile=new El(),mobileSlot=new El(),mobilePanel=new El(),leftBtn=new El(),closeBtn=new El();
   narrow.matches=!wideScreen;
-  if(withList) Object.assign(root.select,{'[data-story-left-toggle]':leftBtn,'#story-document-list':left,'[data-story-list-content]':list,'#story-list-dialog':mobile,'[data-story-mobile-list-slot]':mobileSlot,'[data-story-list-close]':closeBtn});
-  const window={matchMedia:query=>query.includes('1360')?wide:narrow};
+  if(withList) Object.assign(root.select,{'[data-story-left-toggle]':leftBtn,'#story-document-list':left,'[data-story-list-content]':list,'#story-list-dialog':mobile});
+  mobile.select={'[data-reader-mobile-list-slot]':mobileSlot,'.ol-reader-list-panel':mobilePanel,'[data-reader-list-close]':closeBtn};
+  const window={matchMedia:query=>query.includes('1360')?wide:narrow,getSelection:()=>null};
   const drawer=evaluate('ol-core/src/lib/client/reader-drawer.ts',{document,window,Event,CustomEvent:Event});
   const controllers=dialogs.map(dialog=>{
     dialog.addEventListener('reader:panel',()=>root.fire('reader:panel'));
     return drawer.createReaderDrawer(dialog,new El(),null);
   });
-  evaluate('ol-core/src/lib/client/story-workspace.ts',{document,window,Event}).initStoryWorkspace();
-  return {root,slot,empty,body,wide,dialogs,buttons,controllers,narrow,left,list,mobile,mobileSlot,leftBtn,closeBtn};
+  evaluate('ol-core/src/lib/client/story-workspace.ts',{document,window,Event},{'./reader-drawer':drawer}).initStoryWorkspace();
+  return {root,slot,empty,body,wide,dialogs,buttons,controllers,narrow,left,list,mobile,mobileSlot,mobilePanel,leftBtn,closeBtn};
 }
 test('STORY desktop keeps one original aid open, switches tabs and preserves footnote return callbacks',()=>{
   const h=storyWorkspace();const [toc,notes]=h.dialogs;
@@ -307,6 +373,25 @@ test('STORY chapter toggle preserves desktop choice through focus and uses one m
   h.leftBtn.fire('click');h.narrow.matches=false;h.narrow.fire('change');
   assert.equal(h.list.parentElement,h.left);assert.equal(h.mobile.open,false);assert.equal(h.body.style.overflow,'');
   assert.equal(h.leftBtn.attrs['aria-expanded'],'true');
+});
+
+test('both mobile document lists close on a left swipe and restore scroll and trigger focus', () => {
+  for (const h of [workspace({ wideScreen: false }), storyWorkspace(false, true)]) {
+    h.narrow.matches = true;
+    h.narrow.fire('change');
+    h.body.style.overflow = 'auto';
+    h.leftBtn.fire('click');
+    assert.ok(h.mobile.open);
+    touch(h.mobilePanel, 'touchstart', 140, 100);
+    assert.equal(touch(h.mobilePanel, 'touchend', 220, 105), false);
+    assert.ok(h.mobile.open);
+    touch(h.mobilePanel, 'touchstart', 140, 100);
+    assert.equal(touch(h.mobilePanel, 'touchend', 60, 105), true);
+    assert.equal(h.mobile.open, false);
+    assert.equal(h.body.style.overflow, 'auto');
+    assert.equal(h.leftBtn.attrs['aria-expanded'], 'false');
+    assert.ok(h.leftBtn.focused);
+  }
 });
 
 

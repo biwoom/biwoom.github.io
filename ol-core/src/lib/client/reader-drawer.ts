@@ -1,11 +1,61 @@
+const mobileReader = "(max-width: 980px)";
+
+function enableReaderSwipeDismiss(panel: HTMLElement, edge: "left" | "right", dismiss: () => void) {
+  const narrow = window.matchMedia(mobileReader);
+  let start: Touch | undefined;
+  panel.addEventListener("touchstart", event => {
+    start = narrow.matches && event.touches.length === 1 ? event.touches[0] : undefined;
+  }, { passive: true });
+  panel.addEventListener("touchmove", event => {
+    if (!start) return;
+    const touch = event.touches[0];
+    if (event.touches.length !== 1 || touch.identifier !== start.identifier) {
+      start = undefined;
+      return;
+    }
+    const horizontal = Math.abs(touch.clientX - start.clientX);
+    const vertical = Math.abs(touch.clientY - start.clientY);
+    if (vertical >= 12 && vertical >= horizontal) start = undefined;
+  }, { passive: true });
+  panel.addEventListener("touchcancel", () => { start = undefined; }, { passive: true });
+  panel.addEventListener("touchend", event => {
+    const first = start;
+    start = undefined;
+    const touch = event.changedTouches[0];
+    if (!first || !narrow.matches || event.touches.length || touch?.identifier !== first.identifier) return;
+    const outward = (touch.clientX - first.clientX) * (edge === "left" ? -1 : 1);
+    const vertical = Math.abs(touch.clientY - first.clientY);
+    if (outward < 56 || outward < 1.5 * vertical) return;
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed && selection.containsNode(panel, true)) return;
+    // A completed swipe may have started on a link or note. Do not activate it.
+    event.preventDefault();
+    dismiss();
+  }, { passive: false });
+}
+
+export function bindReaderModalDismiss(
+  dialog: HTMLDialogElement,
+  panel: HTMLElement | null,
+  edge: "left" | "right",
+  closeButton: Element | null,
+  dismiss: () => void,
+) {
+  closeButton?.addEventListener("click", dismiss);
+  dialog.addEventListener("cancel", event => { event.preventDefault(); dismiss(); });
+  dialog.addEventListener("click", event => { if (event.target === dialog) dismiss(); });
+  if (panel) enableReaderSwipeDismiss(panel, edge, dismiss);
+}
+
 /** The modal shell clips without scrolling; only its inner panel animates.
- * Keep native autofocus at rest before starting the right-edge entrance. */
+ * Move initial focus before starting the right-edge entrance. */
 export function createReaderDrawer(
   drawer: HTMLDialogElement,
   trigger: HTMLButtonElement,
   closeButton: Element | null,
 ) {
   const panel = drawer.querySelector<HTMLElement>(".ol-reader-toc-panel");
+  const narrow = window.matchMedia(mobileReader);
   let animation: Animation | undefined;
   let closing = false;
   let previousOverflow = "";
@@ -75,6 +125,7 @@ export function createReaderDrawer(
     previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     drawer.showModal();
+    if (narrow.matches) panel?.querySelector<HTMLElement>(".ol-reader-toc-head h2")?.focus({ preventScroll: true });
     // Clear offsets retained by a previous opening/native autofocus. The shell
     // uses overflow: clip so later focus cannot scroll it during the animation.
     drawer.scrollLeft = 0;
@@ -96,8 +147,6 @@ export function createReaderDrawer(
     animation?.cancel();
     if (drawer.open) finishClose(undefined, false);
   });
-  closeButton?.addEventListener("click", () => close());
-  drawer.addEventListener("cancel", event => { event.preventDefault(); close(); });
-  drawer.addEventListener("click", event => { if (event.target === drawer) close(); });
+  bindReaderModalDismiss(drawer, panel, "right", closeButton, () => close());
   return { open, close };
 }

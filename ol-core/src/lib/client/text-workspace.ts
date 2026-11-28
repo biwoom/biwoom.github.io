@@ -1,3 +1,5 @@
+import { bindReaderModalDismiss } from './reader-drawer';
+
 /** One set of actual dialog/footnote nodes serves the desktop dock and mobile
  * modals. Moving nodes, rather than copying markup, preserves reference IDs. */
 export function initTextWorkspace() {
@@ -14,7 +16,7 @@ export function initTextWorkspace() {
   const left = root.querySelector<HTMLElement>('#text-document-list')!;
   const listContent = root.querySelector<HTMLElement>('[data-text-list-content]')!;
   const mobileList = root.querySelector<HTMLDialogElement>('#text-list-dialog')!;
-  const mobileSlot = mobileList.querySelector<HTMLElement>('[data-text-mobile-list-slot]')!;
+  const mobileSlot = mobileList.querySelector<HTMLElement>('[data-reader-mobile-list-slot]')!;
   const leftButton = root.querySelector<HTMLButtonElement>('[data-text-left-toggle]')!;
   const focusButton = root.querySelector<HTMLButtonElement>('[data-text-focus]')!;
   const focusLabel = root.querySelector<HTMLElement>('[data-text-focus-label]')!;
@@ -95,9 +97,8 @@ export function initTextWorkspace() {
       setLeft(!root.hasAttribute('data-text-left-hidden'));
     }
   });
-  root.querySelector('[data-text-list-close]')?.addEventListener('click', () => closeList());
-  mobileList.addEventListener('cancel', event => { event.preventDefault(); closeList(); });
-  mobileList.addEventListener('click', event => { if (event.target === mobileList) closeList(); });
+  bindReaderModalDismiss(mobileList, mobileList.querySelector('.ol-reader-list-panel'), 'left',
+    mobileList.querySelector('[data-reader-list-close]'), () => closeList());
   focusButton.addEventListener('click', () => {
     if (!focused) {
       saved = { left: root.hasAttribute('data-text-left-hidden'), right: !dialogs.some(dialog => dialog.open), panel: activePanel };

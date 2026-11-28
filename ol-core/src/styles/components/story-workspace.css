@@ -22,7 +22,6 @@
   .ol-story-doc-page:not(.ol-text-reader) .ol-story-part-tools { flex-wrap: nowrap; gap: 2px; }
   .ol-story-doc-page:not(.ol-text-reader) .ol-reader-toolbar .ol-text-tool-btn { padding: 6px; }
   #story-list-dialog .ol-story-part-sidebar-head { padding: 8px 0 16px; }
-  #story-list-dialog .ol-text-list-close { margin-left: auto; }
   #story-list-dialog nav { height: auto; padding: 14px 0; }
   #story-list-dialog nav a.active { background: var(--ol-surface-2); color: var(--ol-accent); }
 }

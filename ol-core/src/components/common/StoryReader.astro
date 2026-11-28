@@ -4,6 +4,7 @@ import ContentRights from "./ContentRights.astro";
 import MaterialBody from "./MaterialBody.astro";
 import ReaderBody from "./ReaderBody.astro";
 import ReaderToolbar from "./ReaderToolbar.astro";
+import ReaderListDialog from "./ReaderListDialog.astro";
 import ReaderPanelResize from "./ReaderPanelResize.astro";
 import { render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
@@ -140,7 +141,6 @@ const hasToc = headings.length > 0;
         <aside class="ol-story-part-sidebar" id="story-document-list" data-pagefind-ignore>
           <div data-story-list-content>
           <div class="ol-story-part-sidebar-head">
-            <!-- <button class="ol-text-list-close" type="button" data-story-list-close aria-label="문헌 목차 닫기">닫기</button> -->
             <span>{section === "text" ? "자료 구분" : "PART"}</span>
             <strong class="ol-kr">
               {currentPart?.label ?? entry.data.part}
@@ -241,11 +241,11 @@ const hasToc = headings.length > 0;
         </aside>
       </div>
     </section>
-    <dialog id="story-list-dialog" class="ol-text-list-dialog" aria-label="문헌 목차" data-pagefind-ignore><div data-story-mobile-list-slot></div></dialog>
+    <ReaderListDialog id="story-list-dialog" />
       <dialog data-reader-toc-empty={!hasToc ? true : undefined} id="ol-reader-toc" class="ol-reader-toc" aria-labelledby="ol-reader-toc-title" data-pagefind-ignore>
         <section class="ol-reader-toc-panel">
           <header class="ol-reader-toc-head">
-            <h2 id="ol-reader-toc-title">본문 목차</h2>
+            <h2 id="ol-reader-toc-title" tabindex="-1">본문 목차</h2>
             <button type="button" class="ol-text-tool-btn" aria-label="본문 목차 닫기" data-reader-toc-close autofocus>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="m6 6 12 12M6 18 18 6" />

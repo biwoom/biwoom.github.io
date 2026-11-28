@@ -1,3 +1,5 @@
+import { bindReaderModalDismiss } from './reader-drawer';
+
 /** Reuse the original shared reader dialogs for desktop aids and compact modals. */
 export function initStoryWorkspace() {
   const root = document.querySelector<HTMLElement>('[data-story-workspace]');
@@ -69,7 +71,7 @@ function initStoryList(root: HTMLElement) {
   const sidebar = root.querySelector<HTMLElement>('#story-document-list');
   const content = root.querySelector<HTMLElement>('[data-story-list-content]');
   const dialog = root.querySelector<HTMLDialogElement>('#story-list-dialog');
-  const slot = root.querySelector<HTMLElement>('[data-story-mobile-list-slot]');
+  const slot = dialog?.querySelector<HTMLElement>('[data-reader-mobile-list-slot]');
   if (!trigger || !sidebar || !content || !dialog || !slot) return;
   const narrow = window.matchMedia('(max-width: 980px)');
   let overflow = '';
@@ -109,9 +111,8 @@ function initStoryList(root: HTMLElement) {
       sync();
     }
   });
-  root.querySelector('[data-story-list-close]')?.addEventListener('click', () => close());
-  dialog.addEventListener('cancel', event => { event.preventDefault(); close(); });
-  dialog.addEventListener('click', event => { if (event.target === dialog) close(); });
+  bindReaderModalDismiss(dialog, dialog.querySelector('.ol-reader-list-panel'), 'left',
+    dialog.querySelector('[data-reader-list-close]'), () => close());
   root.addEventListener('reader:focus', sync);
   narrow.addEventListener('change', layout);
   layout();

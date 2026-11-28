@@ -118,12 +118,14 @@
     &:is(:hover, :focus, :active, [aria-expanded="true"], [aria-pressed="true"]) {
       border-color: transparent;
       background-color: transparent;
-      outline: none;
     }
     &:enabled:is(:active, [aria-expanded="true"], [aria-pressed="true"]) {
       color: color-mix(in srgb, var(--ol-accent, var(--ol-accent-story)) 50%, var(--ol-ink));
     }
-    &:focus-visible { box-shadow: inset 0 -2px currentColor; }
+    &:focus:not(:focus-visible) { outline: none; }
+    @media (hover: none) {
+      &:focus { outline: none; }
+    }
   }
   /* The slider can receive focus when opened by touch. Keep its focus cue on the thumb. */
   [data-reader-font-toolbar] .ol-reader-font-panel :is(button, input) {
@@ -169,7 +171,12 @@
   outline-offset: 2px;
 }
 @media (max-width: 980px) {
-  /* Keep tools first in normal flow, above the title, and sticky on scroll. */
+  .ol-text-list-dialog,
+  .ol-reader-toc:not([data-docked]) :is(.ol-reader-toc-panel, nav, .ol-reader-footnotes-content) {
+    touch-action: pan-y pinch-zoom;
+  }
+  :is(.ol-text-list-dialog, .ol-reader-toc:not([data-docked])) .ol-reader-toc-head h2[tabindex="-1"]:focus { outline: none; }
+  :is(.ol-text-list-dialog, .ol-reader-toc:not([data-docked])) .ol-reader-toc-head button { -webkit-tap-highlight-color: transparent; }
 }
 
 /* One shared control follows the reading column through sidebar/focus changes. */
@@ -204,11 +211,12 @@
 .ol-story-doc-page .ol-reader-toc[data-docked="true"][open] { position: static; inset: auto; display: block; width: 100%; height: 100%; max-height: none; padding: 0; border: 0; color: var(--ol-ink); background: transparent; }
 .ol-story-doc-page .ol-reader-toc[data-docked="true"] .ol-reader-toc-panel { width: 100%; height: 100%; margin: 0; border: 0; box-shadow: none; background: transparent; }
 .ol-story-doc-page .ol-reader-toc[data-docked="true"] .ol-reader-toc-head { padding: 12px 18px; }
-.ol-text-list-close { display: none; }
-.ol-text-list-dialog { inset: 0 auto 0 0; margin: 0; padding: 24px 18px; width: min(320px, 90vw); height: 100dvh; max-height: none; max-width: none; border: 0; background: var(--ol-bg); color: var(--ol-ink); overflow-y: auto; }
+.ol-text-list-dialog { inset: 0 auto 0 0; margin: 0; padding: 0; width: min(320px, 90vw); height: 100dvh; max-height: none; max-width: none; border: 0; background: var(--ol-bg); color: var(--ol-ink); overflow-y: auto; }
 .ol-text-list-dialog:not([open]) { display: none; }
 .ol-text-list-dialog::backdrop { background: rgb(0 0 0 / 30%); }
-.ol-text-list-dialog .ol-text-list-close { display: block; border: 0; background: transparent; color: var(--ol-ink); padding: 8px; font-size: 13px; }
+.ol-reader-list-panel { min-height: 100%; padding: 24px 18px; }
+.ol-text-list-dialog .ol-reader-toc-head { margin-bottom: 16px; padding: 0 0 12px; }
+.ol-text-list-dialog .ol-reader-toc-head button { min-width: 36px; min-height: 36px; padding: 0; background: transparent; color: var(--ol-ink); }
 .ol-text-list-dialog h2 { font-size: 14px; }
 .ol-text-list-dialog nav a { display: flex; gap: 12px; padding: 12px 8px; text-decoration: none; font-size: 14px; }
 .ol-text-list-dialog nav a.active { background: var(--ol-text-selected); color: var(--ol-accent); }
