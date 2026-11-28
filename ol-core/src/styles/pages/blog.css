@@ -248,8 +248,10 @@
 .ol-blog-series-intro > span:last-child { color: var(--ol-muted); font-size: 12px; }
 .ol-blog-series-actions { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-top: 24px; font-size: 12px; color: var(--ol-muted); }
 .ol-blog-series-actions .ol-btn { font-size: 13px; }
-.ol-blog-toc-heading { display: flex; justify-content: space-between; align-items: baseline; margin-top: 26px; }
-.ol-blog-toc-heading h3, .ol-blog-toc-heading span { font-size: 12px; color: var(--ol-muted); }
+.ol-blog-toc-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin-top: 26px; }
+.ol-blog-toc-heading h2 { margin: 0; font-size: 12px; color: var(--ol-muted); }
+.ol-series-order-controls:not([hidden]) { display: flex; flex-wrap: wrap; gap: 7px; }
+.ol-series-order-controls button[aria-pressed="true"] { background: var(--ol-ink); color: var(--ol-bg); border-color: var(--ol-ink); }
 .ol-blog-series-toc { list-style: none; margin: 0; padding: 0; }
 .ol-blog-series-toc li { display: grid; grid-template-columns: 40px minmax(0,1fr) 80px; gap: 16px; padding: 25px 0; border-bottom: 1px solid var(--ol-border); align-items: start; }
 .ol-blog-ordinal { font: italic 24px Georgia,serif; color: var(--ol-muted); }

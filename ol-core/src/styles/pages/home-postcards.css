@@ -245,7 +245,6 @@
 .ol-home-series-arrow { position: absolute; right: 0; bottom: 0; font-size: 1.35rem; }
 .ol-home-series-detail { grid-template-columns: clamp(115px, 15vw, 220px) minmax(0, 1fr); gap: clamp(16px, 3vw, 48px); }
 .ol-home-series-detail .ol-home-series-note { color: var(--ol-muted); font-size: .86rem; }
-.ol-home-series-detail .ol-blog-toc-heading h2 { font-size: 12px; color: var(--ol-muted); }
 .ol-home-series-detail .ol-blog-series-toc a:is(:hover, :focus-visible) h3 { text-decoration: underline; text-underline-offset: 4px; }
 .ol-story-saved-empty { display: grid; align-content: center; justify-items: center; gap: 9px; min-height: 150px; padding: 22px; border: 1px solid var(--ol-border); border-radius: 6px; color: var(--ol-ink-2); text-align: center; }
 .ol-story-saved-empty p { margin: 0; }

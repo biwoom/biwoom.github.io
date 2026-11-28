@@ -4,18 +4,48 @@ interface Props {
 }
 const { entries } = Astro.props;
 ---
-<div class="ol-blog-toc-heading"><h2>시리즈 목차</h2><span>읽는 순서</span></div>
-<ol class="ol-blog-series-toc">
-  {entries.map(({ href, title, description, category, minutes }, index) => (
-    <li>
-      <span class="ol-blog-ordinal" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-      <div><a href={href}><h3>{title}</h3></a><p>{description}</p></div>
-      <span class="ol-blog-toc-meta"><span>{category}</span><span>{minutes}분</span></span>
-    </li>
-  ))}
-</ol>
-{!entries.length && <div class="ol-blog-coming-soon">
-  <span aria-hidden="true">…</span>
-  <h3>새로운 이야기를 준비하고 있습니다.</h3>
-  <p>글이 준비되면 이곳에서 차례대로 읽으실 수 있습니다.</p>
-</div>}
+<div data-series-reading-order>
+  <div class="ol-blog-toc-heading">
+    <h2>시리즈 목차</h2>
+    {entries.length > 1 && <div class="ol-series-order-controls" role="group" aria-label="시리즈 목차 정렬" hidden>
+      <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-series-order="forward" aria-pressed="true">순서대로</button>
+      <button class="ol-btn ol-btn-outline ol-btn-sm" type="button" data-series-order="reverse" aria-pressed="false">최신순으로</button>
+    </div>}
+  </div>
+  <ol class="ol-blog-series-toc">
+    {entries.map(({ href, title, description, category, minutes }, index) => (
+      <li>
+        <span class="ol-blog-ordinal" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <div><a href={href}><h3>{title}</h3></a><p>{description}</p></div>
+        <span class="ol-blog-toc-meta"><span>{category}</span><span>{minutes}분</span></span>
+      </li>
+    ))}
+  </ol>
+  {!entries.length && <div class="ol-blog-coming-soon">
+    <span aria-hidden="true">…</span>
+    <h3>새로운 이야기를 준비하고 있습니다.</h3>
+    <p>글이 준비되면 이곳에서 차례대로 읽으실 수 있습니다.</p>
+  </div>}
+</div>
+
+<script>
+  for (const series of document.querySelectorAll('[data-series-reading-order]')) {
+    const controls = series.querySelector('.ol-series-order-controls');
+    const list = series.querySelector('.ol-blog-series-toc');
+    if (!controls || !list) continue;
+
+    const items = [...list.children];
+    const buttons = controls.querySelectorAll('button[data-series-order]');
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        if (button.getAttribute('aria-pressed') === 'true') return;
+
+        const reversed = button.getAttribute('data-series-order') === 'reverse';
+        list.append(...(reversed ? [...items].reverse() : items));
+        list.toggleAttribute('reversed', reversed);
+        for (const option of buttons) option.setAttribute('aria-pressed', String(option === button));
+      });
+    }
+    controls.removeAttribute('hidden');
+  }
+</script>

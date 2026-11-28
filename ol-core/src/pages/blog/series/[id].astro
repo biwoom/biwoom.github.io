@@ -3,6 +3,7 @@ import { url } from "../../../lib/url";
 import { render } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import BlogNav from "../../../components/blog/BlogNav.astro";
+import SeriesReadingOrder from "../../../components/common/SeriesReadingOrder.astro";
 import { getBlogLibrary } from "../../../lib/blog";
 import type { BlogSeries } from "../../../lib/blog";
 import { SERIES_LABELS } from "../../../lib/site-config";
@@ -13,6 +14,9 @@ interface Props { series: BlogSeries; }
 const { series } = Astro.props;
 const rendered = series.meta ? await render(series.meta) : null;
 const Intro = rendered?.Content;
+const entries = series.entries.map(({ data }) => ({
+  href: url(data.url), title: data.title, description: data.description, category: data.category, minutes: data.readingTime,
+}));
 ---
 <BaseLayout title={`${series.title} · ${SERIES_LABELS.blog}`} description={series.description} pagefindMeta={{ title: series.title, section: 'BLOG', sectionLabel: 'BLOG', breadcrumb: `${SERIES_LABELS.blog} · ${series.title}` }}>
   <main class="ol-blog-page"><BlogNav active="series" compact />
@@ -29,9 +33,7 @@ const Intro = rendered?.Content;
             {Intro ? <div class="ol-prose ol-blog-series-prose"><Intro /></div> : <p>{series.description}</p>}
             <div class="ol-blog-series-actions"><span>{series.count}편{series.count > 0 && ` · 약 ${series.readingTime}분`}</span>{series.entries[0] && <a class="ol-btn ol-btn-outline" href={url(series.entries[0].data.url)}>처음부터 읽기 →</a>}</div>
           </header>
-          <div class="ol-blog-toc-heading"><h3>시리즈 목차</h3><span>읽는 순서</span></div>
-          <ol class="ol-blog-series-toc">{series.entries.map((post,index) => <li><span class="ol-blog-ordinal" aria-hidden="true">{String(index+1).padStart(2,'0')}</span><div><a href={url(post.data.url)}><h3>{post.data.title}</h3></a><p>{post.data.description}</p></div><span class="ol-blog-toc-meta"><span>{post.data.category}</span><span>{post.data.readingTime}분</span></span></li>)}</ol>
-          {!series.count && <div class="ol-blog-coming-soon"><span aria-hidden="true">…</span><h3>새로운 이야기를 준비하고 있습니다.</h3><p>글이 준비되면 이곳에서 차례대로 읽으실 수 있습니다.</p></div>}
+          <SeriesReadingOrder {entries} />
         </div>
       </div>
     </div></section>
