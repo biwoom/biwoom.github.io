@@ -111,6 +111,26 @@
 .ol-reader-font-actions button { min-height: 28px; padding: 0 2px; border: 0; background: transparent; color: var(--ol-ink-2); cursor: pointer; white-space: nowrap; }
 .ol-reader-font-actions button:is(:hover, :focus-visible) { color: var(--ol-ink); text-decoration: underline; text-underline-offset: 3px; }
 .ol-reader-font-panel :is(button,input):focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 980px) {
+  :is(.ol-story-doc-page, .ol-home-reader) :is([data-reader-font-toolbar], .ol-home-reader-footer) :is(.ol-text-tool-btn, .ol-story-bookmark) {
+    -webkit-tap-highlight-color: transparent;
+
+    &:is(:hover, :focus, :active, [aria-expanded="true"], [aria-pressed="true"]) {
+      border-color: transparent;
+      background-color: transparent;
+      outline: none;
+    }
+    &:enabled:is(:active, [aria-expanded="true"], [aria-pressed="true"]) {
+      color: color-mix(in srgb, var(--ol-accent, var(--ol-accent-story)) 50%, var(--ol-ink));
+    }
+    &:focus-visible { box-shadow: inset 0 -2px currentColor; }
+  }
+  /* The slider can receive focus when opened by touch. Keep its focus cue on the thumb. */
+  [data-reader-font-toolbar] .ol-reader-font-panel :is(button, input) {
+    -webkit-tap-highlight-color: transparent;
+    &:focus { outline: none; }
+  }
+}
 .ol-reader-footnotes-content { overflow-y: auto; padding: 20px; overscroll-behavior: contain; }
 .ol-reader-footnotes-content .footnotes { margin: 0; padding: 0; border: 0; }
 .ol-reader-footnotes-content .footnotes li { display: block; overflow-wrap: anywhere; }
